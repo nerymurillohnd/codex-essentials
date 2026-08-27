@@ -232,10 +232,18 @@ npm run validate:plugins
 npm run validate:all
 ```
 
-The following is an optional maintainer check. `validate_plugin.py` is supplied
-by the external Codex `plugin-creator` Skill; it is not stored in this
-repository. Replace `<plugin-creator-skill-root>` with the local filesystem
-root of that Skill, or skip this check when that Skill is not installed:
+The following is an optional maintainer check. The easiest way to run it is to
+ask Codex directly:
+
+```text
+Use the plugin-creator Skill to validate plugins/astro-cli-commands.
+```
+
+Codex can resolve the validator from its installed `plugin-creator` Skill. The
+`validate_plugin.py` script is external to this repository; it is not stored in
+the package. Maintainers who prefer to run it from a terminal must replace
+`<plugin-creator-skill-root>` with the local filesystem root of that Skill, or
+skip this check when the Skill is not installed:
 
 ```bash
 uv run --with pyyaml python <plugin-creator-skill-root>/scripts/validate_plugin.py plugins/astro-cli-commands

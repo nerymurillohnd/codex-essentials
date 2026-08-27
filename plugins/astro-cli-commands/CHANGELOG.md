@@ -23,7 +23,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Documentation]** Clarified that the repository-owned
   `npm run validate:all` check is the canonical contributor validation, while
   the external `plugin-creator` compatibility checker is optional and
-  maintainer-only.
+  maintainer-only. Documented asking Codex to invoke that Skill as the
+  preferred user experience.
 
 ### Changed
 
