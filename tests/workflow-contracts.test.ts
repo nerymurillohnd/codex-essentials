@@ -31,13 +31,6 @@ function asArray(value: unknown, label: string): unknown[] {
   return value;
 }
 
-function asString(value: unknown, label: string): string {
-  if (typeof value !== "string") {
-    throw new TypeError(`${label} must contain a string`);
-  }
-  return value;
-}
-
 function readWorkflow(fileName: string): string {
   return fs.readFileSync(path.join(workflowsRoot, fileName), "utf8");
 }
@@ -81,6 +74,22 @@ function expectFullShaPins(workflowText: string): void {
   }
 }
 
+function expectNodeSetup(steps: readonly Record<string, unknown>[]): void {
+  const uses = stepUses(steps);
+  const setupNodeStep = asRecord(
+    steps.find(
+      (step) => step.uses === `actions/setup-node@${setupNodeActionSha}`,
+    ),
+    "setup-node step",
+  );
+  const setupNodeWith = asRecord(setupNodeStep.with, "setup-node with");
+
+  expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
+  expect(uses).toContain(`actions/setup-node@${setupNodeActionSha}`);
+  expect(setupNodeWith["node-version"]).toBe("24");
+  expect(setupNodeWith.cache).toBe("npm");
+}
+
 describe("quality workflow contract", () => {
   it("runs only safe push and pull request events with read-only permissions", () => {
     const workflow = parseWorkflow("quality.yml");
@@ -114,23 +123,9 @@ describe("quality workflow contract", () => {
     for (const [jobName, expectedCommand] of executableJobs) {
       const job = asRecord(jobs[jobName], `${jobName} job`);
       const steps = jobSteps(job, jobName);
-      const uses = stepUses(steps);
       const runs = stepRuns(steps);
-      const setupNodeStep = asRecord(
-        steps.find(
-          (step) => step.uses === `actions/setup-node@${setupNodeActionSha}`,
-        ),
-        `${jobName} setup-node step`,
-      );
-      const setupNodeWith = asRecord(
-        setupNodeStep.with,
-        `${jobName} setup-node with`,
-      );
 
-      expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
-      expect(uses).toContain(`actions/setup-node@${setupNodeActionSha}`);
-      expect(setupNodeWith["node-version"]).toBe("24");
-      expect(setupNodeWith.cache).toBe("npm");
+      expectNodeSetup(steps);
       expect(runs).toContain("npm ci");
       expect(runs).toContain(expectedCommand);
     }
@@ -166,5 +161,57 @@ describe("quality workflow contract", () => {
     expect(requiredRun).toContain("needs.test.result");
     expect(requiredRun).toContain("needs.validate-manifests.result");
     expect(requiredRun).toContain("exit 1");
+  });
+});
+
+describe("documentation workflow contract", () => {
+  it("runs only on pull request document changes with minimal permissions", () => {
+    const workflow = parseWorkflow("documentation-gate.yml");
+    const triggers = asRecord(workflow.on, "documentation triggers");
+    const pullRequest = asRecord(
+      triggers.pull_request,
+      "documentation pull_request trigger",
+    );
+    const permissions = asRecord(
+      workflow.permissions,
+      "documentation permissions",
+    );
+
+    expect(pullRequest.types).toEqual(["opened", "synchronize", "reopened"]);
+    expect(triggers).not.toHaveProperty("pull_request_target");
+    expect(permissions).toEqual({ contents: "read" });
+  });
+
+  it("pins documentation workflow actions and disables Husky in CI", () => {
+    const workflow = parseWorkflow("documentation-gate.yml");
+    const documentationJob = asRecord(
+      workflowJobs(workflow).documentation,
+      "documentation job",
+    );
+    const steps = jobSteps(documentationJob, "documentation");
+    const checkoutStep = asRecord(
+      steps.find(
+        (step) => step.uses === `actions/checkout@${checkoutActionSha}`,
+      ),
+      "documentation checkout step",
+    );
+    const checkoutWith = asRecord(
+      checkoutStep.with,
+      "documentation checkout with",
+    );
+    const runs = stepRuns(steps);
+
+    expectFullShaPins(readWorkflow("documentation-gate.yml"));
+    expect(asRecord(workflow.env, "documentation env").HUSKY).toBe("0");
+    expectNodeSetup(steps);
+    expect(checkoutWith["fetch-depth"]).toBe(0);
+    expect(runs).toContain("npm ci");
+    expect(runs).toContain("npm run validate:all");
+    expect(runs).toContain(
+      'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
+    );
+    const jobEnv = asRecord(documentationJob.env, "documentation job env");
+    expect(jobEnv.BASE_SHA).toBe("${{ github.event.pull_request.base.sha }}");
+    expect(jobEnv.HEAD_SHA).toBe("${{ github.event.pull_request.head.sha }}");
   });
 });

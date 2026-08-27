@@ -15,6 +15,12 @@ const nodeExecutable = process.execPath;
 const require = createRequire(import.meta.url);
 
 interface ValidatorModule {
+  validateScope(
+    root: string,
+    scope: "marketplace" | "plugins" | "all",
+  ): {
+    errors: string[];
+  };
   validatePluginDocumentation(
     root: string,
     pluginRoot: string,
@@ -240,6 +246,38 @@ describe("plugin documentation scaffolding", () => {
       } finally {
         fs.rmSync(missingTemplateRoot, { recursive: true, force: true });
       }
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts an empty plugins directory with an empty marketplace", () => {
+    const root = createFixture();
+    try {
+      runGenerator(root, ["marketplace"]);
+
+      expect(validator.validateScope(root, "all").errors).toEqual([]);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("requires local plugin directories to be registered in the marketplace", () => {
+    const root = createFixture();
+    try {
+      runGenerator(root, ["marketplace"]);
+      runGenerator(root, ["plugin", "unregistered-plugin"]);
+      fs.writeFileSync(
+        path.join(root, ".agents/plugins/marketplace.json"),
+        `${JSON.stringify({ plugins: [] }, null, 2)}\n`,
+        "utf8",
+      );
+
+      const result = validator.validateScope(root, "all");
+
+      expect(result.errors).toContain(
+        "plugin 'unregistered-plugin' is not registered in .agents/plugins/marketplace.json",
+      );
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }
