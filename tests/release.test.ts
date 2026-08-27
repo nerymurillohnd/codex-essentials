@@ -17,9 +17,11 @@ const releaseScriptPath = path.join(
 const nodeExecutable = process.execPath;
 
 interface ReleaseModule {
+  hasPluginPackages(root: string): boolean;
   parsePluginTag(
     tag: string,
   ): { pluginName: string; version: string } | undefined;
+  parseArgs(argv: string[]): { root: string; tag: string };
   validateRelease(
     root: string,
     tag: string,
@@ -181,6 +183,37 @@ describe("plugin release validation", () => {
       expect(result.stderr).toContain("release tag is required");
     } finally {
       fs.rmSync(pluginRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("parses CLI arguments and rejects malformed release options", () => {
+    expect(release.parseArgs(["plugin/example/v1.2.3"])).toMatchObject({
+      tag: "plugin/example/v1.2.3",
+    });
+    expect(release.parseArgs(["--root", "/tmp/release-root"])).toEqual({
+      root: "/tmp/release-root",
+      tag: "",
+    });
+    expect(() => release.parseArgs(["--root"])).toThrow(
+      "--root requires a path",
+    );
+    expect(() => release.parseArgs(["plugin/example/v1.2.3", "extra"])).toThrow(
+      "unknown argument: extra",
+    );
+  });
+
+  it("detects releaseable plugin package directories", () => {
+    const root = fs.mkdtempSync(
+      path.join(os.tmpdir(), "codex-plugin-detect-test-"),
+    );
+    try {
+      expect(release.hasPluginPackages(root)).toBe(false);
+      fs.mkdirSync(path.join(root, "plugins/.internal"), { recursive: true });
+      expect(release.hasPluginPackages(root)).toBe(false);
+      fs.mkdirSync(path.join(root, "plugins/example"), { recursive: true });
+      expect(release.hasPluginPackages(root)).toBe(true);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
     }
   });
 });

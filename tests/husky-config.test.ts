@@ -72,7 +72,7 @@ describe("local hook package contract", () => {
     const packageJson = readPackageJson();
     const engines = readStringRecord(packageJson, "engines");
 
-    expect(engines.node).toBe(expectedNodeEngine);
+    expect(engines["node"]).toBe(expectedNodeEngine);
     expect(fs.readFileSync(npmrcPath, "utf8").trim()).toBe(
       "engine-strict=true",
     );
@@ -83,8 +83,8 @@ describe("local hook package contract", () => {
     const scripts = readStringRecord(packageJson, "scripts");
     const devDependencies = readStringRecord(packageJson, "devDependencies");
 
-    expect(scripts.prepare).toBe("husky");
-    expect(devDependencies.husky).toBe(expectedHuskyVersion);
+    expect(scripts["prepare"]).toBe("husky");
+    expect(devDependencies["husky"]).toBe(expectedHuskyVersion);
     expect(devDependencies["lint-staged"]).toBeTypeOf("string");
   });
 

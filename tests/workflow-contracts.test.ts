@@ -47,27 +47,27 @@ function parseWorkflow(fileName: string): Record<string, unknown> {
 function workflowJobs(
   workflow: Record<string, unknown>,
 ): Record<string, unknown> {
-  return asRecord(workflow.jobs, "workflow jobs");
+  return asRecord(workflow["jobs"], "workflow jobs");
 }
 
 function jobSteps(
   job: Record<string, unknown>,
   jobName: string,
 ): Record<string, unknown>[] {
-  return asArray(job.steps, `${jobName} steps`).map((step, index) =>
+  return asArray(job["steps"], `${jobName} steps`).map((step, index) =>
     asRecord(step, `${jobName} step ${index}`),
   );
 }
 
 function stepUses(steps: readonly Record<string, unknown>[]): string[] {
   return steps
-    .map((step) => step.uses)
+    .map((step) => step["uses"])
     .filter((value): value is string => typeof value === "string");
 }
 
 function stepRuns(steps: readonly Record<string, unknown>[]): string[] {
   return steps
-    .map((step) => step.run)
+    .map((step) => step["run"])
     .filter((value): value is string => typeof value === "string");
 }
 
@@ -83,29 +83,32 @@ function expectNodeSetup(steps: readonly Record<string, unknown>[]): void {
   const uses = stepUses(steps);
   const setupNodeStep = asRecord(
     steps.find(
-      (step) => step.uses === `actions/setup-node@${setupNodeActionSha}`,
+      (step) => step["uses"] === `actions/setup-node@${setupNodeActionSha}`,
     ),
     "setup-node step",
   );
-  const setupNodeWith = asRecord(setupNodeStep.with, "setup-node with");
+  const setupNodeWith = asRecord(setupNodeStep["with"], "setup-node with");
 
   expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
   expect(uses).toContain(`actions/setup-node@${setupNodeActionSha}`);
   expect(setupNodeWith["node-version"]).toBe("24");
-  expect(setupNodeWith.cache).toBe("npm");
+  expect(setupNodeWith["cache"]).toBe("npm");
 }
 
 describe("quality workflow contract", () => {
   it("runs only safe push and pull request events with read-only permissions", () => {
     const workflow = parseWorkflow("quality.yml");
-    const triggers = asRecord(workflow.on, "quality triggers");
-    const permissions = asRecord(workflow.permissions, "quality permissions");
+    const triggers = asRecord(workflow["on"], "quality triggers");
+    const permissions = asRecord(
+      workflow["permissions"],
+      "quality permissions",
+    );
 
     expect(Object.keys(triggers)).toEqual(
       expect.arrayContaining(["push", "pull_request"]),
     );
     expect(triggers).not.toHaveProperty("pull_request_target");
-    expect(permissions.contents).toBe("read");
+    expect(permissions["contents"]).toBe("read");
   });
 
   it("pins every action reference to a full commit SHA", () => {
@@ -135,18 +138,18 @@ describe("quality workflow contract", () => {
       expect(runs).toContain(expectedCommand);
     }
 
-    expect(asRecord(workflow.env, "quality env").HUSKY).toBe("0");
+    expect(asRecord(workflow["env"], "quality env")["HUSKY"]).toBe("0");
   });
 
   it("exposes a stable required aggregator that fails on red gates", () => {
     const workflow = parseWorkflow("quality.yml");
     const requiredJob = asRecord(
-      workflowJobs(workflow).required,
+      workflowJobs(workflow)["required"],
       "required job",
     );
 
-    expect(requiredJob.if).toBe("${{ always() }}");
-    expect(requiredJob.needs).toEqual([
+    expect(requiredJob["if"]).toBe("${{ always() }}");
+    expect(requiredJob["needs"]).toEqual([
       "format",
       "lint",
       "typecheck-native",
@@ -156,7 +159,7 @@ describe("quality workflow contract", () => {
       "validate-manifests",
     ]);
     const requiredRun = jobSteps(requiredJob, "required")
-      .map((step) => step.run)
+      .map((step) => step["run"])
       .find((run): run is string => typeof run === "string");
     expect(requiredRun).toContain("needs.format.result");
     expect(requiredRun).toContain("needs.lint.result");
@@ -172,17 +175,17 @@ describe("quality workflow contract", () => {
 describe("documentation workflow contract", () => {
   it("runs only on pull request document changes with minimal permissions", () => {
     const workflow = parseWorkflow("documentation-gate.yml");
-    const triggers = asRecord(workflow.on, "documentation triggers");
+    const triggers = asRecord(workflow["on"], "documentation triggers");
     const pullRequest = asRecord(
-      triggers.pull_request,
+      triggers["pull_request"],
       "documentation pull_request trigger",
     );
     const permissions = asRecord(
-      workflow.permissions,
+      workflow["permissions"],
       "documentation permissions",
     );
 
-    expect(pullRequest.types).toEqual(["opened", "synchronize", "reopened"]);
+    expect(pullRequest["types"]).toEqual(["opened", "synchronize", "reopened"]);
     expect(triggers).not.toHaveProperty("pull_request_target");
     expect(permissions).toEqual({ contents: "read" });
   });
@@ -190,24 +193,24 @@ describe("documentation workflow contract", () => {
   it("pins documentation workflow actions and disables Husky in CI", () => {
     const workflow = parseWorkflow("documentation-gate.yml");
     const documentationJob = asRecord(
-      workflowJobs(workflow).documentation,
+      workflowJobs(workflow)["documentation"],
       "documentation job",
     );
     const steps = jobSteps(documentationJob, "documentation");
     const checkoutStep = asRecord(
       steps.find(
-        (step) => step.uses === `actions/checkout@${checkoutActionSha}`,
+        (step) => step["uses"] === `actions/checkout@${checkoutActionSha}`,
       ),
       "documentation checkout step",
     );
     const checkoutWith = asRecord(
-      checkoutStep.with,
+      checkoutStep["with"],
       "documentation checkout with",
     );
     const runs = stepRuns(steps);
 
     expectFullShaPins(readWorkflow("documentation-gate.yml"));
-    expect(asRecord(workflow.env, "documentation env").HUSKY).toBe("0");
+    expect(asRecord(workflow["env"], "documentation env")["HUSKY"]).toBe("0");
     expectNodeSetup(steps);
     expect(checkoutWith["fetch-depth"]).toBe(0);
     expect(runs).toContain("npm ci");
@@ -215,17 +218,24 @@ describe("documentation workflow contract", () => {
     expect(runs).toContain(
       'npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"',
     );
-    const jobEnv = asRecord(documentationJob.env, "documentation job env");
-    expect(jobEnv.BASE_SHA).toBe("${{ github.event.pull_request.base.sha }}");
-    expect(jobEnv.HEAD_SHA).toBe("${{ github.event.pull_request.head.sha }}");
+    const jobEnv = asRecord(documentationJob["env"], "documentation job env");
+    expect(jobEnv["BASE_SHA"]).toBe(
+      "${{ github.event.pull_request.base.sha }}",
+    );
+    expect(jobEnv["HEAD_SHA"]).toBe(
+      "${{ github.event.pull_request.head.sha }}",
+    );
   });
 });
 
 describe("security workflow contract", () => {
   it("runs safe events with read-only default permissions", () => {
     const workflow = parseWorkflow("security.yml");
-    const triggers = asRecord(workflow.on, "security triggers");
-    const permissions = asRecord(workflow.permissions, "security permissions");
+    const triggers = asRecord(workflow["on"], "security triggers");
+    const permissions = asRecord(
+      workflow["permissions"],
+      "security permissions",
+    );
 
     expect(Object.keys(triggers)).toEqual(
       expect.arrayContaining(["push", "pull_request"]),
@@ -245,12 +255,12 @@ describe("security workflow contract", () => {
       "dependency-review job",
     );
     const permissions = asRecord(
-      dependencyReviewJob.permissions,
+      dependencyReviewJob["permissions"],
       "dependency-review permissions",
     );
     const uses = stepUses(jobSteps(dependencyReviewJob, "dependency-review"));
 
-    expect(dependencyReviewJob.if).toBe(
+    expect(dependencyReviewJob["if"]).toBe(
       "${{ github.event_name == 'pull_request' }}",
     );
     expect(permissions).toEqual({
@@ -266,8 +276,11 @@ describe("security workflow contract", () => {
 
   it("runs CodeQL with only the security-events write permission", () => {
     const workflow = parseWorkflow("security.yml");
-    const codeqlJob = asRecord(workflowJobs(workflow).codeql, "codeql job");
-    const permissions = asRecord(codeqlJob.permissions, "codeql permissions");
+    const codeqlJob = asRecord(workflowJobs(workflow)["codeql"], "codeql job");
+    const permissions = asRecord(
+      codeqlJob["permissions"],
+      "codeql permissions",
+    );
     const uses = stepUses(jobSteps(codeqlJob, "codeql"));
 
     expect(permissions).toEqual({
@@ -295,18 +308,18 @@ describe("security workflow contract", () => {
 describe("plugin release workflow contract", () => {
   it("accepts manual and plugin tag triggers only", () => {
     const workflow = parseWorkflow("plugin-release.yml");
-    const triggers = asRecord(workflow.on, "release triggers");
+    const triggers = asRecord(workflow["on"], "release triggers");
     const workflowDispatch = asRecord(
-      triggers.workflow_dispatch,
+      triggers["workflow_dispatch"],
       "release workflow_dispatch trigger",
     );
-    const push = asRecord(triggers.push, "release push trigger");
-    const inputs = asRecord(workflowDispatch.inputs, "release inputs");
-    const tagInput = asRecord(inputs.tag, "release tag input");
+    const push = asRecord(triggers["push"], "release push trigger");
+    const inputs = asRecord(workflowDispatch["inputs"], "release inputs");
+    const tagInput = asRecord(inputs["tag"], "release tag input");
 
-    expect(push.tags).toEqual(["plugin/**/v*"]);
-    expect(tagInput.required).toBe(true);
-    expect(tagInput.type).toBe("string");
+    expect(push["tags"]).toEqual(["plugin/**/v*"]);
+    expect(tagInput["required"]).toBe(true);
+    expect(tagInput["type"]).toBe("string");
     expect(triggers).not.toHaveProperty("pull_request");
     expect(triggers).not.toHaveProperty("pull_request_target");
   });
@@ -318,27 +331,27 @@ describe("plugin release workflow contract", () => {
   it("validates releases with read-only permissions before any write", () => {
     const workflow = parseWorkflow("plugin-release.yml");
     const jobs = workflowJobs(workflow);
-    const validateJob = asRecord(jobs.validate, "release validate job");
+    const validateJob = asRecord(jobs["validate"], "release validate job");
     const steps = jobSteps(validateJob, "release validate");
     const checkoutStep = asRecord(
       steps.find(
-        (step) => step.uses === `actions/checkout@${checkoutActionSha}`,
+        (step) => step["uses"] === `actions/checkout@${checkoutActionSha}`,
       ),
       "release validate checkout step",
     );
     const permissions = asRecord(
-      validateJob.permissions,
+      validateJob["permissions"],
       "release validate permissions",
     );
     const runs = stepRuns(steps);
 
-    expect(asRecord(workflow.permissions, "release permissions")).toEqual({
+    expect(asRecord(workflow["permissions"], "release permissions")).toEqual({
       contents: "read",
     });
-    expect(asRecord(workflow.env, "release env").HUSKY).toBe("0");
+    expect(asRecord(workflow["env"], "release env")["HUSKY"]).toBe("0");
     expect(permissions).toEqual({ contents: "read" });
     expect(
-      asRecord(checkoutStep.with, "release validate checkout with")[
+      asRecord(checkoutStep["with"], "release validate checkout with")[
         "fetch-depth"
       ],
     ).toBe(0);
@@ -356,19 +369,19 @@ describe("plugin release workflow contract", () => {
   it("creates only a draft release with contents write permission", () => {
     const workflow = parseWorkflow("plugin-release.yml");
     const draftJob = asRecord(
-      workflowJobs(workflow).draft,
+      workflowJobs(workflow)["draft"],
       "release draft job",
     );
     const permissions = asRecord(
-      draftJob.permissions,
+      draftJob["permissions"],
       "release draft permissions",
     );
     const steps = jobSteps(draftJob, "release draft");
     const uses = stepUses(steps);
     const runs = stepRuns(steps).join("\n");
 
-    expect(draftJob.needs).toBe("validate");
-    expect(draftJob.if).toBe("${{ success() }}");
+    expect(draftJob["needs"]).toBe("validate");
+    expect(draftJob["if"]).toBe("${{ success() }}");
     expect(permissions).toEqual({ contents: "write" });
     expect(uses).toContain(
       `mikepenz/release-changelog-builder-action@${releaseChangelogBuilderActionSha}`,
@@ -384,18 +397,18 @@ describe("plugin release workflow contract", () => {
   it("publishes only through the protected release environment", () => {
     const workflow = parseWorkflow("plugin-release.yml");
     const publishJob = asRecord(
-      workflowJobs(workflow).publish,
+      workflowJobs(workflow)["publish"],
       "release publish job",
     );
     const permissions = asRecord(
-      publishJob.permissions,
+      publishJob["permissions"],
       "release publish permissions",
     );
     const runs = stepRuns(jobSteps(publishJob, "release publish")).join("\n");
 
-    expect(publishJob.needs).toBe("draft");
-    expect(publishJob.if).toBe("${{ success() }}");
-    expect(publishJob.environment).toBe("release");
+    expect(publishJob["needs"]).toBe("draft");
+    expect(publishJob["if"]).toBe("${{ success() }}");
+    expect(publishJob["environment"]).toBe("release");
     expect(permissions).toEqual({ contents: "write" });
     expect(runs).toContain('gh release edit "$RELEASE_TAG" --draft=false');
   });
