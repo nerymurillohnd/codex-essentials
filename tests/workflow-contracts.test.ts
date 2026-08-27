@@ -13,7 +13,7 @@ const checkoutActionSha = "3d3c42e5aac5ba805825da76410c181273ba90b1";
 const setupNodeActionSha = "820762786026740c76f36085b0efc47a31fe5020";
 const dependencyReviewActionSha = "a1d282b36b6f3519aa1f3fc636f609c47dddb294";
 const codeqlActionSha = "cdf488f595d80d6e07e03d4674febd5ab45fa938";
-const actionlintActionSha = "03d0035246f3e81f36aed592ffb4bebf33a03106";
+const actionlintActionSha = "914e7df21a07ef503a81201c76d2b11c789d3fca";
 const fullShaActionReference = /uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s|$)/u;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
