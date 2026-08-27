@@ -21,6 +21,24 @@ Use the following event contract:
 Select file -> resolve local prettier -> fallback to global -> run prettier --write --ignore-unknown
 ```
 
+## ⚡ Quick Start
+
+Add the marketplace and install this plugin:
+
+```bash
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
+codex plugin add prettier-after-edit@codex-essentials
+```
+
+Then open a target project and ask Codex to format files after edits.
+
+Quick sanity check:
+
+```bash
+codex plugin marketplace list
+codex plugin list
+```
+
 ## 🧰 Included Components
 
 | Component                             | Purpose                                               |
@@ -33,6 +51,13 @@ Select file -> resolve local prettier -> fallback to global -> run prettier --wr
 | `CHANGELOG.md`                        | User-facing change history.                           |
 | `LICENSE.md`                          | License terms.                                        |
 
+## 📚 Reference Library
+
+| Read this                                         | What it provides                                         |
+| ------------------------------------------------- | -------------------------------------------------------- |
+| [`SKILL.md`](skills/prettier-after-edit/SKILL.md) | Author-facing behavior and fallback expectations.        |
+| [`prettier-format.sh`](hooks/prettier-format.sh)  | Hook implementation and explicit skip/failure signaling. |
+
 ## 🖥️ Supported Environments
 
 Node ecosystem projects and any project where `prettier` is accessible are supported.
@@ -44,6 +69,13 @@ You need:
 
 This plugin does not require network access and does not install project
 dependencies.
+
+## 🔄 Maintenance Model
+
+Maintenance runs in this repository and includes compatibility reviews when
+`prettier` contract changes or payload shapes affect hook behavior.
+Changes are published as repository pull requests; no silent rewrites are
+expected.
 
 ## 🔁 Inputs and Outputs
 
@@ -144,6 +176,12 @@ From a target project, validate the hook behavior by editing a tracked file:
 ```bash
 printf '{"cwd":"/path/to/project","tool_input":{"file_path":"src/index.js"}}\n' \\
   | bash plugins/prettier-after-edit/hooks/prettier-format.sh
+```
+
+For a marketplace/package-level check you can also run:
+
+```bash
+uv run --with pyyaml python <path-to-plugin-creator>/scripts/validate_plugin.py plugins/prettier-after-edit
 ```
 
 ## 🚧 Known Limitations

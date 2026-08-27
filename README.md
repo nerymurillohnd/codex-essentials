@@ -11,8 +11,9 @@ distributable Codex plugins. It provides the catalog, schemas, generators,
 validators, documentation, and quality gates needed to publish reusable skills,
 MCP integrations, and supporting assets.
 
-> **Current status:** the marketplace publishes its first installable plugin:
-> `Astro Commands` (`astro-cli-commands`).
+> **Current status:** the marketplace publishes two installable plugins:
+> `Astro Commands` (`astro-cli-commands`) and `Prettier After Edit`
+> (`prettier-after-edit`).
 
 ## ✨ Start Here
 
@@ -21,9 +22,10 @@ the catalog and quality gates; they are **not installed into every user's
 Astro project**. Users add the remote marketplace and install only the plugins
 they need.
 
-| Product            | Purpose                                                                                          | Install ID           |
-| ------------------ | ------------------------------------------------------------------------------------------------ | -------------------- |
-| **Astro Commands** | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands` |
+| Product                 | Purpose                                                                                          | Install ID            |
+| ----------------------- | ------------------------------------------------------------------------------------------------ | --------------------- |
+| **Astro Commands**      | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands`  |
+| **Prettier After Edit** | Automatically formats edited files with local or PATH Prettier using a Codex post-edit hook.     | `prettier-after-edit` |
 
 ### Install the Marketplace
 
@@ -41,16 +43,18 @@ codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
 codex plugin marketplace list
 ```
 
-### Install Astro Commands
+### Install marketplace plugins
 
 ```bash
 codex plugin add astro-cli-commands@codex-essentials
+codex plugin add prettier-after-edit@codex-essentials
 codex plugin list
 ```
 
-Then open an Astro project in Codex and ask for the work you need. The plugin
-can activate automatically for Astro-focused tasks, or you can request
-**Astro Commands** directly.
+Then open the target project in Codex and use the appropriate plugin explicitly.
+
+- Use **Astro Commands** for project planning, checks, preview, and CLI coordination.
+- Use **Prettier After Edit** to auto-format changed files in Codex editing flows.
 
 ## 👤 Ownership and Repository
 
@@ -75,8 +79,8 @@ branch remains available for contributors and early adopters who intentionally
 track unreleased marketplace changes.
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install **Astro Commands** (`astro-cli-commands`) or another
-available plugin.
+Essentials**, and install **Astro Commands** (`astro-cli-commands`) or
+**Prettier After Edit** (`prettier-after-edit`).
 
 Refresh the marketplace metadata when you want to discover catalog changes:
 
@@ -88,6 +92,7 @@ Remove only the plugin:
 
 ```bash
 codex plugin remove astro-cli-commands@codex-essentials
+codex plugin remove prettier-after-edit@codex-essentials
 ```
 
 Remove the marketplace registration:
@@ -99,9 +104,11 @@ codex plugin marketplace remove codex-essentials
 See the [official Codex plugin packaging guide](https://developers.openai.com/plugins/build/plugins)
 for current marketplace, plugin, path, and distribution behavior.
 
-For the complete product explanation, installation guide, references, approval
-boundaries, rollback behavior, and troubleshooting, read the [Astro Commands
-product README](plugins/astro-cli-commands/README.md).
+For the complete product explanation, installation guide, references,
+approval boundaries, rollback behavior, and troubleshooting:
+
+- [Astro Commands product README](plugins/astro-cli-commands/README.md)
+- [Prettier After Edit product README](plugins/prettier-after-edit/README.md)
 
 ## 🗂️ Directory Reference
 
