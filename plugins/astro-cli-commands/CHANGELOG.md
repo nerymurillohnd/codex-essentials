@@ -8,6 +8,12 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- **[Area: Packaging]** Derived plugin and agent metadata from the repository
+  declarative source and strengthened release validation to reject resources
+  resolving outside this package.
+
 ## [0.1.1] - 2026-08-27
 
 ### Added

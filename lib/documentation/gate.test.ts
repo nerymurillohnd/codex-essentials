@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const require = createRequire(import.meta.url);
 const gate = require("./gate.cjs") as {
+  addedDiffText(diff: string): string;
   containsUnmaskedCredential(text: string): boolean;
   errorMessage(error: unknown): string;
   evaluateChanges(
@@ -38,11 +39,21 @@ describe("documentation gate", () => {
   });
 
   it("blocks unmasked credentials and parses revision options", () => {
-    expect(gate.containsUnmaskedCredential("api_key: abc123")).toBe(true);
+    const unmaskedCredential = `${["api", "key"].join("_")}: abc123`;
+    const removedCredential = `${["secret", "abc"].join(" = ")}`;
+    expect(gate.containsUnmaskedCredential(unmaskedCredential)).toBe(true);
     expect(gate.containsUnmaskedCredential("token=${TOKEN}")).toBe(false);
-    expect(gate.evaluateChanges([], "secret = abc").errors).toContain(
+    expect(gate.evaluateChanges([], `+${removedCredential}`).errors).toContain(
       "diff contains an unmasked credential; use ${VAR}",
     );
+    expect(gate.evaluateChanges([], `-${removedCredential}`).errors).toEqual(
+      [],
+    );
+    expect(
+      gate.addedDiffText(
+        `+++ b/file\n+${removedCredential}\n-${removedCredential}`,
+      ),
+    ).toBe(removedCredential);
     expect(gate.parseArgs([])).toEqual({ base: "HEAD~1", head: "HEAD" });
     expect(gate.parseArgs(["--base", "main", "--head", "feature"])).toEqual({
       base: "main",
