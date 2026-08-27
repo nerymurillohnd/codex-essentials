@@ -1,6 +1,9 @@
 # Tooling and Runtime Guidelines
 
-- Use npm for project dependencies. Node.js is managed by nvm; keep `.nvmrc` aligned with the active LTS runtime. Keep `package.json` engines and `.npmrc` `engine-strict=true` aligned when present.
+- Use npm for project dependencies. Node.js is managed by nvm; `.nvmrc` is
+  `24.19.0` and all GitHub Actions workflows must select the Node.js 24 major
+  line explicitly. Keep `package.json` engines and `.npmrc`
+  `engine-strict=true` aligned when present.
 - Use project-local dependencies for build, test, lint, format, and type checks. Use global PATH tools only for host automation and hooks; do not replace the declared manager.
 - uv manages Python 3.14, `ruff`, `basedpyright`, and `pre-commit`. Do not install those tools with pip, Homebrew, npm, or global site-packages.
 - Homebrew manages `git`, `gh`, `jq`, `shellcheck`, `shfmt`, and `yq`; prefer `/opt/homebrew/bin`.

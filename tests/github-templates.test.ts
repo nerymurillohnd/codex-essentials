@@ -74,6 +74,9 @@ describe("GitHub contribution contracts", () => {
       expect(document.name).toBeTypeOf("string");
       expect(document.permissions?.contents).toBeTypeOf("string");
       expect(document.jobs).toBeTypeOf("object");
+      const workflow = read(fileName);
+      expect(workflow).toContain('node-version: "24"');
+      expect(workflow).not.toContain("node-version-file:");
       expect(read(fileName)).toMatch(/uses: actions\/checkout@[0-9a-f]{40}/u);
       expect(read(fileName)).toMatch(/uses: actions\/setup-node@[0-9a-f]{40}/u);
     }
