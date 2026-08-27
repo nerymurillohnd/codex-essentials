@@ -4,21 +4,150 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
+env:
+  HUSKY: "0"
+
 jobs:
-  check:
+  format:
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Run complete quality gate
-        run: npm run check
+      - name: Check formatting
+        run: npm run format:check
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npm run lint -- --max-warnings=0
+
+  typecheck-native:
+    name: TypeScript 7 native
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run native typecheck
+        run: npm run typecheck
+
+  typecheck-scripts:
+    name: Script typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run script typecheck
+        run: npm run typecheck:scripts
+
+  typecheck-compatibility:
+    name: TypeScript 6 compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run TypeScript 6 compatibility check
+        run: npx tsc6 --noEmit
+
+  test:
+    name: Tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+
+  validate-manifests:
+    name: Manifest validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate manifests
+        run: npm run validate:all
+
+  required:
+    name: Required quality gates
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - format
+      - lint
+      - typecheck-native
+      - typecheck-scripts
+      - typecheck-compatibility
+      - test
+      - validate-manifests
+    steps:
+      - name: Fail when a required gate fails
+        run: |
+          if [[ "${{ needs.format.result }}" != "success" ||
+                "${{ needs.lint.result }}" != "success" ||
+                "${{ needs.typecheck-native.result }}" != "success" ||
+                "${{ needs.typecheck-scripts.result }}" != "success" ||
+                "${{ needs.typecheck-compatibility.result }}" != "success" ||
+                "${{ needs.test.result }}" != "success" ||
+                "${{ needs.validate-manifests.result }}" != "success" ]]; then
+            exit 1
+          fi
