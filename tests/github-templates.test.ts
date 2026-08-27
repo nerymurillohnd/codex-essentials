@@ -9,6 +9,8 @@ const repositoryRoot = path.resolve(
   "..",
 );
 const githubRoot = path.join(repositoryRoot, ".github");
+const checkoutActionSha = "3d3c42e5aac5ba805825da76410c181273ba90b1";
+const setupNodeActionSha = "820762786026740c76f36085b0efc47a31fe5020";
 
 function read(relativePath: string): string {
   return fs.readFileSync(path.join(githubRoot, relativePath), "utf8");
@@ -77,14 +79,19 @@ describe("GitHub contribution contracts", () => {
       const workflow = read(fileName);
       expect(workflow).toContain('node-version: "24"');
       expect(workflow).not.toContain("node-version-file:");
-      expect(read(fileName)).toMatch(/uses: actions\/checkout@[0-9a-f]{40}/u);
-      expect(read(fileName)).toMatch(/uses: actions\/setup-node@[0-9a-f]{40}/u);
+      expect(workflow).toContain(`uses: actions/checkout@${checkoutActionSha}`);
+      expect(workflow).toContain(
+        `uses: actions/setup-node@${setupNodeActionSha}`,
+      );
     }
     const release = read("workflows/plugin-release.yml");
-    expect(release).toMatch(
-      /mikepenz\/release-changelog-builder-action@[0-9a-f]{40}/u,
+    expect(release).toContain(
+      'gh release create "$RELEASE_TAG" "$PLUGIN_ARCHIVE" --draft --verify-tag',
     );
-    expect(release).toContain("failOnError: true");
+    expect(release).toContain("Changelog source: plugins/");
+    expect(release).toContain('--repo "$GH_REPO"');
+    expect(release).not.toContain("release-changelog-builder-action");
+    expect(release).not.toContain("${{ steps.changelog.outputs.changelog }}");
     expect(release).not.toContain("cat ${{ secrets");
   });
 });
