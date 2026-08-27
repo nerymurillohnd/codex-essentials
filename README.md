@@ -84,7 +84,7 @@ npm test                # Vitest with coverage
 npm run validate:all    # Validate catalog, schemas, and plugin directories
 npm run documentation:gate -- --base <base> --head <head> # PR documentation gate
 npm run validate:release -- plugin/<plugin-id>/v<semver> # Release contract
-npm run check           # Complete quality gate
+npm run check           # Aggregate npm-owned quality gate
 ```
 
 The policy is literal: local hooks are advisory; CI is authoritative. Husky installs a no-shim
@@ -116,10 +116,11 @@ npx tsc6 --noEmit       # TypeScript 6 compiler/API compatibility path
 
 GitHub Actions use Node 24, full SHA pins for third-party actions, separate
 quality jobs, and a stable `required` aggregator for branch-protection required
-checks. Release publication requires release environment approval through the
-protected `release` environment. Rollback for a plugin release means restoring
-the prior marketplace metadata, deleting the GitHub release, and deleting the
-release tag.
+checks. Plugin release tags are validated against the exact tag checkout, draft
+releases attach a deterministic archive of the target plugin, and final
+publication requires release environment approval through the protected
+`release` environment. Rollback for a plugin release means restoring the prior
+marketplace metadata, deleting the GitHub release, and deleting the release tag.
 
 To scaffold content, use the repository generators:
 

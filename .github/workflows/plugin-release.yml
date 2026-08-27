@@ -25,13 +25,17 @@ jobs:
     permissions:
       contents: read
     outputs:
-      artifact_checksum: ${{ steps.metadata.outputs.artifact_checksum }}
+      plugin_id: ${{ steps.metadata.outputs.plugin_id }}
       plugin_version: ${{ steps.metadata.outputs.plugin_version }}
+      previous_release_tag: ${{ steps.metadata.outputs.previous_release_tag }}
+      source_commit: ${{ steps.metadata.outputs.source_commit }}
+      plugin_tree_sha: ${{ steps.metadata.outputs.plugin_tree_sha }}
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ env.RELEASE_TAG }}
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -48,12 +52,38 @@ jobs:
       - name: Capture release metadata
         id: metadata
         run: |
+          tag_commit="$(git rev-parse "$RELEASE_TAG^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+          if [ "$tag_commit" != "$head_commit" ]; then
+            echo "Checked-out commit $head_commit does not match release tag $RELEASE_TAG at $tag_commit"
+            exit 1
+          fi
+
+          plugin_id="${RELEASE_TAG#plugin/}"
+          plugin_id="${plugin_id%/v*}"
           plugin_version="${RELEASE_TAG##*/v}"
-          pack_metadata="$(npm pack --dry-run --json)"
-          artifact_checksum="$(printf '%s' "$pack_metadata" | shasum -a 256 | awk '{print $1}')"
+          source_commit="$tag_commit"
+          plugin_tree_sha="$(git rev-parse "$RELEASE_TAG:plugins/$plugin_id")"
+          previous_release_tag=""
+          found_current="false"
+
+          while IFS= read -r tag; do
+            if [ "$tag" = "$RELEASE_TAG" ]; then
+              found_current="true"
+              continue
+            fi
+            if [ "$found_current" = "true" ]; then
+              previous_release_tag="$tag"
+              break
+            fi
+          done < <(git tag --list "plugin/${plugin_id}/v*" --sort=-v:refname)
+
           {
+            echo "plugin_id=$plugin_id"
             echo "plugin_version=$plugin_version"
-            echo "artifact_checksum=$artifact_checksum"
+            echo "previous_release_tag=$previous_release_tag"
+            echo "source_commit=$source_commit"
+            echo "plugin_tree_sha=$plugin_tree_sha"
           } >> "$GITHUB_OUTPUT"
 
   draft:
@@ -64,38 +94,70 @@ jobs:
     permissions:
       contents: write
     env:
-      ARTIFACT_CHECKSUM: ${{ needs.validate.outputs.artifact_checksum }}
+      GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
+      PLUGIN_ID: ${{ needs.validate.outputs.plugin_id }}
+      PLUGIN_TREE_SHA: ${{ needs.validate.outputs.plugin_tree_sha }}
       PLUGIN_VERSION: ${{ needs.validate.outputs.plugin_version }}
+      PREVIOUS_RELEASE_TAG: ${{ needs.validate.outputs.previous_release_tag }}
       RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+      SOURCE_COMMIT: ${{ needs.validate.outputs.source_commit }}
     steps:
-      - name: Build release notes
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+      - name: Check out release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          configuration: ".github/release.yml"
-          failOnError: true
-          fromTag: ${{ github.event.before }}
-          toTag: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ env.RELEASE_TAG }}
+      - name: Build release archive
+        run: |
+          PLUGIN_ARCHIVE="${PLUGIN_ID}-${PLUGIN_VERSION}.tar.gz"
+          tar --sort=name --mtime="@0" --owner=0 --group=0 --numeric-owner -czf "$PLUGIN_ARCHIVE" "plugins/$PLUGIN_ID"
+          artifact_checksum="$(shasum -a 256 "$PLUGIN_ARCHIVE" | awk '{print $1}')"
+          {
+            echo "ARTIFACT_CHECKSUM=$artifact_checksum"
+            echo "PLUGIN_ARCHIVE=$PLUGIN_ARCHIVE"
+          } >> "$GITHUB_ENV"
       - name: Prevent duplicate tag releases
         run: |
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+          if gh release view "$RELEASE_TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
             echo "Release already exists for $RELEASE_TAG"
             exit 1
           fi
       - name: Write release metadata
         run: |
+          changelog_path="plugins/$PLUGIN_ID/CHANGELOG.md"
           {
-            echo "${{ steps.changelog.outputs.changelog }}"
-            echo
-            echo "Release tag: $RELEASE_TAG"
-            echo "Plugin version: $PLUGIN_VERSION"
-            echo "Changelog source: .github/release.yml"
-            echo "Artifact checksum: $ARTIFACT_CHECKSUM"
-            echo "Rollback: restore the previous marketplace metadata, delete this release, and delete tag $RELEASE_TAG."
+            printf '# %s\n\n' "$RELEASE_TAG"
+            printf '## Curated changelog\n\n'
+            awk '
+              /^## / {
+                if (capturing) {
+                  exit
+                }
+                if ($0 == "## [Unreleased]") {
+                  capturing = 1
+                  next
+                }
+              }
+              capturing {
+                print
+              }
+            ' "$changelog_path"
+            printf '\n## Release metadata\n\n'
+            printf 'Release tag: %s\n' "$RELEASE_TAG"
+            printf 'Plugin: %s\n' "$PLUGIN_ID"
+            printf 'Plugin version: %s\n' "$PLUGIN_VERSION"
+            printf 'Changelog source: plugins/%s/CHANGELOG.md\n' "$PLUGIN_ID"
+            printf 'Previous plugin release tag: %s\n' "${PREVIOUS_RELEASE_TAG:-first release}"
+            printf 'Source commit: %s\n' "$SOURCE_COMMIT"
+            printf 'Plugin tree: %s\n' "$PLUGIN_TREE_SHA"
+            printf 'Artifact: %s\n' "$PLUGIN_ARCHIVE"
+            printf 'Artifact checksum: %s\n' "$ARTIFACT_CHECKSUM"
+            printf 'Rollback: restore the previous marketplace metadata, delete this release, and delete tag %s.\n' "$RELEASE_TAG"
           } > release-notes.md
       - name: Publish draft release metadata
-        run: gh release create "$RELEASE_TAG" --draft --title "$RELEASE_TAG" --notes-file release-notes.md
+        run: gh release create "$RELEASE_TAG" "$PLUGIN_ARCHIVE" --draft --verify-tag --title "$RELEASE_TAG" --notes-file release-notes.md --repo "$GH_REPO"
 
   publish:
     name: Publish release
@@ -106,8 +168,9 @@ jobs:
     permissions:
       contents: write
     env:
+      GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
       RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - name: Publish approved release
-        run: gh release edit "$RELEASE_TAG" --draft=false --latest=false
+        run: gh release edit "$RELEASE_TAG" --draft=false --latest=false --repo "$GH_REPO"

@@ -1,6 +1,9 @@
 # Quality and Maintenance Guidelines
 
-- Run `npm run check` before declaring work clean. It covers formatting, ESLint, typechecking, Vitest coverage, and full manifest validation.
+- Run `npm run check` before declaring npm-owned repository checks clean. It
+  covers formatting, warning-strict ESLint, TypeScript 7 typechecking, script
+  typechecking, TypeScript 6 compatibility, Vitest coverage, and full manifest
+  validation.
 - Treat local hooks as advisory; CI is authoritative. Developers may bypass a
   local hook only for an authorized emergency with `HUSKY=0` or `--no-verify`,
   but the CI gates remain mandatory.
@@ -9,9 +12,11 @@
   `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
   `npm run validate:all`, `npm run validate:release`, `actionlint`, and
   `git diff --check`.
-- Keep branch-protection required checks aligned to the workflow's stable
-  `required` aggregator plus independently visible documentation, security, and
-  release validation jobs.
+- Keep branch-protection required checks aligned to the quality workflow's
+  stable `required` aggregator plus independently visible pull-request
+  documentation and security jobs. Release validation runs on plugin release
+  tags and manual release dispatches, not as a pull-request branch-protection
+  check.
 - Add applicable language-server diagnostics and unit, integration, regression, security, and adversarial tests. Keep documentation synchronized with behavior.
 - Re-check version-sensitive claims against the target release or latest changelog before planning and again before execution.
 - Report skipped checks, missing tools, unresolved diagnostics, and residual risks explicitly.

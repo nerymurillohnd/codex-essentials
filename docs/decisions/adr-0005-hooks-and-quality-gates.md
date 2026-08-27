@@ -37,9 +37,10 @@ HUSKY=0 in CI so npm installation does not install or run local hooks.
 
 Security and release automation are separate workflows. The security workflow
 runs dependency review, CodeQL, and actionlint with least privilege. The release
-workflow validates first with read-only permissions, creates only draft release
-metadata with contents write permission, and publishes only after release
-environment approval through the protected `release` environment.
+workflow checks out and validates the exact release tag with read-only
+permissions, builds a deterministic plugin archive for the draft release, and
+publishes only after release environment approval through the protected
+`release` environment.
 
 ## Alternatives
 
@@ -57,8 +58,9 @@ environment approval through the protected `release` environment.
   independently reproducible.
 - Good: protected branches can require one stable aggregator while still showing
   detailed job results.
-- Good: release writes are isolated from validation and held behind the
-  protected environment.
+- Good: release validation is tied to the exact tag being published, and the
+  draft release records source commit, plugin tree, archive, and archive
+  checksum.
 - Trade-off: CI repeats `npm ci` across independent jobs to keep each gate
   observable and independently rerunnable.
 - Trade-off: branch protection, the protected release environment, and
@@ -69,9 +71,11 @@ environment approval through the protected `release` environment.
 
 Workflows default to `contents: read`. Dependency review adds only
 `pull-requests: read`, CodeQL adds only `security-events: write`, and release
-write permissions are limited to draft/publish jobs. Pull-request workflows do
-not use secrets, and release documentation uses `${VAR}` placeholders rather
-than credential values.
+write permissions are limited to draft/publish jobs. Draft creation is an
+unpublished write used to attach the plugin archive and release notes; final
+publication is gated by the protected `release` environment. Pull-request
+workflows do not use secrets, and release documentation uses `${VAR}`
+placeholders rather than credential values.
 
 ## Compatibility
 

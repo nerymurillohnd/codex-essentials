@@ -14,8 +14,6 @@ const setupNodeActionSha = "820762786026740c76f36085b0efc47a31fe5020";
 const dependencyReviewActionSha = "a1d282b36b6f3519aa1f3fc636f609c47dddb294";
 const codeqlActionSha = "cdf488f595d80d6e07e03d4674febd5ab45fa938";
 const actionlintActionSha = "03d0035246f3e81f36aed592ffb4bebf33a03106";
-const releaseChangelogBuilderActionSha =
-  "c9bcd8238b6f41e05561348339429d360b1c0247";
 const fullShaActionReference = /uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s|$)/u;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -69,6 +67,15 @@ function stepRuns(steps: readonly Record<string, unknown>[]): string[] {
   return steps
     .map((step) => step["run"])
     .filter((value): value is string => typeof value === "string");
+}
+
+function stepIndexByName(
+  steps: readonly Record<string, unknown>[],
+  stepName: string,
+): number {
+  const index = steps.findIndex((step) => step["name"] === stepName);
+  expect(index).toBeGreaterThanOrEqual(0);
+  return index;
 }
 
 function expectFullShaPins(workflowText: string): void {
@@ -355,6 +362,9 @@ describe("plugin release workflow contract", () => {
         "fetch-depth"
       ],
     ).toBe(0);
+    expect(
+      asRecord(checkoutStep["with"], "release validate checkout with")["ref"],
+    ).toBe("${{ env.RELEASE_TAG }}");
     expectNodeSetup(steps);
     expect(runs).toEqual(
       expect.arrayContaining([
@@ -364,9 +374,11 @@ describe("plugin release workflow contract", () => {
         "npm pack --dry-run",
       ]),
     );
+    expect(runs.join("\n")).toContain('git rev-parse "$RELEASE_TAG^{commit}"');
+    expect(runs.join("\n")).toContain("previous_release_tag=");
   });
 
-  it("creates only a draft release with contents write permission", () => {
+  it("creates only a verified draft release with explicit repository context", () => {
     const workflow = parseWorkflow("plugin-release.yml");
     const draftJob = asRecord(
       workflowJobs(workflow)["draft"],
@@ -379,19 +391,64 @@ describe("plugin release workflow contract", () => {
     const steps = jobSteps(draftJob, "release draft");
     const uses = stepUses(steps);
     const runs = stepRuns(steps).join("\n");
+    const env = asRecord(draftJob["env"], "release draft env");
 
     expect(draftJob["needs"]).toBe("validate");
     expect(draftJob["if"]).toBe("${{ success() }}");
     expect(permissions).toEqual({ contents: "write" });
-    expect(uses).toContain(
-      `mikepenz/release-changelog-builder-action@${releaseChangelogBuilderActionSha}`,
+    expect(env["GH_REPO"]).toBe("${{ github.repository }}");
+    expect(env["GH_TOKEN"]).toBe("${{ github.token }}");
+    expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
+    expect(runs).toContain('gh release view "$RELEASE_TAG" --repo "$GH_REPO"');
+    expect(runs).toContain(
+      'gh release create "$RELEASE_TAG" "$PLUGIN_ARCHIVE" --draft --verify-tag',
     );
-    expect(runs).toContain('gh release view "$RELEASE_TAG"');
-    expect(runs).toContain('gh release create "$RELEASE_TAG" --draft');
+    expect(runs).toContain('--repo "$GH_REPO"');
+    expect(runs).toContain("tar --sort=name");
+    expect(runs).toContain('shasum -a 256 "$PLUGIN_ARCHIVE"');
     expect(runs).toContain("Plugin version:");
-    expect(runs).toContain("Changelog source:");
+    expect(runs).toContain("Changelog source: plugins/");
     expect(runs).toContain("Artifact checksum:");
+    expect(runs).toContain("Source commit:");
+    expect(runs).toContain("Plugin tree:");
     expect(runs).toContain("Rollback:");
+  });
+
+  it("does not interpolate generated release content directly into shell", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const jobs = workflowJobs(workflow);
+    const draftSteps = jobSteps(
+      asRecord(jobs["draft"], "release draft job"),
+      "release draft",
+    );
+    const draftRuns = stepRuns(draftSteps);
+
+    expect(draftRuns.join("\n")).not.toContain(
+      "${{ steps.changelog.outputs.changelog }}",
+    );
+    expect(draftRuns.join("\n")).not.toMatch(
+      /\$\{\{\s*(?:github\.event|steps\.).*?\}\}/u,
+    );
+  });
+
+  it("checks out the release tag before file-backed draft metadata is created", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const draftJob = asRecord(
+      workflowJobs(workflow)["draft"],
+      "release draft job",
+    );
+    const steps = jobSteps(draftJob, "release draft");
+    const checkoutIndex = stepIndexByName(steps, "Check out release tag");
+    const archiveIndex = stepIndexByName(steps, "Build release archive");
+    const notesIndex = stepIndexByName(steps, "Write release metadata");
+    const checkoutStep = asRecord(steps[checkoutIndex], "draft checkout step");
+    const checkoutWith = asRecord(checkoutStep["with"], "draft checkout with");
+
+    expect(checkoutIndex).toBeLessThan(archiveIndex);
+    expect(checkoutIndex).toBeLessThan(notesIndex);
+    expect(checkoutWith["ref"]).toBe("${{ env.RELEASE_TAG }}");
+    expect(checkoutWith["fetch-depth"]).toBe(0);
+    expect(checkoutWith["persist-credentials"]).toBe(false);
   });
 
   it("publishes only through the protected release environment", () => {
@@ -410,6 +467,11 @@ describe("plugin release workflow contract", () => {
     expect(publishJob["if"]).toBe("${{ success() }}");
     expect(publishJob["environment"]).toBe("release");
     expect(permissions).toEqual({ contents: "write" });
-    expect(runs).toContain('gh release edit "$RELEASE_TAG" --draft=false');
+    expect(asRecord(publishJob["env"], "release publish env")["GH_REPO"]).toBe(
+      "${{ github.repository }}",
+    );
+    expect(runs).toContain(
+      'gh release edit "$RELEASE_TAG" --draft=false --latest=false --repo "$GH_REPO"',
+    );
   });
 });

@@ -8,6 +8,7 @@
 - Use the least-privileged available tool. Do not escalate to Chrome or desktop control when Browser or Playwright is sufficient.
 - Organization-level GitHub Projects mutations require an approved GitHub App or a token with Projects scope; the repository-scoped default Actions token is not sufficient. Keep `contents` and pull-request permissions read-only unless a release publication explicitly requires write access.
 - GitHub Actions security gates must use least privilege: dependency review adds
-  only `pull-requests: read`, CodeQL adds only `security-events: write`, and
-  release publication uses contents write only after release environment
-  approval.
+  only `pull-requests: read`, CodeQL adds only `security-events: write`, draft
+  release creation uses `contents: write` only to create an unpublished release
+  and attach the plugin archive, and final publication runs only after release
+  environment approval.
