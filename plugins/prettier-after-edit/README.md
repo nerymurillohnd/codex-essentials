@@ -83,7 +83,9 @@ Inputs:
 
 - Hook payload JSON from Codex on `PostToolUse`.
 - `tool_input.file_path`, `tool_input.path`, or `tool_input.file`.
-- `tool_input.command` fallback for `apply_patch` payloads.
+- `tool_input.command`.
+- Freeform `tool_input` string for `apply_patch` payloads containing
+  `*** Add File:` / `*** Update File:` directives.
 
 Outputs:
 

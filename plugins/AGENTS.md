@@ -74,3 +74,27 @@ sections from published releases. Release tags use
 `complete:*` preserves authored values while filling missing defaults. Never
 commit credentials or real secret values in plugin files; use `${VAR}`
 references and document required configuration instead.
+
+## Consistency and Drift Review
+
+Before merging any plugin change, verify these artifacts as one atomic set:
+
+- `.codex-plugin/plugin.json`
+- `README.md`
+- `CHANGELOG.md`
+- `.agents/plugins/marketplace.json`
+
+Required consistency checks:
+
+- `<plugin-id>` must match `plugin.json` name and marketplace `name`.
+- Marketplace registration path must be `./plugins/<plugin-id>`.
+- `README.md` version badge and `CHANGELOG.md` unreleased section should reflect
+  manifest/versioned intent.
+- Capability and installation claims in README should match actual files present
+  (`hooks`, `skills`, `references`, etc.) and runtime assumptions.
+- Any behavioral or compatibility change must appear in the Unreleased changelog
+  before the change is released.
+- Hook-path assumptions in docs must match runtime script behavior.
+
+When any of these checks fail, pause merge and fix docs/manifest/catalog together
+in the same change set.
