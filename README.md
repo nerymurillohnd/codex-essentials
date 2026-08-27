@@ -116,7 +116,7 @@ approval boundaries, rollback behavior, and troubleshooting:
 | ---------------------------------- | ------------------------------------------------------------------------------ |
 | `.agents/plugins/marketplace.json` | Required marketplace catalog and plugin ordering.                              |
 | `plugins/<plugin-id>/`             | Plugin packages; each requires `.codex-plugin/plugin.json`.                    |
-| `templates/`                       | JSON Schemas and product-documentation templates.                              |
+| `templates/`                       | JSON/YAML schemas and product-documentation templates.                         |
 | `.github/`                         | Issue forms, pull-request contract, release categories, and CI gates.          |
 | `scripts/`                         | CommonJS validators, generators, and typecheck wrapper.                        |
 | `tsconfig.scripts.json`            | Dedicated `checkJs` project for JavaScript, CJS, and MJS sources.              |
@@ -131,7 +131,11 @@ approval boundaries, rollback behavior, and troubleshooting:
 
 There is intentionally no repository-level `skills/` directory. Skills belong
 inside the plugin that distributes them, for example
-`plugins/example/skills/example-workflow/SKILL.md`.
+`plugins/example/skills/example-workflow/SKILL.md`. Every distributed skill
+also exposes its Codex agent metadata at
+`plugins/example/skills/example-workflow/agents/openai.yaml`; it provides the
+skill label, concise catalog description, and optional initial prompt, while
+`SKILL.md` remains the behavioral instruction source.
 
 The current manifest schema validates skills, apps, MCP integrations, and
 interface assets. Top-level `hooks` are intentionally outside this schema until
@@ -175,6 +179,7 @@ metadata and removing the corresponding release artifacts.
 - [GitHub Projects operations](docs/operations/github-project-template.md)
 - [Documentation automation decision](docs/decisions/adr-0004-documentation-and-maintenance-automation.md)
 - [Hooks and quality gates decision](docs/decisions/adr-0005-hooks-and-quality-gates.md)
+- [Skill agent manifests decision](docs/decisions/adr-0006-skill-agent-manifests.md)
 
 ## 🤝 Contribution Style
 
