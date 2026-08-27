@@ -1,0 +1,49 @@
+name: Plugin release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag in plugin/<plugin-id>/v<semver> format"
+        required: true
+        type: string
+  push:
+    tags:
+      - "plugin/**/v*"
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate release contract
+        run: node scripts/validate_release.cjs "$RELEASE_TAG"
+      - name: Build release notes
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247
+        with:
+          configuration: ".github/release.yml"
+          failOnError: true
+          fromTag: ${{ github.event.before }}
+          toTag: ${{ github.sha }}
+      - name: Publish draft release metadata
+        run: gh release create "$RELEASE_TAG" --draft --title "$RELEASE_TAG" --notes "$RELEASE_NOTES"
+        env:
+          RELEASE_NOTES: ${{ steps.changelog.outputs.changelog }}

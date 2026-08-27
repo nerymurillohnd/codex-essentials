@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "noEmitOnError": true,
+
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "declarationMap": true,
+    "isolatedDeclarations": true,
+
+    "emitDeclarationOnly": false,
+    "emitBOM": false,
+    "importHelpers": false,
+
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "newLine": "lf",
+
+    "noEmitHelpers": false,
+    "outDir": "./dist",
+    "removeComments": false,
+
+    "sourceMap": true,
+    "stripInternal": false
+  },
+  "include": [
+    "adapters/**/*.ts",
+    "config/**/*.ts",
+    "plugins/**/*.ts",
+    "types/**/*.d.ts"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "types": ["node"],
+    "skipLibCheck": true,
+    "noErrorTruncation": true
+  },
+  "include": [
+    "eslint.config.cjs",
+    "prettier.config.cjs",
+    "scripts/**/*.js",
+    "scripts/**/*.cjs",
+    "scripts/**/*.mjs"
+  ],
+  "exclude": ["node_modules", "coverage", "dist"]
+}

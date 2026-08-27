@@ -1,0 +1,11 @@
+.codex/
+.diagnostics/
+node_modules/
+.tmp/
+.ruff_cache/
+__pycache__/
+.vitest/
+coverage/
+dist/
+.env
+.DS_Store

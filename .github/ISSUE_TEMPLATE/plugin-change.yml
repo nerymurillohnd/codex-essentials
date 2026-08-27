@@ -1,0 +1,68 @@
+name: Plugin change
+description: Propose a product change to a marketplace plugin.
+title: "[Plugin] "
+labels:
+  - plugin-change
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the user-visible change. Do not include credentials or private data.
+  - type: input
+    id: plugin_id
+    attributes:
+      label: Plugin identifier
+      description: Use the exact plugins/<plugin-id> directory name.
+      placeholder: example-plugin
+    validations:
+      required: true
+  - type: dropdown
+    id: change_category
+    attributes:
+      label: Change category
+      options:
+        - Feature
+        - Fix
+        - Documentation
+        - Security
+        - Breaking change
+        - Maintenance
+    validations:
+      required: true
+  - type: textarea
+    id: user_impact
+    attributes:
+      label: User-visible impact
+      description: Explain behavior, inputs, outputs, and affected environments.
+    validations:
+      required: true
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Permissions and credentials
+      description: List changed permissions and credential variable names using ${VAR}; never provide values.
+    validations:
+      required: true
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation and changelog plan
+      description: Identify README.md sections and the CHANGELOG.md Unreleased entry that will change.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification evidence
+      description: List commands, expected results, and recovery tests.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety checks
+      options:
+        - label: I will not include real secrets or personal data.
+          required: true
+        - label: I will document human approval boundaries and rollback behavior.
+          required: true

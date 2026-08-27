@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "diagnostics": true,
+    "explainFiles": true,
+    "extendedDiagnostics": true,
+    "generateCpuProfile": "./.diagnostics/tsc.cpuprofile",
+    "generateTrace": "./.diagnostics/tsc-trace",
+    "listEmittedFiles": true,
+    "listFiles": true,
+    "noCheck": false,
+    "traceResolution": true
+  }
+}

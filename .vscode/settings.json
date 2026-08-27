@@ -1,0 +1,26 @@
+{
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+  "js/ts.experimental.useTsgo": false,
+  "js/ts.format.enabled": false,
+  "js/ts.tsserver.automaticTypeAcquisition.enabled": false,
+  "js/ts.preferences.preferTypeOnlyAutoImports": true,
+  "js/ts.preferences.useAliasesForRenames": true,
+  "js/ts.preferences.autoImportFileExcludePatterns": [
+    "**/.astro/**",
+    "**/.wrangler/**",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/node_modules/**"
+  ],
+  "js/ts.suggest.autoImports": true,
+  "js/ts.suggest.completeFunctionCalls": true,
+  "js/ts.referencesCodeLens.enabled": true,
+  "js/ts.implementationsCodeLens.enabled": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnPaste.enabled": true,
+  "js/ts.preferences.quoteStyle": "double",
+  "js/ts.tsserver.maxMemory": 8192,
+  "vitest.rootConfig": "./vitest.config.ts",
+  "vitest.ignoreWorkspace": true,
+  "vitest.applyDiagnostic": true
+}

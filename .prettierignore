@@ -1,0 +1,8 @@
+.codex/
+.diagnostics/
+node_modules/
+.tmp/
+.env
+.DS_Store
+package-lock.json
+./*/**.py

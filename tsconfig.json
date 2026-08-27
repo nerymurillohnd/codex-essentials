@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
+
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "strictBuiltinIteratorReturn": true,
+
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": true,
+
+    "allowJs": false,
+    "checkJs": false,
+    "maxNodeModuleJsDepth": 0,
+    "types": ["node"],
+
+    "noEmit": true,
+    "noEmitOnError": true,
+
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "emitBOM": false,
+    "importHelpers": false,
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "newLine": "lf",
+    "noEmitHelpers": false,
+    "outDir": "./dist",
+    "removeComments": false,
+    "sourceMap": false,
+    "stripInternal": false,
+
+    "diagnostics": false,
+    "explainFiles": false,
+    "extendedDiagnostics": false,
+    "listEmittedFiles": false,
+    "listFiles": false,
+    "noCheck": false,
+    "traceResolution": false,
+
+    "noErrorTruncation": true,
+    "preserveWatchOutput": true,
+    "pretty": true,
+
+    "skipDefaultLibCheck": false,
+    "skipLibCheck": false
+  },
+  "include": [
+    "adapters/**/*.ts",
+    "config/**/*.ts",
+    "plugins/**/*.ts",
+    "tests/**/*.ts",
+    "types/**/*.d.ts",
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "scripts/**/*.cjs",
+    "scripts/**/*.mjs",
+    "tests/**/*.mjs",
+    "*.config.cjs",
+    "*.config.mjs"
+  ]
+}
