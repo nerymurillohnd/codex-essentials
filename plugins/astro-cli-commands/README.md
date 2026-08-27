@@ -154,17 +154,10 @@ preferences or telemetry, or starting and stopping unrelated servers.
 
 ## 📦 Installation Behavior
 
-The public marketplace installation is:
+Install from the public marketplace:
 
 ```bash
 codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
-codex plugin add astro-cli-commands@codex-essentials
-```
-
-For local authoring:
-
-```bash
-codex plugin marketplace add /absolute/path/to/codex-essentials
 codex plugin add astro-cli-commands@codex-essentials
 ```
 

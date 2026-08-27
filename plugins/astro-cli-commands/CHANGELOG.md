@@ -30,6 +30,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Documentation]** Added human-facing visual hierarchy and section
   icons to the product README while keeping operational agent instructions
   unchanged.
+- **[Area: Documentation]** Removed maintainer-only local authoring commands
+  from the public product and marketplace README guidance.
 
 ### Changed
 
