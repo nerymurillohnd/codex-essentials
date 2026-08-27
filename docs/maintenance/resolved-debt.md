@@ -25,3 +25,13 @@ Move completed maintenance items here with the resolution date and verification 
   configuration, documentation gates, per-plugin release validation, and a
   dry-run/idempotent Projects bootstrap helper. Verified with the repository
   format, lint, typecheck, Vitest coverage, and manifest validation gates.
+- 2026-08-27 — Updated all GitHub Actions workflows to the current
+  Node.js-24-compatible releases: `actions/checkout` `v7.0.1` and
+  `actions/setup-node` `v7.0.0`, both pinned to immutable commit SHAs. Kept
+  explicit `node-version: "24"` selection and documented the 2026-09-23
+  Node.js 20 removal deadline and runner compatibility constraints. Verified
+  with workflow contract tests and the complete repository quality gate.
+- 2026-08-27 — Normalized repository ignore policy for generated Husky internals,
+  diagnostics output, Python caches, build output, and operating-system files.
+  Removed local `.DS_Store` files and documented that authored hooks are linted
+  separately from generated `.husky/_/*` infrastructure.

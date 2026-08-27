@@ -1,11 +1,21 @@
+# Local Codex and diagnostics state
 .codex/
 .diagnostics/
-node_modules/
 .tmp/
-.ruff_cache/
-__pycache__/
+
+# Dependencies and build/test output
+node_modules/
 .vitest/
 coverage/
 dist/
+
+# Generated hook internals
+.husky/_/
+
+# Python tooling caches
+.ruff_cache/
+__pycache__/
+
+# Local credentials and operating-system files
 .env
 .DS_Store

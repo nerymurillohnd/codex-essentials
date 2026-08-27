@@ -76,12 +76,24 @@ npm test -- --coverage
 npm run validate:all
 ```
 
-The release workflow uses pinned immutable action commits:
+The release and validation workflows use pinned immutable action commits. The
+pins were reviewed against the upstream release pages on 2026-08-27:
 
-- `actions/checkout` `v4.2.2` → `11bd71901bbe5b1630ceea73d27597364c9af683`
-- `actions/setup-node` `v4.4.0` → `49933ea5288caeca8642d1e84afbd3f7d6820020`
-- `mikepenz/release-changelog-builder-action` `v6.2.3` →
-  `c9bcd8238b6f41e05561348339429d360b1c0247`
+- `actions/checkout` `v7.0.1` → `3d3c42e5aac5ba805825da76410c181273ba90b1`
+- `actions/setup-node` `v7.0.0` → `820762786026740c76f36085b0efc47a31fe5020`
+
+Plugin release notes are built from the curated plugin `CHANGELOG.md`, not from
+generated pull-request metadata. Release drafts attach a deterministic archive
+of the target plugin and record the validated tag commit, plugin tree SHA, and
+archive checksum.
+
+GitHub's current runner migration notice states that Node.js 24 became the
+default on 2026-06-16 and Node.js 20 is scheduled for removal on 2026-09-23.
+All workflows therefore select Node.js 24 explicitly and use the latest
+Node.js-24-compatible action majors. The workflows run on `ubuntu-latest`;
+contributors maintaining self-hosted runners must provide the runner version
+required by these action releases. Node.js 24 does not support macOS 13.4 or
+older, or ARM32 runners.
 
 ## Pros and Cons of the Options
 
@@ -108,3 +120,6 @@ The release workflow uses pinned immutable action commits:
 - [Automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)
 - [GitHub Projects automation](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project)
 - [Organization Project templates](https://docs.github.com/en/issues/planning-and-tracking-with-projects/managing-your-project/managing-project-templates-in-your-organization)
+- [actions/checkout releases](https://github.com/actions/checkout/releases)
+- [actions/setup-node releases](https://github.com/actions/setup-node/releases)
+- [Node.js 20 deprecation on GitHub Actions runners](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/)

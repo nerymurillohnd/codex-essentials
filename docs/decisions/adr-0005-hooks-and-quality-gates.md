@@ -25,9 +25,15 @@ side by side.
 ## Decision
 
 Use Husky 9.1.7 for the local `pre-commit` hook and run lint-staged directly
-with `npx --no-install lint-staged`. The hook intentionally uses the no-shim
-format and does not source `_/husky.sh`, so it is compatible with Husky's
-documented removal of the legacy shim in a future major release.
+with `npx --no-install lint-staged`. The hook intentionally uses minimal POSIX
+shell with `#!/usr/bin/env sh` and the no-shim format. It does not source
+`_/husky.sh`, so it is compatible with Husky's documented removal of the legacy
+shim in a future major release.
+
+Treat `.husky/_/*` as generated Husky infrastructure, not authored repository
+hook logic. Do not edit `.husky/_/husky.sh` to satisfy linters; exclude
+`.husky/_/` from repository ignore/formatting scopes and lint only the authored
+hook files such as `.husky/pre-commit`.
 
 CI remains the source of truth. The quality workflow exposes separate gates for
 formatting, ESLint, TypeScript 7 native typechecking, script typechecking,
@@ -56,6 +62,8 @@ publishes only after release environment approval through the protected
 
 - Good: contributors get fast local formatting/lint feedback while CI remains
   independently reproducible.
+- Good: the authored hook stays portable and ShellCheck-clean without modifying
+  generated Husky internals.
 - Good: protected branches can require one stable aggregator while still showing
   detailed job results.
 - Good: release validation is tied to the exact tag being published, and the
@@ -91,6 +99,8 @@ Disable the local hook by reverting `.husky/pre-commit`, removing the
 reverting the workflow commits or temporarily removing the affected check from
 branch protection. Roll back a plugin release by restoring the previous
 marketplace metadata, deleting the GitHub release, and deleting the release tag.
+Generated `.husky/_/*` files can be recreated by rerunning the Husky `prepare`
+step.
 
 ## Verification
 
