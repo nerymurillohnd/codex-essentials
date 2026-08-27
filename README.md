@@ -7,15 +7,15 @@ distributable Codex plugins. It provides the catalog, schemas, generators,
 validators, documentation, and quality gates needed to publish reusable skills,
 MCP integrations, and supporting assets.
 
-> **Current status:** the marketplace scaffold is ready, but `plugins/` is
-> currently empty. No installable plugin is published in this repository yet.
+> **Current status:** the marketplace publishes its first installable plugin:
+> `Astro Commandments` (`astro-cli-commands`).
 
 ## 👤 Ownership and Repository
 
 - **Owner:** Nery Samuel Murillo
 - **GitHub:** [@nerymurillohnd](https://github.com/nerymurillohnd)
 - **Declared repository:** [nerymurillohnd/codex-essentials](https://github.com/nerymurillohnd/codex-essentials)
-- **Configured Git remote:** none in this checkout as of 2026-08-27.
+- **Configured Git remote:** `https://github.com/nerymurillohnd/codex-essentials.git`.
 - **License:** [MIT](LICENSE.md)
 
 ## 📦 Install the Marketplace
@@ -29,8 +29,8 @@ codex plugin marketplace list
 ```
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install an available plugin. Because the catalog is currently
-empty, this step becomes useful as soon as the first plugin is added.
+Essentials**, and install **Astro Commandments** (`astro-cli-commands`) or
+another available plugin.
 
 For local authoring and testing, register a checkout instead:
 

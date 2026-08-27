@@ -3,5 +3,18 @@
   "interface": {
     "displayName": "Codex Essentials"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "astro-cli-commands",
+      "source": {
+        "source": "local",
+        "path": "./plugins/astro-cli-commands"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
 }
