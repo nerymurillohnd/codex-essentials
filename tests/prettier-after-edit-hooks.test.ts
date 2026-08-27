@@ -414,4 +414,58 @@ echo first > '${usedPrettierText(fixture)}'`,
       rmSync(fixture, { recursive: true, force: true });
     }
   });
+
+  it("extracts the first Add/Update entry from apply_patch freeform payload", () => {
+    const fixture = createFixture();
+    const workspace = path.join(fixture, "project");
+    const jqStubPath = createJqStub(fixture);
+    createFixtureFile(workspace, "first.js", "function demo( ) {return 1}\n");
+    createFixtureFile(workspace, "second.js", "function demo( ) {return 1}\n");
+    const localPrettier = path.join(
+      workspace,
+      "node_modules",
+      ".bin",
+      "prettier",
+    );
+    fs.mkdirSync(path.dirname(localPrettier), { recursive: true });
+    createExecutable(
+      localPrettier,
+      `#!/usr/bin/env bash
+echo first > '${usedPrettierText(fixture)}'`,
+    );
+
+    const patchPayload = [
+      "*** Begin Patch",
+      "*** Add File: second.js",
+      "+++",
+      "*** Update File: first.js",
+      "---",
+    ].join("\n");
+
+    const hookPath = path.join(
+      path.resolve("."),
+      "plugins/prettier-after-edit/hooks/prettier-format.sh",
+    );
+    const result = runHook(
+      hookPath,
+      {
+        cwd: workspace,
+        tool_input: patchPayload,
+      },
+      fixture,
+      `${path.join(fixture, ".bin")}:${path.dirname(jqStubPath)}:/bin`,
+    );
+
+    try {
+      expect(result.status).toBe(0);
+      expect(fs.readFileSync(usedPrettierText(fixture), "utf8")).toBe(
+        "first\n",
+      );
+      expect(result.stdout).toContain(
+        "prettier-after-edit: formatted second.js.",
+      );
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
 });

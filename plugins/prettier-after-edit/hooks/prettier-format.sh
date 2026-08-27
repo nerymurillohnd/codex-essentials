@@ -23,7 +23,13 @@ cwd="$(printf '%s' "${parsed_input}" | jq -r '.cwd // empty' 2>/dev/null || true
 
 file="$(printf '%s' "${parsed_input}" | jq -r '.tool_input.file_path // .tool_input.path // .tool_input.file // empty' 2>/dev/null || true)"
 if [[ -z "${file}" ]]; then
-	command_payload="$(printf '%s' "${parsed_input}" | jq -r '.tool_input.command // empty' 2>/dev/null || true)"
+	command_payload="$(printf '%s' "${parsed_input}" | jq -r '
+	  if (.tool_input | type) == "string" then
+	    .tool_input
+	  else
+	    .tool_input.command // ""
+	  end
+	' 2>/dev/null || true)"
 	while IFS= read -r line; do
 		case "${line}" in
 		"*** Add File: "*)

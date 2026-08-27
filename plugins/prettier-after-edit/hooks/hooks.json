@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${PLUGIN_ROOT}/hooks/prettier-format.sh\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}/hooks/prettier-format.sh\"",
             "timeout": 30,
             "statusMessage": "Formatting with Prettier"
           }
