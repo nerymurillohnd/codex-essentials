@@ -14,8 +14,8 @@ MCP integrations, and supporting assets.
 
 - **Owner:** Nery Samuel Murillo
 - **GitHub:** [@nerymurillohnd](https://github.com/nerymurillohnd)
-- **Repository:** [nerymurillohnd/codex-essentials](https://github.com/nerymurillohnd/codex-essentials)
-- **Remote URL:** `https://github.com/nerymurillohnd/codex-essentials.git`
+- **Declared repository:** [nerymurillohnd/codex-essentials](https://github.com/nerymurillohnd/codex-essentials)
+- **Configured Git remote:** none in this checkout as of 2026-08-27.
 - **License:** [MIT](LICENSE.md)
 
 ## 📦 Install the Marketplace
@@ -87,12 +87,39 @@ npm run validate:release -- plugin/<plugin-id>/v<semver> # Release contract
 npm run check           # Complete quality gate
 ```
 
+The policy is literal: local hooks are advisory; CI is authoritative. Husky installs a no-shim
+pre-commit hook that runs `npx --no-install lint-staged` for staged files.
+Authorized emergency bypasses use `HUSKY=0` or `--no-verify`; HUSKY=0 in CI
+keeps npm installation reproducible and prevents local hook side effects.
+
+Required quality commands:
+
+```bash
+npm run format:check
+npm run lint -- --max-warnings=0
+npm run typecheck
+npm run typecheck:scripts
+npx tsc6 --noEmit
+npm test
+npm run validate:all
+npm run validate:release
+actionlint .github/workflows/*.yml
+git diff --check
+```
+
 The repository keeps TypeScript 7 and TypeScript 6 side by side:
 
 ```bash
 npx tsc --noEmit        # Native TypeScript 7 compiler
 npx tsc6 --noEmit       # TypeScript 6 compiler/API compatibility path
 ```
+
+GitHub Actions use Node 24, full SHA pins for third-party actions, separate
+quality jobs, and a stable `required` aggregator for branch-protection required
+checks. Release publication requires release environment approval through the
+protected `release` environment. Rollback for a plugin release means restoring
+the prior marketplace metadata, deleting the GitHub release, and deleting the
+release tag.
 
 To scaffold content, use the repository generators:
 
@@ -114,6 +141,7 @@ npm run complete:plugin -- example-plugin
 - [Maintenance records](docs/maintenance/)
 - [GitHub Projects operations](docs/operations/github-project-template.md)
 - [Documentation automation decision](docs/decisions/adr-0004-documentation-and-maintenance-automation.md)
+- [Hooks and quality gates decision](docs/decisions/adr-0005-hooks-and-quality-gates.md)
 
 ## 🤝 Contribution Style
 

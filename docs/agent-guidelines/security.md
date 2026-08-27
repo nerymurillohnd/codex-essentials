@@ -7,3 +7,7 @@
 - Keep manifests, fixtures, documentation, and generated output free of credentials. Validate every local path remains inside the repository before reading or writing it.
 - Use the least-privileged available tool. Do not escalate to Chrome or desktop control when Browser or Playwright is sufficient.
 - Organization-level GitHub Projects mutations require an approved GitHub App or a token with Projects scope; the repository-scoped default Actions token is not sufficient. Keep `contents` and pull-request permissions read-only unless a release publication explicitly requires write access.
+- GitHub Actions security gates must use least privilege: dependency review adds
+  only `pull-requests: read`, CodeQL adds only `security-events: write`, and
+  release publication uses contents write only after release environment
+  approval.
