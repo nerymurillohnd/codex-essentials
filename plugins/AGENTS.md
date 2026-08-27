@@ -32,7 +32,8 @@ exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
   `interface.default_prompt` may frame the first request; it must not repeat
   the skill's operating procedure.
 - Agent icon paths are optional. When declared, keep them `./assets/`-relative
-  and inside the owning skill directory. Do not add unsupported YAML fields,
+  and resolving inside the owning skill directory, including after symbolic-link
+  canonicalization. Do not add unsupported YAML fields,
   use traversal paths, or place credentials in agent metadata.
 - Declare `apps` as `./.app.json` and `mcpServers` as `./.mcp.json` only when
   those files exist; inline MCP definitions are also permitted by the schema.

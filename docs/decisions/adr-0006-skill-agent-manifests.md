@@ -59,7 +59,8 @@ initial task framing. `interface.icon_small`, `interface.icon_large`, and
 `policy.allow_implicit_invocation` are optional supported metadata. They are
 not required merely to make a skill valid. The manifest must use only these
 declared fields, prevent traversal in icon paths, and resolve declared icons
-inside the owning skill directory.
+inside the owning skill directory after canonicalizing symbolic links. A
+symbolic link is permitted only when its real target remains inside that skill.
 
 `SKILL.md` remains the behavior and operating-instruction source. The agent
 manifest is metadata and prompt bootstrap only; it must not duplicate long

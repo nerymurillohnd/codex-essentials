@@ -80,6 +80,7 @@ interface ValidationModule {
   main(): void;
   parseArgs(argv: string[]): { root: string; scope: string };
   relativePath(root: string, target: string): string;
+  resolvesInside(root: string, target: string): boolean;
   resolveInside(root: string, rawPath: unknown): string | undefined;
   validateAgainstSchema(
     schema: unknown,
@@ -444,7 +445,9 @@ describe("manifest validator internals", () => {
       expect(result.errors.join("\n")).toContain("missing .app.json");
       expect(result.errors.join("\n")).toContain("missing .mcp.json");
       expect(result.errors.join("\n")).toContain("must stay under ./assets/");
-      expect(result.errors.join("\n")).toContain("missing file");
+      expect(result.errors.join("\n")).toContain(
+        "must resolve to a file inside the owning plugin directory",
+      );
 
       const hidden = path.join(root, "plugins", ".hidden");
       fs.mkdirSync(hidden);
@@ -530,7 +533,7 @@ describe("manifest validator internals", () => {
 
       const missingResult = validate.validatePlugins(root);
       expect(missingResult.errors.join("\n")).toContain(
-        "skills/agent-skill/agents/openai.yaml is missing",
+        "skills/agent-skill/agents/openai.yaml is missing, not a file, or resolves outside the owning skill directory",
       );
 
       const agentPath = path.join(skillRoot, "agents", "openai.yaml");
@@ -569,7 +572,7 @@ describe("manifest validator internals", () => {
       );
       const missingAssetResult = validate.validatePlugins(root);
       expect(missingAssetResult.errors.join("\n")).toContain(
-        "skills/agent-skill/agents/openai.yaml.interface.icon_large points to a missing file",
+        "skills/agent-skill/agents/openai.yaml.interface.icon_large must resolve to a file inside the owning skill directory",
       );
 
       writeText(path.join(skillRoot, "assets", "icon.png"), "png");
@@ -597,6 +600,43 @@ describe("manifest validator internals", () => {
       writeText(agentPath, "interface: not-an-object\n");
       expect(validate.validatePlugins(root).errors.join("\n")).toContain(
         "must be object",
+      );
+
+      writeText(
+        agentPath,
+        [
+          "interface:",
+          "  display_name: Agent Skill",
+          "  short_description: Valid description",
+          "  icon_large: ./assets/icon.png",
+          "",
+        ].join("\n"),
+      );
+      const outsideIcon = path.join(root, "outside.png");
+      writeText(outsideIcon, "png");
+      const iconPath = path.join(skillRoot, "assets", "icon.png");
+      fs.rmSync(iconPath);
+      fs.symlinkSync(outsideIcon, iconPath);
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml.interface.icon_large must resolve to a file inside the owning skill directory",
+      );
+
+      fs.unlinkSync(iconPath);
+      writeText(iconPath, "png");
+      const outsideAgent = path.join(root, "outside.yaml");
+      writeText(
+        outsideAgent,
+        [
+          "interface:",
+          "  display_name: External Agent",
+          "  short_description: External metadata",
+          "",
+        ].join("\n"),
+      );
+      fs.rmSync(agentPath);
+      fs.symlinkSync(outsideAgent, agentPath);
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml is missing, not a file, or resolves outside the owning skill directory",
       );
     } finally {
       removeFixture(root);
@@ -633,6 +673,16 @@ describe("manifest validator internals", () => {
         root,
         pluginRoot,
         { interface: { screenshots: [42] } },
+        path.join(pluginRoot, ".codex-plugin", "plugin.json"),
+        filesystemErrors,
+      );
+      expect(filesystemErrors).toEqual([]);
+
+      writeText(path.join(pluginRoot, "assets", "screenshot.png"), "png");
+      validate.validatePluginFilesystem(
+        root,
+        pluginRoot,
+        { interface: { screenshots: ["./assets/screenshot.png"] } },
         path.join(pluginRoot, ".codex-plugin", "plugin.json"),
         filesystemErrors,
       );
@@ -712,6 +762,9 @@ describe("manifest validator internals", () => {
     expect(validate.resolveInside("/tmp/root", 42)).toBeUndefined();
     expect(validate.resolveInside("/tmp/root", "./../outside")).toBeUndefined();
     expect(validate.relativePath("/tmp/root", "/tmp/root")).toBe(".");
+    expect(validate.resolvesInside("/tmp/root", "/tmp/root/missing-file")).toBe(
+      false,
+    );
     const assetErrors: string[] = [];
     validate.checkAsset("/tmp/root", 42, "asset", assetErrors);
     expect(assetErrors).toContain("asset must stay under ./assets/");

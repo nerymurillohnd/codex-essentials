@@ -316,9 +316,13 @@ function validatePluginSkillAgents(pluginRoot, agentSchema, errors) {
       AGENTS_DIRECTORY,
       AGENT_MANIFEST_FILE,
     );
-    if (!fs.existsSync(agentPath) || !fs.statSync(agentPath).isFile()) {
+    const hasContainedAgentManifest =
+      fs.existsSync(agentPath) &&
+      fs.statSync(agentPath).isFile() &&
+      resolvesInside(skillRoot, agentPath);
+    if (!hasContainedAgentManifest) {
       errors.push(
-        `${relativePath(pluginRoot, agentPath)} is missing for ${relativePath(pluginRoot, skillPath)}`,
+        `${relativePath(pluginRoot, agentPath)} is missing, not a file, or resolves outside the owning skill directory for ${relativePath(pluginRoot, skillPath)}`,
       );
       continue;
     }
@@ -339,6 +343,7 @@ function validatePluginSkillAgents(pluginRoot, agentSchema, errors) {
           interfacePayload[field],
           `${relativePath(pluginRoot, agentPath)}.interface.${field}`,
           errors,
+          "owning skill directory",
         );
       }
     }
@@ -485,7 +490,13 @@ function validatePluginFilesystem(
   }
 }
 
-function checkAsset(pluginRoot, rawPath, location, errors) {
+function checkAsset(
+  pluginRoot,
+  rawPath,
+  location,
+  errors,
+  owner = "owning plugin directory",
+) {
   const assetPath = resolveInside(pluginRoot, rawPath);
   const relativeAssetPath =
     assetPath === undefined ? undefined : path.relative(pluginRoot, assetPath);
@@ -500,8 +511,22 @@ function checkAsset(pluginRoot, rawPath, location, errors) {
     errors.push(`${location} must stay under ./${ASSETS_DIRECTORY}/`);
     return;
   }
-  if (!fs.existsSync(assetPath) || !fs.statSync(assetPath).isFile()) {
-    errors.push(`${location} points to a missing file`);
+  const isContainedFile =
+    fs.existsSync(assetPath) &&
+    fs.statSync(assetPath).isFile() &&
+    resolvesInside(pluginRoot, assetPath);
+  if (!isContainedFile) {
+    errors.push(`${location} must resolve to a file inside the ${owner}`);
+  }
+}
+
+function resolvesInside(root, target) {
+  try {
+    const resolvedRoot = fs.realpathSync(root);
+    const resolvedTarget = fs.realpathSync(target);
+    return resolvedTarget.startsWith(`${resolvedRoot}${path.sep}`);
+  } catch {
+    return false;
   }
 }
 
@@ -605,6 +630,7 @@ module.exports = {
   main,
   parseArgs,
   relativePath,
+  resolvesInside,
   resolveInside,
   validateAgainstSchema,
   validateMarketplace,
