@@ -35,8 +35,20 @@ function createExecutable(filePath: string, content: string): void {
 }
 
 function createJqStub(fixture: string): string {
-  const systemJq =
-    process.platform === "darwin" ? "/opt/homebrew/bin/jq" : "/usr/bin/jq";
+  let systemJq = "";
+  try {
+    systemJq = childProcess
+      .execSync("command -v jq", {
+        encoding: "utf8",
+        shell: "/bin/bash",
+      })
+      .trim();
+  } catch {
+    systemJq = "/usr/bin/jq";
+  }
+  if (!systemJq) {
+    systemJq = "/usr/bin/jq";
+  }
   const stub = path.join(fixture, ".bin", "jq");
   createExecutable(
     stub,
@@ -215,7 +227,7 @@ echo "$@" > '${prettierArgsText(fixture)}'`,
   it("skips when no prettier binary is available", () => {
     const fixture = createFixture();
     const workspace = path.join(fixture, "project");
-    createJqStub(fixture);
+    const jqStubPath = createJqStub(fixture);
     createFixtureFile(
       workspace,
       "src/index.js",
@@ -235,13 +247,57 @@ echo "$@" > '${prettierArgsText(fixture)}'`,
         },
       },
       fixture,
-      `${path.join(fixture, ".bin")}:/bin`,
+      `${path.join(fixture, ".bin")}:${path.dirname(jqStubPath)}:/bin`,
     );
 
     try {
       expect(result.status).toBe(0);
       expect(result.stdout).toContain(
         "prettier-after-edit: skipped; prettier not found.",
+      );
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
+
+  it("skips when jq is not available", () => {
+    const fixture = createFixture();
+    const workspace = path.join(fixture, "project");
+    const noJqBin = path.join(fixture, "no-jq-bin");
+    fs.mkdirSync(noJqBin, { recursive: true });
+    const hostCat = childProcess
+      .execSync("command -v cat", {
+        encoding: "utf8",
+        shell: "/bin/bash",
+      })
+      .trim();
+    fs.symlinkSync(hostCat, path.join(noJqBin, "cat"));
+    createFixtureFile(
+      workspace,
+      "src/index.js",
+      "function demo( ) {return 1}\n",
+    );
+
+    const hookPath = path.join(
+      path.resolve("."),
+      "plugins/prettier-after-edit/hooks/prettier-format.sh",
+    );
+    const result = runHook(
+      hookPath,
+      {
+        cwd: workspace,
+        tool_input: {
+          file_path: "src/index.js",
+        },
+      },
+      fixture,
+      noJqBin,
+    );
+
+    try {
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain(
+        "prettier-after-edit: skipped; jq not found.",
       );
     } finally {
       rmSync(fixture, { recursive: true, force: true });
