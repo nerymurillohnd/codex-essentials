@@ -1,5 +1,11 @@
 # Astro Commands
 
+![Astro](https://img.shields.io/badge/Astro-Commands-ff5d01.svg)
+![Plugin version](https://img.shields.io/badge/version-0.1.0-111827.svg)
+
+> A command-first operating guide that helps Codex use Astro's own capabilities
+> before reaching for custom scripts or improvised configuration.
+
 ## Purpose
 
 Astro Commands gives Codex a maintained, command-first operating contract
@@ -11,6 +17,33 @@ preserves framework-managed behavior, and makes version drift visible.
 The plugin is intended for developers and operators who use Codex to inspect,
 build, test, preview, or debug Astro applications.
 
+| If you are...             | Astro Commands helps you...                                          |
+| ------------------------- | -------------------------------------------------------------------- |
+| Building an Astro feature | Find the framework command that already supports the operation.      |
+| Debugging a CLI failure   | Separate version drift, unsupported flags, and missing dependencies. |
+| Running local development | Use Astro's tracked server lifecycle instead of orphaned processes.  |
+| Preparing CI              | Choose the right diagnostic and failure thresholds for the build.    |
+
+## Quick Start
+
+Install the marketplace and this plugin from any Codex environment:
+
+```bash
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
+codex plugin add astro-cli-commands@codex-essentials
+```
+
+Confirm that Codex can see both entries:
+
+```bash
+codex plugin marketplace list
+codex plugin list
+```
+
+Open an Astro project and ask Codex to perform a task. Astro Commands will
+first establish the local CLI contract, then select the supported command,
+explain important flags, and verify the result.
+
 ## Included Components
 
 - `.codex-plugin/plugin.json` manifest for marketplace discovery.
@@ -20,6 +53,17 @@ build, test, preview, or debug Astro applications.
 - `skills/astro-commands/references/operations.md` operating conventions.
 
 This release ships no hooks, scripts, MCP servers, apps, or visual assets.
+
+## Reference Library
+
+The Skill is the entry point; these references provide the supporting detail:
+
+| Reference                                                         | Read it when you need to...                                                                 |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [`SKILL.md`](skills/astro-commands/SKILL.md)                      | Decide which Astro command or workflow to use first.                                        |
+| [`commands.md`](skills/astro-commands/references/commands.md)     | Review commands, exit behavior, server controls, preferences, telemetry, or key generation. |
+| [`flags.md`](skills/astro-commands/references/flags.md)           | Check flag scope, defaults, compatibility, and interactions.                                |
+| [`operations.md`](skills/astro-commands/references/operations.md) | Apply package-manager, CI, server, lock-file, secret, and configuration conventions.        |
 
 ## Supported Environments
 
@@ -136,6 +180,34 @@ codex plugin add astro-cli-commands@codex-essentials
 Codex reads `plugins/astro-cli-commands/.codex-plugin/plugin.json` and caches
 the skill files under its configured plugin cache. The marketplace entry uses
 `policy.installation: "AVAILABLE"` and `policy.authentication: "ON_INSTALL"`.
+
+### Update the Marketplace
+
+```bash
+codex plugin marketplace update codex-essentials
+codex plugin list
+```
+
+The marketplace is the update channel. Refreshing it makes newer plugin
+metadata available; it does not install Astro, change an Astro project, or
+replace that project's package manager.
+
+### Remove the Plugin or Marketplace
+
+Remove only Astro Commands:
+
+```bash
+codex plugin remove astro-cli-commands@codex-essentials
+```
+
+Remove the marketplace registration as well:
+
+```bash
+codex plugin marketplace remove codex-essentials
+```
+
+Removing the plugin affects Codex's instructions only. It does not delete
+Astro projects, `node_modules`, build output, server state, or user settings.
 
 ## Uninstall and Rollback Behavior
 

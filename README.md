@@ -10,6 +10,35 @@ MCP integrations, and supporting assets.
 > **Current status:** the marketplace publishes its first installable plugin:
 > `Astro Commands` (`astro-cli-commands`).
 
+## ✨ Start Here
+
+Codex Essentials is the distribution layer. Its own `npm` dependencies maintain
+the catalog and quality gates; they are **not installed into every user's
+Astro project**. Users add the remote marketplace and install only the plugins
+they need.
+
+| Product            | Purpose                                                                                          | Install ID           |
+| ------------------ | ------------------------------------------------------------------------------------------------ | -------------------- |
+| **Astro Commands** | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands` |
+
+### Install the Marketplace
+
+```bash
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
+codex plugin marketplace list
+```
+
+### Install Astro Commands
+
+```bash
+codex plugin add astro-cli-commands@codex-essentials
+codex plugin list
+```
+
+Then open an Astro project in Codex and ask for the work you need. The plugin
+can activate automatically for Astro-focused tasks, or you can request
+**Astro Commands** directly.
+
 ## 👤 Ownership and Repository
 
 - **Owner:** Nery Samuel Murillo
@@ -18,7 +47,7 @@ MCP integrations, and supporting assets.
 - **Configured Git remote:** `https://github.com/nerymurillohnd/codex-essentials.git`.
 - **License:** [MIT](LICENSE.md)
 
-## 📦 Install the Marketplace
+## 📦 Marketplace Lifecycle
 
 Codex can track a repository marketplace directly from its Git remote. The
 `--ref` option pins the source to a branch or tag:
@@ -29,8 +58,26 @@ codex plugin marketplace list
 ```
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install **Astro Commands** (`astro-cli-commands`) or
-another available plugin.
+Essentials**, and install **Astro Commands** (`astro-cli-commands`) or another
+available plugin.
+
+Refresh the marketplace metadata when you want to discover catalog changes:
+
+```bash
+codex plugin marketplace update codex-essentials
+```
+
+Remove only the plugin:
+
+```bash
+codex plugin remove astro-cli-commands@codex-essentials
+```
+
+Remove the marketplace registration:
+
+```bash
+codex plugin marketplace remove codex-essentials
+```
 
 For local authoring and testing, register a checkout instead:
 
@@ -44,6 +91,10 @@ relative to `.agents/plugins/`.
 
 See the [official Codex plugin packaging guide](https://developers.openai.com/plugins/build/plugins)
 for current marketplace, plugin, path, and distribution behavior.
+
+For the complete product explanation, installation guide, references, approval
+boundaries, rollback behavior, and troubleshooting, read the [Astro Commands
+product README](plugins/astro-cli-commands/README.md).
 
 ## 🗂️ Directory Reference
 
@@ -72,64 +123,29 @@ The current manifest schema validates skills, apps, MCP integrations, and
 interface assets. Top-level `hooks` are intentionally outside this schema until
 the repository validator and the supported Codex packaging contract are aligned.
 
-## 🛠️ Development
+## 🛠️ For Contributors
+
+The repository includes local generators, validators, documentation gates, and
+release checks for maintaining marketplace products. Start with:
 
 ```bash
 npm install
-npm run format          # Write Prettier formatting
-npm run lint            # Lint JavaScript runtime files
-npm run typecheck       # TypeScript 7 strict no-emit check
-npm run typecheck:scripts # Check JavaScript files with @ts-check
-npm test                # Vitest with coverage
-npm run validate:all    # Validate catalog, schemas, and plugin directories
-npm run documentation:gate -- --base <base> --head <head> # PR documentation gate
-npm run validate:release -- plugin/<plugin-id>/v<semver> # Release contract
-npm run check           # Aggregate npm-owned quality gate
+npm run check
 ```
 
-The policy is literal: local hooks are advisory; CI is authoritative. Husky installs a no-shim
-pre-commit hook that runs `npx --no-install lint-staged` for staged files.
-Authorized emergency bypasses use `HUSKY=0` or `--no-verify`; HUSKY=0 in CI
-keeps npm installation reproducible and prevents local hook side effects.
+Before submitting a plugin change, update its manifest, README, changelog, and
+marketplace entry together. The complete contributor workflow and operational
+rules live in [AGENTS.md](AGENTS.md) and the linked [quality guidelines](docs/agent-guidelines/quality.md).
 
-Required quality commands:
-
-```bash
-npm run format:check
-npm run lint -- --max-warnings=0
-npm run typecheck
-npm run typecheck:scripts
-npx tsc6 --noEmit
-npm test
-npm run validate:all
-npm run validate:release
-actionlint .github/workflows/*.yml
-git diff --check
-```
-
-The repository keeps TypeScript 7 and TypeScript 6 side by side:
-
-```bash
-npx tsc --noEmit        # Native TypeScript 7 compiler
-npx tsc6 --noEmit       # TypeScript 6 compiler/API compatibility path
-```
-
-GitHub Actions use Node 24, full SHA pins for third-party actions, separate
-quality jobs, and a stable `required` aggregator for branch-protection required
-checks. Plugin release tags are validated against the exact tag checkout, draft
-releases attach a deterministic archive of the target plugin, and final
-publication requires release environment approval through the protected
-`release` environment. Rollback for a plugin release means restoring the prior
-marketplace metadata, deleting the GitHub release, and deleting the release tag.
-
-To scaffold content, use the repository generators:
-
-```bash
-npm run generate:marketplace
-npm run generate:plugin -- example-plugin
-npm run complete:marketplace
-npm run complete:plugin -- example-plugin
-```
+The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6
+compatibility checks. CI is authoritative, uses full SHA pins, and protects
+branch-required checks with release environment approval. Local hooks are
+no-shim and advisory; `HUSKY=0` is used in CI, while authorized local emergency
+bypasses use `HUSKY=0` or `--no-verify`. The contributor quality vocabulary is:
+`npm run format:check`, `npm run lint -- --max-warnings=0`, `npm run typecheck`,
+`npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`, `npm run
+validate:all`, and `actionlint`. Rollback means restoring prior marketplace
+metadata and removing the corresponding release artifacts.
 
 ## 📚 Documentation
 
