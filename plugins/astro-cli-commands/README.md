@@ -6,7 +6,7 @@
 > A command-first operating guide that helps Codex use Astro's own capabilities
 > before reaching for custom scripts or improvised configuration.
 
-## Purpose
+## 🎯 Purpose
 
 Astro Commands gives Codex a maintained, command-first operating contract
 for Astro projects. Before planning or executing work, it directs the agent to
@@ -24,7 +24,7 @@ build, test, preview, or debug Astro applications.
 | Running local development | Use Astro's tracked server lifecycle instead of orphaned processes.  |
 | Preparing CI              | Choose the right diagnostic and failure thresholds for the build.    |
 
-## Quick Start
+## ⚡ Quick Start
 
 Install the marketplace and this plugin from any Codex environment:
 
@@ -44,7 +44,7 @@ Open an Astro project and ask Codex to perform a task. Astro Commands will
 first establish the local CLI contract, then select the supported command,
 explain important flags, and verify the result.
 
-## Included Components
+## 🧰 Included Components
 
 - `.codex-plugin/plugin.json` manifest for marketplace discovery.
 - `skills/astro-commands/SKILL.md` skill instructions.
@@ -54,7 +54,7 @@ explain important flags, and verify the result.
 
 This release ships no hooks, scripts, MCP servers, apps, or visual assets.
 
-## Reference Library
+## 📚 Reference Library
 
 The Skill is the entry point; these references provide the supporting detail:
 
@@ -65,7 +65,7 @@ The Skill is the entry point; these references provide the supporting detail:
 | [`flags.md`](skills/astro-commands/references/flags.md)           | Check flag scope, defaults, compatibility, and interactions.                                |
 | [`operations.md`](skills/astro-commands/references/operations.md) | Apply package-manager, CI, server, lock-file, secret, and configuration conventions.        |
 
-## Supported Environments
+## 🖥️ Supported Environments
 
 The plugin is designed for Codex sessions working inside Astro repositories
 with Node.js and npm, pnpm, or Yarn available through the project's existing
@@ -82,7 +82,7 @@ materially or behavior has drifted, Codex must consult current official Astro
 documentation or `/withastro/astro` through Context7 before proceeding. The
 agent should report the version and the exact command surface it re-verified.
 
-## Maintenance Model
+## 🔄 Maintenance Model
 
 The package manager in this repository maintains the marketplace itself; it is
 not installed into every user's machine as part of this plugin. Community
@@ -97,7 +97,7 @@ weekly schedule plus a manual dispatch is sufficient for this command surface;
 daily polling would add noise without improving runtime safety. The check
 should never rewrite `main` or silently publish a plugin update.
 
-## Inputs and Outputs
+## 🔁 Inputs and Outputs
 
 Inputs include user requests about Astro CLI usage, Astro project files,
 `package.json` scripts, lockfiles, Astro configuration, and installed CLI help
@@ -112,7 +112,7 @@ dependencies, `npx` attempting to download Astro, unsupported flags,
 non-zero `astro check` or `astro build` exits, and background server lock-file
 state that contradicts the requested operation.
 
-## Required Tools and Credentials
+## 🧩 Required Tools and Credentials
 
 Required tools are the project-local Astro CLI, Node.js, and the package manager
 declared by the target Astro project. The skill examples use `npm` and `npx`,
@@ -123,7 +123,7 @@ require environment variables such as `${ASTRO_KEY}` during build or deployment;
 the skill treats secret creation, storage, and disclosure as separate
 human-authorized actions.
 
-## Permissions
+## 🔐 Permissions
 
 The plugin itself only adds local instruction files to Codex. When used inside
 an Astro project, Codex may need read access to project files, write access when
@@ -135,7 +135,7 @@ when Codex must retrieve current Astro documentation after version drift or when
 the target project command installs dependencies, contacts a package registry,
 or runs deployment-specific tooling.
 
-## Side Effects
+## ⚠️ Side Effects
 
 Installing the plugin adds the package files to the marketplace cache used by
 Codex. Using the skill can lead Codex to run Astro commands requested by the
@@ -148,7 +148,7 @@ The skill warns that `astro create-key` prints secret material, `astro docs`
 opens a browser, `astro info --copy` changes the clipboard, and preference or
 telemetry commands mutate user or project state.
 
-## Human Approval Boundaries
+## 🛡️ Human Approval Boundaries
 
 Codex may automatically inspect project files, check local Astro versions, read
 command help, and run non-mutating diagnostics when those actions are necessary
@@ -160,7 +160,7 @@ the clipboard, mutating Astro preferences or telemetry settings, installing
 dependencies, changing configuration, or starting/stopping servers when that
 side effect is outside the requested task.
 
-## Installation Behavior
+## 📦 Installation Behavior
 
 This plugin is registered in the `codex-essentials` marketplace at
 `.agents/plugins/marketplace.json` with a local source path:
@@ -181,7 +181,7 @@ Codex reads `plugins/astro-cli-commands/.codex-plugin/plugin.json` and caches
 the skill files under its configured plugin cache. The marketplace entry uses
 `policy.installation: "AVAILABLE"` and `policy.authentication: "ON_INSTALL"`.
 
-### Update the Marketplace
+### 🔄 Update the Marketplace
 
 ```bash
 codex plugin marketplace update codex-essentials
@@ -192,7 +192,7 @@ The marketplace is the update channel. Refreshing it makes newer plugin
 metadata available; it does not install Astro, change an Astro project, or
 replace that project's package manager.
 
-### Remove the Plugin or Marketplace
+### 🧹 Remove the Plugin or Marketplace
 
 Remove only Astro Commands:
 
@@ -209,7 +209,7 @@ codex plugin marketplace remove codex-essentials
 Removing the plugin affects Codex's instructions only. It does not delete
 Astro projects, `node_modules`, build output, server state, or user settings.
 
-## Uninstall and Rollback Behavior
+## ↩️ Uninstall and Rollback Behavior
 
 Uninstall the plugin from Codex with the client's plugin management flow or CLI
 for the installed marketplace. Removing the plugin only removes the Codex
@@ -221,7 +221,7 @@ To roll back the marketplace source, revert the repository changes that added
 `plugins/astro-cli-commands/` and the marketplace entry. If an install is
 partial, reinstall after validating the marketplace and plugin manifests.
 
-## Verification
+## ✅ Verification
 
 Validate the package from the marketplace repository. This is the canonical
 check for contributors and is available after installing this repository's
@@ -262,7 +262,7 @@ Expected result: manifest validation passes, Codex can discover the skill, and
 the target project's installed Astro CLI help agrees with the command being
 used or any drift is re-verified against current authoritative documentation.
 
-## Known Limitations
+## 🚧 Known Limitations
 
 The bundled reference is a point-in-time Astro 7.2.x guide, not a replacement
 for the target project's installed CLI. It does not support using a global Astro
@@ -273,7 +273,7 @@ The plugin does not ship an MCP server, app UI, automated command runner, or
 Astro project template. It guides Codex behavior; it does not execute commands
 by itself.
 
-## Failure and Recovery
+## 🩺 Failure and Recovery
 
 If `npx astro` tries to install Astro, Codex should stop and report that the
 working directory is wrong or dependencies are missing. If a flag is rejected
@@ -290,7 +290,7 @@ The plugin preserves project data by requiring the agent to inspect mutations
 from commands such as `astro add`, avoid printing generated secret values, and
 report exact verification commands and material failure output.
 
-## Documentation and Attribution
+## 🌐 Documentation and Attribution
 
 Astro Commands is an independent Codex plugin. It is not an official Astro
 product and is not affiliated with or endorsed by the Astro team. Astro and

@@ -27,6 +27,9 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   preferred user experience.
 - **[Area: Documentation]** Added official Astro documentation, repository,
   installation, and release-note links with attribution and source precedence.
+- **[Area: Documentation]** Added human-facing visual hierarchy and section
+  icons to the product README while keeping operational agent instructions
+  unchanged.
 
 ### Changed
 
