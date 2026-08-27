@@ -32,8 +32,8 @@ shim in a future major release.
 
 Treat `.husky/_/*` as generated Husky infrastructure, not authored repository
 hook logic. Do not edit `.husky/_/husky.sh` to satisfy linters; exclude
-`.husky/_/` from repository ignore/formatting scopes and lint only the authored
-hook files such as `.husky/pre-commit`.
+`.husky/_/` from linting and formatting scopes while keeping generated internals
+ignored by Git. Lint only the authored hook files such as `.husky/pre-commit`.
 
 CI remains the source of truth. The quality workflow exposes separate gates for
 formatting, ESLint, TypeScript 7 native typechecking, script typechecking,
