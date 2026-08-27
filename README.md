@@ -79,16 +79,6 @@ Remove the marketplace registration:
 codex plugin marketplace remove codex-essentials
 ```
 
-For local authoring and testing, register a checkout instead:
-
-```bash
-codex plugin marketplace add /absolute/path/to/codex-essentials
-```
-
-Marketplace paths and plugin manifests must remain inside their intended roots.
-Codex resolves local `source.path` values relative to the marketplace root, not
-relative to `.agents/plugins/`.
-
 See the [official Codex plugin packaging guide](https://developers.openai.com/plugins/build/plugins)
 for current marketplace, plugin, path, and distribution behavior.
 

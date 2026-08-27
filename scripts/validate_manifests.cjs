@@ -298,8 +298,12 @@ function validatePluginDocumentation(root, pluginRoot, errors) {
   }
 
   if (readme !== undefined) {
+    const headings = readme
+      .split("\n")
+      .map(normalizeReadmeHeading)
+      .filter((heading) => heading !== undefined);
     for (const heading of REQUIRED_README_HEADINGS) {
-      if (!readme.split("\n").includes(heading)) {
+      if (!headings.includes(heading)) {
         errors.push(
           `${path.join(pluginPath, README_FILE)} is missing required heading '${heading}'`,
         );
@@ -314,6 +318,16 @@ function validatePluginDocumentation(root, pluginRoot, errors) {
       `${path.join(pluginPath, CHANGELOG_FILE)} must include ${UNRELEASED_HEADING}`,
     );
   }
+}
+
+/** @param {string} line */
+function normalizeReadmeHeading(line) {
+  const match = /^##\s+(.+?)\s*$/.exec(line);
+  if (!match || !match[1]) {
+    return undefined;
+  }
+  const title = match[1].replace(/^[^\p{L}\p{N}`]+/u, "").trim();
+  return title ? `## ${title}` : undefined;
 }
 
 function validatePluginFilesystem(

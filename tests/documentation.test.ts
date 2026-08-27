@@ -97,7 +97,8 @@ describe("plugin documentation scaffolding", () => {
       );
 
       expect(readme).toContain("# Docs Plugin");
-      expect(readme).toContain("## Human Approval Boundaries");
+      expect(readme).toContain("## 🛡️ Human Approval Boundaries");
+      expect(readme).toContain("## 🌐 Documentation and Attribution");
       expect(changelog).toContain("## [Unreleased]");
       expect(changelog).not.toContain("{{PLUGIN_NAME}}");
     } finally {
@@ -183,6 +184,31 @@ describe("plugin documentation scaffolding", () => {
 
       expect(result.status).toBe(1);
       expect(result.stderr).toContain("README.md is missing required heading");
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts required headings decorated with leading icons", () => {
+    const root = createFixture();
+    try {
+      runGenerator(root, ["plugin", "decorated-docs"]);
+      const readmePath = path.join(root, "plugins/decorated-docs/README.md");
+      const readme = fs.readFileSync(readmePath, "utf8");
+      fs.writeFileSync(
+        readmePath,
+        readme.replace(/^## (.+)$/gm, "## ✅ $1"),
+        "utf8",
+      );
+
+      const errors: string[] = [];
+      validator.validatePluginDocumentation(
+        root,
+        path.join(root, "plugins/decorated-docs"),
+        errors,
+      );
+
+      expect(errors).toEqual([]);
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }

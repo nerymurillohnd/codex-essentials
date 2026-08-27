@@ -20,6 +20,20 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   marketplace as an available local plugin.
 - **[Area: Documentation]** Documented the command-first decision rule and
   version-drift maintenance contract.
+- **[Area: Documentation]** Clarified that the repository-owned
+  `npm run validate:all` check is the canonical contributor validation, while
+  the external `plugin-creator` compatibility checker is optional and
+  maintainer-only. Documented asking Codex to invoke that Skill as the
+  preferred user experience.
+- **[Area: Documentation]** Added official Astro documentation, repository,
+  installation, and release-note links with attribution and source precedence.
+- **[Area: Documentation]** Added human-facing visual hierarchy and section
+  icons to the product README while keeping operational agent instructions
+  unchanged.
+- **[Area: Documentation]** Removed maintainer-only local authoring commands
+  from the public product and marketplace README guidance.
+- **[Area: Documentation]** Distinguished the full contributor check from the
+  repository's manifest-only validation commands.
 
 ### Changed
 
