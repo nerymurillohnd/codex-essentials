@@ -1,6 +1,10 @@
 # 🧩 Codex Essentials
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Quality](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml)
+[![Documentation gate](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml/badge.svg)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml)
+[![Security](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml)
+[![Latest release](https://img.shields.io/github/v/release/nerymurillohnd/codex-essentials?include_prereleases&sort=semver)](https://github.com/nerymurillohnd/codex-essentials/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 **Codex Essentials** is a community marketplace and data repository for
 distributable Codex plugins. It provides the catalog, schemas, generators,
@@ -143,6 +147,8 @@ metadata and removing the corresponding release artifacts.
 - [Tooling and runtimes](docs/agent-guidelines/tooling.md)
 - [Security and credentials](docs/agent-guidelines/security.md)
 - [Quality and maintenance](docs/agent-guidelines/quality.md)
+- [Public roadmap](docs/roadmap.md)
+- [Plugin submission guidelines](docs/contributing/plugins.md)
 - [ADR template](docs/decisions/adr-template.md)
 - [TypeScript side-by-side decision](docs/decisions/typescript-side-by-side.md)
 - [Maintenance records](docs/maintenance/)

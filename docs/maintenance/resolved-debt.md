@@ -47,3 +47,8 @@ Move completed maintenance items here with the resolution date and verification 
 - 2026-08-27 — Removed two generated Playwright MCP accessibility snapshots
   that had entered the public repository accidentally. Verified that the
   snapshots are absent from `main` and the working tree is clean.
+- 2026-08-27 — Protected the GitHub `main` branch against force pushes and
+  deletion, required conversation resolution, and required the `Required quality
+gates` quality aggregator plus the `documentation`, `CodeQL`, `Workflow lint`,
+  and `Dependency review` checks before merge. Verified through the GitHub
+  branch protection API.

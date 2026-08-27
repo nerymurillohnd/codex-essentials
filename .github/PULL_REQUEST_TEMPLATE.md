@@ -4,6 +4,8 @@ Describe the user-visible change and the affected plugin(s).
 
 ## Product documentation synchronization
 
+- [ ] Plugin submissions and product changes follow
+      `docs/contributing/plugins.md`.
 - [ ] `plugins/<plugin-id>/README.md` was updated for changed behavior,
       permissions, installation, limitations, or recovery behavior.
 - [ ] `plugins/<plugin-id>/CHANGELOG.md` contains a concise `Unreleased` entry
