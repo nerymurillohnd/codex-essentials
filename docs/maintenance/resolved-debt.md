@@ -2,6 +2,18 @@
 
 Move completed maintenance items here with the resolution date and verification reference.
 
+- 2026-08-27 — Updated `prettier-after-edit` hook bootstrap to resolve the
+  plugin package root with Codex-first precedence (`CODEX_PLUGIN_ROOT` →
+  `CLAUDE_PLUGIN_ROOT` → `PLUGIN_ROOT`) and added explicit compatibility fallback
+  for local/dev usage. Verified through `hooks.json` execution path review and
+  `plugins/prettier-after-edit/hooks/hooks.json` alignment.
+- 2026-08-27 — Fixed `prettier-after-edit` hook payload parsing so
+  `apply_patch` freeform events are handled correctly by extracting target files
+  directly from `*** Add File:` / `*** Update File:` directives when
+  `tool_input.command` is absent. Verified with
+  `npx vitest run tests/prettier-after-edit-hooks.test.ts` and `shellcheck` on
+  the updated hook script.
+
 - 2026-08-27 — Added `// @ts-check` to every repository JavaScript source,
   introduced the separate `tsconfig.scripts.json` `checkJs` project, and added
   `scripts/tsconfig.json` for editor project association without changing the
