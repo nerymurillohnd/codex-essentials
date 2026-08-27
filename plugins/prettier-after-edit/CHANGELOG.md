@@ -8,6 +8,22 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-27
+
+### Added
+
+- **[Area: Agent]** Added the schema-validated Codex agent manifest at
+  `skills/prettier-after-edit/agents/openai.yaml` with the skill's catalog
+  label, concise description, and default invocation prompt.
+
+### Changed
+
+- **[Area: Documentation]** Documented the agent manifest as a bundled
+  component and reference, including its distinction from behavioral skill
+  instructions.
+
+## [0.1.0] - 2026-08-27
+
 ### Added
 
 - **[Area: Manifest]** Added the `prettier-after-edit` plugin manifest with catalog

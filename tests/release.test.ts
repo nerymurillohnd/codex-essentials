@@ -64,7 +64,7 @@ function createFixture(): string {
   );
   fs.writeFileSync(
     path.join(root, "plugins/example/CHANGELOG.md"),
-    "# Changelog\n\n## [Unreleased]\n",
+    "# Changelog\n\n## [Unreleased]\n\n## [1.2.3] - 2026-08-27\n",
     "utf8",
   );
   return root;
@@ -150,6 +150,25 @@ describe("plugin release validation", () => {
       expect(
         release.validateRelease(root, "not-a-plugin-tag").errors.join("\n"),
       ).toContain("must match plugin/<id>/v<semver>");
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("requires a released changelog heading matching the tag version", () => {
+    const root = createFixture();
+    try {
+      fs.writeFileSync(
+        path.join(root, "plugins/example/CHANGELOG.md"),
+        "# Changelog\n\n## [Unreleased]\n",
+        "utf8",
+      );
+
+      expect(
+        release
+          .validateRelease(root, "plugin/example/v1.2.3")
+          .errors.join("\n"),
+      ).toContain("must include ## [1.2.3]");
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }

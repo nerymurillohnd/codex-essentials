@@ -104,6 +104,14 @@ function validateRelease(root, tag) {
     if (!changelog.split("\n").includes(UNRELEASED_HEADING)) {
       errors.push(`${changelogPath} must include ${UNRELEASED_HEADING}`);
     }
+    const releaseHeading = `## [${parsed.version}]`;
+    if (
+      !changelog.split("\n").some((line) => line.startsWith(releaseHeading))
+    ) {
+      errors.push(
+        `${changelogPath} must include ${releaseHeading} for the release tag`,
+      );
+    }
   }
 
   return {

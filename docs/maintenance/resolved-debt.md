@@ -2,6 +2,12 @@
 
 Move completed maintenance items here with the resolution date and verification reference.
 
+- 2026-08-27 — Closed the skill-agent metadata drift gap by requiring a
+  schema-valid `skills/<skill-id>/agents/openai.yaml` for every distributed
+  `SKILL.md`, migrating both published plugins, and aligning agent metadata
+  with each single-skill package manifest. Verified through schema, generator,
+  validator, documentation-gate, release-validator, and complete coverage tests.
+
 - 2026-08-27 — Updated `prettier-after-edit` hook bootstrap to resolve the
   plugin package root with Codex-first precedence (`CODEX_PLUGIN_ROOT` →
   `CLAUDE_PLUGIN_ROOT` → `PLUGIN_ROOT`) and added explicit compatibility fallback

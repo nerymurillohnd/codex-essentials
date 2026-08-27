@@ -5,16 +5,21 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const Ajv2020 = require("ajv/dist/2020").default;
+const YAML = require("yaml");
 
 const MARKETPLACE_RELATIVE_PATH = ".agents/plugins/marketplace.json";
 const PLUGINS_RELATIVE_PATH = "plugins";
 const MARKETPLACE_SCHEMA_RELATIVE_PATH = "templates/marketplace.schema.json";
 const PLUGIN_SCHEMA_RELATIVE_PATH = "templates/plugin.schema.json";
+const AGENT_SCHEMA_RELATIVE_PATH = "templates/agent.schema.json";
 const SCOPE_MARKETPLACE = "marketplace";
 const SCOPE_PLUGINS = "plugins";
 const SCOPE_ALL = "all";
 const LOCAL_SOURCE = "local";
 const SKILLS_RELATIVE_PATH = "skills";
+const SKILL_FILE = "SKILL.md";
+const AGENTS_DIRECTORY = "agents";
+const AGENT_MANIFEST_FILE = "openai.yaml";
 const APP_MANIFEST = ".app.json";
 const MCP_MANIFEST = ".mcp.json";
 const PLUGIN_MANIFEST_RELATIVE_PATH = ".codex-plugin/plugin.json";
@@ -38,6 +43,7 @@ const REQUIRED_README_HEADINGS = [
 ];
 const ASSETS_DIRECTORY = "assets";
 const ASSET_FIELDS = ["composerIcon", "logo", "logoDark"];
+const AGENT_ASSET_FIELDS = ["icon_small", "icon_large"];
 
 /** @param {unknown} error */
 function errorMessage(error) {
@@ -106,6 +112,7 @@ function validateAll(root) {
   const schemas = loadSchemas(root, errors);
   const marketplace = validateMarketplace(root, schemas.marketplaceSchema);
   const plugins = validatePlugins(root, {
+    agentSchema: schemas.agentSchema,
     pluginSchema: schemas.pluginSchema,
     requireDirectory: true,
   });
@@ -116,6 +123,9 @@ function validateAll(root) {
   }
   if (schemas.pluginSchema === undefined) {
     errors.push(`${PLUGIN_SCHEMA_RELATIVE_PATH} could not be loaded`);
+  }
+  if (schemas.agentSchema === undefined) {
+    errors.push(`${AGENT_SCHEMA_RELATIVE_PATH} could not be loaded`);
   }
 
   const marketplaceNames = new Set(
@@ -152,6 +162,11 @@ function loadSchemas(root, errors) {
       path.join(root, PLUGIN_SCHEMA_RELATIVE_PATH),
       errors,
       "plugin schema",
+    ),
+    agentSchema: loadJson(
+      path.join(root, AGENT_SCHEMA_RELATIVE_PATH),
+      errors,
+      "agent schema",
     ),
   };
 }
@@ -230,6 +245,13 @@ function validatePlugins(root, options = {}) {
       errors,
       "plugin schema",
     );
+  const agentSchema =
+    options.agentSchema ??
+    loadJson(
+      path.join(root, AGENT_SCHEMA_RELATIVE_PATH),
+      errors,
+      "agent schema",
+    );
 
   if (!fs.existsSync(pluginsRoot)) {
     if (options.requireDirectory) {
@@ -270,9 +292,78 @@ function validatePlugins(root, options = {}) {
       validateAgainstSchema(pluginSchema, payload, manifestPath, errors);
       validatePluginFilesystem(root, pluginRoot, payload, manifestPath, errors);
     }
+    if (agentSchema !== undefined) {
+      validatePluginSkillAgents(pluginRoot, agentSchema, errors);
+    }
   }
 
   return { errors, names };
+}
+
+function validatePluginSkillAgents(pluginRoot, agentSchema, errors) {
+  const skillsDirectory = path.join(pluginRoot, SKILLS_RELATIVE_PATH);
+  if (
+    !fs.existsSync(skillsDirectory) ||
+    !fs.statSync(skillsDirectory).isDirectory()
+  ) {
+    return;
+  }
+
+  for (const skillPath of findSkillPaths(skillsDirectory)) {
+    const skillRoot = path.dirname(skillPath);
+    const agentPath = path.join(
+      skillRoot,
+      AGENTS_DIRECTORY,
+      AGENT_MANIFEST_FILE,
+    );
+    const hasContainedAgentManifest =
+      fs.existsSync(agentPath) &&
+      fs.statSync(agentPath).isFile() &&
+      resolvesInside(skillRoot, agentPath);
+    if (!hasContainedAgentManifest) {
+      errors.push(
+        `${relativePath(pluginRoot, agentPath)} is missing, not a file, or resolves outside the owning skill directory for ${relativePath(pluginRoot, skillPath)}`,
+      );
+      continue;
+    }
+
+    const payload = loadYaml(agentPath, errors, "agent manifest");
+    if (payload === undefined) {
+      continue;
+    }
+    validateAgainstSchema(agentSchema, payload, agentPath, errors);
+    const interfacePayload = payload.interface;
+    if (!interfacePayload || typeof interfacePayload !== "object") {
+      continue;
+    }
+    for (const field of AGENT_ASSET_FIELDS) {
+      if (typeof interfacePayload[field] === "string") {
+        checkAsset(
+          skillRoot,
+          interfacePayload[field],
+          `${relativePath(pluginRoot, agentPath)}.interface.${field}`,
+          errors,
+          "owning skill directory",
+        );
+      }
+    }
+  }
+}
+
+function findSkillPaths(directory) {
+  const skillPaths = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) {
+      continue;
+    }
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      skillPaths.push(...findSkillPaths(entryPath));
+    } else if (entry.isFile() && entry.name === SKILL_FILE) {
+      skillPaths.push(entryPath);
+    }
+  }
+  return skillPaths.sort();
 }
 
 function validatePluginDocumentation(root, pluginRoot, errors) {
@@ -399,7 +490,13 @@ function validatePluginFilesystem(
   }
 }
 
-function checkAsset(pluginRoot, rawPath, location, errors) {
+function checkAsset(
+  pluginRoot,
+  rawPath,
+  location,
+  errors,
+  owner = "owning plugin directory",
+) {
   const assetPath = resolveInside(pluginRoot, rawPath);
   const relativeAssetPath =
     assetPath === undefined ? undefined : path.relative(pluginRoot, assetPath);
@@ -414,8 +511,22 @@ function checkAsset(pluginRoot, rawPath, location, errors) {
     errors.push(`${location} must stay under ./${ASSETS_DIRECTORY}/`);
     return;
   }
-  if (!fs.existsSync(assetPath) || !fs.statSync(assetPath).isFile()) {
-    errors.push(`${location} points to a missing file`);
+  const isContainedFile =
+    fs.existsSync(assetPath) &&
+    fs.statSync(assetPath).isFile() &&
+    resolvesInside(pluginRoot, assetPath);
+  if (!isContainedFile) {
+    errors.push(`${location} must resolve to a file inside the ${owner}`);
+  }
+}
+
+function resolvesInside(root, target) {
+  try {
+    const resolvedRoot = fs.realpathSync(root);
+    const resolvedTarget = fs.realpathSync(target);
+    return resolvedTarget.startsWith(`${resolvedRoot}${path.sep}`);
+  } catch {
+    return false;
   }
 }
 
@@ -461,6 +572,27 @@ function loadJson(filePath, errors, kind) {
   }
 }
 
+function loadYaml(filePath, errors, _kind) {
+  let text;
+  try {
+    text = fs.readFileSync(filePath, "utf8");
+  } catch (error) {
+    errors.push(`unable to read ${filePath}: ${errorMessage(error)}`);
+    return undefined;
+  }
+
+  try {
+    const document = YAML.parseDocument(text, { prettyErrors: false });
+    if (document.errors.length > 0) {
+      throw document.errors[0];
+    }
+    return document.toJS();
+  } catch (error) {
+    errors.push(`${filePath} is invalid YAML: ${errorMessage(error)}`);
+    return undefined;
+  }
+}
+
 function resolveInside(root, rawPath) {
   if (typeof rawPath !== "string") {
     return undefined;
@@ -492,14 +624,19 @@ if (require.main === module) {
 
 module.exports = {
   checkAsset,
+  errorMessage,
   loadJson,
+  loadYaml,
   main,
   parseArgs,
   relativePath,
+  resolvesInside,
   resolveInside,
   validateAgainstSchema,
   validateMarketplace,
   validatePlugins,
   validatePluginDocumentation,
+  validatePluginFilesystem,
+  validatePluginSkillAgents,
   validateScope,
 };

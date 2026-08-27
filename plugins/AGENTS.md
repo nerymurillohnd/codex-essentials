@@ -12,6 +12,10 @@ These instructions apply to every local package under `plugins/`. The root
   in `templates/plugin.schema.json`.
 - Keep plugin resources inside the package. Do not create a repository-level
   `skills/` directory; skill content belongs in `plugins/<plugin-id>/skills/`.
+- Every distributed skill at `skills/<skill-id>/SKILL.md` must include its
+  Codex-facing agent manifest at `skills/<skill-id>/agents/openai.yaml`. The
+  skill document owns behavior and operating instructions; the agent manifest
+  owns concise presentation metadata and optional prompt bootstrap.
 
 The manifest must validate against `templates/plugin.schema.json`. Its required
 top-level fields are `name`, `version`, `description`, `author`, and
@@ -22,6 +26,15 @@ exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
 ## Referenced Resources
 
 - Declare `skills` only when `./skills/` exists.
+- Validate every `agents/openai.yaml` against
+  `templates/agent.schema.json`. The required `interface.display_name` and
+  `interface.short_description` identify the skill in Codex. An optional
+  `interface.default_prompt` may frame the first request; it must not repeat
+  the skill's operating procedure.
+- Agent icon paths are optional. When declared, keep them `./assets/`-relative
+  and resolving inside the owning skill directory, including after symbolic-link
+  canonicalization. Do not add unsupported YAML fields,
+  use traversal paths, or place credentials in agent metadata.
 - Declare `apps` as `./.app.json` and `mcpServers` as `./.mcp.json` only when
   those files exist; inline MCP definitions are also permitted by the schema.
 - Keep interface assets under `./assets/`; screenshot paths must point to PNG
@@ -80,6 +93,7 @@ references and document required configuration instead.
 Before merging any plugin change, verify these artifacts as one atomic set:
 
 - `.codex-plugin/plugin.json`
+- `skills/<skill-id>/SKILL.md` and `skills/<skill-id>/agents/openai.yaml`
 - `README.md`
 - `CHANGELOG.md`
 - `.agents/plugins/marketplace.json`
@@ -91,7 +105,10 @@ Required consistency checks:
 - `README.md` version badge and `CHANGELOG.md` unreleased section should reflect
   manifest/versioned intent.
 - Capability and installation claims in README should match actual files present
-  (`hooks`, `skills`, `references`, etc.) and runtime assumptions.
+  (`hooks`, `skills`, `agents`, `references`, etc.) and runtime assumptions.
+- Each `SKILL.md` must have exactly one schema-valid `agents/openai.yaml`; its
+  catalog description and default prompt must accurately describe that skill,
+  rather than the entire plugin.
 - Any behavioral or compatibility change must appear in the Unreleased changelog
   before the change is released.
 - Hook-path assumptions in docs must match runtime script behavior.

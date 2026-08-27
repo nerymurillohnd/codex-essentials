@@ -16,13 +16,22 @@ Each plugin package must include:
 
 Add these only when the plugin actually uses them:
 
-- `plugins/<plugin-id>/skills/`
+- `plugins/<plugin-id>/skills/<skill-id>/SKILL.md` and its required
+  `plugins/<plugin-id>/skills/<skill-id>/agents/openai.yaml`
 - `plugins/<plugin-id>/.app.json`
 - `plugins/<plugin-id>/.mcp.json`
 - `plugins/<plugin-id>/assets/`
 
 Do not create a repository-level `skills/` directory. Skill content belongs
 inside the plugin package that distributes it.
+
+Each `agents/openai.yaml` validates against `templates/agent.schema.json` after
+YAML parsing. It requires `interface.display_name` and
+`interface.short_description`; an `interface.default_prompt` is optional and
+provides concise invocation framing. The file is metadata and prompt bootstrap,
+not a second copy of `SKILL.md`. Optional icons must live under the owning
+skill's `./assets/` directory, and unsupported fields or traversal paths fail
+validation.
 
 ## Manifest Requirements
 
@@ -53,8 +62,9 @@ The plugin README must explain:
 - Known limitations and compatibility notes.
 
 The changelog must keep a `## [Unreleased]` section and record
-product-relevant changes, including manifest, skill, MCP, app, permission,
-security, compatibility, installation behavior, and breaking changes.
+product-relevant changes, including manifest, skill, agent metadata, MCP, app,
+permission, security, compatibility, installation behavior, and breaking
+changes.
 
 ## Catalog Registration
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: Prettier After Edit
+  short_description: Auto-format files after each Codex edit.
+  default_prompt: Use Prettier After Edit to format changed files after supported Codex edits.

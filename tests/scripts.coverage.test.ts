@@ -74,10 +74,13 @@ interface ValidationModule {
     location: string,
     errors: string[],
   ): void;
+  errorMessage(error: unknown): string;
   loadJson(filePath: string, errors: string[], kind: string): unknown;
+  loadYaml(filePath: string, errors: string[], kind: string): unknown;
   main(): void;
   parseArgs(argv: string[]): { root: string; scope: string };
   relativePath(root: string, target: string): string;
+  resolvesInside(root: string, target: string): boolean;
   resolveInside(root: string, rawPath: unknown): string | undefined;
   validateAgainstSchema(
     schema: unknown,
@@ -88,8 +91,24 @@ interface ValidationModule {
   validateMarketplace(root: string, schema?: unknown): ValidationResult;
   validatePlugins(
     root: string,
-    options?: { pluginSchema?: unknown; requireDirectory?: boolean },
+    options?: {
+      agentSchema?: unknown;
+      pluginSchema?: unknown;
+      requireDirectory?: boolean;
+    },
   ): PluginValidationResult;
+  validatePluginDocumentation(
+    root: string,
+    pluginRoot: string,
+    errors: string[],
+  ): void;
+  validatePluginFilesystem(
+    root: string,
+    pluginRoot: string,
+    payload: unknown,
+    manifestPath: string,
+    errors: string[],
+  ): void;
   validateScope(root: string, scope: string): ValidationResult;
 }
 
@@ -191,6 +210,11 @@ function writeJson(filePath: string, value: unknown): void {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+function writeText(filePath: string, value: string): void {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, value, "utf8");
+}
+
 function readJson<T extends object = Record<string, unknown>>(
   filePath: string,
 ): T {
@@ -263,6 +287,25 @@ describe("manifest validator internals", () => {
       ).toBeUndefined();
       expect(errors).toHaveLength(3);
       expect(errors.join("\n")).toContain("invalid JSON");
+      expect(errors.join("\n")).toContain("unable to read");
+    } finally {
+      removeFixture(root);
+    }
+  });
+
+  it("loads YAML and safely formats non-Error diagnostics", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "codex-yaml-"));
+    try {
+      const errors: string[] = [];
+      const validPath = path.join(root, "valid.yaml");
+      writeText(validPath, "interface:\n  display_name: Valid\n");
+      expect(validate.loadYaml(validPath, errors, "fixture")).toEqual({
+        interface: { display_name: "Valid" },
+      });
+      expect(
+        validate.loadYaml(path.join(root, "missing.yaml"), errors, "fixture"),
+      ).toBeUndefined();
+      expect(validate.errorMessage("failure")).toBe("failure");
       expect(errors.join("\n")).toContain("unable to read");
     } finally {
       removeFixture(root);
@@ -402,7 +445,9 @@ describe("manifest validator internals", () => {
       expect(result.errors.join("\n")).toContain("missing .app.json");
       expect(result.errors.join("\n")).toContain("missing .mcp.json");
       expect(result.errors.join("\n")).toContain("must stay under ./assets/");
-      expect(result.errors.join("\n")).toContain("missing file");
+      expect(result.errors.join("\n")).toContain(
+        "must resolve to a file inside the owning plugin directory",
+      );
 
       const hidden = path.join(root, "plugins", ".hidden");
       fs.mkdirSync(hidden);
@@ -467,6 +512,181 @@ describe("manifest validator internals", () => {
       expect(validate.validatePlugins(root).errors.join("\n")).not.toContain(
         "null-manifest field",
       );
+    } finally {
+      removeFixture(root);
+    }
+  });
+
+  it("requires a schema-valid agent manifest for every skill", () => {
+    const root = createFixture();
+    try {
+      const pluginRoot = path.join(root, "plugins", "agent-plugin");
+      generate.generatePlugin({
+        root,
+        pluginName: "agent-plugin",
+        version: "0.1.0",
+        force: false,
+        withoutMarketplace: true,
+      });
+      const skillRoot = path.join(pluginRoot, "skills", "agent-skill");
+      writeText(path.join(skillRoot, "SKILL.md"), "# Agent Skill\n");
+
+      const missingResult = validate.validatePlugins(root);
+      expect(missingResult.errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml is missing, not a file, or resolves outside the owning skill directory",
+      );
+
+      const agentPath = path.join(skillRoot, "agents", "openai.yaml");
+      writeText(agentPath, "interface: [\n");
+      const invalidYamlResult = validate.validatePlugins(root);
+      expect(invalidYamlResult.errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml is invalid YAML",
+      );
+
+      writeText(
+        agentPath,
+        [
+          "interface:",
+          "  display_name: Agent Skill",
+          "  short_description: Valid description",
+          "  unsupported: true",
+          "policy:",
+          "  allow_implicit_invocation: false",
+          "",
+        ].join("\n"),
+      );
+      const invalidSchemaResult = validate.validatePlugins(root);
+      expect(invalidSchemaResult.errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml /interface must NOT have additional properties",
+      );
+
+      writeText(
+        agentPath,
+        [
+          "interface:",
+          "  display_name: Agent Skill",
+          "  short_description: Valid description",
+          "  icon_large: ./assets/missing.png",
+          "",
+        ].join("\n"),
+      );
+      const missingAssetResult = validate.validatePlugins(root);
+      expect(missingAssetResult.errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml.interface.icon_large must resolve to a file inside the owning skill directory",
+      );
+
+      writeText(path.join(skillRoot, "assets", "icon.png"), "png");
+      writeText(
+        agentPath,
+        [
+          "interface:",
+          "  display_name: Agent Skill",
+          "  short_description: Valid description",
+          "  default_prompt: Use Agent Skill",
+          "  icon_large: ./assets/icon.png",
+          "policy:",
+          "  allow_implicit_invocation: false",
+          "",
+        ].join("\n"),
+      );
+      expect(validate.validatePlugins(root).errors).toEqual([]);
+
+      writeText(
+        path.join(pluginRoot, "skills", ".ignored", "SKILL.md"),
+        "# Ignored\n",
+      );
+      expect(validate.validatePlugins(root).errors).toEqual([]);
+
+      writeText(agentPath, "interface: not-an-object\n");
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "must be object",
+      );
+
+      writeText(
+        agentPath,
+        [
+          "interface:",
+          "  display_name: Agent Skill",
+          "  short_description: Valid description",
+          "  icon_large: ./assets/icon.png",
+          "",
+        ].join("\n"),
+      );
+      const outsideIcon = path.join(root, "outside.png");
+      writeText(outsideIcon, "png");
+      const iconPath = path.join(skillRoot, "assets", "icon.png");
+      fs.rmSync(iconPath);
+      fs.symlinkSync(outsideIcon, iconPath);
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml.interface.icon_large must resolve to a file inside the owning skill directory",
+      );
+
+      fs.unlinkSync(iconPath);
+      writeText(iconPath, "png");
+      const outsideAgent = path.join(root, "outside.yaml");
+      writeText(
+        outsideAgent,
+        [
+          "interface:",
+          "  display_name: External Agent",
+          "  short_description: External metadata",
+          "",
+        ].join("\n"),
+      );
+      fs.rmSync(agentPath);
+      fs.symlinkSync(outsideAgent, agentPath);
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "skills/agent-skill/agents/openai.yaml is missing, not a file, or resolves outside the owning skill directory",
+      );
+    } finally {
+      removeFixture(root);
+    }
+  });
+
+  it("reports agent schema availability and optional plugin metadata branches", () => {
+    const root = createFixture();
+    try {
+      generate.generatePlugin({
+        root,
+        pluginName: "schema-branch",
+        version: "0.1.0",
+        force: false,
+        withoutMarketplace: true,
+      });
+      fs.rmSync(path.join(root, "templates", "agent.schema.json"));
+      expect(validate.validatePlugins(root).errors.join("\n")).toContain(
+        "agent.schema.json is missing",
+      );
+
+      const pluginRoot = path.join(root, "plugins", "schema-branch");
+      const documentationErrors: string[] = [];
+      fs.rmSync(path.join(pluginRoot, "README.md"));
+      validate.validatePluginDocumentation(
+        root,
+        pluginRoot,
+        documentationErrors,
+      );
+      expect(documentationErrors.join("\n")).toContain("README.md is missing");
+
+      const filesystemErrors: string[] = [];
+      validate.validatePluginFilesystem(
+        root,
+        pluginRoot,
+        { interface: { screenshots: [42] } },
+        path.join(pluginRoot, ".codex-plugin", "plugin.json"),
+        filesystemErrors,
+      );
+      expect(filesystemErrors).toEqual([]);
+
+      writeText(path.join(pluginRoot, "assets", "screenshot.png"), "png");
+      validate.validatePluginFilesystem(
+        root,
+        pluginRoot,
+        { interface: { screenshots: ["./assets/screenshot.png"] } },
+        path.join(pluginRoot, ".codex-plugin", "plugin.json"),
+        filesystemErrors,
+      );
+      expect(filesystemErrors).toEqual([]);
     } finally {
       removeFixture(root);
     }
@@ -542,6 +762,9 @@ describe("manifest validator internals", () => {
     expect(validate.resolveInside("/tmp/root", 42)).toBeUndefined();
     expect(validate.resolveInside("/tmp/root", "./../outside")).toBeUndefined();
     expect(validate.relativePath("/tmp/root", "/tmp/root")).toBe(".");
+    expect(validate.resolvesInside("/tmp/root", "/tmp/root/missing-file")).toBe(
+      false,
+    );
     const assetErrors: string[] = [];
     validate.checkAsset("/tmp/root", 42, "asset", assetErrors);
     expect(assetErrors).toContain("asset must stay under ./assets/");
