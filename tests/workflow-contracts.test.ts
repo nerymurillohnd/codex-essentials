@@ -364,7 +364,7 @@ describe("plugin release workflow contract", () => {
     ).toBe(0);
     expect(
       asRecord(checkoutStep["with"], "release validate checkout with")["ref"],
-    ).toBe("${{ env.RELEASE_TAG }}");
+    ).toBe("refs/tags/${{ env.RELEASE_TAG }}");
     expectNodeSetup(steps);
     expect(runs).toEqual(
       expect.arrayContaining([
@@ -374,7 +374,9 @@ describe("plugin release workflow contract", () => {
         "npm pack --dry-run",
       ]),
     );
-    expect(runs.join("\n")).toContain('git rev-parse "$RELEASE_TAG^{commit}"');
+    expect(runs.join("\n")).toContain(
+      'git rev-parse "refs/tags/$RELEASE_TAG^{commit}"',
+    );
     expect(runs.join("\n")).toContain("previous_release_tag=");
   });
 
@@ -400,6 +402,8 @@ describe("plugin release workflow contract", () => {
     expect(env["GH_TOKEN"]).toBe("${{ github.token }}");
     expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
     expect(runs).toContain('gh release view "$RELEASE_TAG" --repo "$GH_REPO"');
+    expect(runs).toContain('git rev-parse "refs/tags/$RELEASE_TAG^{commit}"');
+    expect(runs).toContain('"$tag_commit" != "$SOURCE_COMMIT"');
     expect(runs).toContain(
       'gh release create "$RELEASE_TAG" "$PLUGIN_ARCHIVE" --draft --verify-tag',
     );
@@ -446,7 +450,7 @@ describe("plugin release workflow contract", () => {
 
     expect(checkoutIndex).toBeLessThan(archiveIndex);
     expect(checkoutIndex).toBeLessThan(notesIndex);
-    expect(checkoutWith["ref"]).toBe("${{ env.RELEASE_TAG }}");
+    expect(checkoutWith["ref"]).toBe("refs/tags/${{ env.RELEASE_TAG }}");
     expect(checkoutWith["fetch-depth"]).toBe(0);
     expect(checkoutWith["persist-credentials"]).toBe(false);
   });
@@ -463,13 +467,17 @@ describe("plugin release workflow contract", () => {
     );
     const runs = stepRuns(jobSteps(publishJob, "release publish")).join("\n");
 
-    expect(publishJob["needs"]).toBe("draft");
+    expect(publishJob["needs"]).toEqual(["validate", "draft"]);
     expect(publishJob["if"]).toBe("${{ success() }}");
     expect(publishJob["environment"]).toBe("release");
     expect(permissions).toEqual({ contents: "write" });
-    expect(asRecord(publishJob["env"], "release publish env")["GH_REPO"]).toBe(
-      "${{ github.repository }}",
+    const env = asRecord(publishJob["env"], "release publish env");
+    expect(env["GH_REPO"]).toBe("${{ github.repository }}");
+    expect(env["SOURCE_COMMIT"]).toBe(
+      "${{ needs.validate.outputs.source_commit }}",
     );
+    expect(runs).toContain('git rev-parse "refs/tags/$RELEASE_TAG^{commit}"');
+    expect(runs).toContain('"$tag_commit" != "$SOURCE_COMMIT"');
     expect(runs).toContain(
       'gh release edit "$RELEASE_TAG" --draft=false --latest=false --repo "$GH_REPO"',
     );
