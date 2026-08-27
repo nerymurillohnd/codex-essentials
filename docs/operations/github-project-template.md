@@ -45,9 +45,9 @@ Run the idempotent helper locally or from an authorized maintenance workflow:
 
 ```bash
 GITHUB_ORG="${GITHUB_ORG}" PROJECT_TITLE="${PROJECT_TITLE}" \
-  node scripts/bootstrap_project.cjs --dry-run
+  npm run project:bootstrap -- --dry-run
 GITHUB_ORG="${GITHUB_ORG}" PROJECT_TITLE="${PROJECT_TITLE}" \
-  node scripts/bootstrap_project.cjs
+  npm run project:bootstrap
 ```
 
 The helper reuses an existing project with the same title. A real run requires

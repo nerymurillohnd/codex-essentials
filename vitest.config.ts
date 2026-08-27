@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      include: ["scripts/**/*.cjs"],
+      include: ["lib/**/*.cjs"],
       exclude: ["**/node_modules/**"],
       reporter: ["text", "json", "json-summary"],
       thresholds: {

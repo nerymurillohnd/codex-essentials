@@ -8,7 +8,6 @@
   },
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "skills": "./skills/",
   "interface": {
     "displayName": "Prettier After Edit",
     "shortDescription": "Auto-format files after each Codex edit.",
@@ -22,5 +21,6 @@
       "No installation-time project mutations"
     ],
     "defaultPrompt": "Use Prettier After Edit to format changed files after supported Codex edits."
-  }
+  },
+  "skills": "./skills/"
 }

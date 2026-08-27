@@ -226,7 +226,7 @@ The external `plugin-creator` compatibility checker is optional and is not
 stored in this repository. Its terminal form uses a local Skill path:
 
 ```bash
-uv run --with pyyaml python <plugin-creator-skill-root>/scripts/validate_plugin.py plugins/astro-cli-commands
+npm run validate:all
 ```
 
 In a target Astro project, verify the installed command surface:

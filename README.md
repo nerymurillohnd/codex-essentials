@@ -116,13 +116,10 @@ approval boundaries, rollback behavior, and troubleshooting:
 | ---------------------------------- | ------------------------------------------------------------------------------ |
 | `.agents/plugins/marketplace.json` | Required marketplace catalog and plugin ordering.                              |
 | `plugins/<plugin-id>/`             | Plugin packages; each requires `.codex-plugin/plugin.json`.                    |
-| `templates/`                       | JSON/YAML schemas and product-documentation templates.                         |
+| `lib/`                             | Declarative SSOT, schemas, templates, domain modules, and colocated tests.     |
 | `.github/`                         | Issue forms, pull-request contract, release categories, and CI gates.          |
-| `scripts/`                         | CommonJS validators, generators, and typecheck wrapper.                        |
 | `tsconfig.scripts.json`            | Dedicated `checkJs` project for JavaScript, CJS, and MJS sources.              |
-| `scripts/tsconfig.json`            | Editor-discoverable config for files inside `scripts/`.                        |
 | `types/`                           | TypeScript contracts and declaration-only interfaces.                          |
-| `tests/`                           | TypeScript Vitest tests and configuration boundary checks.                     |
 | `docs/agent-guidelines/`           | Detailed architecture, tooling, security, quality, and communication guidance. |
 | `docs/decisions/`                  | Architecture Decision Records and the reusable ADR template.                   |
 | `docs/maintenance/`                | Pending and resolved maintenance debt.                                         |
@@ -143,17 +140,22 @@ the repository validator and the supported Codex packaging contract are aligned.
 
 ## 🛠️ For Contributors
 
-The repository includes local generators, validators, documentation gates, and
-release checks for maintaining marketplace products. Start with:
+The repository uses `lib/source.json` as its only declarative source for fixed
+plugin metadata. It derives the catalog, each package manifest, and each agent
+manifest; author-owned `SKILL.md`, README, and changelog documents are only
+initialized, never replaced by synchronization. Start with:
 
 ```bash
 npm install
 npm run check
 ```
 
-Before submitting a plugin change, update its manifest, README, changelog, and
-marketplace entry together. The complete contributor workflow and operational
-rules live in [AGENTS.md](AGENTS.md) and the linked [quality guidelines](docs/agent-guidelines/quality.md).
+Before submitting a plugin change, update `lib/source.json`, the affected
+README, and the changelog together, then run `npm run sync:all`. Plugins are
+self-contained release packages: no executable, asset, import, or symbolic
+link may resolve outside `plugins/<plugin-id>/`. The complete contributor
+workflow and operational rules live in [AGENTS.md](AGENTS.md) and the linked
+[quality guidelines](docs/agent-guidelines/quality.md).
 
 The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6
 compatibility checks. CI is authoritative, uses full SHA pins, and protects

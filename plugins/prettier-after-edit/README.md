@@ -185,7 +185,7 @@ printf '{"cwd":"/path/to/project","tool_input":{"file_path":"src/index.js"}}\n' 
 For a marketplace/package-level check you can also run:
 
 ```bash
-uv run --with pyyaml python <path-to-plugin-creator>/scripts/validate_plugin.py plugins/prettier-after-edit
+npm run validate:all
 ```
 
 ## 🚧 Known Limitations

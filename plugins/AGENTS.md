@@ -3,13 +3,32 @@
 These instructions apply to every local package under `plugins/`. The root
 `AGENTS.md` and its linked policies continue to apply.
 
+## Generated Metadata and Package Containment
+
+`lib/source.json` is the repository-wide declarative source of truth for fixed
+plugin metadata. It is development infrastructure, not a resource consumed by
+an installed plugin. The repository synchronizer derives `.codex-plugin/plugin.json`,
+each `skills/<skill-id>/agents/openai.yaml`, and the plugin's marketplace entry.
+
+Do not hand-edit derived metadata. Change the source definition and run the
+synchronizer. `SKILL.md`, `README.md`, and `CHANGELOG.md` are initialized from
+templates but remain author-owned after creation; synchronizers validate their
+contract and must not replace their content.
+
+Every file, directory, asset, symlink target, executable, and declared runtime
+path used by an installed plugin must resolve within `plugins/<plugin-id>/`.
+Plugins must not import, execute, reference, or depend on `lib/`, repository
+maintenance tooling, another plugin, or another path outside their own package.
+This rule applies after symbolic-link canonicalization and is enforced before
+generation, validation, packaging, and release.
+
 ## Package Layout and Identity
 
 - Place each package at `plugins/<plugin-id>/`.
 - Every local package must contain
   `plugins/<plugin-id>/.codex-plugin/plugin.json`.
 - `<plugin-id>` must match the manifest `name` and satisfy the identifier rules
-  in `templates/plugin.schema.json`.
+  in `lib/schemas/plugin.schema.json`.
 - Keep plugin resources inside the package. Do not create a repository-level
   `skills/` directory; skill content belongs in `plugins/<plugin-id>/skills/`.
 - Every distributed skill at `skills/<skill-id>/SKILL.md` must include its
@@ -17,7 +36,7 @@ These instructions apply to every local package under `plugins/`. The root
   skill document owns behavior and operating instructions; the agent manifest
   owns concise presentation metadata and optional prompt bootstrap.
 
-The manifest must validate against `templates/plugin.schema.json`. Its required
+The manifest must validate against `lib/schemas/plugin.schema.json`. Its required
 top-level fields are `name`, `version`, `description`, `author`, and
 `interface`. The interface requires the display metadata, capabilities, and
 exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
@@ -27,7 +46,7 @@ exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
 
 - Declare `skills` only when `./skills/` exists.
 - Validate every `agents/openai.yaml` against
-  `templates/agent.schema.json`. The required `interface.display_name` and
+  `lib/schemas/agent.schema.json`. The required `interface.display_name` and
   `interface.short_description` identify the skill in Codex. An optional
   `interface.default_prompt` may frame the first request; it must not repeat
   the skill's operating procedure.
@@ -62,8 +81,8 @@ marketplace registration synchronized in the same change. Product changes are
 gated in pull requests; documentation-only changes may update only the
 affected document.
 
-Use [`templates/README.md`](../templates/README.md) and
-[`templates/CHANGELOG.md`](../templates/CHANGELOG.md) as the canonical starting
+Use [`lib/templates/README.md`](../lib/templates/README.md) and
+[`lib/templates/CHANGELOG.md`](../lib/templates/CHANGELOG.md) as the canonical starting
 points. Preserve Keep a Changelog headings, use ISO 8601 dates, and add
 migration notes for breaking changes. Area labels are conditional metadata,
 not a checklist: do not add entries for unaffected areas, and remove empty
@@ -77,15 +96,15 @@ sections from published releases. Release tags use
 - Prefer the repository helpers so manifests and catalog entries stay aligned:
 
   ```sh
-  npm run generate:plugin -- <plugin-id>
-  npm run complete:plugin -- <plugin-id>
-  npm run validate:plugins
+  npm run scaffold:plugin -- <plugin-id>
+  npm run sync:all
   npm run validate:all
   npm run check
   ```
 
-`complete:*` preserves authored values while filling missing defaults. Never
-commit credentials or real secret values in plugin files; use `${VAR}`
+`scaffold:plugin` preserves existing author-owned documents while initializing
+missing files. `sync:all` rewrites only derived metadata. Never commit
+credentials or real secret values in plugin files; use `${VAR}`
 references and document required configuration instead.
 
 ## Consistency and Drift Review
