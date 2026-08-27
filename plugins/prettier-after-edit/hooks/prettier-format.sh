@@ -13,12 +13,17 @@ if ! command -v jq >/dev/null 2>&1; then
 	exit 0
 fi
 
-cwd="$(printf '%s' "${input}" | jq -r '.cwd // empty' 2>/dev/null || true)"
+if ! parsed_input="$(printf '%s' "${input}" | jq -c . 2>/dev/null)"; then
+	message "skipped; unable to parse hook payload."
+	exit 0
+fi
+
+cwd="$(printf '%s' "${parsed_input}" | jq -r '.cwd // empty' 2>/dev/null || true)"
 [[ -n "${cwd}" ]] || cwd="${PWD}"
 
-file="$(printf '%s' "${input}" | jq -r '.tool_input.file_path // .tool_input.path // .tool_input.file // empty' 2>/dev/null || true)"
+file="$(printf '%s' "${parsed_input}" | jq -r '.tool_input.file_path // .tool_input.path // .tool_input.file // empty' 2>/dev/null || true)"
 if [[ -z "${file}" ]]; then
-	command_payload="$(printf '%s' "${input}" | jq -r '.tool_input.command // empty' 2>/dev/null || true)"
+	command_payload="$(printf '%s' "${parsed_input}" | jq -r '.tool_input.command // empty' 2>/dev/null || true)"
 	while IFS= read -r line; do
 		case "${line}" in
 		"*** Add File: "*)
@@ -36,14 +41,20 @@ if [[ -z "${file}" ]]; then
 	done <<<"${command_payload}"
 fi
 
-[[ -n "${file}" ]] || exit 0
+if [[ -z "${file}" ]]; then
+	message "skipped; no target file in hook payload."
+	exit 0
+fi
 
 case "${file}" in
 /*) target="${file}" ;;
 *) target="${cwd%/}/${file}" ;;
 esac
 
-[[ -f "${target}" ]] || exit 0
+if [[ ! -f "${target}" ]]; then
+	message "skipped; target file not found: ${file}."
+	exit 0
+fi
 
 find_local_prettier() {
 	local search_dir

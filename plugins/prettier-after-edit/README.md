@@ -55,10 +55,11 @@ Inputs:
 
 Outputs:
 
-- One JSON line to Codex:
+- JSON lines to Codex:
 
 ```json
 { "systemMessage": "prettier-after-edit: formatted <file>." }
+{ "systemMessage": "prettier-after-edit: skipped; ..." }
 ```
 
 - Exit status `0` in all normal and skip conditions.

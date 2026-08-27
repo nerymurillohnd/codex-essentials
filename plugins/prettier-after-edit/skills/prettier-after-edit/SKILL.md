@@ -42,8 +42,10 @@ Only one file is formatted per event.
 
 ## Failure behavior
 
-- If the hook payload cannot be parsed, it emits `skipped; jq not found.` and exits 0.
-- If target file resolution fails, it exits 0 with no formatter invocation.
+- If the hook payload cannot be parsed, it emits `skipped; unable to parse hook payload.` and exits 0.
+- If `jq` is missing, it emits `skipped; jq not found.` and exits 0.
+- If target file resolution fails, it emits `skipped; no target file in hook payload.` or
+  `skipped; target file not found: <file>.` and exits 0 with no formatter invocation.
 - If no formatter exists, it emits `skipped; prettier not found.` and exits 0.
 - If formatter execution fails, it emits `failed to format <file>.`
 

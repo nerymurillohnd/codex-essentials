@@ -69,6 +69,29 @@ function runHook(
   };
 }
 
+function runHookRawInput(
+  hookPath: string,
+  rawInput: string,
+  cwd: string,
+  pathOverride: string,
+): SpawnResult {
+  const result = childProcess.spawnSync("/bin/bash", [hookPath], {
+    cwd,
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      PATH: pathOverride,
+    },
+    input: `${rawInput}\n`,
+  });
+
+  return {
+    status: result.status,
+    stderr: result.stderr ? String(result.stderr) : "",
+    stdout: result.stdout ? String(result.stdout) : "",
+  };
+}
+
 function prettierArgsText(fixture: string): string {
   return path.join(fixture, "prettier-args.txt");
 }
@@ -219,6 +242,61 @@ echo "$@" > '${prettierArgsText(fixture)}'`,
       expect(result.status).toBe(0);
       expect(result.stdout).toContain(
         "prettier-after-edit: skipped; prettier not found.",
+      );
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
+
+  it("skips when no target file can be resolved from payload", () => {
+    const fixture = createFixture();
+    const workspace = path.join(fixture, "project");
+    const jqStubPath = createJqStub(fixture);
+    const hookPath = path.join(
+      path.resolve("."),
+      "plugins/prettier-after-edit/hooks/prettier-format.sh",
+    );
+    const result = runHook(
+      hookPath,
+      {
+        cwd: workspace,
+        tool_input: {
+          command: "echo 'patch without file directives'",
+        },
+      },
+      fixture,
+      `${path.join(fixture, ".bin")}:${path.dirname(jqStubPath)}:/bin`,
+    );
+
+    try {
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain(
+        "prettier-after-edit: skipped; no target file in hook payload.",
+      );
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
+
+  it("skips with parse error when payload is not valid JSON", () => {
+    const fixture = createFixture();
+    const workspace = path.join(fixture, "project");
+    const jqStubPath = createJqStub(fixture);
+    const hookPath = path.join(
+      path.resolve("."),
+      "plugins/prettier-after-edit/hooks/prettier-format.sh",
+    );
+    const result = runHookRawInput(
+      hookPath,
+      "{ invalid json",
+      workspace,
+      `${path.join(fixture, ".bin")}:${path.dirname(jqStubPath)}:/bin`,
+    );
+
+    try {
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain(
+        "prettier-after-edit: skipped; unable to parse hook payload.",
       );
     } finally {
       rmSync(fixture, { recursive: true, force: true });
