@@ -1,7 +1,7 @@
 {
   "name": "astro-cli-commands",
   "version": "0.1.0",
-  "description": "Astro Commandments gives Codex a maintained, command-first operating contract for Astro projects: inspect the installed CLI, prefer official capabilities, and verify version drift before acting.",
+  "description": "Astro Commands gives Codex a maintained, command-first operating contract for Astro projects: inspect the installed CLI, prefer official capabilities, and verify version drift before acting.",
   "author": {
     "name": "Nery Samuel Murillo",
     "url": "https://github.com/nerymurillohnd"
@@ -10,7 +10,7 @@
   "license": "MIT",
   "skills": "./skills/",
   "interface": {
-    "displayName": "Astro Commandments",
+    "displayName": "Astro Commands",
     "shortDescription": "Use Astro's current CLI capabilities first.",
     "longDescription": "A maintained command-first operating contract for Astro projects. It makes Codex inspect the installed Astro CLI, prefer supported framework commands over improvised workflows, and verify version drift before planning or executing changes.",
     "developerName": "Nery Samuel Murillo",
@@ -21,6 +21,6 @@
       "Background dev and preview server handling",
       "CI check and build verification"
     ],
-    "defaultPrompt": "Use Astro Commandments"
+    "defaultPrompt": "Use Astro Commands"
   }
 }

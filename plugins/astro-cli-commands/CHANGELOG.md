@@ -21,4 +21,10 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Documentation]** Documented the command-first decision rule and
   version-drift maintenance contract.
 
+### Changed
+
+- **[Area: Manifest]** Renamed the visible product and Skill from Astro
+  Commandments to Astro Commands; the `astro-cli-commands` installation ID is
+  unchanged for compatibility.
+
 [unreleased]: https://github.com/nerymurillohnd/codex-essentials/compare/HEAD...HEAD

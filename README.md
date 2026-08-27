@@ -8,7 +8,7 @@ validators, documentation, and quality gates needed to publish reusable skills,
 MCP integrations, and supporting assets.
 
 > **Current status:** the marketplace publishes its first installable plugin:
-> `Astro Commandments` (`astro-cli-commands`).
+> `Astro Commands` (`astro-cli-commands`).
 
 ## 👤 Ownership and Repository
 
@@ -29,7 +29,7 @@ codex plugin marketplace list
 ```
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install **Astro Commandments** (`astro-cli-commands`) or
+Essentials**, and install **Astro Commands** (`astro-cli-commands`) or
 another available plugin.
 
 For local authoring and testing, register a checkout instead:

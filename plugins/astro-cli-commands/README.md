@@ -1,8 +1,8 @@
-# Astro Commandments
+# Astro Commands
 
 ## Purpose
 
-Astro Commandments gives Codex a maintained, command-first operating contract
+Astro Commands gives Codex a maintained, command-first operating contract
 for Astro projects. Before planning or executing work, it directs the agent to
 inspect the project's installed Astro CLI and prefer an official Astro command
 or workflow whenever one exists. This prevents unnecessary custom setup,
@@ -14,10 +14,10 @@ build, test, preview, or debug Astro applications.
 ## Included Components
 
 - `.codex-plugin/plugin.json` manifest for marketplace discovery.
-- `skills/astro-commandments/SKILL.md` skill instructions.
-- `skills/astro-commandments/references/commands.md` command reference.
-- `skills/astro-commandments/references/flags.md` flag reference.
-- `skills/astro-commandments/references/operations.md` operating conventions.
+- `skills/astro-commands/SKILL.md` skill instructions.
+- `skills/astro-commands/references/commands.md` command reference.
+- `skills/astro-commands/references/flags.md` flag reference.
+- `skills/astro-commands/references/operations.md` operating conventions.
 
 This release ships no hooks, scripts, MCP servers, apps, or visual assets.
 
@@ -37,6 +37,21 @@ CLI with `npx astro --version` and command-specific `npx astro <command>
 materially or behavior has drifted, Codex must consult current official Astro
 documentation or `/withastro/astro` through Context7 before proceeding. The
 agent should report the version and the exact command surface it re-verified.
+
+## Maintenance Model
+
+The package manager in this repository maintains the marketplace itself; it is
+not installed into every user's machine as part of this plugin. Community
+users add the remote marketplace and install `astro-cli-commands` independently
+through Codex.
+
+The maintenance source of truth should remain the official Astro CLI and
+documentation. A lightweight scheduled repository check can query the latest
+published Astro version, compare it with the reference verification metadata,
+and open a reviewable maintenance pull request when drift is detected. A
+weekly schedule plus a manual dispatch is sufficient for this command surface;
+daily polling would add noise without improving runtime safety. The check
+should never rewrite `main` or silently publish a plugin update.
 
 ## Inputs and Outputs
 

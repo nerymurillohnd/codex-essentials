@@ -1,10 +1,10 @@
 ---
-name: astro-commandments
+name: astro-commands
 description: Use first when planning or executing work in an Astro project. Inspect the installed Astro CLI, prefer official Astro commands over custom workflows, manage Astro dev or preview servers, add integrations, generate types, configure CI checks, and diagnose flags or version drift.
 disable-model-invocation: false
 ---
 
-# Astro Commandments
+# Astro Commands
 
 This skill is the default command reference for Astro work. Before proposing a
 custom script, manual configuration, or workaround, check whether the
