@@ -1,8 +1,24 @@
+# Local Codex and diagnostics state
 .codex/
 .diagnostics/
-node_modules/
 .tmp/
+
+# Dependencies and generated output
+node_modules/
+coverage/
+dist/
+
+# Generated hook internals
+.husky/_/
+
+# Python tooling caches
+.ruff_cache/
+__pycache__/
+
+# Local credentials and operating-system files
 .env
 .DS_Store
+
+# Intentionally unmanaged/generated formats
 package-lock.json
 ./*/**.py
