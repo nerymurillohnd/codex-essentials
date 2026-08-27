@@ -8,7 +8,6 @@
   },
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "skills": "./skills/",
   "interface": {
     "displayName": "Astro Commands",
     "shortDescription": "Use Astro's current CLI capabilities first.",
@@ -22,5 +21,6 @@
       "CI check and build verification"
     ],
     "defaultPrompt": "Use Astro Commands before planning this Astro task."
-  }
+  },
+  "skills": "./skills/"
 }

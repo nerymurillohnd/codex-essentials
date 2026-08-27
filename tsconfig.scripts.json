@@ -18,9 +18,9 @@
   "include": [
     "eslint.config.cjs",
     "prettier.config.cjs",
-    "scripts/**/*.js",
-    "scripts/**/*.cjs",
-    "scripts/**/*.mjs"
+    "lib/**/*.js",
+    "lib/**/*.cjs",
+    "lib/**/*.mjs"
   ],
   "exclude": ["node_modules", "coverage", "dist"]
 }

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Declarative Plugin Pipeline"
+  short_description: "Maintain the declarative plugin source and release pipeline"
+  default_prompt: "Create or update a self-contained marketplace plugin through the declarative pipeline."

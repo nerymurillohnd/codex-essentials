@@ -76,7 +76,7 @@
     "adapters/**/*.ts",
     "config/**/*.ts",
     "plugins/**/*.ts",
-    "tests/**/*.ts",
+    "lib/**/*.ts",
     "types/**/*.d.ts",
     "*.ts"
   ],
@@ -84,9 +84,8 @@
     "node_modules",
     "coverage",
     "dist",
-    "scripts/**/*.cjs",
-    "scripts/**/*.mjs",
-    "tests/**/*.mjs",
+    "lib/**/*.cjs",
+    "lib/**/*.mjs",
     "*.config.cjs",
     "*.config.mjs"
   ]

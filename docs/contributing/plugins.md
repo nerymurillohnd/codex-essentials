@@ -6,7 +6,8 @@ changing an existing plugin product.
 ## Required Package Structure
 
 Place every plugin under `plugins/<plugin-id>/`. The plugin ID must match the
-manifest `name` and the marketplace catalog entry.
+`name` declared in `lib/source.json`; the manifest and marketplace catalog entry
+are derived from that declaration.
 
 Each plugin package must include:
 
@@ -25,7 +26,7 @@ Add these only when the plugin actually uses them:
 Do not create a repository-level `skills/` directory. Skill content belongs
 inside the plugin package that distributes it.
 
-Each `agents/openai.yaml` validates against `templates/agent.schema.json` after
+Each `agents/openai.yaml` validates against `lib/schemas/agent.schema.json` after
 YAML parsing. It requires `interface.display_name` and
 `interface.short_description`; an `interface.default_prompt` is optional and
 provides concise invocation framing. The file is metadata and prompt bootstrap,
@@ -35,7 +36,7 @@ validation.
 
 ## Manifest Requirements
 
-The manifest must validate against `templates/plugin.schema.json`. It must
+The derived manifest must validate against `lib/schemas/plugin.schema.json`. It must
 define the plugin identity, author, interface metadata, capabilities, and at
 least one of `skills`, `apps`, or `mcpServers`.
 
@@ -49,8 +50,8 @@ packaging contract are aligned.
 
 Start from the canonical templates:
 
-- `templates/README.md`
-- `templates/CHANGELOG.md`
+- `lib/templates/README.md`
+- `lib/templates/CHANGELOG.md`
 
 The plugin README must explain:
 
@@ -68,18 +69,21 @@ changes.
 
 ## Catalog Registration
 
-Register local packages in `.agents/plugins/marketplace.json` with a source path
-such as `./plugins/<plugin-id>`.
+Declare local packages in the single non-executable source of truth,
+`lib/source.json`. The synchronizer derives `.agents/plugins/marketplace.json`
+with source paths such as `./plugins/<plugin-id>`.
 
 Prefer repository helpers so generated fields remain consistent:
 
 ```bash
-npm run generate:plugin -- <plugin-id>
-npm run complete:plugin -- <plugin-id>
-npm run validate:plugins
+npm run scaffold:plugin -- <plugin-id>
+npm run sync:all
+npm run validate:all
 ```
 
-`complete:*` preserves authored values while filling missing defaults.
+The scaffold initializes missing author-owned documents; `sync:all` rewrites
+only derived metadata. Do not hand-edit `plugin.json`, `openai.yaml`, or the
+marketplace catalog.
 
 ## Pull Request Evidence
 
