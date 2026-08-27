@@ -21,10 +21,10 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Documentation]** Documented the command-first decision rule and
   version-drift maintenance contract.
 - **[Area: Documentation]** Clarified that the repository-owned
-  `npm run validate:all` check is the canonical contributor validation, while
-  the external `plugin-creator` compatibility checker is optional and
-  maintainer-only. Documented asking Codex to invoke that Skill as the
-  preferred user experience.
+  `npm run check` command is the canonical contributor validation and that
+  `npm run validate:all` is manifest-only. The external `plugin-creator`
+  compatibility checker remains optional and maintainer-only. Documented
+  asking Codex to invoke that Skill as the preferred user experience.
 - **[Area: Documentation]** Added official Astro documentation, repository,
   installation, and release-note links with attribution and source precedence.
 - **[Area: Documentation]** Added human-facing visual hierarchy and section
