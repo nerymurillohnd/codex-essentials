@@ -14,6 +14,8 @@ const setupNodeActionSha = "820762786026740c76f36085b0efc47a31fe5020";
 const dependencyReviewActionSha = "a1d282b36b6f3519aa1f3fc636f609c47dddb294";
 const codeqlActionSha = "cdf488f595d80d6e07e03d4674febd5ab45fa938";
 const actionlintActionSha = "03d0035246f3e81f36aed592ffb4bebf33a03106";
+const releaseChangelogBuilderActionSha =
+  "c9bcd8238b6f41e05561348339429d360b1c0247";
 const fullShaActionReference = /uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s|$)/u;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -287,5 +289,114 @@ describe("security workflow contract", () => {
 
     expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
     expect(uses).toContain(`rhysd/actionlint@${actionlintActionSha}`);
+  });
+});
+
+describe("plugin release workflow contract", () => {
+  it("accepts manual and plugin tag triggers only", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const triggers = asRecord(workflow.on, "release triggers");
+    const workflowDispatch = asRecord(
+      triggers.workflow_dispatch,
+      "release workflow_dispatch trigger",
+    );
+    const push = asRecord(triggers.push, "release push trigger");
+    const inputs = asRecord(workflowDispatch.inputs, "release inputs");
+    const tagInput = asRecord(inputs.tag, "release tag input");
+
+    expect(push.tags).toEqual(["plugin/**/v*"]);
+    expect(tagInput.required).toBe(true);
+    expect(tagInput.type).toBe("string");
+    expect(triggers).not.toHaveProperty("pull_request");
+    expect(triggers).not.toHaveProperty("pull_request_target");
+  });
+
+  it("pins every release workflow action to a full commit SHA", () => {
+    expectFullShaPins(readWorkflow("plugin-release.yml"));
+  });
+
+  it("validates releases with read-only permissions before any write", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const jobs = workflowJobs(workflow);
+    const validateJob = asRecord(jobs.validate, "release validate job");
+    const steps = jobSteps(validateJob, "release validate");
+    const checkoutStep = asRecord(
+      steps.find(
+        (step) => step.uses === `actions/checkout@${checkoutActionSha}`,
+      ),
+      "release validate checkout step",
+    );
+    const permissions = asRecord(
+      validateJob.permissions,
+      "release validate permissions",
+    );
+    const runs = stepRuns(steps);
+
+    expect(asRecord(workflow.permissions, "release permissions")).toEqual({
+      contents: "read",
+    });
+    expect(asRecord(workflow.env, "release env").HUSKY).toBe("0");
+    expect(permissions).toEqual({ contents: "read" });
+    expect(
+      asRecord(checkoutStep.with, "release validate checkout with")[
+        "fetch-depth"
+      ],
+    ).toBe(0);
+    expectNodeSetup(steps);
+    expect(runs).toEqual(
+      expect.arrayContaining([
+        "npm ci",
+        "npm run validate:all",
+        'npm run validate:release -- "$RELEASE_TAG"',
+        "npm pack --dry-run",
+      ]),
+    );
+  });
+
+  it("creates only a draft release with contents write permission", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const draftJob = asRecord(
+      workflowJobs(workflow).draft,
+      "release draft job",
+    );
+    const permissions = asRecord(
+      draftJob.permissions,
+      "release draft permissions",
+    );
+    const steps = jobSteps(draftJob, "release draft");
+    const uses = stepUses(steps);
+    const runs = stepRuns(steps).join("\n");
+
+    expect(draftJob.needs).toBe("validate");
+    expect(draftJob.if).toBe("${{ success() }}");
+    expect(permissions).toEqual({ contents: "write" });
+    expect(uses).toContain(
+      `mikepenz/release-changelog-builder-action@${releaseChangelogBuilderActionSha}`,
+    );
+    expect(runs).toContain('gh release view "$RELEASE_TAG"');
+    expect(runs).toContain('gh release create "$RELEASE_TAG" --draft');
+    expect(runs).toContain("Plugin version:");
+    expect(runs).toContain("Changelog source:");
+    expect(runs).toContain("Artifact checksum:");
+    expect(runs).toContain("Rollback:");
+  });
+
+  it("publishes only through the protected release environment", () => {
+    const workflow = parseWorkflow("plugin-release.yml");
+    const publishJob = asRecord(
+      workflowJobs(workflow).publish,
+      "release publish job",
+    );
+    const permissions = asRecord(
+      publishJob.permissions,
+      "release publish permissions",
+    );
+    const runs = stepRuns(jobSteps(publishJob, "release publish")).join("\n");
+
+    expect(publishJob.needs).toBe("draft");
+    expect(publishJob.if).toBe("${{ success() }}");
+    expect(publishJob.environment).toBe("release");
+    expect(permissions).toEqual({ contents: "write" });
+    expect(runs).toContain('gh release edit "$RELEASE_TAG" --draft=false');
   });
 });

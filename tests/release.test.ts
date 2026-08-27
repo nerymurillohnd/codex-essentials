@@ -2,9 +2,19 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const require = createRequire(import.meta.url);
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+const releaseScriptPath = path.join(
+  repositoryRoot,
+  "scripts/validate_release.cjs",
+);
+const nodeExecutable = process.execPath;
 
 interface ReleaseModule {
   parsePluginTag(
@@ -18,6 +28,27 @@ interface ReleaseModule {
 }
 
 const release = require("../scripts/validate_release.cjs") as ReleaseModule;
+
+interface SpawnOutput {
+  status: number | null;
+  stdout: string;
+  stderr: string;
+}
+
+function spawnRelease(root: string, args: string[]): SpawnOutput {
+  const childProcess = require("node:child_process") as {
+    spawnSync: (
+      command: string,
+      commandArgs: string[],
+      options: { encoding: "utf8" },
+    ) => SpawnOutput;
+  };
+  return childProcess.spawnSync(
+    nodeExecutable,
+    [releaseScriptPath, ...args, "--root", root],
+    { encoding: "utf8" },
+  );
+}
 
 function createFixture(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "codex-release-test-"));
@@ -125,5 +156,31 @@ describe("plugin release validation", () => {
   it("formats unknown thrown values for safe CLI diagnostics", () => {
     expect(release.errorMessage(new Error("failure"))).toBe("failure");
     expect(release.errorMessage("failure")).toBe("failure");
+  });
+
+  it("allows no tag only when there is no plugin package to release", () => {
+    const emptyRoot = fs.mkdtempSync(
+      path.join(os.tmpdir(), "codex-empty-release-test-"),
+    );
+    try {
+      fs.mkdirSync(path.join(emptyRoot, "plugins"));
+
+      const result = spawnRelease(emptyRoot, []);
+
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain("Release validation skipped");
+    } finally {
+      fs.rmSync(emptyRoot, { recursive: true, force: true });
+    }
+
+    const pluginRoot = createFixture();
+    try {
+      const result = spawnRelease(pluginRoot, []);
+
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain("release tag is required");
+    } finally {
+      fs.rmSync(pluginRoot, { recursive: true, force: true });
+    }
   });
 });

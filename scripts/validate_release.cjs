@@ -10,6 +10,44 @@ const PLUGIN_MANIFEST = ".codex-plugin/plugin.json";
 const CHANGELOG_FILE = "CHANGELOG.md";
 const UNRELEASED_HEADING = "## [Unreleased]";
 const PLUGINS_DIRECTORY = "plugins";
+const ROOT_OPTION = "--root";
+
+/** @param {string[]} argv */
+function parseArgs(argv) {
+  let root = path.resolve(__dirname, "..");
+  let tag = "";
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === ROOT_OPTION) {
+      const candidate = argv[index + 1];
+      if (!candidate) {
+        throw new Error(`${ROOT_OPTION} requires a path`);
+      }
+      root = path.resolve(candidate);
+      index += 1;
+      continue;
+    }
+    if (!tag) {
+      tag = argument;
+      continue;
+    }
+    throw new Error(`unknown argument: ${argument}`);
+  }
+
+  return { root, tag };
+}
+
+/** @param {string} root */
+function hasPluginPackages(root) {
+  const pluginsRoot = path.join(root, PLUGINS_DIRECTORY);
+  if (!fs.existsSync(pluginsRoot) || !fs.statSync(pluginsRoot).isDirectory()) {
+    return false;
+  }
+  return fs
+    .readdirSync(pluginsRoot, { withFileTypes: true })
+    .some((entry) => entry.isDirectory() && !entry.name.startsWith("."));
+}
 
 /**
  * @param {string} tag
@@ -82,8 +120,19 @@ function errorMessage(error) {
 
 /* c8 ignore start */
 function main() {
-  const [tag = ""] = process.argv.slice(2);
-  const result = validateRelease(path.resolve(__dirname, ".."), tag);
+  const { root, tag } = parseArgs(process.argv.slice(2));
+  if (!tag) {
+    if (!hasPluginPackages(root)) {
+      console.log(
+        "Release validation skipped: no plugin release tag supplied and plugins/ contains no plugin packages",
+      );
+      return;
+    }
+    console.error("release tag is required when plugins/ contains packages");
+    process.exitCode = 1;
+    return;
+  }
+  const result = validateRelease(root, tag);
   if (result.errors.length > 0) {
     for (const error of result.errors) {
       console.error(error);
@@ -102,4 +151,11 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { errorMessage, main, parsePluginTag, validateRelease };
+module.exports = {
+  errorMessage,
+  hasPluginPackages,
+  main,
+  parseArgs,
+  parsePluginTag,
+  validateRelease,
+};
