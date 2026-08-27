@@ -18,10 +18,12 @@ const render = require("./render.cjs") as {
   ): void;
   ensureContainedDirectory(root: string, directory: string): void;
   ensurePluginRoot(root: string, pluginName: string): string;
+  isSymbolicLink(target: string): boolean;
   renderAgent(skill: SkillDefinition): string;
   renderMarketplace(source: SourceDocument): string;
   renderPlugin(plugin: PluginDefinition): string;
   syncPlugin(root: string, plugin: PluginDefinition): void;
+  writeContained(root: string, relativePath: string, content: string): void;
 };
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -169,5 +171,23 @@ describe("derived plugin artifact rendering", () => {
       ),
     ).toThrow("resolves outside");
     expect(() => render.assertPathInside(pluginRoot, pluginRoot)).not.toThrow();
+  });
+
+  it("rejects dangling symlink targets before a generated write", () => {
+    const root = fs.mkdtempSync(
+      path.join(os.tmpdir(), "codex-render-dangling-test-"),
+    );
+    fixtures.push(root);
+    const external = path.join(root, "external-output.json");
+    const pluginRoot = render.ensurePluginRoot(root, "contained");
+    const target = path.join(pluginRoot, ".codex-plugin", "plugin.json");
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.symlinkSync(external, target);
+
+    expect(render.isSymbolicLink(target)).toBe(true);
+    expect(() =>
+      render.writeContained(pluginRoot, ".codex-plugin/plugin.json", "{}\n"),
+    ).toThrow("must not be a symbolic link");
+    expect(fs.existsSync(external)).toBe(false);
   });
 });

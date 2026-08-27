@@ -46,11 +46,11 @@ describe("release tree validation", () => {
     fs.symlinkSync(external, path.join(pluginRoot, "assets", "icon.png"));
 
     expect(release.validateReleaseTree(root, "released")).toContain(
-      "assets/icon.png resolves outside the release package",
+      "assets/icon.png must not be a symbolic link",
     );
   });
 
-  it("reports a missing release package and allows a contained relative link", () => {
+  it("reports a missing release package and rejects contained relative links", () => {
     const { root, pluginRoot } = createFixture();
     expect(release.validateReleaseTree(root, "missing")).toEqual([
       "plugins/missing is missing",
@@ -59,13 +59,17 @@ describe("release tree validation", () => {
       "icon.png",
       path.join(pluginRoot, "assets", "contained-icon.png"),
     );
-    expect(release.validateReleaseTree(root, "released")).toEqual([]);
+    expect(release.validateReleaseTree(root, "released")).toContain(
+      "assets/contained-icon.png must not be a symbolic link",
+    );
   });
 
   it("handles cycles, invalid filesystem targets, and root-relative paths", () => {
     const { root, pluginRoot } = createFixture();
     fs.symlinkSync("assets", path.join(pluginRoot, "assets-link"));
-    expect(release.validateReleaseTree(root, "released")).toEqual([]);
+    expect(release.validateReleaseTree(root, "released")).toContain(
+      "assets-link must not be a symbolic link",
+    );
     expect(release.isDirectory(path.join(root, "missing"))).toBe(false);
     expect(release.isDirectory(pluginRoot)).toBe(true);
     expect(release.resolvesInside(pluginRoot, path.join(root, "missing"))).toBe(

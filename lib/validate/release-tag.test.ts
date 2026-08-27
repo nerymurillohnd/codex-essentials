@@ -147,7 +147,7 @@ describe("independent plugin release tags", () => {
 
     expect(
       release.validateRelease(root, "plugin/example/v1.2.3").errors,
-    ).toContain("external-link.txt resolves outside the release package");
+    ).toContain("external-link.txt must not be a symbolic link");
   });
 
   it("detects releaseable packages and formats unknown errors", () => {

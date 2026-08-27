@@ -15,10 +15,16 @@ const validator = require("./package.cjs") as {
   iconPaths(payload: unknown): string[];
   isDirectory(target: string): boolean;
   isFile(target: string): boolean;
+  manifestResourcePaths(manifest: unknown): string[];
+  missingReadmeSections(content: string): string[];
   relative(root: string, target: string): string;
   resolvesInside(root: string, target: string): boolean;
   validateAuthoredDocuments(pluginRoot: string, errors: string[]): void;
-  validatePackage(root: string, pluginName: string): string[];
+  validatePackage(
+    root: string,
+    pluginName: string,
+    declaredSkillIds?: string[],
+  ): string[];
 };
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -78,7 +84,28 @@ function createFixture(): { root: string; pluginRoot: string } {
     "interface:\n  display_name: Contained\n  short_description: Contained\n",
     "utf8",
   );
-  fs.writeFileSync(path.join(pluginRoot, "README.md"), "# Contained\n", "utf8");
+  fs.writeFileSync(
+    path.join(pluginRoot, "README.md"),
+    [
+      "# Contained",
+      "",
+      "## Purpose",
+      "## Included Components",
+      "## Supported Environments",
+      "## Inputs and Outputs",
+      "## Required Tools and Credentials",
+      "## Permissions",
+      "## Side Effects",
+      "## Human Approval Boundaries",
+      "## Installation Behavior",
+      "## Uninstall and Rollback Behavior",
+      "## Verification",
+      "## Known Limitations",
+      "## Failure and Recovery",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
   fs.writeFileSync(
     path.join(pluginRoot, "CHANGELOG.md"),
     "# Changelog\n\n## [Unreleased]\n",
@@ -285,6 +312,95 @@ describe("package containment", () => {
       "utf8",
     );
     fs.symlinkSync("..", path.join(skillRoot, "cycle"));
-    expect(validator.validatePackage(root, "contained")).toEqual([]);
+    expect(validator.validatePackage(root, "contained")).toContain(
+      "skills/contained-skill/cycle must not be a symbolic link",
+    );
+  });
+
+  it("requires every manifest resource, README section, and declared skill", () => {
+    const { root, pluginRoot } = createFixture();
+    const manifestPath = path.join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    manifest.apps = "./.app.json";
+    manifest.mcpServers = "./.mcp.json";
+    manifest.interface.logo = "./assets/logo.png";
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest), "utf8");
+
+    const errors = validator
+      .validatePackage(root, "contained", ["contained-skill", "missing-skill"])
+      .join("\n");
+    expect(errors).toContain("plugin manifest resource ./.app.json is missing");
+    expect(errors).toContain("plugin manifest resource ./.mcp.json is missing");
+    expect(errors).toContain(
+      "plugin manifest resource ./assets/logo.png is missing",
+    );
+    expect(errors).toContain("skills/missing-skill/SKILL.md is missing");
+
+    fs.writeFileSync(
+      path.join(pluginRoot, "README.md"),
+      "# Contained\n",
+      "utf8",
+    );
+    expect(validator.validatePackage(root, "contained").join("\n")).toContain(
+      "README.md is missing required section: Purpose",
+    );
+    expect(validator.missingReadmeSections("## Purpose")).toContain(
+      "Verification",
+    );
+    expect(
+      validator.manifestResourcePaths({
+        apps: "./.app.json",
+        mcpServers: "./.mcp.json",
+        interface: {
+          logo: "./assets/logo.png",
+          screenshots: ["./assets/one.png"],
+        },
+      }),
+    ).toEqual([
+      "./.app.json",
+      "./.mcp.json",
+      "./assets/logo.png",
+      "./assets/one.png",
+    ]);
+  });
+
+  it("accepts present manifest resources and ignores unsupported value types", () => {
+    const { root, pluginRoot } = createFixture();
+    const manifestPath = path.join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    manifest.apps = "./.app.json";
+    manifest.mcpServers = "./.mcp.json";
+    manifest.interface.composerIcon = "./assets/composer.png";
+    manifest.interface.logo = "./assets/logo.png";
+    manifest.interface.logoDark = "./assets/logo-dark.png";
+    manifest.interface.screenshots = ["./assets/screenshot.png"];
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest), "utf8");
+    fs.mkdirSync(path.join(pluginRoot, "assets"));
+    for (const resource of [
+      ".app.json",
+      ".mcp.json",
+      "assets/composer.png",
+      "assets/logo.png",
+      "assets/logo-dark.png",
+      "assets/screenshot.png",
+    ]) {
+      fs.writeFileSync(path.join(pluginRoot, resource), "{}\n", "utf8");
+    }
+
+    expect(
+      validator.validatePackage(root, "contained", ["contained-skill"]),
+    ).toEqual([]);
+    expect(validator.manifestResourcePaths(null)).toEqual([]);
+    expect(validator.manifestResourcePaths(3)).toEqual([]);
+    expect(validator.manifestResourcePaths([])).toEqual([]);
+    expect(validator.manifestResourcePaths({ apps: 3 })).toEqual([]);
+    expect(validator.manifestResourcePaths({ interface: "invalid" })).toEqual(
+      [],
+    );
+    expect(
+      validator.manifestResourcePaths({
+        interface: { screenshots: [3] },
+      }),
+    ).toEqual([]);
   });
 });

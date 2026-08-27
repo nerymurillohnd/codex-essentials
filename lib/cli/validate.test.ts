@@ -104,6 +104,29 @@ describe("repository validation command", () => {
     );
   });
 
+  it("rejects packaged skills not declared by the source", () => {
+    const root = createFixture();
+    scaffold.scaffoldPlugin(root, "validated-plugin");
+    const staleSkill = path.join(
+      root,
+      "plugins",
+      "validated-plugin",
+      "skills",
+      "stale-skill",
+    );
+    fs.mkdirSync(path.join(staleSkill, "agents"), { recursive: true });
+    fs.writeFileSync(path.join(staleSkill, "SKILL.md"), "# Stale\n", "utf8");
+    fs.writeFileSync(
+      path.join(staleSkill, "agents", "openai.yaml"),
+      "interface:\n  display_name: Stale\n  short_description: Stale\n",
+      "utf8",
+    );
+
+    expect(validate.validateAll(root)).toContain(
+      "skills/stale-skill is not declared in lib/source.json",
+    );
+  });
+
   it("runs successful, failed, and invalid CLI argument paths", () => {
     const root = createFixture();
     scaffold.scaffoldPlugin(root, "validated-plugin");
