@@ -12,3 +12,11 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   protected `release` environment, release environment approval reviewers, and
   Dependabot/security settings. Move this entry to `resolved-debt.md` only after
   live GitHub verification.
+- 2026-08-27 — Publish the next marketplace product from the reusable document
+  and spreadsheet template Skills. Prioritize `Sales Pipeline`, `Operating
+Review`, `Project Tracker`, `Operating Calendar`, and `Market Trends Report`
+  for Forestal MT workflows; consider `Legal Memorandum`, `Minimal Letterhead`,
+  and `Project Kickoff` as the next document and presentation products. Each
+  product must receive its own manifest, user-facing README, references,
+  changelog, catalog entry, validation evidence, and release tag before it is
+  distributed.
