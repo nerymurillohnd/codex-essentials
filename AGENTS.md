@@ -43,3 +43,29 @@ Run applicable diagnostics and tests before declaring work complete. Keep docs s
 ## Commits and Pull Requests
 
 Use concise imperative Conventional Commit subjects (for example, `feat: add npm source schema`). Pull requests should explain the change, show verification commands/output, link an issue when applicable, and note compatibility effects. Product changes must update the affected plugin README and `Unreleased` changelog entry in the same PR. Screenshots are not applicable.
+
+### Change Routing and PR Completion
+
+Route changes according to their risk and distribution impact:
+
+- **Pull request required:** plugin packages, manifests, marketplace catalog
+  entries, scripts, tests, schemas, workflows, release behavior, permissions,
+  security controls, or any change that alters product behavior, installation,
+  validation, or compatibility.
+- **Direct commit to `main` allowed:** small documentation corrections,
+  wording or formatting adjustments, minor `AGENTS.md` or contributor-guidance
+  clarifications, and other changes with no product or runtime impact. Run the
+  relevant formatter and validation for the affected files first.
+
+For every pull request, read all review comments, checks, and requested
+changes before integrating. Evaluate each finding against the repository; fix
+it when technically valid, reply in the review thread with the result, and
+resolve the conversation after the fix is pushed. Do not dismiss or resolve a
+valid review finding without addressing it. Re-run the applicable validation
+after review changes.
+
+When a pull request is ready, integrate it with an explicit **merge commit**.
+Do not squash unless Nery explicitly requests it. After merging, delete the
+feature branch from the remote and local checkout, run `git fetch --prune`,
+fast-forward `main` with `git pull --ff-only origin main`, and confirm
+`git status --short --branch` is clean and synchronized with `origin/main`.
