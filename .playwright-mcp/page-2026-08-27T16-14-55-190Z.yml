@@ -1,0 +1,395 @@
+- generic [ref=f1e2]:
+    - generic [ref=f1e3]:
+        - link "Skip to content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#start-of-content"
+        - banner [ref=f1e9]:
+            - heading "Navigation Menu" [level=2] [ref=f1e10]
+            - generic [ref=f1e11]:
+                - link "Homepage" [ref=f1e13] [cursor=pointer]:
+                    - /url: /
+                - generic [ref=f1e16]:
+                    - navigation "Global" [ref=f1e17]:
+                        - list [ref=f1e18]:
+                            - listitem [ref=f1e19]:
+                                - button "Platform" [ref=f1e21] [cursor=pointer]
+                            - listitem [ref=f1e24]:
+                                - button "Solutions" [ref=f1e26] [cursor=pointer]
+                            - listitem [ref=f1e29]:
+                                - button "Resources" [ref=f1e31] [cursor=pointer]
+                            - listitem [ref=f1e34]:
+                                - button "Open Source" [ref=f1e36] [cursor=pointer]
+                            - listitem [ref=f1e39]:
+                                - button "Enterprise" [ref=f1e41] [cursor=pointer]
+                            - listitem [ref=f1e44]:
+                                - link "Pricing" [ref=f1e45] [cursor=pointer]:
+                                    - /url: https://github.com/pricing
+                    - generic [ref=f1e46]:
+                        - button "Search or jump to, type / to search" [ref=f1e48] [cursor=pointer]
+                        - link "Sign in" [ref=f1e55] [cursor=pointer]:
+                            - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fnerymurillohnd%2Fcodex-essentials%2Fwiki
+                        - link "Sign up" [ref=f1e58] [cursor=pointer]:
+                            - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fwiki%2Findex&source=header-repo&source_repo=nerymurillohnd%2Fcodex-essentials
+                        - button "Appearance settings" [ref=f1e61] [cursor=pointer]
+    - main [ref=f1e68]:
+        - generic [ref=f1e69]:
+            - generic [ref=f1e70]:
+                - generic [ref=f1e72]:
+                    - link "nerymurillohnd" [ref=f1e76] [cursor=pointer]:
+                        - /url: /nerymurillohnd
+                    - generic [ref=f1e77]: /
+                    - strong [ref=f1e78]:
+                        - link "codex-essentials" [ref=f1e79] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials
+                    - generic [ref=f1e80]: Public
+                - generic [ref=f1e81]:
+                    - list:
+                        - listitem [ref=f1e82]:
+                            - link "You must be signed in to change notification settings" [ref=f1e83] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Notifications
+                        - listitem [ref=f1e86]:
+                            - link "Fork 0" [ref=f1e87] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Fork
+                                - generic "0" [ref=f1e90]
+                        - listitem [ref=f1e91]:
+                            - link "You must be signed in to star a repository" [ref=f1e93] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Star
+                                - generic "1 user starred this repository" [ref=f1e96]: "1"
+            - navigation "Repository" [ref=f1e97]:
+                - list [ref=f1e98]:
+                    - listitem [ref=f1e99]:
+                        - link "Code" [ref=f1e100] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials
+                    - listitem [ref=f1e104]:
+                        - link "Issues 5" [ref=f1e105] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/issues
+                            - generic [ref=f1e109]: Issues
+                            - generic "5" [ref=f1e110]
+                    - listitem [ref=f1e111]:
+                        - link "Pull requests" [ref=f1e112] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/pulls
+                    - listitem [ref=f1e116]:
+                        - link "Discussions" [ref=f1e117] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/discussions
+                    - listitem [ref=f1e121]:
+                        - link "Actions" [ref=f1e122] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/actions
+                    - listitem [ref=f1e126]:
+                        - link "Projects" [ref=f1e127] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/projects
+                    - listitem [ref=f1e131]:
+                        - link "Wiki" [ref=f1e132] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/wiki
+                    - listitem [ref=f1e136]:
+                        - link "Security and quality" [ref=f1e137] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/security
+                    - listitem [ref=f1e141]:
+                        - link "Insights" [ref=f1e142] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/pulse
+        - generic [ref=f1e148]:
+            - heading "Home" [level=1] [ref=f1e150]
+            - generic [ref=f1e151]:
+                - text: Nery Samuel Murillo edited this page Aug 27, 2026now ·
+                - link "3 revisions" [ref=f1e152] [cursor=pointer]:
+                    - /url: /nerymurillohnd/codex-essentials/wiki/Home/_history
+            - generic [ref=f1e154]:
+                - generic [ref=f1e157]:
+                    - generic [ref=f1e158]:
+                        - heading "Codex Essentials Wiki" [level=1] [ref=f1e159]
+                        - 'link "Permalink: Codex Essentials Wiki" [ref=f1e160] [cursor=pointer]':
+                            - /url: "#codex-essentials-wiki"
+                    - paragraph [ref=f1e163]: Codex Essentials is a public marketplace and quality system for distributable Codex plugins. It provides the catalog structure, schema contracts, generators, validators, documentation patterns, and release gates needed to publish reusable skills, MCP integrations, apps, and supporting assets.
+                    - paragraph [ref=f1e164]: This wiki is the public operating layer for the project. It summarizes the marketplace status, roadmap, contribution direction, and maintenance model without replacing the repository README or source-controlled documentation.
+                    - generic [ref=f1e165]:
+                        - heading "Current Status" [level=2] [ref=f1e166]
+                        - 'link "Permalink: Current Status" [ref=f1e167] [cursor=pointer]':
+                            - /url: "#current-status"
+                    - paragraph [ref=f1e170]: Codex Essentials is in its first public marketplace phase.
+                    - table [ref=f1e171]:
+                        - rowgroup [ref=f1e172]:
+                            - row [ref=f1e173]:
+                                - columnheader "Area" [ref=f1e174]
+                                - columnheader "Status" [ref=f1e175]
+                        - rowgroup [ref=f1e176]:
+                            - row [ref=f1e177]:
+                                - cell "Repository visibility" [ref=f1e178]
+                                - cell "Public" [ref=f1e179]
+                            - row [ref=f1e180]:
+                                - cell "Marketplace catalog" [ref=f1e181]
+                                - cell "Active" [ref=f1e182]
+                            - row [ref=f1e183]:
+                                - cell "First installable plugin" [ref=f1e184]
+                                - cell [ref=f1e185]:
+                                    - text: Astro Commands (
+                                    - code [ref=f1e186]: astro-cli-commands
+                                    - text: )
+                            - row [ref=f1e187]:
+                                - cell "Primary language" [ref=f1e188]
+                                - cell "TypeScript" [ref=f1e189]
+                            - row [ref=f1e190]:
+                                - cell "Quality gates" [ref=f1e191]
+                                - cell "Local and CI validation workflows" [ref=f1e192]
+                            - row [ref=f1e193]:
+                                - cell "Discussions" [ref=f1e194]
+                                - cell "Enabled" [ref=f1e195]
+                            - row [ref=f1e196]:
+                                - cell "Releases" [ref=f1e197]
+                                - cell "Pending first stable release" [ref=f1e198]
+                            - row [ref=f1e199]:
+                                - cell "Documentation homepage" [ref=f1e200]
+                                - cell "Pending" [ref=f1e201]
+                    - paragraph [ref=f1e202]: The repository currently supports marketplace metadata, plugin manifests, product README templates, validation scripts, quality checks, and contributor-facing operational documentation.
+                    - generic [ref=f1e203]:
+                        - heading "Marketplace Purpose" [level=2] [ref=f1e204]
+                        - 'link "Permalink: Marketplace Purpose" [ref=f1e205] [cursor=pointer]':
+                            - /url: "#marketplace-purpose"
+                    - paragraph [ref=f1e208]: "Codex Essentials exists to make Codex plugin distribution more reliable, auditable, and reusable. The project is designed around a few core responsibilities:"
+                    - list [ref=f1e209]:
+                        - listitem [ref=f1e210]: Maintain a public catalog of installable Codex plugins.
+                        - listitem [ref=f1e211]: Validate plugin manifests, skills, MCP integrations, app metadata, and supporting assets.
+                        - listitem [ref=f1e212]: Standardize product README structure and release documentation.
+                        - listitem [ref=f1e213]: Provide operational rules for safe plugin publishing and rollback.
+                        - listitem [ref=f1e214]: Give contributors a clear path for proposing and maintaining marketplace plugins.
+                    - generic [ref=f1e215]:
+                        - heading "Start Here" [level=2] [ref=f1e216]
+                        - 'link "Permalink: Start Here" [ref=f1e217] [cursor=pointer]':
+                            - /url: "#start-here"
+                    - paragraph [ref=f1e220]: "Install the marketplace:"
+                    - generic [ref=f1e221]:
+                        - generic [ref=f1e222]: codex plugin marketplace add nerymurillohnd/codex-essentials --ref main codex plugin marketplace list
+                        - button "Copy code to clipboard" [ref=f1e224] [cursor=pointer]
+                    - paragraph [ref=f1e228]: "Install the first available plugin:"
+                    - generic [ref=f1e229]:
+                        - generic [ref=f1e230]: codex plugin add astro-cli-commands@codex-essentials codex plugin list
+                        - button "Copy code to clipboard" [ref=f1e232] [cursor=pointer]
+                    - paragraph [ref=f1e236]:
+                        - text: Use
+                        - code [ref=f1e237]: "--ref main"
+                        - text: only when tracking active development. A stable release tag should become the preferred installation reference after the first release is published.
+                    - generic [ref=f1e238]:
+                        - heading "Roadmap" [level=2] [ref=f1e239]
+                        - 'link "Permalink: Roadmap" [ref=f1e240] [cursor=pointer]':
+                            - /url: "#roadmap"
+                    - paragraph [ref=f1e243]: The current public roadmap focuses on making the marketplace easier to discover, safer to consume, and clearer for contributors.
+                    - table [ref=f1e244]:
+                        - rowgroup [ref=f1e245]:
+                            - row [ref=f1e246]:
+                                - columnheader "Priority" [ref=f1e247]
+                                - columnheader "Initiative" [ref=f1e248]
+                                - columnheader "Outcome" [ref=f1e249]
+                        - rowgroup [ref=f1e250]:
+                            - row [ref=f1e251]:
+                                - cell "1" [ref=f1e252]
+                                - cell "Publish first stable release" [ref=f1e253]
+                                - cell [ref=f1e254]:
+                                    - text: Users can install a known-good marketplace version instead of tracking
+                                    - code [ref=f1e255]: main
+                                    - text: .
+                            - row [ref=f1e256]:
+                                - cell "2" [ref=f1e257]
+                                - cell "Launch public documentation homepage" [ref=f1e258]
+                                - cell "GitHub repository metadata can point to a stable onboarding and catalog page." [ref=f1e259]
+                            - row [ref=f1e260]:
+                                - cell "3" [ref=f1e261]
+                                - cell "Add README status badges" [ref=f1e262]
+                                - cell "Visitors can quickly evaluate validation, license, release, and runtime status." [ref=f1e263]
+                            - row [ref=f1e264]:
+                                - cell "4" [ref=f1e265]
+                                - cell "Create plugin submission guidelines" [ref=f1e266]
+                                - cell "External contributors can propose plugins with clear manifest, documentation, validation, and review expectations." [ref=f1e267]
+                            - row [ref=f1e268]:
+                                - cell "5" [ref=f1e269]
+                                - cell "Expand plugin catalog" [ref=f1e270]
+                                - cell "The marketplace moves beyond the first plugin into a broader ecosystem of reusable Codex capabilities." [ref=f1e271]
+                    - paragraph [ref=f1e272]: "Active public tracking issues:"
+                    - list [ref=f1e273]:
+                        - listitem [ref=f1e274]:
+                            - link "#5 Publish the first stable marketplace release" [ref=f1e275] [cursor=pointer]:
+                                - /url: https://github.com/nerymurillohnd/codex-essentials/issues/5
+                        - listitem [ref=f1e276]:
+                            - link "#6 Add README status badges for repository health" [ref=f1e277] [cursor=pointer]:
+                                - /url: https://github.com/nerymurillohnd/codex-essentials/issues/6
+                        - listitem [ref=f1e278]:
+                            - link "#7 Create a public roadmap for marketplace evolution" [ref=f1e279] [cursor=pointer]:
+                                - /url: https://github.com/nerymurillohnd/codex-essentials/issues/7
+                        - listitem [ref=f1e280]:
+                            - link "#8 Add a public documentation homepage" [ref=f1e281] [cursor=pointer]:
+                                - /url: https://github.com/nerymurillohnd/codex-essentials/issues/8
+                        - listitem [ref=f1e282]:
+                            - link "#9 Add plugin submission guidelines for external contributors" [ref=f1e283] [cursor=pointer]:
+                                - /url: https://github.com/nerymurillohnd/codex-essentials/issues/9
+                    - generic [ref=f1e284]:
+                        - heading "Repository Documentation" [level=2] [ref=f1e285]
+                        - 'link "Permalink: Repository Documentation" [ref=f1e286] [cursor=pointer]':
+                            - /url: "#repository-documentation"
+                    - paragraph [ref=f1e289]: Use the README for installation and high-level project orientation. Use source-controlled documentation for detailed contributor and operational rules.
+                    - paragraph [ref=f1e290]: "Key documentation areas:"
+                    - list [ref=f1e291]:
+                        - listitem [ref=f1e292]:
+                            - code [ref=f1e293]: README.md
+                            - text: ": marketplace overview, installation, ownership, and directory reference."
+                        - listitem [ref=f1e294]:
+                            - code [ref=f1e295]: AGENTS.md
+                            - text: ": repository-specific contribution and review protocol."
+                        - listitem [ref=f1e296]:
+                            - code [ref=f1e297]: docs/agent-guidelines/
+                            - text: ": architecture, tooling, security, quality, and communication guidance."
+                        - listitem [ref=f1e298]:
+                            - code [ref=f1e299]: docs/decisions/
+                            - text: ": architecture decision records."
+                        - listitem [ref=f1e300]:
+                            - code [ref=f1e301]: docs/maintenance/
+                            - text: ": pending and resolved maintenance debt."
+                        - listitem [ref=f1e302]:
+                            - code [ref=f1e303]: docs/operations/
+                            - text: ": GitHub Projects and automation guidance."
+                        - listitem [ref=f1e304]:
+                            - code [ref=f1e305]: plugins/
+                            - text: ": plugin packages and product documentation."
+                        - listitem [ref=f1e306]:
+                            - code [ref=f1e307]: templates/
+                            - text: ": schemas and reusable documentation templates."
+                    - generic [ref=f1e308]:
+                        - heading "Contribution Direction" [level=2] [ref=f1e309]
+                        - 'link "Permalink: Contribution Direction" [ref=f1e310] [cursor=pointer]':
+                            - /url: "#contribution-direction"
+                    - paragraph [ref=f1e313]: "Contributions should preserve the repository's quality model:"
+                    - list [ref=f1e314]:
+                        - listitem [ref=f1e315]:
+                            - text: Keep plugin paths relative and
+                            - code [ref=f1e316]: ./
+                            - text: "-prefixed where required."
+                        - listitem [ref=f1e317]: Update plugin manifest, README, changelog, and marketplace catalog entries together.
+                        - listitem [ref=f1e318]: Include validation evidence in pull requests.
+                        - listitem [ref=f1e319]: Avoid credentials, private environment values, and local-only machine assumptions.
+                        - listitem [ref=f1e320]: Prefer clear Markdown, semantic headings, and restrained visual noise.
+                        - listitem [ref=f1e321]: Keep all repository artifacts in English.
+                    - paragraph [ref=f1e322]: Before submitting marketplace changes, run the relevant validation commands documented in the repository README and contributor guidance.
+                    - generic [ref=f1e323]:
+                        - heading "Release Direction" [level=2] [ref=f1e324]
+                        - 'link "Permalink: Release Direction" [ref=f1e325] [cursor=pointer]':
+                            - /url: "#release-direction"
+                    - paragraph [ref=f1e328]: The first stable release should establish a baseline for marketplace consumption.
+                    - paragraph [ref=f1e329]: "Expected release evidence should include:"
+                    - list [ref=f1e330]:
+                        - listitem [ref=f1e331]: Marketplace metadata validation.
+                        - listitem [ref=f1e332]: Plugin manifest validation.
+                        - listitem [ref=f1e333]: Type checking and tests.
+                        - listitem [ref=f1e334]: Documentation quality checks.
+                        - listitem [ref=f1e335]: Release notes with installation, rollback, and known limitation guidance.
+                    - paragraph [ref=f1e336]:
+                        - text: After the first stable release, normal installation documentation should prefer a versioned tag instead of
+                        - code [ref=f1e337]: main
+                        - text: .
+                    - generic [ref=f1e338]:
+                        - heading "Operating Principles" [level=2] [ref=f1e339]
+                        - 'link "Permalink: Operating Principles" [ref=f1e340] [cursor=pointer]':
+                            - /url: "#operating-principles"
+                    - paragraph [ref=f1e343]: "Codex Essentials should remain:"
+                    - list [ref=f1e344]:
+                        - listitem [ref=f1e345]: "Publicly understandable: new users should understand the project from the README, wiki, and homepage."
+                        - listitem [ref=f1e346]: "Operationally auditable: marketplace changes should include validation evidence."
+                        - listitem [ref=f1e347]: "Contributor-friendly: plugin submission requirements should be explicit."
+                        - listitem [ref=f1e348]: "Release-aware: public consumption should move toward stable tags."
+                        - listitem [ref=f1e349]: "Security-conscious: credentials and local secrets must never enter manifests, examples, logs, or documentation."
+                    - generic [ref=f1e350]:
+                        - heading "Ownership" [level=2] [ref=f1e351]
+                        - 'link "Permalink: Ownership" [ref=f1e352] [cursor=pointer]':
+                            - /url: "#ownership"
+                    - paragraph [ref=f1e355]:
+                        - text: "Owner: Nery Samuel Murillo GitHub:"
+                        - link "@nerymurillohnd" [ref=f1e356] [cursor=pointer]:
+                            - /url: https://github.com/nerymurillohnd
+                        - text: "Repository:"
+                        - link "nerymurillohnd/codex-essentials" [ref=f1e357] [cursor=pointer]:
+                            - /url: https://github.com/nerymurillohnd/codex-essentials
+                - generic [ref=f1e359]:
+                    - navigation [ref=f1e360]:
+                        - generic [ref=f1e361]:
+                            - heading "Wiki pages Pages 1" [level=2] [ref=f1e363] [cursor=pointer]:
+                                - button "Wiki pages" [expanded] [ref=f1e364]
+                                - generic [ref=f1e365]:
+                                    - text: Pages
+                                    - generic "1" [ref=f1e366]
+                            - generic [ref=f1e367]:
+                                - textbox "Find a page or section" [ref=f1e369]:
+                                    - /placeholder: Find a page or section…
+                                - list [ref=f1e370]:
+                                    - listitem [ref=f1e371]:
+                                        - generic [ref=f1e372]:
+                                            - generic [ref=f1e373]:
+                                                - button "Structure for Home" [expanded] [ref=f1e374] [cursor=pointer]
+                                                - link "Home" [ref=f1e379] [cursor=pointer]:
+                                                    - /url: /nerymurillohnd/codex-essentials/wiki
+                                            - list [ref=f1e382]:
+                                                - listitem [ref=f1e383]:
+                                                    - link "Codex Essentials Wiki" [ref=f1e384] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#codex-essentials-wiki
+                                                - listitem [ref=f1e385]:
+                                                    - link "Current Status" [ref=f1e386] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#current-status
+                                                - listitem [ref=f1e387]:
+                                                    - link "Marketplace Purpose" [ref=f1e388] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#marketplace-purpose
+                                                - listitem [ref=f1e389]:
+                                                    - link "Start Here" [ref=f1e390] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#start-here
+                                                - listitem [ref=f1e391]:
+                                                    - link "Roadmap" [ref=f1e392] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#roadmap
+                                                - listitem [ref=f1e393]:
+                                                    - link "Repository Documentation" [ref=f1e394] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#repository-documentation
+                                                - listitem [ref=f1e395]:
+                                                    - link "Contribution Direction" [ref=f1e396] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#contribution-direction
+                                                - listitem [ref=f1e397]:
+                                                    - link "Release Direction" [ref=f1e398] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#release-direction
+                                                - listitem [ref=f1e399]:
+                                                    - link "Operating Principles" [ref=f1e400] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#operating-principles
+                                                - listitem [ref=f1e401]:
+                                                    - link "Ownership" [ref=f1e402] [cursor=pointer]:
+                                                        - /url: /nerymurillohnd/codex-essentials/wiki#ownership
+                    - heading "Clone this wiki locally" [level=3] [ref=f1e403]
+                    - generic [ref=f1e404]:
+                        - textbox "Clone URL for this wiki" [ref=f1e405]: https://github.com/nerymurillohnd/codex-essentials.wiki.git
+                        - button "Copy to clipboard" [ref=f1e408] [cursor=pointer]
+    - contentinfo [ref=f1e413]:
+        - heading "Footer" [level=2] [ref=f1e414]
+        - generic [ref=f1e415]:
+            - generic [ref=f1e416]:
+                - link "GitHub Homepage" [ref=f1e417] [cursor=pointer]:
+                    - /url: https://github.com
+                - generic [ref=f1e420]: © 2026 GitHub, Inc.
+            - navigation "Footer" [ref=f1e421]:
+                - heading "Footer navigation" [level=3] [ref=f1e422]
+                - list "Footer navigation" [ref=f1e423]:
+                    - listitem [ref=f1e424]:
+                        - link "Terms" [ref=f1e425] [cursor=pointer]:
+                            - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+                    - listitem [ref=f1e426]:
+                        - link "Privacy" [ref=f1e427] [cursor=pointer]:
+                            - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+                    - listitem [ref=f1e428]:
+                        - link "Security" [ref=f1e429] [cursor=pointer]:
+                            - /url: https://github.com/security
+                    - listitem [ref=f1e430]:
+                        - link "Status" [ref=f1e431] [cursor=pointer]:
+                            - /url: https://www.githubstatus.com/
+                    - listitem [ref=f1e432]:
+                        - link "Community" [ref=f1e433] [cursor=pointer]:
+                            - /url: https://github.community/
+                    - listitem [ref=f1e434]:
+                        - link "Docs" [ref=f1e435] [cursor=pointer]:
+                            - /url: https://docs.github.com/
+                    - listitem [ref=f1e436]:
+                        - link "Contact" [ref=f1e437] [cursor=pointer]:
+                            - /url: https://support.github.com?tags=dotcom-footer
+                    - listitem [ref=f1e438]:
+                        - button "Manage cookies" [ref=f1e440] [cursor=pointer]
+                    - listitem [ref=f1e441]:
+                        - button "Do not share my personal information" [ref=f1e443] [cursor=pointer]

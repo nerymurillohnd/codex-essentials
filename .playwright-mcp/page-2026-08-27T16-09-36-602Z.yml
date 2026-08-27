@@ -1,0 +1,700 @@
+- generic [ref=e2]:
+    - generic [ref=e3]:
+        - link "Skip to content" [ref=e4] [cursor=pointer]:
+            - /url: "#start-of-content"
+        - banner [ref=e9]:
+            - heading "Navigation Menu" [level=2] [ref=e10]
+            - generic [ref=e11]:
+                - link "Homepage" [ref=e13] [cursor=pointer]:
+                    - /url: /
+                - generic [ref=e16]:
+                    - navigation "Global" [ref=e17]:
+                        - list [ref=e18]:
+                            - listitem [ref=e19]:
+                                - button "Platform" [ref=e21] [cursor=pointer]
+                            - listitem [ref=e24]:
+                                - button "Solutions" [ref=e26] [cursor=pointer]
+                            - listitem [ref=e29]:
+                                - button "Resources" [ref=e31] [cursor=pointer]
+                            - listitem [ref=e34]:
+                                - button "Open Source" [ref=e36] [cursor=pointer]
+                            - listitem [ref=e39]:
+                                - button "Enterprise" [ref=e41] [cursor=pointer]
+                            - listitem [ref=e44]:
+                                - link "Pricing" [ref=e45] [cursor=pointer]:
+                                    - /url: https://github.com/pricing
+                    - generic [ref=e46]:
+                        - button "Search or jump to, type / to search" [ref=e48] [cursor=pointer]
+                        - link "Sign in" [ref=e55] [cursor=pointer]:
+                            - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fnerymurillohnd%2Fcodex-essentials
+                        - link "Sign up" [ref=e58] [cursor=pointer]:
+                            - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=nerymurillohnd%2Fcodex-essentials
+                        - button "Appearance settings" [ref=e61] [cursor=pointer]
+    - main [ref=e68]:
+        - generic [ref=e69]:
+            - generic [ref=e70]:
+                - generic [ref=e72]:
+                    - link "nerymurillohnd" [ref=e76] [cursor=pointer]:
+                        - /url: /nerymurillohnd
+                    - generic [ref=e77]: /
+                    - strong [ref=e78]:
+                        - link "codex-essentials" [ref=e79] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials
+                    - generic [ref=e80]: Public
+                - generic [ref=e81]:
+                    - list:
+                        - listitem [ref=e82]:
+                            - link "You must be signed in to change notification settings" [ref=e83] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Notifications
+                        - listitem [ref=e86]:
+                            - link "Fork 0" [ref=e87] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Fork
+                                - generic "0" [ref=e90]
+                        - listitem [ref=e91]:
+                            - link "You must be signed in to star a repository" [ref=e93] [cursor=pointer]:
+                                - /url: /login?return_to=%2Fnerymurillohnd%2Fcodex-essentials
+                                - text: Star
+                                - generic "1 user starred this repository" [ref=e96]: "1"
+            - navigation "Repository" [ref=e97]:
+                - list [ref=e98]:
+                    - listitem [ref=e99]:
+                        - link "Code" [ref=e100] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials
+                    - listitem [ref=e104]:
+                        - link "Issues 5" [ref=e105] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/issues
+                            - generic [ref=e109]: Issues
+                            - generic "5" [ref=e110]
+                    - listitem [ref=e111]:
+                        - link "Pull requests" [ref=e112] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/pulls
+                    - listitem [ref=e116]:
+                        - link "Discussions" [ref=e117] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/discussions
+                    - listitem [ref=e121]:
+                        - link "Actions" [ref=e122] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/actions
+                    - listitem [ref=e126]:
+                        - link "Projects" [ref=e127] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/projects
+                    - listitem [ref=e131]:
+                        - link "Security and quality" [ref=e132] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/security
+                    - listitem [ref=e136]:
+                        - link "Insights" [ref=e137] [cursor=pointer]:
+                            - /url: /nerymurillohnd/codex-essentials/pulse
+        - generic [ref=e154]:
+            - generic [ref=e157]:
+                - generic [ref=e158]:
+                    - generic [ref=e159]:
+                        - button "main branch" [ref=e161] [cursor=pointer]:
+                            - generic [ref=e162]: main
+                        - generic [ref=e166]:
+                            - link "Branches" [ref=e167] [cursor=pointer]:
+                                - /url: /nerymurillohnd/codex-essentials/branches
+                            - link "Tags" [ref=e170] [cursor=pointer]:
+                                - /url: /nerymurillohnd/codex-essentials/tags
+                    - generic [ref=e173]:
+                        - combobox "Go to file" [ref=e181]
+                        - button "Code" [ref=e182] [cursor=pointer]
+                - generic [ref=e185]:
+                    - generic [ref=e186]:
+                        - generic [ref=e188]:
+                            - heading "Latest commit" [level=2] [ref=e189]
+                            - generic [ref=e192]:
+                                - heading "History" [level=2] [ref=e193]
+                                - link "33 Commits" [ref=e194] [cursor=pointer]:
+                                    - /url: /nerymurillohnd/codex-essentials/commits/main/
+                        - heading "Folders and files" [level=2] [ref=e197]
+                        - table "Folders and files" [ref=e198]:
+                            - rowgroup:
+                                - row "Name Last commit message Last commit date":
+                                    - columnheader "Name"
+                                    - columnheader "Last commit message"
+                                    - columnheader "Last commit date"
+                            - rowgroup [ref=e199]:
+                                - row ".agents/plugins, (Directory)" [ref=e200]:
+                                    - cell [ref=e201]:
+                                        - link ".agents/plugins, (Directory)" [ref=e208] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/.agents/plugins
+                                            - text: .agents/plugins
+                                    - cell [ref=e209]
+                                    - cell [ref=e211]
+                                - row ".github, (Directory)" [ref=e214]:
+                                    - cell [ref=e215]:
+                                        - link ".github, (Directory)" [ref=e222] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/.github
+                                            - text: .github
+                                    - cell [ref=e223]
+                                    - cell [ref=e225]
+                                - row ".husky, (Directory)" [ref=e228]:
+                                    - cell [ref=e229]:
+                                        - link ".husky, (Directory)" [ref=e236] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/.husky
+                                            - text: .husky
+                                    - cell [ref=e237]
+                                    - cell [ref=e239]
+                                - row ".vscode, (Directory)" [ref=e242]:
+                                    - cell [ref=e243]:
+                                        - link ".vscode, (Directory)" [ref=e250] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/.vscode
+                                            - text: .vscode
+                                    - cell [ref=e251]
+                                    - cell [ref=e253]
+                                - row "docs, (Directory)" [ref=e256]:
+                                    - cell [ref=e257]:
+                                        - link "docs, (Directory)" [ref=e264] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/docs
+                                            - text: docs
+                                    - cell [ref=e265]
+                                    - cell [ref=e267]
+                                - row "plugins, (Directory)" [ref=e270]:
+                                    - cell [ref=e271]:
+                                        - link "plugins, (Directory)" [ref=e278] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/plugins
+                                            - text: plugins
+                                    - cell [ref=e279]
+                                    - cell [ref=e281]
+                                - row "scripts, (Directory)" [ref=e284]:
+                                    - cell [ref=e285]:
+                                        - link "scripts, (Directory)" [ref=e292] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/scripts
+                                            - text: scripts
+                                    - cell [ref=e293]
+                                    - cell [ref=e295]
+                                - row "templates, (Directory)" [ref=e298]:
+                                    - cell [ref=e299]:
+                                        - link "templates, (Directory)" [ref=e306] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/templates
+                                            - text: templates
+                                    - cell [ref=e307]
+                                    - cell [ref=e309]
+                                - row "tests, (Directory)" [ref=e312]:
+                                    - cell [ref=e313]:
+                                        - link "tests, (Directory)" [ref=e320] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/tests
+                                            - text: tests
+                                    - cell [ref=e321]
+                                    - cell [ref=e323]
+                                - row "types, (Directory)" [ref=e326]:
+                                    - cell [ref=e327]:
+                                        - link "types, (Directory)" [ref=e334] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/tree/main/types
+                                            - text: types
+                                    - cell [ref=e335]
+                                    - cell [ref=e337]
+                                - row ".gitattributes, (File)" [ref=e340]:
+                                    - cell [ref=e341]:
+                                        - link ".gitattributes, (File)" [ref=e348] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/.gitattributes
+                                            - text: .gitattributes
+                                    - cell [ref=e349]
+                                    - cell [ref=e351]
+                                - row ".gitignore, (File)" [ref=e354]:
+                                    - cell [ref=e355]:
+                                        - link ".gitignore, (File)" [ref=e362] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/.gitignore
+                                            - text: .gitignore
+                                    - cell [ref=e363]
+                                    - cell [ref=e365]
+                                - row ".npmrc, (File)" [ref=e368]:
+                                    - cell [ref=e369]:
+                                        - link ".npmrc, (File)" [ref=e376] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/.npmrc
+                                            - text: .npmrc
+                                    - cell [ref=e377]
+                                    - cell [ref=e379]
+                                - row ".nvmrc, (File)" [ref=e382]:
+                                    - cell [ref=e383]:
+                                        - link ".nvmrc, (File)" [ref=e390] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/.nvmrc
+                                            - text: .nvmrc
+                                    - cell [ref=e391]
+                                    - cell [ref=e393]
+                                - row ".prettierignore, (File)" [ref=e396]:
+                                    - cell [ref=e397]:
+                                        - link ".prettierignore, (File)" [ref=e404] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/.prettierignore
+                                            - text: .prettierignore
+                                    - cell [ref=e405]
+                                    - cell [ref=e407]
+                                - row "AGENTS.md, (File)" [ref=e410]:
+                                    - cell [ref=e411]:
+                                        - link "AGENTS.md, (File)" [ref=e418] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/AGENTS.md
+                                            - text: AGENTS.md
+                                    - cell [ref=e419]
+                                    - cell [ref=e421]
+                                - row "LICENSE.md, (File)" [ref=e424]:
+                                    - cell [ref=e425]:
+                                        - link "LICENSE.md, (File)" [ref=e432] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/LICENSE.md
+                                            - text: LICENSE.md
+                                    - cell [ref=e433]
+                                    - cell [ref=e435]
+                                - row "README.md, (File)" [ref=e438]:
+                                    - cell [ref=e439]:
+                                        - link "README.md, (File)" [ref=e446] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/README.md
+                                            - text: README.md
+                                    - cell [ref=e447]
+                                    - cell [ref=e449]
+                                - row "eslint.config.cjs, (File)" [ref=e452]:
+                                    - cell [ref=e453]:
+                                        - link "eslint.config.cjs, (File)" [ref=e460] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/eslint.config.cjs
+                                            - text: eslint.config.cjs
+                                    - cell [ref=e461]
+                                    - cell [ref=e463]
+                                - row "package-lock.json, (File)" [ref=e466]:
+                                    - cell [ref=e467]:
+                                        - link "package-lock.json, (File)" [ref=e474] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/package-lock.json
+                                            - text: package-lock.json
+                                    - cell [ref=e475]
+                                    - cell [ref=e477]
+                                - row "package.json, (File)" [ref=e480]:
+                                    - cell [ref=e481]:
+                                        - link "package.json, (File)" [ref=e488] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/package.json
+                                            - text: package.json
+                                    - cell [ref=e489]
+                                    - cell [ref=e491]
+                                - row "prettier.config.cjs, (File)" [ref=e494]:
+                                    - cell [ref=e495]:
+                                        - link "prettier.config.cjs, (File)" [ref=e502] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/prettier.config.cjs
+                                            - text: prettier.config.cjs
+                                    - cell [ref=e503]
+                                    - cell [ref=e505]
+                                - row "tsconfig.build.json, (File)" [ref=e508]:
+                                    - cell [ref=e509]:
+                                        - link "tsconfig.build.json, (File)" [ref=e516] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/tsconfig.build.json
+                                            - text: tsconfig.build.json
+                                    - cell [ref=e517]
+                                    - cell [ref=e519]
+                                - row "tsconfig.diagnostics.json, (File)" [ref=e522]:
+                                    - cell [ref=e523]:
+                                        - link "tsconfig.diagnostics.json, (File)" [ref=e530] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/tsconfig.diagnostics.json
+                                            - text: tsconfig.diagnostics.json
+                                    - cell [ref=e531]
+                                    - cell [ref=e533]
+                                - row "tsconfig.json, (File)" [ref=e536]:
+                                    - cell [ref=e537]:
+                                        - link "tsconfig.json, (File)" [ref=e544] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/tsconfig.json
+                                            - text: tsconfig.json
+                                    - cell [ref=e545]
+                                    - cell [ref=e547]
+                                - row "tsconfig.scripts.json, (File)" [ref=e550]:
+                                    - cell [ref=e551]:
+                                        - link "tsconfig.scripts.json, (File)" [ref=e558] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/tsconfig.scripts.json
+                                            - text: tsconfig.scripts.json
+                                    - cell [ref=e559]
+                                    - cell [ref=e561]
+                                - row "vitest.config.ts, (File)" [ref=e564]:
+                                    - cell [ref=e565]:
+                                        - link "vitest.config.ts, (File)" [ref=e572] [cursor=pointer]:
+                                            - /url: /nerymurillohnd/codex-essentials/blob/main/vitest.config.ts
+                                            - text: vitest.config.ts
+                                    - cell [ref=e573]
+                                    - cell [ref=e575]
+                    - generic [ref=e579]:
+                        - generic [ref=e580]:
+                            - heading "Repository files navigation" [level=2] [ref=e581]
+                            - navigation "Repository files" [ref=e582]:
+                                - list [ref=e583]:
+                                    - listitem [ref=e584]:
+                                        - link "README" [ref=e585] [cursor=pointer]:
+                                            - /url: "#"
+                                    - listitem [ref=e587]:
+                                        - link "License" [ref=e588] [cursor=pointer]:
+                                            - /url: "#"
+                            - button "Outline" [ref=e590] [cursor=pointer]
+                        - article [ref=e594]:
+                            - generic [ref=e595]:
+                                - heading "🧩 Codex Essentials" [level=1] [ref=e596]
+                                - 'link "Permalink: 🧩 Codex Essentials" [ref=e597] [cursor=pointer]':
+                                    - /url: "#-codex-essentials"
+                            - paragraph [ref=e600]:
+                                - link [ref=e601] [cursor=pointer]:
+                                    - /url: https://camo.githubusercontent.com/fdf2982b9f5d7489dcf44570e714e3a15fce6253e0cc6b5aa61a075aac2ff71b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d79656c6c6f772e737667
+                                    - 'img "License: MIT" [ref=e602]'
+                            - paragraph [ref=e603]:
+                                - strong [ref=e604]: Codex Essentials
+                                - text: is a community marketplace and data repository for distributable Codex plugins. It provides the catalog, schemas, generators, validators, documentation, and quality gates needed to publish reusable skills, MCP integrations, and supporting assets.
+                            - blockquote [ref=e605]:
+                                - paragraph [ref=e606]:
+                                    - strong [ref=e607]: "Current status:"
+                                    - text: "the marketplace publishes its first installable plugin:"
+                                    - code [ref=e608]: Astro Commands
+                                    - text: (
+                                    - code [ref=e609]: astro-cli-commands
+                                    - text: ).
+                            - generic [ref=e610]:
+                                - heading "✨ Start Here" [level=2] [ref=e611]
+                                - 'link "Permalink: ✨ Start Here" [ref=e612] [cursor=pointer]':
+                                    - /url: "#-start-here"
+                            - paragraph [ref=e615]:
+                                - text: Codex Essentials is the distribution layer. Its own
+                                - code [ref=e616]: npm
+                                - text: dependencies maintain the catalog and quality gates; they are
+                                - strong [ref=e617]: not installed into every user's Astro project
+                                - text: . Users add the remote marketplace and install only the plugins they need.
+                            - table [ref=e619]:
+                                - rowgroup [ref=e620]:
+                                    - row [ref=e621]:
+                                        - columnheader "Product" [ref=e622]
+                                        - columnheader "Purpose" [ref=e623]
+                                        - columnheader "Install ID" [ref=e624]
+                                - rowgroup [ref=e625]:
+                                    - row [ref=e626]:
+                                        - cell [ref=e627]:
+                                            - strong [ref=e628]: Astro Commands
+                                        - cell "Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows." [ref=e629]
+                                        - cell [ref=e630]:
+                                            - code [ref=e631]: astro-cli-commands
+                            - generic [ref=e632]:
+                                - heading "Install the Marketplace" [level=3] [ref=e633]
+                                - 'link "Permalink: Install the Marketplace" [ref=e634] [cursor=pointer]':
+                                    - /url: "#install-the-marketplace"
+                            - generic [ref=e637]:
+                                - generic [ref=e638]: codex plugin marketplace add nerymurillohnd/codex-essentials --ref main codex plugin marketplace list
+                                - button "Copy code to clipboard" [ref=e640] [cursor=pointer]
+                            - generic [ref=e644]:
+                                - heading "Install Astro Commands" [level=3] [ref=e645]
+                                - 'link "Permalink: Install Astro Commands" [ref=e646] [cursor=pointer]':
+                                    - /url: "#install-astro-commands"
+                            - generic [ref=e649]:
+                                - generic [ref=e650]: codex plugin add astro-cli-commands@codex-essentials codex plugin list
+                                - button "Copy code to clipboard" [ref=e652] [cursor=pointer]
+                            - paragraph [ref=e656]:
+                                - text: Then open an Astro project in Codex and ask for the work you need. The plugin can activate automatically for Astro-focused tasks, or you can request
+                                - strong [ref=e657]: Astro Commands
+                                - text: directly.
+                            - generic [ref=e658]:
+                                - heading "👤 Ownership and Repository" [level=2] [ref=e659]
+                                - 'link "Permalink: 👤 Ownership and Repository" [ref=e660] [cursor=pointer]':
+                                    - /url: "#-ownership-and-repository"
+                            - list [ref=e663]:
+                                - listitem [ref=e664]:
+                                    - strong [ref=e665]: "Owner:"
+                                    - text: Nery Samuel Murillo
+                                - listitem [ref=e666]:
+                                    - strong [ref=e667]: "GitHub:"
+                                    - link "@nerymurillohnd" [ref=e668] [cursor=pointer]:
+                                        - /url: https://github.com/nerymurillohnd
+                                - listitem [ref=e669]:
+                                    - strong [ref=e670]: "Declared repository:"
+                                    - link "nerymurillohnd/codex-essentials" [ref=e671] [cursor=pointer]:
+                                        - /url: https://github.com/nerymurillohnd/codex-essentials
+                                - listitem [ref=e672]:
+                                    - strong [ref=e673]: "Configured Git remote:"
+                                    - code [ref=e674]: https://github.com/nerymurillohnd/codex-essentials.git
+                                    - text: .
+                                - listitem [ref=e675]:
+                                    - strong [ref=e676]: "License:"
+                                    - link "MIT" [ref=e677] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/LICENSE.md
+                            - generic [ref=e678]:
+                                - heading "📦 Marketplace Lifecycle" [level=2] [ref=e679]
+                                - 'link "Permalink: 📦 Marketplace Lifecycle" [ref=e680] [cursor=pointer]':
+                                    - /url: "#-marketplace-lifecycle"
+                            - paragraph [ref=e683]:
+                                - text: Codex can track a repository marketplace directly from its Git remote. The
+                                - code [ref=e684]: "--ref"
+                                - text: "option pins the source to a branch or tag:"
+                            - generic [ref=e685]:
+                                - generic [ref=e686]: codex plugin marketplace add nerymurillohnd/codex-essentials --ref main codex plugin marketplace list
+                                - button "Copy code to clipboard" [ref=e688] [cursor=pointer]
+                            - paragraph [ref=e692]:
+                                - text: Open the Plugins Directory in the ChatGPT desktop app, select
+                                - strong [ref=e693]: Codex Essentials
+                                - text: ", and install"
+                                - strong [ref=e694]: Astro Commands
+                                - text: (
+                                - code [ref=e695]: astro-cli-commands
+                                - text: ) or another available plugin.
+                            - paragraph [ref=e696]: "Refresh the marketplace metadata when you want to discover catalog changes:"
+                            - generic [ref=e697]:
+                                - generic [ref=e698]: codex plugin marketplace update codex-essentials
+                                - button "Copy code to clipboard" [ref=e700] [cursor=pointer]
+                            - paragraph [ref=e704]: "Remove only the plugin:"
+                            - generic [ref=e705]:
+                                - generic [ref=e706]: codex plugin remove astro-cli-commands@codex-essentials
+                                - button "Copy code to clipboard" [ref=e708] [cursor=pointer]
+                            - paragraph [ref=e712]: "Remove the marketplace registration:"
+                            - generic [ref=e713]:
+                                - generic [ref=e714]: codex plugin marketplace remove codex-essentials
+                                - button "Copy code to clipboard" [ref=e716] [cursor=pointer]
+                            - paragraph [ref=e720]:
+                                - text: See the
+                                - link "official Codex plugin packaging guide" [ref=e721] [cursor=pointer]:
+                                    - /url: https://developers.openai.com/plugins/build/plugins
+                                - text: for current marketplace, plugin, path, and distribution behavior.
+                            - paragraph [ref=e722]:
+                                - text: For the complete product explanation, installation guide, references, approval boundaries, rollback behavior, and troubleshooting, read the
+                                - link "Astro Commands product README" [ref=e723] [cursor=pointer]:
+                                    - /url: /nerymurillohnd/codex-essentials/blob/main/plugins/astro-cli-commands/README.md
+                                - text: .
+                            - generic [ref=e724]:
+                                - heading "🗂️ Directory Reference" [level=2] [ref=e725]
+                                - 'link "Permalink: 🗂️ Directory Reference" [ref=e726] [cursor=pointer]':
+                                    - /url: "#️-directory-reference"
+                            - table [ref=e730]:
+                                - rowgroup [ref=e731]:
+                                    - row [ref=e732]:
+                                        - columnheader "Path" [ref=e733]
+                                        - columnheader "Purpose" [ref=e734]
+                                - rowgroup [ref=e735]:
+                                    - row [ref=e736]:
+                                        - cell [ref=e737]:
+                                            - code [ref=e738]: .agents/plugins/marketplace.json
+                                        - cell "Required marketplace catalog and plugin ordering." [ref=e739]
+                                    - row [ref=e740]:
+                                        - cell [ref=e741]:
+                                            - code [ref=e742]: plugins/<plugin-id>/
+                                        - cell [ref=e743]:
+                                            - text: Plugin packages; each requires
+                                            - code [ref=e744]: .codex-plugin/plugin.json
+                                            - text: .
+                                    - row [ref=e745]:
+                                        - cell [ref=e746]:
+                                            - code [ref=e747]: templates/
+                                        - cell "JSON Schemas and product-documentation templates." [ref=e748]
+                                    - row [ref=e749]:
+                                        - cell [ref=e750]:
+                                            - code [ref=e751]: .github/
+                                        - cell "Issue forms, pull-request contract, release categories, and CI gates." [ref=e752]
+                                    - row [ref=e753]:
+                                        - cell [ref=e754]:
+                                            - code [ref=e755]: scripts/
+                                        - cell "CommonJS validators, generators, and typecheck wrapper." [ref=e756]
+                                    - row [ref=e757]:
+                                        - cell [ref=e758]:
+                                            - code [ref=e759]: tsconfig.scripts.json
+                                        - cell [ref=e760]:
+                                            - text: Dedicated
+                                            - code [ref=e761]: checkJs
+                                            - text: project for JavaScript, CJS, and MJS sources.
+                                    - row [ref=e762]:
+                                        - cell [ref=e763]:
+                                            - code [ref=e764]: scripts/tsconfig.json
+                                        - cell [ref=e765]:
+                                            - text: Editor-discoverable config for files inside
+                                            - code [ref=e766]: scripts/
+                                            - text: .
+                                    - row [ref=e767]:
+                                        - cell [ref=e768]:
+                                            - code [ref=e769]: types/
+                                        - cell "TypeScript contracts and declaration-only interfaces." [ref=e770]
+                                    - row [ref=e771]:
+                                        - cell [ref=e772]:
+                                            - code [ref=e773]: tests/
+                                        - cell "TypeScript Vitest tests and configuration boundary checks." [ref=e774]
+                                    - row [ref=e775]:
+                                        - cell [ref=e776]:
+                                            - code [ref=e777]: docs/agent-guidelines/
+                                        - cell "Detailed architecture, tooling, security, quality, and communication guidance." [ref=e778]
+                                    - row [ref=e779]:
+                                        - cell [ref=e780]:
+                                            - code [ref=e781]: docs/decisions/
+                                        - cell "Architecture Decision Records and the reusable ADR template." [ref=e782]
+                                    - row [ref=e783]:
+                                        - cell [ref=e784]:
+                                            - code [ref=e785]: docs/maintenance/
+                                        - cell "Pending and resolved maintenance debt." [ref=e786]
+                                    - row [ref=e787]:
+                                        - cell [ref=e788]:
+                                            - code [ref=e789]: docs/operations/
+                                        - cell "Community GitHub Projects and operational automation guidance." [ref=e790]
+                                    - row [ref=e791]:
+                                        - cell [ref=e792]:
+                                            - code [ref=e793]: adapters/
+                                            - text: ","
+                                            - code [ref=e794]: config/
+                                        - cell "Supporting integration and repository configuration material." [ref=e795]
+                            - paragraph [ref=e796]:
+                                - text: There is intentionally no repository-level
+                                - code [ref=e797]: skills/
+                                - text: directory. Skills belong inside the plugin that distributes them, for example
+                                - code [ref=e798]: plugins/example/skills/example-workflow/SKILL.md
+                                - text: .
+                            - paragraph [ref=e799]:
+                                - text: The current manifest schema validates skills, apps, MCP integrations, and interface assets. Top-level
+                                - code [ref=e800]: hooks
+                                - text: are intentionally outside this schema until the repository validator and the supported Codex packaging contract are aligned.
+                            - generic [ref=e801]:
+                                - heading "🛠️ For Contributors" [level=2] [ref=e802]
+                                - 'link "Permalink: 🛠️ For Contributors" [ref=e803] [cursor=pointer]':
+                                    - /url: "#️-for-contributors"
+                            - paragraph [ref=e806]: "The repository includes local generators, validators, documentation gates, and release checks for maintaining marketplace products. Start with:"
+                            - generic [ref=e807]:
+                                - generic [ref=e808]: npm install npm run check
+                                - button "Copy code to clipboard" [ref=e810] [cursor=pointer]
+                            - paragraph [ref=e814]:
+                                - text: Before submitting a plugin change, update its manifest, README, changelog, and marketplace entry together. The complete contributor workflow and operational rules live in
+                                - link "AGENTS.md" [ref=e815] [cursor=pointer]:
+                                    - /url: /nerymurillohnd/codex-essentials/blob/main/AGENTS.md
+                                - text: and the linked
+                                - link "quality guidelines" [ref=e816] [cursor=pointer]:
+                                    - /url: /nerymurillohnd/codex-essentials/blob/main/docs/agent-guidelines/quality.md
+                                - text: .
+                            - paragraph [ref=e817]:
+                                - text: The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6 compatibility checks. CI is authoritative, uses full SHA pins, and protects branch-required checks with release environment approval. Local hooks are no-shim and advisory;
+                                - code [ref=e818]: HUSKY=0
+                                - text: is used in CI, while authorized local emergency bypasses use
+                                - code [ref=e819]: HUSKY=0
+                                - text: or
+                                - code [ref=e820]: "--no-verify"
+                                - text: ". The contributor quality vocabulary is:"
+                                - code [ref=e821]: npm run format:check
+                                - text: ","
+                                - code [ref=e822]: npm run lint -- --max-warnings=0
+                                - text: ","
+                                - code [ref=e823]: npm run typecheck
+                                - text: ","
+                                - code [ref=e824]: npm run typecheck:scripts
+                                - text: ","
+                                - code [ref=e825]: npx tsc6 --noEmit
+                                - text: ","
+                                - code [ref=e826]: npm test
+                                - text: ","
+                                - code [ref=e827]: npm run validate:all
+                                - text: ", and"
+                                - code [ref=e828]: actionlint
+                                - text: . Rollback means restoring prior marketplace metadata and removing the corresponding release artifacts.
+                            - generic [ref=e829]:
+                                - heading "📚 Documentation" [level=2] [ref=e830]
+                                - 'link "Permalink: 📚 Documentation" [ref=e831] [cursor=pointer]':
+                                    - /url: "#-documentation"
+                            - list [ref=e834]:
+                                - listitem [ref=e835]:
+                                    - link "Architecture and paths" [ref=e836] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/agent-guidelines/architecture.md
+                                - listitem [ref=e837]:
+                                    - link "Tooling and runtimes" [ref=e838] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/agent-guidelines/tooling.md
+                                - listitem [ref=e839]:
+                                    - link "Security and credentials" [ref=e840] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/agent-guidelines/security.md
+                                - listitem [ref=e841]:
+                                    - link "Quality and maintenance" [ref=e842] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/agent-guidelines/quality.md
+                                - listitem [ref=e843]:
+                                    - link "ADR template" [ref=e844] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/decisions/adr-template.md
+                                - listitem [ref=e845]:
+                                    - link "TypeScript side-by-side decision" [ref=e846] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/decisions/typescript-side-by-side.md
+                                - listitem [ref=e847]:
+                                    - link "Maintenance records" [ref=e848] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/maintenance
+                                - listitem [ref=e849]:
+                                    - link "GitHub Projects operations" [ref=e850] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/operations/github-project-template.md
+                                - listitem [ref=e851]:
+                                    - link "Documentation automation decision" [ref=e852] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/decisions/adr-0004-documentation-and-maintenance-automation.md
+                                - listitem [ref=e853]:
+                                    - link "Hooks and quality gates decision" [ref=e854] [cursor=pointer]:
+                                        - /url: /nerymurillohnd/codex-essentials/blob/main/docs/decisions/adr-0005-hooks-and-quality-gates.md
+                            - generic [ref=e855]:
+                                - heading "🤝 Contribution Style" [level=2] [ref=e856]
+                                - 'link "Permalink: 🤝 Contribution Style" [ref=e857] [cursor=pointer]':
+                                    - /url: "#-contribution-style"
+                            - paragraph [ref=e860]:
+                                - text: Use clear Markdown, semantic headings, restrained emoji, and descriptive file names. Keep plugin paths relative and
+                                - code [ref=e861]: ./
+                                - text: "-prefixed, avoid"
+                                - code [ref=e862]: any
+                                - text: and magic strings, never commit credentials, and include validation evidence in pull requests. All repository artifacts are written in English; conversation and issue coordination may use Spanish.
+            - generic [ref=e865]:
+                - generic [ref=e866]:
+                    - heading "About" [level=2] [ref=e867]
+                    - paragraph [ref=e868]: Community marketplace for Codex plugins, with schemas, generators, validators, docs, and quality gates for reusable skills, MCP integrations, and assets.
+                    - heading "Topics" [level=3] [ref=e869]
+                    - generic [ref=e870]:
+                        - link "agent-skills" [ref=e871] [cursor=pointer]:
+                            - /url: /topics/agent-skills
+                        - link "automation" [ref=e872] [cursor=pointer]:
+                            - /url: /topics/automation
+                        - link "codex" [ref=e873] [cursor=pointer]:
+                            - /url: /topics/codex
+                        - link "codex-plugins" [ref=e874] [cursor=pointer]:
+                            - /url: /topics/codex-plugins
+                        - link "developer-tools" [ref=e875] [cursor=pointer]:
+                            - /url: /topics/developer-tools
+                        - link "mcp" [ref=e876] [cursor=pointer]:
+                            - /url: /topics/mcp
+                        - link "plugin-marketplace" [ref=e877] [cursor=pointer]:
+                            - /url: /topics/plugin-marketplace
+                        - link "typescript" [ref=e878] [cursor=pointer]:
+                            - /url: /topics/typescript
+                    - heading "Resources" [level=3] [ref=e879]
+                    - link "Readme" [ref=e881] [cursor=pointer]:
+                        - /url: "#readme-ov-file"
+                    - link "License" [ref=e885] [cursor=pointer]:
+                        - /url: "#License-1-ov-file"
+                    - link "Activity" [ref=e889] [cursor=pointer]:
+                        - /url: /nerymurillohnd/codex-essentials/activity
+                    - heading "Stars" [level=3] [ref=e892]
+                    - generic [ref=e894]:
+                        - strong [ref=e897]: "1"
+                        - text: star
+                    - heading "Watchers" [level=3] [ref=e898]
+                    - generic [ref=e900]:
+                        - strong [ref=e903]: "1"
+                        - text: watching
+                    - heading "Forks" [level=3] [ref=e904]
+                    - link [ref=e906] [cursor=pointer]:
+                        - /url: /nerymurillohnd/codex-essentials/forks
+                        - strong [ref=e910]: "0"
+                        - text: forks
+                    - link "Report repository" [ref=e912] [cursor=pointer]:
+                        - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fnerymurillohnd%2Fcodex-essentials&report=nerymurillohnd+%28user%29
+                - heading "Releases" [level=2] [ref=e914]
+                - heading "Packages" [level=2] [ref=e918]
+                - heading "Used by" [level=2] [ref=e921]
+                - heading "Contributors" [level=2] [ref=e924]
+                - heading "Languages" [level=2] [ref=e927]
+    - contentinfo [ref=e930]:
+        - heading "Footer" [level=2] [ref=e931]
+        - generic [ref=e932]:
+            - generic [ref=e933]:
+                - link "GitHub Homepage" [ref=e934] [cursor=pointer]:
+                    - /url: https://github.com
+                - generic [ref=e937]: © 2026 GitHub, Inc.
+            - navigation "Footer" [ref=e938]:
+                - heading "Footer navigation" [level=3] [ref=e939]
+                - list "Footer navigation" [ref=e940]:
+                    - listitem [ref=e941]:
+                        - link "Terms" [ref=e942] [cursor=pointer]:
+                            - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+                    - listitem [ref=e943]:
+                        - link "Privacy" [ref=e944] [cursor=pointer]:
+                            - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+                    - listitem [ref=e945]:
+                        - link "Security" [ref=e946] [cursor=pointer]:
+                            - /url: https://github.com/security
+                    - listitem [ref=e947]:
+                        - link "Status" [ref=e948] [cursor=pointer]:
+                            - /url: https://www.githubstatus.com/
+                    - listitem [ref=e949]:
+                        - link "Community" [ref=e950] [cursor=pointer]:
+                            - /url: https://github.community/
+                    - listitem [ref=e951]:
+                        - link "Docs" [ref=e952] [cursor=pointer]:
+                            - /url: https://docs.github.com/
+                    - listitem [ref=e953]:
+                        - link "Contact" [ref=e954] [cursor=pointer]:
+                            - /url: https://support.github.com?tags=dotcom-footer
+                    - listitem [ref=e955]:
+                        - button "Manage cookies" [ref=e957] [cursor=pointer]
+                    - listitem [ref=e958]:
+                        - button "Do not share my personal information" [ref=e960] [cursor=pointer]
