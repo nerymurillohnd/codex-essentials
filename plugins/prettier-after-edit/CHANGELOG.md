@@ -28,7 +28,7 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - **[Area: Packaging]** Added a full marketplace-compatible package structure and
   changelog/manifest synchronization entry.
 - **[Area: Hook]** Updated hook invocation to use
-  `"${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}"` so packaged hooks resolve correctly
-  in Codex environments that export `CLAUDE_PLUGIN_ROOT` only.
+  `"${CODEX_PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}"` so packaged
+  hooks resolve correctly in Codex plugin execution environments.
 
 [unreleased]: https://github.com/nerymurillohnd/codex-essentials/compare/HEAD...HEAD
