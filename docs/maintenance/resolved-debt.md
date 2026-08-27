@@ -52,3 +52,9 @@ Move completed maintenance items here with the resolution date and verification 
 gates` quality aggregator plus the `documentation`, `CodeQL`, `Workflow lint`,
   and `Dependency review` checks before merge. Verified through the GitHub
   branch protection API.
+- 2026-08-27 — Added the protected GitHub `release` environment with
+  `nerymurillohnd` as a required reviewer and created the active `Protect plugin
+release tags` repository ruleset for `refs/tags/plugin/**/v*`. The ruleset
+  blocks tag deletion and non-fast-forward tag updates while still allowing new
+  plugin release tags to be created. Verified through the GitHub Environments
+  and Rulesets APIs.

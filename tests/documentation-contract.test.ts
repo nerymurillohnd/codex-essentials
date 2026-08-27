@@ -85,9 +85,10 @@ describe("hooks and quality gate documentation contract", () => {
 
     expect(pendingDebt).toContain("2026-08-27");
     expect(pendingDebt).toContain("GitHub remote");
-    expect(pendingDebt).toContain("protected `release` environment");
     expect(pendingDebt).toContain("Dependabot/security settings");
     expect(resolvedDebt).toContain("Protected the GitHub `main` branch");
     expect(resolvedDebt).toContain("Required quality gates");
+    expect(resolvedDebt).toContain("protected GitHub `release` environment");
+    expect(resolvedDebt).toContain("Protect plugin release tags");
   });
 });
