@@ -9,6 +9,7 @@ const CHANGELOG_FILE = "CHANGELOG.md";
 const BASE_OPTION = "--base";
 const HEAD_OPTION = "--head";
 const DEFAULT_BASE = "HEAD~1";
+const EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 const CREDENTIAL_PATTERN =
   /\b(?:api[_-]?key|access[_-]?token|secret|password|token)\b\s*[:=]\s*(?!\$\{[A-Z][A-Z0-9_]*\})(?!["'`])\S+/iu;
 
@@ -62,6 +63,26 @@ function containsUnmaskedCredential(text) {
   return CREDENTIAL_PATTERN.test(text);
 }
 
+/**
+ * @param {string} base
+ * @param {(args: string[]) => string} [runner]
+ */
+function resolveBase(
+  base,
+  runner = (args) =>
+    childProcess.execFileSync("git", args, { encoding: "utf8" }),
+) {
+  try {
+    runner(["rev-parse", "--verify", `${base}^{commit}`]);
+    return base;
+  } catch (error) {
+    if (base === DEFAULT_BASE) {
+      return EMPTY_TREE;
+    }
+    throw error;
+  }
+}
+
 /** @param {string[]} argv */
 function parseArgs(argv) {
   let base = DEFAULT_BASE;
@@ -90,16 +111,21 @@ function parseArgs(argv) {
 function main() {
   try {
     const { base, head } = parseArgs(process.argv.slice(2));
+    const resolvedBase = resolveBase(base);
     const changedPaths = childProcess
-      .execFileSync("git", ["diff", "--name-only", base, head], {
+      .execFileSync("git", ["diff", "--name-only", resolvedBase, head], {
         encoding: "utf8",
       })
       .split("\n")
       .map((value) => value.trim())
       .filter(Boolean);
-    const diffText = childProcess.execFileSync("git", ["diff", base, head], {
-      encoding: "utf8",
-    });
+    const diffText = childProcess.execFileSync(
+      "git",
+      ["diff", resolvedBase, head],
+      {
+        encoding: "utf8",
+      },
+    );
     const result = evaluateChanges(changedPaths, diffText);
     if (result.errors.length > 0) {
       console.error(
@@ -132,4 +158,5 @@ module.exports = {
   evaluateChanges,
   main,
   parseArgs,
+  resolveBase,
 };

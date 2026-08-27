@@ -11,6 +11,7 @@ interface DocumentationGateModule {
   containsUnmaskedCredential(text: string): boolean;
   parseArgs(argv: string[]): { base: string; head: string };
   errorMessage(error: unknown): string;
+  resolveBase(base: string, runner?: (args: string[]) => string): string;
 }
 
 const gate =
@@ -76,5 +77,21 @@ describe("documentation gate", () => {
     );
     expect(gate.errorMessage(new Error("failure"))).toBe("failure");
     expect(gate.errorMessage("failure")).toBe("failure");
+  });
+
+  it("uses the empty tree when the first commit has no parent", () => {
+    const emptyTree = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+    expect(
+      gate.resolveBase("HEAD~1", () => {
+        throw new Error("missing revision");
+      }),
+    ).toBe(emptyTree);
+    expect(gate.resolveBase("HEAD~1", () => "verified")).toBe("HEAD~1");
+    expect(() =>
+      gate.resolveBase("missing", () => {
+        throw new Error("missing");
+      }),
+    ).toThrow("missing");
+    expect(gate.resolveBase("HEAD")).toBe("HEAD");
   });
 });
