@@ -289,3 +289,28 @@ tracked `--background --force`, `stop`, `status`, and `logs` controls.
 The plugin preserves project data by requiring the agent to inspect mutations
 from commands such as `astro add`, avoid printing generated secret values, and
 report exact verification commands and material failure output.
+
+## Documentation and Attribution
+
+Astro Commands is an independent Codex plugin. It is not an official Astro
+product and is not affiliated with or endorsed by the Astro team. Astro and
+related marks belong to their respective owners.
+
+The command names, flags, version behavior, and framework concepts summarized
+by this plugin are based on Astro's public documentation and open-source
+project materials:
+
+| Official source                                                             | Used for                                                                                 |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [Astro documentation](https://docs.astro.build/)                            | General framework concepts, installation guidance, and current documentation navigation. |
+| [Astro CLI reference](https://docs.astro.build/en/reference/cli-reference/) | Commands, flags, package-manager examples, and CLI behavior.                             |
+| [Astro installation guide](https://docs.astro.build/en/install-and-setup/)  | Project-local installation and setup expectations.                                       |
+| [Astro GitHub repository](https://github.com/withastro/astro)               | Open-source implementation, package source, issues, releases, and contribution context.  |
+| [Astro 7 release notes](https://astro.build/blog/astro-7/)                  | Astro 7 platform changes and agent-oriented development behavior.                        |
+| [Astro 7.2 release notes](https://astro.build/blog/astro-720/)              | Astro 7.2 additions, including preview background mode and related CLI updates.          |
+
+The bundled references are curated and versioned snapshots, not a substitute
+for the installed project's CLI or Astro's current documentation. When a
+project's version, `--help` output, or behavior differs, the installed binary
+and the official sources above take precedence. See the [Skill instructions](skills/astro-commands/SKILL.md)
+for the maintenance and re-verification rule.

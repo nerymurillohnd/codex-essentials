@@ -25,6 +25,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   the external `plugin-creator` compatibility checker is optional and
   maintainer-only. Documented asking Codex to invoke that Skill as the
   preferred user experience.
+- **[Area: Documentation]** Added official Astro documentation, repository,
+  installation, and release-note links with attribution and source precedence.
 
 ### Changed
 
