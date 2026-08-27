@@ -223,14 +223,19 @@ partial, reinstall after validating the marketplace and plugin manifests.
 
 ## Verification
 
-Validate the package from the marketplace repository:
+Validate the package from the marketplace repository. This is the canonical
+check for contributors and is available after installing this repository's
+dependencies:
 
 ```bash
 npm run validate:plugins
 npm run validate:all
 ```
 
-Validate with the plugin-creator compatibility checker:
+The following is an optional maintainer check. `validate_plugin.py` is supplied
+by the external Codex `plugin-creator` Skill; it is not stored in this
+repository. Replace `<plugin-creator-skill-root>` with the local filesystem
+root of that Skill, or skip this check when that Skill is not installed:
 
 ```bash
 uv run --with pyyaml python <plugin-creator-skill-root>/scripts/validate_plugin.py plugins/astro-cli-commands

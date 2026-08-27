@@ -20,6 +20,10 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   marketplace as an available local plugin.
 - **[Area: Documentation]** Documented the command-first decision rule and
   version-drift maintenance contract.
+- **[Area: Documentation]** Clarified that the repository-owned
+  `npm run validate:all` check is the canonical contributor validation, while
+  the external `plugin-creator` compatibility checker is optional and
+  maintainer-only.
 
 ### Changed
 
