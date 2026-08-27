@@ -32,6 +32,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   unchanged.
 - **[Area: Documentation]** Removed maintainer-only local authoring commands
   from the public product and marketplace README guidance.
+- **[Area: Documentation]** Distinguished the full contributor check from the
+  repository's manifest-only validation commands.
 
 ### Changed
 

@@ -196,13 +196,23 @@ package, then validate the manifests before reinstalling.
 
 ## ✅ Verification
 
-Repository maintainers can run the canonical checks:
+Repository maintainers can run the canonical contributor check. It covers
+formatting, linting, typechecking, tests, coverage, and manifest validation:
+
+```bash
+npm run check
+```
+
+For manifest-only checks, use:
 
 ```bash
 npm run validate:plugins
 npm run validate:all
 npm run validate:release -- plugin/astro-cli-commands/v0.1.0
 ```
+
+`validate:all` checks the catalog, schemas, plugin directories, and
+cross-references; it does not replace `npm run check`.
 
 From Codex, maintainers can ask:
 
