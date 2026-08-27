@@ -89,11 +89,13 @@ archive checksum.
 
 GitHub's current runner migration notice states that Node.js 24 became the
 default on 2026-06-16 and Node.js 20 is scheduled for removal on 2026-09-23.
-All workflows therefore select Node.js 24 explicitly and use the latest
-Node.js-24-compatible action majors. The workflows run on `ubuntu-latest`;
-contributors maintaining self-hosted runners must provide the runner version
-required by these action releases. Node.js 24 does not support macOS 13.4 or
-older, or ARM32 runners.
+Workflows and jobs that execute repository Node tooling therefore select
+Node.js 24 explicitly and use the latest Node.js-24-compatible action majors.
+Action-only security jobs, such as dependency review, CodeQL, and actionlint,
+do not install repository Node dependencies. The workflows run on
+`ubuntu-latest`; contributors maintaining self-hosted runners must provide the
+runner version required by these action releases. Node.js 24 does not support
+macOS 13.4 or older, or ARM32 runners.
 
 ## Pros and Cons of the Options
 
