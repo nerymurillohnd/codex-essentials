@@ -11,6 +11,9 @@ const repositoryRoot = path.resolve(
 const workflowsRoot = path.join(repositoryRoot, ".github", "workflows");
 const checkoutActionSha = "3d3c42e5aac5ba805825da76410c181273ba90b1";
 const setupNodeActionSha = "820762786026740c76f36085b0efc47a31fe5020";
+const dependencyReviewActionSha = "a1d282b36b6f3519aa1f3fc636f609c47dddb294";
+const codeqlActionSha = "cdf488f595d80d6e07e03d4674febd5ab45fa938";
+const actionlintActionSha = "03d0035246f3e81f36aed592ffb4bebf33a03106";
 const fullShaActionReference = /uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s|$)/u;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -213,5 +216,76 @@ describe("documentation workflow contract", () => {
     const jobEnv = asRecord(documentationJob.env, "documentation job env");
     expect(jobEnv.BASE_SHA).toBe("${{ github.event.pull_request.base.sha }}");
     expect(jobEnv.HEAD_SHA).toBe("${{ github.event.pull_request.head.sha }}");
+  });
+});
+
+describe("security workflow contract", () => {
+  it("runs safe events with read-only default permissions", () => {
+    const workflow = parseWorkflow("security.yml");
+    const triggers = asRecord(workflow.on, "security triggers");
+    const permissions = asRecord(workflow.permissions, "security permissions");
+
+    expect(Object.keys(triggers)).toEqual(
+      expect.arrayContaining(["push", "pull_request"]),
+    );
+    expect(triggers).not.toHaveProperty("pull_request_target");
+    expect(permissions).toEqual({ contents: "read" });
+  });
+
+  it("pins every security workflow action to a full commit SHA", () => {
+    expectFullShaPins(readWorkflow("security.yml"));
+  });
+
+  it("scopes dependency review to pull requests without secrets", () => {
+    const workflow = parseWorkflow("security.yml");
+    const dependencyReviewJob = asRecord(
+      workflowJobs(workflow)["dependency-review"],
+      "dependency-review job",
+    );
+    const permissions = asRecord(
+      dependencyReviewJob.permissions,
+      "dependency-review permissions",
+    );
+    const uses = stepUses(jobSteps(dependencyReviewJob, "dependency-review"));
+
+    expect(dependencyReviewJob.if).toBe(
+      "${{ github.event_name == 'pull_request' }}",
+    );
+    expect(permissions).toEqual({
+      contents: "read",
+      "pull-requests": "read",
+    });
+    expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
+    expect(uses).toContain(
+      `actions/dependency-review-action@${dependencyReviewActionSha}`,
+    );
+    expect(readWorkflow("security.yml")).not.toContain("secrets.");
+  });
+
+  it("runs CodeQL with only the security-events write permission", () => {
+    const workflow = parseWorkflow("security.yml");
+    const codeqlJob = asRecord(workflowJobs(workflow).codeql, "codeql job");
+    const permissions = asRecord(codeqlJob.permissions, "codeql permissions");
+    const uses = stepUses(jobSteps(codeqlJob, "codeql"));
+
+    expect(permissions).toEqual({
+      contents: "read",
+      "security-events": "write",
+    });
+    expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
+    expect(uses).toContain(`github/codeql-action/init@${codeqlActionSha}`);
+    expect(uses).toContain(`github/codeql-action/analyze@${codeqlActionSha}`);
+  });
+
+  it("lints GitHub Actions workflows with actionlint", () => {
+    const workflow = parseWorkflow("security.yml");
+    const workflowLintJob = asRecord(
+      workflowJobs(workflow)["workflow-lint"],
+      "workflow-lint job",
+    );
+    const uses = stepUses(jobSteps(workflowLintJob, "workflow-lint"));
+
+    expect(uses).toContain(`actions/checkout@${checkoutActionSha}`);
+    expect(uses).toContain(`rhysd/actionlint@${actionlintActionSha}`);
   });
 });
