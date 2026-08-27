@@ -1,6 +1,6 @@
 {
   "name": "prettier-after-edit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Format files edited by Codex with Prettier after each change, preferring project-local binaries and falling back to global PATH when needed.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -21,6 +21,6 @@
       "Project-local Prettier preference with global fallback",
       "No installation-time project mutations"
     ],
-    "defaultPrompt": "Use Prettier After Edit"
+    "defaultPrompt": "Use Prettier After Edit to format changed files after supported Codex edits."
   }
 }

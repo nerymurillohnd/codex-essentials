@@ -1,7 +1,7 @@
 # Astro Commands
 
 ![Astro](https://img.shields.io/badge/Astro-Commands-ff5d01.svg)
-![Plugin version](https://img.shields.io/badge/version-0.1.0-111827.svg)
+![Plugin version](https://img.shields.io/badge/version-0.1.1-111827.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)
 
 > Let Astro's own CLI lead the work.
@@ -52,13 +52,14 @@ Use Astro Commands before planning this Astro task.
 
 ## 🧰 Included Components
 
-| Component                        | Purpose                                                  |
-| -------------------------------- | -------------------------------------------------------- |
-| `.codex-plugin/plugin.json`      | Marketplace manifest and product metadata.               |
-| `skills/astro-commands/SKILL.md` | Main command-first operating guidance.                   |
-| `references/commands.md`         | Command behavior and lifecycle reference.                |
-| `references/flags.md`            | Flag scope, defaults, and compatibility notes.           |
-| `references/operations.md`       | Package manager, CI, server, and configuration guidance. |
+| Component                                  | Purpose                                                    |
+| ------------------------------------------ | ---------------------------------------------------------- |
+| `.codex-plugin/plugin.json`                | Marketplace manifest and product metadata.                 |
+| `skills/astro-commands/SKILL.md`           | Main command-first operating guidance.                     |
+| `skills/astro-commands/agents/openai.yaml` | Codex agent label, catalog summary, and invocation prompt. |
+| `references/commands.md`                   | Command behavior and lifecycle reference.                  |
+| `references/flags.md`                      | Flag scope, defaults, and compatibility notes.             |
+| `references/operations.md`                 | Package manager, CI, server, and configuration guidance.   |
 
 No hooks, scripts, MCP servers, apps, or assets are bundled with this release.
 
@@ -67,6 +68,7 @@ No hooks, scripts, MCP servers, apps, or assets are bundled with this release.
 | Read this                                                         | When you need to...                                                          |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | [`SKILL.md`](skills/astro-commands/SKILL.md)                      | Choose the right Astro workflow before acting.                               |
+| [`openai.yaml`](skills/astro-commands/agents/openai.yaml)         | Codex-facing skill metadata and the concise initial task prompt.             |
 | [`commands.md`](skills/astro-commands/references/commands.md)     | Review commands, server controls, preferences, telemetry, or key generation. |
 | [`flags.md`](skills/astro-commands/references/flags.md)           | Check a flag's scope, defaults, or version behavior.                         |
 | [`operations.md`](skills/astro-commands/references/operations.md) | Resolve package, CI, server, lock-file, secret, or config questions.         |
@@ -208,7 +210,7 @@ For manifest-only checks, use:
 ```bash
 npm run validate:plugins
 npm run validate:all
-npm run validate:release -- plugin/astro-cli-commands/v0.1.0
+npm run validate:release -- plugin/astro-cli-commands/v0.1.1
 ```
 
 `validate:all` checks the catalog, schemas, plugin directories, and

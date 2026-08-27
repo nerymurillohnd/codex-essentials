@@ -5,6 +5,7 @@ import path from "node:path";
 import type { SpawnSyncReturns } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import YAML from "yaml";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(currentDirectory, "..");
@@ -60,6 +61,36 @@ interface PluginSchema {
       properties: { screenshots: { items: { $ref: string } } };
     };
   };
+}
+
+interface AgentSchema {
+  $schema: string;
+  type: string;
+  additionalProperties: boolean;
+  required: string[];
+  properties: {
+    interface: {
+      required: string[];
+      properties: {
+        display_name: { minLength: number; maxLength: number };
+        short_description: { minLength: number; maxLength: number };
+        default_prompt: { minLength: number; maxLength: number };
+      };
+    };
+    policy: { properties: { allow_implicit_invocation: { type: string } } };
+  };
+}
+
+interface PluginInterfaceMetadata {
+  displayName: string;
+  shortDescription: string;
+  defaultPrompt: string;
+}
+
+interface AgentInterfaceMetadata {
+  display_name: string;
+  short_description: string;
+  default_prompt: string;
 }
 
 function loadSchema(fileName: string): unknown {
@@ -153,6 +184,74 @@ describe("JSON Schema templates", () => {
     );
   });
 
+  it("defines the strict Codex skill agent manifest contract", () => {
+    const schema = loadSchema("agent.schema.json") as AgentSchema;
+
+    expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema");
+    expect(schema.type).toBe("object");
+    expect(schema.additionalProperties).toBe(false);
+    expect(schema.required).toEqual(["interface"]);
+    expect(schema.properties.interface.required).toEqual([
+      "display_name",
+      "short_description",
+    ]);
+    expect(schema.properties.interface.properties.display_name).toMatchObject({
+      minLength: 1,
+      maxLength: 80,
+    });
+    expect(
+      schema.properties.interface.properties.short_description,
+    ).toMatchObject({ minLength: 1, maxLength: 120 });
+    expect(schema.properties.interface.properties.default_prompt).toMatchObject(
+      { minLength: 1, maxLength: 500 },
+    );
+    expect(
+      schema.properties.policy.properties.allow_implicit_invocation.type,
+    ).toBe("boolean");
+  });
+
+  it("keeps every published single-skill agent aligned with package metadata", () => {
+    const products = [
+      ["astro-cli-commands", "astro-commands"],
+      ["prettier-after-edit", "prettier-after-edit"],
+    ] as const;
+
+    for (const [pluginName, skillName] of products) {
+      const plugin = JSON.parse(
+        fs.readFileSync(
+          path.join(
+            repositoryRoot,
+            "plugins",
+            pluginName,
+            ".codex-plugin",
+            "plugin.json",
+          ),
+          "utf8",
+        ),
+      ) as { interface: PluginInterfaceMetadata };
+      const agent = YAML.parse(
+        fs.readFileSync(
+          path.join(
+            repositoryRoot,
+            "plugins",
+            pluginName,
+            "skills",
+            skillName,
+            "agents",
+            "openai.yaml",
+          ),
+          "utf8",
+        ),
+      ) as { interface: AgentInterfaceMetadata };
+
+      expect(agent.interface).toEqual({
+        display_name: plugin.interface.displayName,
+        short_description: plugin.interface.shortDescription,
+        default_prompt: plugin.interface.defaultPrompt,
+      });
+    }
+  });
+
   it("validates an empty marketplace structure", () => {
     const root = createFixture();
     try {
@@ -188,7 +287,40 @@ describe("JSON Schema templates", () => {
           path.join(root, "plugins/sample-plugin/.codex-plugin/plugin.json"),
         ),
       ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(
+            root,
+            "plugins/sample-plugin/skills/sample-plugin/SKILL.md",
+          ),
+        ),
+      ).toBe(true);
+      expect(
+        fs.existsSync(
+          path.join(
+            root,
+            "plugins/sample-plugin/skills/sample-plugin/agents/openai.yaml",
+          ),
+        ),
+      ).toBe(true);
       expect(validation.stdout).toContain("Validation passed: all");
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("serializes custom display metadata safely into generated agent YAML", () => {
+    const root = createFixture();
+    try {
+      const generation = runScript(
+        "generate_manifests.cjs",
+        ["plugin", "quoted-plugin", "--display-name", "Quoted: Plugin"],
+        root,
+      );
+      const validation = runScript("validate_manifests.cjs", ["all"], root);
+
+      expect(generation.status).toBe(0);
+      expect(validation.status).toBe(0);
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }

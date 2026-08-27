@@ -33,6 +33,7 @@ describe("documentation gate", () => {
     const result = gate.evaluateChanges([
       "plugins/example/.codex-plugin/plugin.json",
       "plugins/example/skills/task/SKILL.md",
+      "plugins/example/skills/task/agents/openai.yaml",
     ]);
     expect(result.plugins).toEqual(["example"]);
     expect(result.errors.join("\n")).toContain("README.md");

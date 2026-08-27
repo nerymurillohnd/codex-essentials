@@ -10,7 +10,7 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   Copy this file to the plugin package root as CHANGELOG.md.
 
   Area labels are conditional metadata, not a checklist. Use one or more only
-  when affected: Manifest, Skill, Hook, Script, MCP, App, Permission,
+  when affected: Manifest, Skill, Agent, Hook, Script, MCP, App, Permission,
   Installation, Security, or Breaking Change. Remove empty sections before
   publishing.
   Never include credentials, tokens, or other secret values.

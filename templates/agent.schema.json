@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent.schema.json",
+  "title": "Codex Skill Agent Manifest",
+  "description": "Schema for skills/<skill-id>/agents/openai.yaml metadata consumed by Codex.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["interface"],
+  "properties": {
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_name", "short_description"],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "short_description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "default_prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "icon_small": {
+          "$ref": "#/$defs/skillAssetPath"
+        },
+        "icon_large": {
+          "$ref": "#/$defs/skillAssetPath"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allow_implicit_invocation": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "skillAssetPath": {
+      "type": "string",
+      "allOf": [
+        {
+          "pattern": "^\\./assets/[^\\r\\n]+$"
+        },
+        {
+          "not": {
+            "pattern": "(?:^|/)\\.\\.(?:/|$)"
+          }
+        }
+      ]
+    }
+  }
+}

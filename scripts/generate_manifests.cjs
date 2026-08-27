@@ -3,6 +3,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const YAML = require("yaml");
 
 const { loadJson, validateAgainstSchema } = require("./validate_manifests.cjs");
 
@@ -17,6 +18,9 @@ const DEFAULT_CATEGORY = "Productivity";
 const DEFAULT_VERSION = "0.1.0";
 const DEFAULT_SKILLS_PATH = "./skills/";
 const SKILLS_DIRECTORY = "skills";
+const SKILL_FILE = "SKILL.md";
+const AGENTS_DIRECTORY = "agents";
+const AGENT_MANIFEST_FILE = "openai.yaml";
 const DEFAULT_INSTALLATION_POLICY = "AVAILABLE";
 const DEFAULT_AUTHENTICATION_POLICY = "ON_INSTALL";
 const LOCAL_SOURCE = "local";
@@ -184,6 +188,7 @@ function generatePlugin(options) {
   );
 
   fs.mkdirSync(path.join(pluginRoot, SKILLS_DIRECTORY), { recursive: true });
+  writeSkillAgentTemplate(pluginRoot, options.pluginName, displayName);
   writeValidatedJson(
     manifestPath,
     payload,
@@ -254,6 +259,7 @@ function completeManifest(options) {
   };
 
   fs.mkdirSync(path.join(pluginRoot, SKILLS_DIRECTORY), { recursive: true });
+  writeSkillAgentTemplate(pluginRoot, options.pluginName, displayName);
   writeValidatedJson(
     manifestPath,
     payload,
@@ -398,6 +404,35 @@ function writeDocumentationTemplates(root, pluginRoot, values) {
   }
 }
 
+function writeSkillAgentTemplate(pluginRoot, skillName, displayName) {
+  const skillRoot = path.join(pluginRoot, SKILLS_DIRECTORY, skillName);
+  const skillPath = path.join(skillRoot, SKILL_FILE);
+  const agentPath = path.join(skillRoot, AGENTS_DIRECTORY, AGENT_MANIFEST_FILE);
+
+  if (!fs.existsSync(skillPath)) {
+    fs.mkdirSync(path.dirname(skillPath), { recursive: true });
+    fs.writeFileSync(
+      skillPath,
+      `# ${displayName}\n\nUse this skill to work with ${displayName}.\n`,
+      "utf8",
+    );
+  }
+  if (!fs.existsSync(agentPath)) {
+    fs.mkdirSync(path.dirname(agentPath), { recursive: true });
+    fs.writeFileSync(
+      agentPath,
+      YAML.stringify({
+        interface: {
+          display_name: displayName,
+          short_description: `Use ${displayName} in Codex`,
+          default_prompt: `Use ${displayName}`,
+        },
+      }),
+      "utf8",
+    );
+  }
+}
+
 function readObjectIfPresent(target) {
   if (!fs.existsSync(target)) {
     return undefined;
@@ -442,6 +477,7 @@ module.exports = {
   readObjectIfPresent,
   titleCase,
   updateMarketplace,
+  writeSkillAgentTemplate,
   writeValidatedJson,
   writeDocumentationTemplates,
 };

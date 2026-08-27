@@ -1,6 +1,6 @@
 # Prettier After Edit
 
-![Plugin version](https://img.shields.io/badge/version-0.1.0-111827.svg)
+![Plugin version](https://img.shields.io/badge/version-0.1.1-111827.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)
 
 > Auto-format files edited by Codex using `prettier`.
@@ -41,22 +41,24 @@ codex plugin list
 
 ## 🧰 Included Components
 
-| Component                             | Purpose                                               |
-| ------------------------------------- | ----------------------------------------------------- |
-| `.codex-plugin/plugin.json`           | Marketplace manifest and plugin metadata.             |
-| `hooks/hooks.json`                    | Hook event matchers and invocation configuration.     |
-| `hooks/prettier-format.sh`            | Format behavior and fallback logic.                   |
-| `skills/prettier-after-edit/SKILL.md` | Author-facing usage guidance for the plugin behavior. |
-| `README.md`                           | Plugin purpose, limits, verification, and operations. |
-| `CHANGELOG.md`                        | User-facing change history.                           |
-| `LICENSE.md`                          | License terms.                                        |
+| Component                                       | Purpose                                                    |
+| ----------------------------------------------- | ---------------------------------------------------------- |
+| `.codex-plugin/plugin.json`                     | Marketplace manifest and plugin metadata.                  |
+| `hooks/hooks.json`                              | Hook event matchers and invocation configuration.          |
+| `hooks/prettier-format.sh`                      | Format behavior and fallback logic.                        |
+| `skills/prettier-after-edit/SKILL.md`           | Author-facing usage guidance for the plugin behavior.      |
+| `skills/prettier-after-edit/agents/openai.yaml` | Codex agent label, catalog summary, and invocation prompt. |
+| `README.md`                                     | Plugin purpose, limits, verification, and operations.      |
+| `CHANGELOG.md`                                  | User-facing change history.                                |
+| `LICENSE.md`                                    | License terms.                                             |
 
 ## 📚 Reference Library
 
-| Read this                                         | What it provides                                         |
-| ------------------------------------------------- | -------------------------------------------------------- |
-| [`SKILL.md`](skills/prettier-after-edit/SKILL.md) | Author-facing behavior and fallback expectations.        |
-| [`prettier-format.sh`](hooks/prettier-format.sh)  | Hook implementation and explicit skip/failure signaling. |
+| Read this                                                      | What it provides                                                 |
+| -------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [`SKILL.md`](skills/prettier-after-edit/SKILL.md)              | Author-facing behavior and fallback expectations.                |
+| [`openai.yaml`](skills/prettier-after-edit/agents/openai.yaml) | Codex-facing skill metadata and the concise initial task prompt. |
+| [`prettier-format.sh`](hooks/prettier-format.sh)               | Hook implementation and explicit skip/failure signaling.         |
 
 ## 🖥️ Supported Environments
 
@@ -170,7 +172,7 @@ Run validation and smoke tests from this repository:
 ```bash
 npm run validate:plugins
 npm run validate:all
-npm run validate:release -- plugin/prettier-after-edit/v0.1.0
+npm run validate:release -- plugin/prettier-after-edit/v0.1.1
 ```
 
 From a target project, validate the hook behavior by editing a tracked file:
