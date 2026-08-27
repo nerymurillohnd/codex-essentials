@@ -6,9 +6,8 @@ Use this file for unresolved maintenance work, known limitations, and follow-up 
   `${GITHUB_ORG}` before running the real Project bootstrap. The repository can
   validate the specification and dry-run command now, but organization-level
   Project creation remains an external administrative action.
-- 2026-08-27 — Verify the GitHub remote configuration, tag protection for
-  `plugin/**/v*`, the protected `release` environment, release environment
-  approval reviewers, and the remaining security settings.
+- 2026-08-27 — Verify the GitHub remote configuration and the remaining
+  security settings.
   Dependabot/security settings are partially resolved: Dependabot configuration
   is now present and producing update runs, while the remaining repository
   security settings still need live verification. Move this entry to

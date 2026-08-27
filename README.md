@@ -27,6 +27,15 @@ they need.
 
 ### Install the Marketplace
 
+For normal use, pin the marketplace to the first stable Astro Commands release:
+
+```bash
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
+codex plugin marketplace list
+```
+
+Use `main` only when you intentionally want the latest development state:
+
 ```bash
 codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
 codex plugin marketplace list
@@ -57,9 +66,13 @@ Codex can track a repository marketplace directly from its Git remote. The
 `--ref` option pins the source to a branch or tag:
 
 ```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
 codex plugin marketplace list
 ```
+
+The stable release tag is recommended for normal installation. The `main`
+branch remains available for contributors and early adopters who intentionally
+track unreleased marketplace changes.
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
 Essentials**, and install **Astro Commands** (`astro-cli-commands`) or another

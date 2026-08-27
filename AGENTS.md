@@ -57,6 +57,15 @@ Route changes according to their risk and distribution impact:
   clarifications, and other changes with no product or runtime impact. Run the
   relevant formatter and validation for the affected files first.
 
+| Issue type                                    | PR needed now?                                            |
+| --------------------------------------------- | --------------------------------------------------------- |
+| Badges / roadmap / contributor docs           | No                                                        |
+| Branch protection                             | No                                                        |
+| Homepage metadata                             | No                                                        |
+| Packages                                      | No action now                                             |
+| First stable release                          | Likely yes for prep docs; release action after validation |
+| Future plugin/catalog/schema/workflow changes | Yes                                                       |
+
 For every pull request, read all review comments, checks, and requested
 changes before integrating. Evaluate each finding against the repository; fix
 it when technically valid, reply in the review thread with the result, and
