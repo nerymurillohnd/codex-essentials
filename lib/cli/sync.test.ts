@@ -82,6 +82,23 @@ describe("synchronization command", () => {
     expect(fs.readFileSync(manifest, "utf8")).toBe("{}\n");
   });
 
+  it("rejects a symlinked marketplace target before it writes outside the repository", () => {
+    const root = createFixture();
+    const externalOutput = path.join(root, "external-marketplace.json");
+    const marketplaceDirectory = path.join(root, ".agents", "plugins");
+
+    fs.mkdirSync(marketplaceDirectory, { recursive: true });
+    fs.symlinkSync(
+      externalOutput,
+      path.join(marketplaceDirectory, "marketplace.json"),
+    );
+
+    expect(() => sync.syncAll(root, { write: true })).toThrow(
+      "must not be a symbolic link",
+    );
+    expect(fs.existsSync(externalOutput)).toBe(false);
+  });
+
   it("runs write, drift, and argument-error CLI paths", () => {
     const root = createFixture();
     const argv = process.argv;

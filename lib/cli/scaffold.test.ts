@@ -119,6 +119,26 @@ describe("plugin scaffolding", () => {
     );
   });
 
+  it("rejects external plugin roots before mutating source or templates", () => {
+    const root = createFixture();
+    const pluginName = "external-plugin";
+    const sourcePath = path.join(root, "lib", "source.json");
+    const originalSource = fs.readFileSync(sourcePath, "utf8");
+    const externalRoot = fs.mkdtempSync(
+      path.join(os.tmpdir(), "codex-scaffold-external-test-"),
+    );
+
+    fixtures.push(externalRoot);
+    fs.mkdirSync(path.join(root, "plugins"), { recursive: true });
+    fs.symlinkSync(externalRoot, path.join(root, "plugins", pluginName));
+
+    expect(() => scaffold.scaffoldPlugin(root, pluginName)).toThrow(
+      "resolves outside",
+    );
+    expect(fs.readFileSync(sourcePath, "utf8")).toBe(originalSource);
+    expect(fs.existsSync(path.join(externalRoot, "README.md"))).toBe(false);
+  });
+
   it("does not replace an existing template target", () => {
     const root = createFixture();
     const target = path.join(root, "existing.md");
