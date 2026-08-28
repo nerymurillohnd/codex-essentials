@@ -1,0 +1,49 @@
+{
+  "labels": [
+    {
+      "name": "bug",
+      "color": "d73a4a",
+      "description": "Something isn't working"
+    },
+    {
+      "name": "dependencies",
+      "color": "0366d6",
+      "description": "Pull requests that update a dependency file"
+    },
+    {
+      "name": "documentation",
+      "color": "0075ca",
+      "description": "Improvements or additions to documentation"
+    },
+    {
+      "name": "enhancement",
+      "color": "a2eeef",
+      "description": "New feature or request"
+    },
+    {
+      "name": "github_actions",
+      "color": "000000",
+      "description": "Pull requests that update GitHub Actions code"
+    },
+    {
+      "name": "plugin-change",
+      "color": "1d76db",
+      "description": "Changes to a marketplace plugin"
+    },
+    {
+      "name": "security",
+      "color": "b60205",
+      "description": "Security-related changes"
+    },
+    {
+      "name": "breaking-change",
+      "color": "5319e7",
+      "description": "Changes that require migration"
+    },
+    {
+      "name": "skip-changelog",
+      "color": "ffffff",
+      "description": "Exclude this item from generated release notes"
+    }
+  ]
+}
