@@ -1,0 +1,5 @@
+interface:
+  display_name: DocKeeper
+  short_description: Keep changelogs and ADRs aligned.
+  default_prompt: Use $doc-keeper to maintain changelogs and ADRs, close out
+    notable changes, or prepare release history.

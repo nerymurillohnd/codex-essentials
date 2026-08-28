@@ -11,9 +11,9 @@ distributable Codex plugins. It provides the catalog, schemas, generators,
 validators, documentation, and quality gates needed to publish reusable skills,
 MCP integrations, and supporting assets.
 
-> **Current status:** the marketplace publishes two installable plugins:
-> `Astro Commands` (`astro-cli-commands`) and `Prettier After Edit`
-> (`prettier-after-edit`).
+> **Current status:** the marketplace publishes three installable plugins:
+> `Astro Commands` (`astro-cli-commands`), `Prettier After Edit`
+> (`prettier-after-edit`), and `DocKeeper` (`doc-keeper`).
 
 ## ✨ Start Here
 
@@ -26,20 +26,23 @@ they need.
 | ----------------------- | ------------------------------------------------------------------------------------------------ | --------------------- |
 | **Astro Commands**      | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands`  |
 | **Prettier After Edit** | Automatically formats edited files with local or PATH Prettier using a Codex post-edit hook.     | `prettier-after-edit` |
+| **DocKeeper**           | Maintains accurate changelogs and ADRs through evidence-first, authorization-aware procedures.   | `doc-keeper`          |
 
 ### Install the Marketplace
 
-For normal use, pin the marketplace to the first stable Astro Commands release:
-
-```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
-codex plugin marketplace list
-```
-
-Use `main` only when you intentionally want the latest development state:
+Use `main` to install the complete current catalog:
 
 ```bash
 codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
+codex plugin marketplace list
+```
+
+Use an immutable release tag only after confirming that it contains the plugin
+you need. Plugin release tags are marketplace snapshots and can predate other
+catalog entries:
+
+```bash
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
 codex plugin marketplace list
 ```
 
@@ -48,6 +51,7 @@ codex plugin marketplace list
 ```bash
 codex plugin add astro-cli-commands@codex-essentials
 codex plugin add prettier-after-edit@codex-essentials
+codex plugin add doc-keeper@codex-essentials
 codex plugin list
 ```
 
@@ -55,6 +59,8 @@ Then open the target project in Codex and use the appropriate plugin explicitly.
 
 - Use **Astro Commands** for project planning, checks, preview, and CLI coordination.
 - Use **Prettier After Edit** to auto-format changed files in Codex editing flows.
+- Use **DocKeeper** to create, complete, audit, update, or repair changelogs and
+  ADRs from repository evidence.
 
 ## 👤 Ownership and Repository
 
@@ -70,17 +76,18 @@ Codex can track a repository marketplace directly from its Git remote. The
 `--ref` option pins the source to a branch or tag:
 
 ```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
 codex plugin marketplace list
 ```
 
-The stable release tag is recommended for normal installation. The `main`
-branch remains available for contributors and early adopters who intentionally
-track unreleased marketplace changes.
+The `main` branch exposes the complete current catalog. An immutable plugin
+release tag is appropriate when its marketplace snapshot contains every plugin
+you intend to install.
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
 Essentials**, and install **Astro Commands** (`astro-cli-commands`) or
-**Prettier After Edit** (`prettier-after-edit`).
+**Prettier After Edit** (`prettier-after-edit`) or **DocKeeper**
+(`doc-keeper`).
 
 Refresh the marketplace metadata when you want to discover catalog changes:
 
@@ -93,6 +100,7 @@ Remove only the plugin:
 ```bash
 codex plugin remove astro-cli-commands@codex-essentials
 codex plugin remove prettier-after-edit@codex-essentials
+codex plugin remove doc-keeper@codex-essentials
 ```
 
 Remove the marketplace registration:
@@ -109,6 +117,7 @@ approval boundaries, rollback behavior, and troubleshooting:
 
 - [Astro Commands product README](plugins/astro-cli-commands/README.md)
 - [Prettier After Edit product README](plugins/prettier-after-edit/README.md)
+- [DocKeeper product README](plugins/doc-keeper/README.md)
 
 ## 🗂️ Directory Reference
 
