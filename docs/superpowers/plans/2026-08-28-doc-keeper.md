@@ -111,6 +111,25 @@ These forward-evaluations prove routing, scope, ownership, and negative-control
 behavior in a pre-publication environment. They do not replace the required
 remote consumer test.
 
-- [ ] After authorized publication, add the published remote marketplace,
+- [x] After authorized publication, add the published remote marketplace,
       install `doc-keeper` as an independent consumer, and repeat the behavioral
       matrix from the installed snapshot.
+
+The remote consumer evaluation installed `doc-keeper` from the published
+`feat/doc-keeper` branch and confirmed that the installed package matched the
+remote marketplace snapshot byte-for-byte. Fresh Codex sessions then confirmed:
+
+- a breaking CLI flag rename updated the implementation, added a regression
+  test, and recorded the compatibility impact under `Unreleased` without
+  creating an ADR;
+- an accepted tenant-isolation decision created the next locally numbered ADR
+  without changing the changelog;
+- a README-only typo correction did not load DocKeeper or modify either governed
+  document type; and
+- a release-please-owned rollover left `CHANGELOG.md`, `package.json`, and the
+  release manifest unchanged when execution of the owner was prohibited.
+
+The first release-owner pass exposed a real defect: the agent manually simulated
+release-please output. Commit `941f0be` tightened the ownership contract, the
+installed remote snapshot was refreshed, and a clean rerun produced no local
+diff while reporting the exact blocked owner operation.
