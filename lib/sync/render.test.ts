@@ -90,6 +90,7 @@ describe("derived plugin artifact rendering", () => {
     expect(JSON.parse(render.renderMarketplace(payload)).plugins).toEqual([
       expect.objectContaining({ name: "astro-cli-commands" }),
       expect.objectContaining({ name: "prettier-after-edit" }),
+      expect.objectContaining({ name: "doc-keeper" }),
     ]);
   });
 

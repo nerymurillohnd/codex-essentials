@@ -89,6 +89,7 @@ describe("declarative plugin source", () => {
     expect(payload.plugins.map((plugin) => plugin.name)).toEqual([
       "astro-cli-commands",
       "prettier-after-edit",
+      "doc-keeper",
     ]);
     expect(payload.plugins[0]?.skills.map((skill) => skill.id)).toEqual([
       "astro-commands",

@@ -1,0 +1,29 @@
+{
+  "name": "doc-keeper",
+  "version": "0.1.0",
+  "description": "Keep changelogs and architecture decision records aligned with completed work, release preparation, and explicit decisions through evidence-based, infrastructure-aware procedures.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "interface": {
+    "displayName": "DocKeeper",
+    "shortDescription": "Keep changelogs and ADRs aligned.",
+    "longDescription": "DocKeeper gives Codex an evidence-first closeout, release-preflight, and maintenance process for changelogs and architecture decision records. It detects existing infrastructure, preserves document ownership, and avoids invented history or unauthorized remote actions.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Evidence-based changelog maintenance",
+      "MADR-based architecture decision records",
+      "Implicit documentation closeout",
+      "Release changelog preflight",
+      "Release automation ownership detection",
+      "Document structure and history audits",
+      "Explicit save and remote-action boundaries"
+    ],
+    "defaultPrompt": "Use DocKeeper to maintain changelogs and ADRs, close out notable changes, or prepare release history."
+  },
+  "skills": "./skills/"
+}
