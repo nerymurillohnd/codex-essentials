@@ -58,8 +58,10 @@ exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
   those files exist; inline MCP definitions are also permitted by the schema.
 - Keep interface assets under `./assets/`; screenshot paths must point to PNG
   files. Do not use `..` path segments.
-- Do not add a top-level `hooks` field until the plugin schema and Codex plugin
-  creator support it.
+- Codex supports explicit top-level `hooks` paths and automatically discovers
+  `hooks/hooks.json` when the field is omitted. Until this repository's
+  declarative source and plugin schema model explicit hook paths, use the
+  conventional file and do not hand-edit generated manifests to add `hooks`.
 
 ## Product Documentation
 

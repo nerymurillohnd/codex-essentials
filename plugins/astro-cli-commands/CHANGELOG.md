@@ -13,6 +13,17 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository
   declarative source and strengthened release validation to reject resources
   resolving outside this package.
+- **[Area: Documentation]** Updated the published Astro patch reference to
+  7.2.9 while preserving installed-CLI verification as the authoritative
+  compatibility check.
+- **[Area: Documentation]** Clarified the current Codex lifecycle-hook contract,
+  including explicit manifest paths and conventional `hooks/hooks.json`
+  discovery.
+
+### Added
+
+- **[Area: Packaging]** Added the MIT license terms to the standalone plugin
+  package and documented the license as a distributed component.
 
 ## [0.1.1] - 2026-08-27
 

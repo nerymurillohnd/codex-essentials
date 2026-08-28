@@ -25,7 +25,7 @@ npx astro <command> --help
 If `npx` attempts to install Astro, stop: dependencies are missing or the working directory is wrong.
 
 The references were verified against Astro 7.2.2 on 2026-08-20. The published
-`astro` package reported 7.2.8 on 2026-08-27, so do not infer that patch-level
+`astro` package reported 7.2.9 on 2026-08-27, so do not infer that patch-level
 versions have identical behavior. The installed binary's command-specific
 `--help` is authoritative for its public CLI surface. If the installed version
 differs materially, help output conflicts with a reference, a flag is rejected,

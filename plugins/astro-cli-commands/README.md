@@ -60,6 +60,7 @@ Use Astro Commands before planning this Astro task.
 | `references/commands.md`                   | Command behavior and lifecycle reference.                  |
 | `references/flags.md`                      | Flag scope, defaults, and compatibility notes.             |
 | `references/operations.md`                 | Package manager, CI, server, and configuration guidance.   |
+| `LICENSE.md`                               | MIT license terms for the distributed package.             |
 
 No hooks, scripts, MCP servers, apps, or assets are bundled with this release.
 
@@ -79,7 +80,7 @@ Astro Commands works in Codex sessions inside Astro projects that use the
 project's existing Node.js runtime and package manager: npm, pnpm, or Yarn.
 
 The bundled references were verified against Astro 7.2.2 on 2026-08-20. The
-published `astro` package reported 7.2.8 on 2026-08-27. Treat the references as
+published `astro` package reported 7.2.9 on 2026-08-27. Treat the references as
 versioned guidance, not as a promise that every patch release has the same CLI.
 
 Before relying on a command or flag, Codex should run:

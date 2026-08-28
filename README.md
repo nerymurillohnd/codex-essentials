@@ -134,9 +134,10 @@ also exposes its Codex agent metadata at
 skill label, concise catalog description, and optional initial prompt, while
 `SKILL.md` remains the behavioral instruction source.
 
-The current manifest schema validates skills, apps, MCP integrations, and
-interface assets. Top-level `hooks` are intentionally outside this schema until
-the repository validator and the supported Codex packaging contract are aligned.
+The official Codex packaging contract supports explicit top-level `hooks` and
+automatically discovers the conventional `hooks/hooks.json` file when the field
+is omitted. This repository currently validates the conventional file while its
+declarative source and manifest schema do not yet model explicit hook paths.
 
 ## 🛠️ For Contributors
 

@@ -3,7 +3,7 @@
   "$id": "plugin.schema.json",
   "title": "Codex Plugin Manifest",
   "description": "Schema for a .codex-plugin/plugin.json manifest accepted by the Codex plugin creator.",
-  "$comment": "The plugin-creator validator currently rejects a top-level hooks field, so hooks are intentionally not part of this schema. Companion files referenced by apps and mcpServers must still exist and be validated separately.",
+  "$comment": "The official Codex packaging contract supports explicit top-level hooks and automatically discovers hooks/hooks.json when the field is omitted. This repository does not yet model explicit hook paths in its declarative source, so hooks remain outside this schema. Companion files referenced by apps and mcpServers must still exist and be validated separately.",
   "type": "object",
   "additionalProperties": false,
   "required": ["name", "version", "description", "author", "interface"],
