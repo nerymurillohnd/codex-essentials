@@ -77,6 +77,7 @@ Run the strict repository pipeline so generated fields remain consistent:
 ```bash
 npm run marketplace:build
 npm run marketplace:check
+npm run validate:release -- plugin/<plugin-id>/v<semver>
 ```
 
 Do not hand-edit the generated marketplace catalog. The pipeline validates

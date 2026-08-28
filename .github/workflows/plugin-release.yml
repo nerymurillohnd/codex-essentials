@@ -45,6 +45,8 @@ jobs:
         run: npm ci
       - name: Validate plugin manifests and generated marketplace
         run: npm run marketplace:check
+      - name: Validate release tag against plugin manifest and changelog
+        run: npm run validate:release -- "$RELEASE_TAG"
       - name: Run distributable smoke test
         run: npm pack --dry-run
       - name: Capture release metadata

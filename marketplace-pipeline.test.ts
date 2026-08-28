@@ -74,6 +74,19 @@ function runDocumentationGate(root: string, base: string, head: string) {
   );
 }
 
+function runReleaseValidation(root: string, tag: string) {
+  return spawnSync(
+    process.execPath,
+    [
+      join(repositoryRoot, "scripts", "validate-release.cjs"),
+      "--root",
+      root,
+      tag,
+    ],
+    { encoding: "utf8" },
+  );
+}
+
 function git(root: string, args: string[]): string {
   const result = spawnSync("git", ["-C", root, ...args], {
     encoding: "utf8",
@@ -165,6 +178,29 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(validation.stderr).toContain(".mcp.json is missing");
   });
 
+  it("accepts a documented inline MCP server map", () => {
+    const root = createFixture();
+    const manifestPath = join(
+      root,
+      "plugins",
+      "doc-keeper",
+      ".codex-plugin",
+      "plugin.json",
+    );
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["mcpServers"] = {
+      docs: { command: "docs-mcp", args: ["--stdio"] },
+    };
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).toBe(0);
+  });
+
   it("rejects a plugin manifest without a functional component", () => {
     const root = createFixture();
     const pluginRoot = join(root, "plugins", "doc-keeper");
@@ -227,6 +263,79 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const headWithDocs = git(root, ["rev-parse", "HEAD"]);
 
     expect(runDocumentationGate(root, base, headWithDocs).status).toBe(0);
+
+    const emptyReadme = join(root, "plugins", "doc-keeper", "README.md");
+    writeFileSync(emptyReadme, "");
+    git(root, ["add", emptyReadme]);
+    git(root, ["commit", "-m", "empty readme"]);
+    const headWithEmptyReadme = git(root, ["rev-parse", "HEAD"]);
+
+    const emptyGate = runDocumentationGate(
+      root,
+      headWithDocs,
+      headWithEmptyReadme,
+    );
+
+    expect(emptyGate.status).not.toBe(0);
+    expect(emptyGate.stderr).toContain("README.md must not be empty");
+    expect(run(root, "validate-plugins.cjs").status).not.toBe(0);
+
+    const deletedRoot = createFixture();
+    git(deletedRoot, ["init"]);
+    git(deletedRoot, ["config", "user.email", "test@example.com"]);
+    git(deletedRoot, ["config", "user.name", "Test"]);
+    git(deletedRoot, ["add", "."]);
+    git(deletedRoot, ["commit", "-m", "fixture"]);
+    const deletedBase = git(deletedRoot, ["rev-parse", "HEAD"]);
+    const deletedReadme = join(
+      deletedRoot,
+      "plugins",
+      "doc-keeper",
+      "README.md",
+    );
+    rmSync(deletedReadme);
+    git(deletedRoot, ["add", "-A"]);
+    git(deletedRoot, ["commit", "-m", "delete readme"]);
+    const deletedHead = git(deletedRoot, ["rev-parse", "HEAD"]);
+
+    const deletedGate = runDocumentationGate(
+      deletedRoot,
+      deletedBase,
+      deletedHead,
+    );
+
+    expect(deletedGate.status).not.toBe(0);
+    expect(deletedGate.stderr).toContain("README.md must exist");
+  });
+
+  it("requires a release tag version and matching changelog section", () => {
+    const root = createFixture();
+
+    expect(runReleaseValidation(root, "plugin/doc-keeper/v0.1.0").status).toBe(
+      0,
+    );
+
+    const mismatch = runReleaseValidation(root, "plugin/doc-keeper/v9.0.0");
+
+    expect(mismatch.status).not.toBe(0);
+    expect(mismatch.stderr).toContain("does not match manifest version");
+
+    const changelogPath = join(root, "plugins", "doc-keeper", "CHANGELOG.md");
+    writeFileSync(
+      changelogPath,
+      readFileSync(changelogPath, "utf8").replace(
+        "## [0.1.0] - 2026-08-28",
+        "## [0.0.9] - 2026-08-28",
+      ),
+    );
+
+    const missingSection = runReleaseValidation(
+      root,
+      "plugin/doc-keeper/v0.1.0",
+    );
+
+    expect(missingSection.status).not.toBe(0);
+    expect(missingSection.stderr).toContain("release section");
   });
 
   it("rejects missing skill agent metadata and symlinks anywhere in a plugin package", () => {

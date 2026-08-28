@@ -26,7 +26,20 @@
     "license": { "$ref": "#/$defs/nonEmptyString" },
     "keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
     "skills": { "const": "./skills/" },
-    "mcpServers": { "const": "./.mcp.json" },
+    "mcpServers": {
+      "oneOf": [
+        { "const": "./.mcp.json" },
+        { "$ref": "#/$defs/mcpServerMap" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mcp_servers"],
+          "properties": {
+            "mcp_servers": { "$ref": "#/$defs/mcpServerMap" }
+          }
+        }
+      ]
+    },
     "apps": { "const": "./.app.json" },
     "hooks": {
       "oneOf": [
@@ -71,6 +84,36 @@
       "uniqueItems": true
     },
     "httpsUrl": { "type": "string", "pattern": "^https://[^\\s]+$" },
+    "mcpServerMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9_-]+$"
+      },
+      "additionalProperties": { "$ref": "#/$defs/mcpServer" }
+    },
+    "mcpServer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "command": { "$ref": "#/$defs/nonEmptyString" },
+        "args": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "env": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "minLength": 1 },
+          "additionalProperties": { "type": "string" }
+        },
+        "url": { "$ref": "#/$defs/httpsUrl" }
+      },
+      "oneOf": [
+        { "required": ["command"], "properties": { "command": {} } },
+        { "required": ["url"], "properties": { "url": {} } }
+      ]
+    },
     "pluginPath": {
       "type": "string",
       "allOf": [

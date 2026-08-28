@@ -20,6 +20,7 @@
     "validate:plugins": "node scripts/validate-plugins.cjs",
     "generate:marketplace": "node scripts/generate-marketplace.cjs",
     "validate:marketplace": "node scripts/validate-marketplace.cjs",
+    "validate:release": "node scripts/validate-release.cjs",
     "documentation:gate": "node scripts/documentation-gate.cjs",
     "marketplace:check": "npm run validate:plugins && npm run validate:marketplace",
     "marketplace:build": "npm run validate:plugins && npm run generate:marketplace && npm run validate:marketplace",

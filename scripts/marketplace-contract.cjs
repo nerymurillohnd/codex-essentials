@@ -33,6 +33,7 @@ const TEMPLATE_FIXED_PATHS = [
   ["interface", "termsOfServiceURL"],
 ];
 const FUNCTIONAL_COMPONENT_FIELDS = ["skills", "hooks", "mcpServers", "apps"];
+const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
 
 /** @param {string} root */
 function loadPluginManifests(root) {
@@ -68,6 +69,7 @@ function loadPluginManifests(root) {
     assertDirectory(pluginRoot, `plugins/${entry.name}`);
     assertContained(pluginsRoot, pluginRoot, `plugins/${entry.name}`);
     assertNoSymlinks(pluginRoot);
+    validatePluginDocumentation(pluginRoot, `plugins/${entry.name}`);
     const manifestPath = path.join(pluginRoot, PLUGIN_MANIFEST);
     assertRegularFile(manifestPath, `plugins/${entry.name}/${PLUGIN_MANIFEST}`);
     assertContained(pluginRoot, manifestPath, manifestPath);
@@ -221,6 +223,26 @@ function assertFunctionalComponent(manifest, label) {
     throw new Error(
       `${label} must declare at least one functional component: ${FUNCTIONAL_COMPONENT_FIELDS.join(", ")}`,
     );
+  }
+}
+
+/** @param {string} pluginRoot @param {string} label */
+function validatePluginDocumentation(pluginRoot, label) {
+  for (const document of REQUIRED_PLUGIN_DOCUMENTS) {
+    const documentPath = path.join(pluginRoot, document);
+    assertRegularFile(documentPath, `${label}/${document}`);
+    const content = fs.readFileSync(documentPath, "utf8");
+    if (content.trim().length === 0) {
+      throw new Error(`${label}/${document} must not be empty`);
+    }
+    if (
+      document === "CHANGELOG.md" &&
+      !/^## \[Unreleased\]\s*$/mu.test(content)
+    ) {
+      throw new Error(
+        `${label}/CHANGELOG.md must contain an Unreleased section`,
+      );
+    }
   }
 }
 

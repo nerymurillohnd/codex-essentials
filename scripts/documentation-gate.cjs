@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // @ts-check
 
+const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
 
 /** @param {string[]} args @param {string} defaultRoot */
 function parseArguments(args, defaultRoot) {
@@ -49,8 +51,8 @@ function changedPluginFiles(root, base, head) {
     .filter(Boolean);
 }
 
-/** @param {string[]} files */
-function validatePluginDocumentation(files) {
+/** @param {string} root @param {string[]} files */
+function validatePluginDocumentation(root, files) {
   const pluginFiles = new Map();
   for (const file of files) {
     const match = /^plugins\/([^/]+)\/(.+)$/u.exec(file);
@@ -69,6 +71,7 @@ function validatePluginDocumentation(files) {
       (file) => file !== "README.md" && file !== "CHANGELOG.md",
     );
     if (!productChanged) {
+      validateCurrentDocuments(root, pluginId, errors);
       continue;
     }
     if (!changed.has("README.md")) {
@@ -81,9 +84,35 @@ function validatePluginDocumentation(files) {
         `plugins/${pluginId}/CHANGELOG.md must change with product files`,
       );
     }
+    validateCurrentDocuments(root, pluginId, errors);
   }
   if (errors.length > 0) {
     throw new Error(errors.join("\n"));
+  }
+}
+
+/** @param {string} root @param {string} pluginId @param {string[]} errors */
+function validateCurrentDocuments(root, pluginId, errors) {
+  for (const document of REQUIRED_PLUGIN_DOCUMENTS) {
+    const documentPath = path.join(root, "plugins", pluginId, document);
+    let content;
+    try {
+      content = fs.readFileSync(documentPath, "utf8");
+    } catch {
+      errors.push(`plugins/${pluginId}/${document} must exist`);
+      continue;
+    }
+    if (content.trim().length === 0) {
+      errors.push(`plugins/${pluginId}/${document} must not be empty`);
+    }
+    if (
+      document === "CHANGELOG.md" &&
+      !/^## \[Unreleased\]\s*$/mu.test(content)
+    ) {
+      errors.push(
+        `plugins/${pluginId}/CHANGELOG.md must contain an Unreleased section`,
+      );
+    }
   }
 }
 
@@ -92,7 +121,7 @@ function main() {
     process.argv.slice(2),
     path.resolve(__dirname, ".."),
   );
-  validatePluginDocumentation(changedPluginFiles(root, base, head));
+  validatePluginDocumentation(root, changedPluginFiles(root, base, head));
   console.log("Plugin documentation gate passed.");
 }
 
