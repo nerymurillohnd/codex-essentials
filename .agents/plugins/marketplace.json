@@ -17,10 +17,10 @@
       "category": "Productivity"
     },
     {
-      "name": "prettier-after-edit",
+      "name": "doc-keeper",
       "source": {
         "source": "local",
-        "path": "./plugins/prettier-after-edit"
+        "path": "./plugins/doc-keeper"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -29,10 +29,10 @@
       "category": "Developer Tools"
     },
     {
-      "name": "doc-keeper",
+      "name": "prettier-after-edit",
       "source": {
         "source": "local",
-        "path": "./plugins/doc-keeper"
+        "path": "./plugins/prettier-after-edit"
       },
       "policy": {
         "installation": "AVAILABLE",

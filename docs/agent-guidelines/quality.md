@@ -10,8 +10,8 @@
 - Required local checks are `npm run format:check`,
   `npm run lint -- --max-warnings=0`, `npm run typecheck`,
   `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
-  `npm run validate:all`, `npm run validate:release`, `actionlint`, and
-  `git diff --check`.
+  `npm run marketplace:check`, `npm run documentation:gate -- --base <base>
+--head <head>`, `actionlint`, and `git diff --check`.
 - Keep branch-protection required checks aligned to the quality workflow's
   stable `required` aggregator plus independently visible pull-request
   documentation and security jobs. Release validation runs on plugin release
@@ -22,7 +22,7 @@
 - Report skipped checks, missing tools, unresolved diagnostics, and residual risks explicitly.
 - Maintain documentation under `docs/`. Record unresolved maintenance work in `docs/maintenance/pending-debt.md`; move completed work to `docs/maintenance/resolved-debt.md`.
 - Record durable decisions affecting architecture, distribution, permissions, runtime, compatibility, or operations in `docs/decisions/`.
-- Validate changed plugin documentation with `npm run documentation:gate -- --base <base> --head <head>`; the gate requires README and `Unreleased` changelog changes for product-affecting edits.
+- Validate changed plugin documentation with `npm run documentation:gate -- --base <base> --head <head>`; the gate requires README and changelog changes for product-affecting edits.
 - Use `plugin/<plugin-id>/v<semver>` tags for independent releases. Generated GitHub release notes never replace the curated plugin changelog.
 - Release publication requires release environment approval through the protected
   `release` environment. Rollback means restoring the prior marketplace

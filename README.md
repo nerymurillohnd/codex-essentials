@@ -145,26 +145,28 @@ skill label, concise catalog description, and optional initial prompt, while
 
 The official Codex packaging contract supports explicit top-level `hooks` and
 automatically discovers the conventional `hooks/hooks.json` file when the field
-is omitted. This repository currently validates the conventional file while its
-declarative source and manifest schema do not yet model explicit hook paths.
+is omitted. Plugins that use the conventional hook file declare
+`"hooks": "./hooks/hooks.json"` so their package contract is explicit.
 
 ## 🛠️ For Contributors
 
-The repository uses `lib/source.json` as its only declarative source for fixed
-plugin metadata. It derives the catalog, each package manifest, and each agent
-manifest; author-owned `SKILL.md`, README, and changelog documents are only
-initialized, never replaced by synchronization. Start with:
+Each plugin's `.codex-plugin/plugin.json` is its authored source of truth for
+identity, version, install metadata, and declared components. Create it from
+`templates/codex-plugin-plugin.json`; the repository derives only the catalog,
+and never rewrites plugin-owned manifests, skills, README files, or changelogs.
+Start with:
 
 ```bash
 npm install
 npm run check
 ```
 
-Before submitting a plugin change, update `lib/source.json`, the affected
-README, and the changelog together, then run `npm run sync:all`. Plugins are
-self-contained release packages: no executable, asset, import, or symbolic
-link may resolve outside `plugins/<plugin-id>/`. The complete contributor
-workflow and operational rules live in [AGENTS.md](AGENTS.md) and the linked
+Before submitting a plugin change, update its manifest, README, and changelog
+together, then run `npm run marketplace:build`. Plugins are self-contained
+release packages: no executable, asset, import, or symbolic link may resolve
+outside `plugins/<plugin-id>/`, and every plugin must declare at least one
+functional component. The complete contributor workflow and operational rules
+live in [AGENTS.md](AGENTS.md) and the linked
 [quality guidelines](docs/agent-guidelines/quality.md).
 
 The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6
@@ -174,8 +176,9 @@ no-shim and advisory; `HUSKY=0` is used in CI, while authorized local emergency
 bypasses use `HUSKY=0` or `--no-verify`. The contributor quality vocabulary is:
 `npm run format:check`, `npm run lint -- --max-warnings=0`, `npm run typecheck`,
 `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`, `npm run
-validate:all`, and `actionlint`. Rollback means restoring prior marketplace
-metadata and removing the corresponding release artifacts.
+`npm run marketplace:check`, `npm run documentation:gate`, and `actionlint`.
+Rollback means restoring prior marketplace metadata and removing the
+corresponding release artifacts.
 
 ## 📚 Documentation
 

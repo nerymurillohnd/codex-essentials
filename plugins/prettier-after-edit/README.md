@@ -10,6 +10,10 @@ events. It prefers project-local Prettier (`node_modules/.bin/prettier`) from th
 edited file path and falls back to a PATH-visible global `prettier` executable
 only when local resolution fails.
 
+The package-local `.codex-plugin/plugin.json` is the source of truth for this
+plugin's identity, install metadata, and explicit `hooks` declaration. The
+repository derives and validates the marketplace catalog from it.
+
 ## 🎯 Purpose
 
 Use this plugin if you want immediate formatting after each relevant edit operation
@@ -171,8 +175,8 @@ Run validation and smoke tests from this repository:
 
 ```bash
 npm run validate:plugins
-npm run validate:all
-npm run validate:release -- plugin/prettier-after-edit/v0.1.1
+npm run validate:marketplace
+npm run marketplace:build
 ```
 
 From a target project, validate the hook behavior by editing a tracked file:
@@ -185,7 +189,7 @@ printf '{"cwd":"/path/to/project","tool_input":{"file_path":"src/index.js"}}\n' 
 For a marketplace/package-level check you can also run:
 
 ```bash
-npm run validate:all
+npm run marketplace:check
 ```
 
 ## 🚧 Known Limitations

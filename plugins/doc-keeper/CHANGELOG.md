@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Recorded the complete author, legal, interface, and component metadata in
+  `.codex-plugin/plugin.json`; the marketplace entry is now generated and
+  reverse-validated from that manifest.
 - Defined deterministic prerelease chronology and stable-promotion behavior,
   including the default cumulative stable summary when no local convention
   exists.

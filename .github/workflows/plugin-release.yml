@@ -43,9 +43,9 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Validate manifests and product documentation
-        run: npm run validate:all
-      - name: Validate release contract
+      - name: Validate plugin manifests and generated marketplace
+        run: npm run marketplace:check
+      - name: Validate release tag against plugin manifest and changelog
         run: npm run validate:release -- "$RELEASE_TAG"
       - name: Run distributable smoke test
         run: npm pack --dry-run

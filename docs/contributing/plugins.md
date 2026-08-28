@@ -5,9 +5,9 @@ changing an existing plugin product.
 
 ## Required Package Structure
 
-Place every plugin under `plugins/<plugin-id>/`. The plugin ID must match the
-`name` declared in `lib/source.json`; the manifest and marketplace catalog entry
-are derived from that declaration.
+Place every plugin under `plugins/<plugin-id>`. The plugin ID must match the
+`name` declared in `plugins/<plugin-id>/.codex-plugin/plugin.json`; the
+marketplace catalog entry is derived from that manifest.
 
 Each plugin package must include:
 
@@ -36,22 +36,21 @@ validation.
 
 ## Manifest Requirements
 
-The derived manifest must validate against `lib/schemas/plugin.schema.json`. It must
+The authored manifest must validate against `schemas/plugin.schema.json`. It must
 define the plugin identity, author, interface metadata, capabilities, and at
-least one of `skills`, `apps`, or `mcpServers`.
+least one of `skills`, `hooks`, `apps`, or `mcpServers`.
 
 Use relative resource paths with a `./` prefix. Do not use `..` path segments.
 Declare screenshots only for PNG assets that exist inside the package.
 
-Top-level `hooks` are not accepted until the schema and supported Codex plugin
-packaging contract are aligned.
+Declare top-level `hooks` when the package includes lifecycle hooks. The
+conventional declaration is `"hooks": "./hooks/hooks.json"`.
 
 ## Documentation Requirements
 
-Start from the canonical templates:
-
-- `lib/templates/README.md`
-- `lib/templates/CHANGELOG.md`
+Start each new manifest from `templates/codex-plugin-plugin.json`, then remove
+optional component fields that do not apply. README and changelog files are
+author-owned package documents.
 
 The plugin README must explain:
 
@@ -69,21 +68,22 @@ changes.
 
 ## Catalog Registration
 
-Declare local packages in the single non-executable source of truth,
-`lib/source.json`. The synchronizer derives `.agents/plugins/marketplace.json`
-with source paths such as `./plugins/<plugin-id>`.
+Declare local packages by creating their package-local manifests. The generator
+derives `.agents/plugins/marketplace.json` with source paths such as
+`./plugins/<plugin-id>`.
 
-Prefer repository helpers so generated fields remain consistent:
+Run the strict repository pipeline so generated fields remain consistent:
 
 ```bash
-npm run scaffold:plugin -- <plugin-id>
-npm run sync:all
-npm run validate:all
+npm run marketplace:build
+npm run marketplace:check
+npm run validate:release -- plugin/<plugin-id>/v<semver>
 ```
 
-The scaffold initializes missing author-owned documents; `sync:all` rewrites
-only derived metadata. Do not hand-edit `plugin.json`, `openai.yaml`, or the
-marketplace catalog.
+Do not hand-edit the generated marketplace catalog. The pipeline validates
+every plugin manifest and skill agent manifest, rejects unsafe package links,
+generates the catalog atomically, and reverse-validates it against the
+manifests.
 
 ## Pull Request Evidence
 
@@ -97,7 +97,7 @@ npm run typecheck
 npm run typecheck:scripts
 npx tsc6 --noEmit
 npm test
-npm run validate:all
+npm run marketplace:check
 ```
 
 For product-affecting plugin changes, also verify that the plugin README and
@@ -128,6 +128,7 @@ plugin/<plugin-id>/v<semver>
 Validate a release candidate before tagging:
 
 ```bash
+npm run marketplace:check
 npm run validate:release -- plugin/<plugin-id>/v<semver>
 ```
 

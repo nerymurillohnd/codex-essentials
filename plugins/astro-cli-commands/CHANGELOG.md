@@ -11,8 +11,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 ### Changed
 
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository
-  declarative source and strengthened release validation to reject resources
-  resolving outside this package.
+  plugin manifest and strengthened package validation to reject incomplete skill
+  metadata, unsafe links, and resources resolving outside this package.
+- **[Area: Manifest]** Recorded the complete author, legal, interface, and
+  component metadata in `.codex-plugin/plugin.json`; the marketplace entry is
+  now generated and reverse-validated from that manifest.
 - **[Area: Documentation]** Updated the published Astro patch reference to
   7.2.9 while preserving installed-CLI verification as the authoritative
   compatibility check.

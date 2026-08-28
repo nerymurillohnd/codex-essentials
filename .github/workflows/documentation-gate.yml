@@ -1,4 +1,4 @@
-name: Documentation gate
+name: Marketplace contract gate
 
 on:
   pull_request:
@@ -28,7 +28,7 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Validate manifests and product documentation
-        run: npm run validate:all
-      - name: Enforce documentation synchronization
+      - name: Validate plugin manifests and generated marketplace
+        run: npm run marketplace:check
+      - name: Enforce plugin documentation synchronization
         run: npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"
