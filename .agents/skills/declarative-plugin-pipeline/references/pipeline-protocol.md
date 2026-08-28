@@ -5,25 +5,24 @@ authorize publication or other remote actions.
 
 ## Change classification
 
-- New plugin or component: author the package manifest, resources, README, and
-  changelog; run `npm run marketplace:build` and, for tooling changes,
-  `npm run check`.
-- Skill behavior or agent metadata: update the package `SKILL.md` and
-  `agents/openai.yaml`; run `npm run validate:plugins` and the documentation
-  gate when required.
-- Manifest, version, interface, or component declaration: update
-  `.codex-plugin/plugin.json` and affected package docs; run
+- New plugin or component: author its manifest, resources, README, and
+  changelog; run `npm run marketplace:build` and the documentation gate.
+- Existing plugin file, including skill metadata, hooks, runtime resources, or
+  manifest: update that package's README and CHANGELOG; run
+  `npm run validate:plugins` and the documentation gate with the actual base
+  and head revisions. If the manifest or catalog is affected, also run
   `npm run marketplace:build`.
-- Validator, generator, schema, template, hook, release behavior, or test:
-  run `npm run check`.
+- Repository tooling hook (`.codex/hooks.json` or
+  `scripts/plugin-manifest-guard.cjs`), validator, generator, schema, template,
+  release behavior, or test: run `npm run check`; add the documentation gate
+  only when the same change touches `plugins/`.
 - Documentation-only package correction: update only the affected document and
   run the applicable documentation gate.
 - Release candidate: run `npm run check`, `npm run marketplace:check`, and
   `npm run validate:release -- plugin/<plugin-id>/v<semver>`.
 
-When a change spans categories, apply all relevant checks. Synchronize the
-manifest, package resources, README, changelog, and catalog wherever they are
-affected.
+Apply the union when a change spans categories. `npm run check` never replaces
+the documentation gate for a non-document plugin change.
 
 ## Package contract
 

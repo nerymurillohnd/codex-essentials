@@ -48,7 +48,10 @@ historical `scaffold:plugin`, `sync:*`, or `validate:all` commands.
    path inside the owning plugin. Do not depend on `lib/`, another plugin, or
    repository-only tooling at install time.
 4. Follow [the pipeline protocol](references/pipeline-protocol.md) for checks.
-   Use `npm run marketplace:build` after manifest/catalog changes and
+   Any non-document change under `plugins/<plugin-id>/` requires updating
+   that package's README and CHANGELOG and running
+   `npm run documentation:gate -- --base <base> --head <head>`. Use
+   `npm run marketplace:build` after manifest/catalog changes and
    `npm run marketplace:check` for a read-only consistency check.
 5. Use `npm run check` for changes to repository tooling, schemas, templates,
    hooks, validators, generators, release behavior, or tests.
