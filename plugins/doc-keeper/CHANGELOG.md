@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Defined deterministic prerelease chronology and stable-promotion behavior,
+  including the default cumulative stable summary when no local convention
+  exists.
+- Clarified semantic-release lifecycle ownership, including the distinct remote
+  effects and non-responsibilities of `@semantic-release/github`.
+- Required newly created changelogs to omit empty change-type sections while
+  preserving the canonical relative order of sections that contain entries.
+
 ## [0.1.0] - 2026-08-28
 
 ### Added
