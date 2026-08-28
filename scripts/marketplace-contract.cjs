@@ -34,6 +34,21 @@ const TEMPLATE_FIXED_PATHS = [
 ];
 const FUNCTIONAL_COMPONENT_FIELDS = ["skills", "hooks", "mcpServers", "apps"];
 const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
+const README_REQUIRED_SECTIONS = [
+  "Purpose",
+  "Included Components",
+  "Supported Environments",
+  "Inputs and Outputs",
+  "Required Tools and Credentials",
+  "Permissions",
+  "Side Effects",
+  "Human Approval Boundaries",
+  "Installation Behavior",
+  "Uninstall and Rollback Behavior",
+  "Verification",
+  "Known Limitations",
+  "Failure and Recovery",
+];
 
 /** @param {string} root */
 function loadPluginManifests(root) {
@@ -235,6 +250,19 @@ function validatePluginDocumentation(pluginRoot, label) {
     if (content.trim().length === 0) {
       throw new Error(`${label}/${document} must not be empty`);
     }
+    if (document === "README.md") {
+      const missing = missingReadmeSections(content);
+      if (missing.length > 0) {
+        throw new Error(
+          missing
+            .map(
+              (section) =>
+                `${label}/README.md is missing required section: ${section}`,
+            )
+            .join("\n"),
+        );
+      }
+    }
     if (
       document === "CHANGELOG.md" &&
       !/^## \[Unreleased\]\s*$/mu.test(content)
@@ -244,6 +272,16 @@ function validatePluginDocumentation(pluginRoot, label) {
       );
     }
   }
+}
+
+/** @param {string} content */
+function missingReadmeSections(content) {
+  const headings = content
+    .split(/\r?\n/u)
+    .filter((line) => line.startsWith("## "));
+  return README_REQUIRED_SECTIONS.filter(
+    (section) => !headings.some((heading) => heading.includes(section)),
+  );
 }
 
 /** @param {string} pluginRoot @param {Record<string, unknown>} manifest */

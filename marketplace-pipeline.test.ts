@@ -308,6 +308,80 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(deletedGate.stderr).toContain("README.md must exist");
   });
 
+  it("rejects plugin diffs that add an unmasked credential", () => {
+    const root = createFixture();
+    git(root, ["init"]);
+    git(root, ["config", "user.email", "test@example.com"]);
+    git(root, ["config", "user.name", "Test"]);
+    git(root, ["add", "."]);
+    git(root, ["commit", "-m", "fixture"]);
+    const base = git(root, ["rev-parse", "HEAD"]);
+    const readme = join(root, "plugins", "doc-keeper", "README.md");
+    const unmasked = `${["api", "key"].join("_")}=${["live", "value"].join("-")}`;
+    writeFileSync(readme, `${readFileSync(readme, "utf8")}\n${unmasked}\n`);
+    git(root, ["add", readme]);
+    git(root, ["commit", "-m", "add credential"]);
+    const headWithCredential = git(root, ["rev-parse", "HEAD"]);
+
+    const failure = runDocumentationGate(root, base, headWithCredential);
+
+    expect(failure.status).not.toBe(0);
+    expect(failure.stderr).toContain("unmasked credential");
+
+    writeFileSync(readme, `${readFileSync(readme, "utf8")}\ntoken=\${TOKEN}\n`);
+    git(root, ["add", readme]);
+    git(root, ["commit", "-m", "mask credential"]);
+    const headMasked = git(root, ["rev-parse", "HEAD"]);
+
+    expect(
+      runDocumentationGate(root, headWithCredential, headMasked).status,
+    ).toBe(0);
+  });
+
+  it("rejects a plugin README that omits a required operational section", () => {
+    const root = createFixture();
+    const readme = join(root, "plugins", "doc-keeper", "README.md");
+    writeFileSync(
+      readme,
+      readFileSync(readme, "utf8").replace("## Permissions", "## Access Model"),
+    );
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain(
+      "README.md is missing required section: Permissions",
+    );
+  });
+
+  it("rejects a non-PNG screenshot path and accepts a PNG screenshot", () => {
+    const root = createFixture();
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    const manifestPath = join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as { interface: Record<string, unknown> };
+    writeFileSync(join(pluginRoot, "assets", "screenshot.jpg"), "jpeg");
+    manifest.interface["screenshots"] = ["./assets/screenshot.jpg"];
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    const jpegValidation = run(root, "validate-plugins.cjs");
+
+    expect(jpegValidation.status).not.toBe(0);
+    expect(jpegValidation.stderr).toContain("screenshots");
+
+    const png = Buffer.from(
+      "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c63000100000500010d0a2db00000000049454e44ae426082",
+      "hex",
+    );
+    writeFileSync(join(pluginRoot, "assets", "screenshot.png"), png);
+    manifest.interface["screenshots"] = ["./assets/screenshot.png"];
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    expect(run(root, "validate-plugins.cjs").status).toBe(0);
+  });
+
   it("requires a release tag version and matching changelog section", () => {
     const root = createFixture();
 

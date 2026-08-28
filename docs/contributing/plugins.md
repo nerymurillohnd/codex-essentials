@@ -129,6 +129,7 @@ Validate a release candidate before tagging:
 
 ```bash
 npm run marketplace:check
+npm run validate:release -- plugin/<plugin-id>/v<semver>
 ```
 
 Generated GitHub release notes supplement the curated plugin changelog; they do
