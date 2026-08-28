@@ -1,74 +1,64 @@
 ---
 name: declarative-plugin-pipeline
-description: Create, update, validate, or release a Codex Essentials plugin through its declarative source, generated metadata, and self-contained package contract.
+description: Use when creating, changing, validating, or releasing a Codex Essentials plugin package, its manifest, skills, hooks, apps, MCP resources, documentation, marketplace registration, or release metadata. Do not use for unrelated repository work.
 metadata:
-  short-description: Maintain declarative marketplace plugins
+  short-description: Maintain plugin packages and marketplace metadata
 ---
 
-# Declarative Plugin Pipeline
+# Codex Essentials Plugin Pipeline
 
-Use this skill when a task changes a marketplace plugin, its fixed metadata, the
-catalog, generated Codex manifests, or plugin release validation. Do not use it
-for an unrelated repository change or for behavior-only edits that leave the
-plugin source and package contract unchanged.
+Keep each distributable plugin self-contained and keep the generated marketplace
+catalog consistent with validated package manifests. This skill is repository
+maintenance guidance; the skill itself under `.agents/skills/` is not a plugin.
 
-## Operating model
+## Use when
 
-`lib/source.json` is the only declarative source of truth for fixed plugin
-metadata. It is development infrastructure; an installed plugin must never
-read, import, execute, or depend on it.
+- Creating or changing `plugins/<plugin-id>/` or any declared plugin component.
+- Editing a plugin manifest, skill, agent metadata, hook, app, MCP resource,
+  README, changelog, or marketplace registration.
+- Changing the schemas, templates, validators, generators, manifest guard, or
+  release checks that enforce this contract.
 
-The source owns plugin identity, version, interface metadata, marketplace
-policy, declared skills, and optional app, MCP, and asset declarations. The
-synchronizer derives only these runtime artifacts:
+Do not use for unrelated repository work or documentation-only changes with no
+plugin-contract impact. Applying this skill never authorizes a commit, tag,
+push, publication, PR, merge, or other remote mutation.
 
-- `.agents/plugins/marketplace.json`
-- `plugins/<plugin-id>/.codex-plugin/plugin.json`
-- `plugins/<plugin-id>/skills/<skill-id>/agents/openai.yaml`
+## Current model
 
-`SKILL.md`, `README.md`, and `CHANGELOG.md` are author-owned. Initialize a
-missing file from `lib/templates/`, but never replace authored content during a
-sync.
+- `plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of
+  truth for that plugin's identity, version, interface, and components.
+- `SKILL.md`, `agents/openai.yaml`, `README.md`, `CHANGELOG.md`, hooks, apps,
+  MCP files, and assets are package-owned and are validated, not regenerated.
+- `.agents/plugins/marketplace.json` is generated from validated manifests; do
+  not edit it by hand.
+- `schemas/`, `templates/`, `scripts/`, and `lib/` are repository tooling, not
+  installed-plugin dependencies.
 
-## Non-negotiable invariants
-
-- Treat `lib/source.json` as the sole owner of generated metadata. Never
-  hand-edit a derived catalog, `plugin.json`, or `openai.yaml`.
-- Derive manifests from each declared `skill.id`, not from the plugin ID. A
-  plugin and skill may intentionally have different IDs.
-- Keep every plugin dependency and effective filesystem path inside
-  `plugins/<plugin-id>/`. This includes imports, executables, assets, declared
-  runtime paths, and symbolic links after canonicalization.
-- Do not create a repository-level `skills/` directory. Distributed skills
-  live under their owning package.
-- Keep source, author-owned documentation, generated metadata, and the
-  marketplace registration consistent in the same product change.
-- Never stage, commit, push, tag, create a pull request, or publish a release
-  without explicit user authorization for that external mutation.
+There is no current `lib/source.json` model. Do not restore it or prescribe the
+historical `scaffold:plugin`, `sync:*`, or `validate:all` commands.
 
 ## Workflow
 
-1. Identify whether the task scaffolds a new plugin, changes fixed metadata,
-   changes package behavior, or prepares a release.
-2. Read the relevant plugin declaration in `lib/source.json` and inspect only
-   the package files affected by the requested change.
-3. For a new plugin, run `npm run scaffold:plugin -- <plugin-id>`. For an
-   existing plugin, update its source declaration directly; do not infer a new
-   skill from its package name.
-4. Write or update author-owned behavior and product documentation only where
-   needed: `SKILL.md`, `README.md`, and `CHANGELOG.md`.
-5. Run `npm run sync:all` to regenerate metadata. Do not manually repair its
-   output afterward; correct `lib/source.json` and synchronize again.
-6. Run `npm run validate:all`. Resolve every source-schema, drift, package,
-   document, catalog, and containment failure before release work.
-7. Run the applicable quality gate. For a code, schema, template, validator,
-   or workflow change, use `npm run check`.
-8. For a release candidate, validate the exact plugin tag with
-   `npm run validate:release -- plugin/<plugin-id>/v<semver>` and ensure
-   `npm run sync:check` reports no drift.
-9. Before any authorized publication, review the complete package boundary,
-   version, changelog heading, generated artifacts, and validation evidence.
+1. Read `AGENTS.md` and `plugins/AGENTS.md`; classify the change and inspect the
+   complete affected package boundary.
+2. For a new package, start `.codex-plugin/plugin.json` from
+   `templates/codex-plugin-plugin.json`. For an existing package, edit its
+   manifest and author-owned resources directly.
+3. Keep every referenced file, executable, asset, symlink target, and runtime
+   path inside the owning plugin. Do not depend on `lib/`, another plugin, or
+   repository-only tooling at install time.
+4. Follow [the pipeline protocol](references/pipeline-protocol.md) for checks.
+   Use `npm run marketplace:build` after manifest/catalog changes and
+   `npm run marketplace:check` for a read-only consistency check.
+5. Use `npm run check` for changes to repository tooling, schemas, templates,
+   hooks, validators, generators, release behavior, or tests.
+6. Before an authorized release, validate
+   `plugin/<plugin-id>/v<semver>` with `npm run validate:release -- ...` and
+   review the package boundary and changelog.
 
-Read [the detailed pipeline protocol](references/pipeline-protocol.md) when
-you need exact command selection, failure diagnosis, release conditions, or
-review evidence.
+## Boundaries
+
+- Never hand-edit generated marketplace output or commit credentials.
+- Stage named paths only. Never stage, commit, tag, push, publish, create a PR,
+  or merge without explicit authorization.
+- Validation is evidence of repository state, not permission for remote action.
