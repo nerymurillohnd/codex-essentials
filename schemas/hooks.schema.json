@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.openai.com/plugins/hooks.schema.json",
+  "title": "OpenAI Codex Plugin Hooks",
+  "description": "Schema for a plugin hooks configuration file referenced by .codex-plugin/plugin.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["hooks"],
+  "properties": {
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hooks": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "enum": [
+          "SessionStart",
+          "UserPromptSubmit",
+          "PreToolUse",
+          "PostToolUse",
+          "PermissionRequest",
+          "Notification",
+          "Stop",
+          "SubagentStart",
+          "SubagentStop",
+          "PreCompact",
+          "SessionEnd"
+        ]
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/eventHandlers"
+      }
+    }
+  },
+  "$defs": {
+    "eventHandlers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/matcherGroup"
+      }
+    },
+    "matcherGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hooks"],
+      "properties": {
+        "matcher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hooks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/commandHook"
+          }
+        }
+      }
+    },
+    "commandHook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "command"],
+      "properties": {
+        "type": {
+          "const": "command"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "statusMessage": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

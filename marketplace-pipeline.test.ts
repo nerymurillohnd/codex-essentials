@@ -202,6 +202,55 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(validation.status).toBe(0);
   });
 
+  it("rejects malformed referenced hook configuration", () => {
+    const root = createFixture();
+    const hookPath = join(
+      root,
+      "plugins",
+      "prettier-after-edit",
+      "hooks",
+      "hooks.json",
+    );
+    writeFileSync(hookPath, "{\n");
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("hooks.json");
+  });
+
+  it("rejects structurally invalid referenced hook configuration", () => {
+    const root = createFixture();
+    const hookPath = join(
+      root,
+      "plugins",
+      "prettier-after-edit",
+      "hooks",
+      "hooks.json",
+    );
+    writeFileSync(
+      hookPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            PostToolUse: [
+              {
+                hooks: [{ type: "not-a-command", command: "true" }],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("hooks.json");
+  });
+
   it("rejects a plugin manifest without a functional component", () => {
     const root = createFixture();
     const pluginRoot = join(root, "plugins", "doc-keeper");

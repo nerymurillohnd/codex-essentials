@@ -109,7 +109,7 @@ configuration, Husky hooks, workflow YAML, release validation, and documentation
 policy. The required local verification commands are `npm run format:check`,
 `npm run lint -- --max-warnings=0`, `npm run typecheck`,
 `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
-`npm run validate:all`, `npm run validate:release`, `actionlint`, and
+`npm run marketplace:check`, `npm run validate:release`, `actionlint`, and
 `git diff --check`.
 
 References:
