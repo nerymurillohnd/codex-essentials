@@ -125,7 +125,7 @@ approval boundaries, rollback behavior, and troubleshooting:
 | ---------------------------------- | ------------------------------------------------------------------------------ |
 | `.agents/plugins/marketplace.json` | Required marketplace catalog and plugin ordering.                              |
 | `plugins/<plugin-id>/`             | Plugin packages; each requires `.codex-plugin/plugin.json`.                    |
-| `lib/`                             | Declarative SSOT, schemas, templates, domain modules, and colocated tests.     |
+| `lib/`                             | Bounded domain modules and colocated tests for repository maintenance.         |
 | `.github/`                         | Issue forms, pull-request contract, release categories, and CI gates.          |
 | `tsconfig.scripts.json`            | Dedicated `checkJs` project for JavaScript, CJS, and MJS sources.              |
 | `types/`                           | TypeScript contracts and declaration-only interfaces.                          |
@@ -175,7 +175,7 @@ branch-required checks with release environment approval. Local hooks are
 no-shim and advisory; `HUSKY=0` is used in CI, while authorized local emergency
 bypasses use `HUSKY=0` or `--no-verify`. The contributor quality vocabulary is:
 `npm run format:check`, `npm run lint -- --max-warnings=0`, `npm run typecheck`,
-`npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`, `npm run
+`npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
 `npm run marketplace:check`, `npm run documentation:gate`, and `actionlint`.
 Rollback means restoring prior marketplace metadata and removing the
 corresponding release artifacts.
