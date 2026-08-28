@@ -1,150 +1,93 @@
-# Declarative Plugin Pipeline Protocol
+# Codex Essentials Plugin Pipeline Protocol
 
-This reference defines the repository-specific protocol for a plugin product
-change. It supplements `SKILL.md`; it does not authorize publication actions.
+Current package-local protocol. It supplements `SKILL.md` and does not
+authorize publication or other remote actions.
 
-## 1. Classify the change
+## Change classification
 
-| Change                    | Source update                                | Author-owned update               | Synchronize       | Required checks                           |
-| ------------------------- | -------------------------------------------- | --------------------------------- | ----------------- | ----------------------------------------- |
-| New plugin                | Add plugin declaration                       | Initialize and complete documents | Yes               | `validate:all`, `check`                   |
-| New or renamed skill      | Update the plugin `skills` array             | Add or update `SKILL.md`          | Yes               | `validate:all`, `check`                   |
-| Fixed metadata            | Update source fields                         | Update claims if they changed     | Yes               | `validate:all`                            |
-| Behavior or runtime files | Only if metadata changes                     | Update skill and product docs     | If source changed | `validate:all`; `check` when code changes |
-| Documentation only        | No, unless correcting a source-derived claim | Update documentation              | No                | Applicable documentation gate             |
-| Release candidate         | Version and release-facing metadata          | Update changelog release heading  | Yes               | `validate:release`, `sync:check`, `check` |
+- New plugin or component: author the package manifest, resources, README, and
+  changelog; run `npm run marketplace:build` and, for tooling changes,
+  `npm run check`.
+- Skill behavior or agent metadata: update the package `SKILL.md` and
+  `agents/openai.yaml`; run `npm run validate:plugins` and the documentation
+  gate when required.
+- Manifest, version, interface, or component declaration: update
+  `.codex-plugin/plugin.json` and affected package docs; run
+  `npm run marketplace:build`.
+- Validator, generator, schema, template, hook, release behavior, or test:
+  run `npm run check`.
+- Documentation-only package correction: update only the affected document and
+  run the applicable documentation gate.
+- Release candidate: run `npm run check`, `npm run marketplace:check`, and
+  `npm run validate:release -- plugin/<plugin-id>/v<semver>`.
 
-When a request spans categories, apply the union of their checks. Do not turn a
-documentation-only request into an unrelated metadata rewrite.
+When a change spans categories, apply all relevant checks. Synchronize the
+manifest, package resources, README, changelog, and catalog wherever they are
+affected.
 
-## 2. Author the declarative model
+## Package contract
 
-`lib/source.json` must satisfy `lib/schemas/source.schema.json` before any
-output is written. Use the existing plugin record as the shape guide.
+`plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of truth
+for that package's identity, version, interface, and declared components. Start
+a new manifest from `templates/codex-plugin-plugin.json`; remove optional fields
+for components the package does not contain. Do not create or restore
+`lib/source.json`.
 
-Required plugin concerns are:
+The following are author-owned and validated, not generated:
 
-- `name` and semantic `version`
-- description, author, license, and repository
-- package interface metadata
-- marketplace category, installation, and authentication policy
-- one or more declared skills with their own IDs, display names, descriptions,
-  and default prompts
+- `skills/<skill-id>/SKILL.md` and `skills/<skill-id>/agents/openai.yaml`;
+- package-root `README.md` and `CHANGELOG.md`;
+- declared hooks, apps, MCP configuration, assets, and runtime resources.
 
-Declare apps, MCP configuration, and assets only when the package actually
-contains and uses them. Every declared path must remain inside its package.
+The package must work when archived alone. Every file, executable, asset,
+symlink target, and runtime path must resolve inside the owning plugin; it must
+not depend on `lib/`, another plugin, or repository-only tooling. A `skills`
+component requires `./skills/`, and every skill directory requires `SKILL.md`
+plus schema-valid `agents/openai.yaml`.
 
-Do not add executable TypeScript, JavaScript, or CJS as plugin input metadata.
-TypeScript contracts exist only for internal repository tooling; the plugin
-source is declarative JSON.
+## Catalog pipeline
 
-## 3. Scaffold and author package content
+- `npm run validate:plugins` validates manifests, required documentation,
+  resources, skill agent metadata, hooks, and containment.
+- `npm run generate:marketplace` writes `.agents/plugins/marketplace.json` from
+  validated manifests.
+- `npm run validate:marketplace` validates the catalog schema and its exact
+  reverse-link to manifests.
+- `npm run marketplace:build` runs package validation, writes the catalog, and
+  validates the result.
+- `npm run marketplace:check` performs package and catalog validation without
+  writing generated output.
 
-For a new package:
+Use `marketplace:build` after manifest or catalog-affecting changes. Use
+`marketplace:check` when inspecting state. Never repair catalog drift by hand;
+correct the package manifest and regenerate it.
 
-```sh
-npm run scaffold:plugin -- <plugin-id>
-```
+The historical commands `scaffold:plugin`, `sync:all`, `sync:check`, and
+`validate:all` are not current npm scripts and must not be prescribed.
 
-The scaffold adds a source record and writes missing author-owned documents. It
-does not permit an incomplete package to become valid by inventing unrelated
-skills. If an existing package already owns a skill with a nonmatching ID,
-declare and generate beside that skill.
+## Quality and release
 
-Author package files deliberately:
-
-- `SKILL.md` contains behavior and operating instructions.
-- `README.md` explains purpose, inputs, tools, permissions, side effects,
-  install and rollback behavior, verification, limitations, and recovery.
-- `CHANGELOG.md` keeps `## [Unreleased]` and records product-facing changes.
-
-Never copy repository-maintenance scripts into a package just to make it work.
-An installed package must remain complete when archived alone.
-
-## 4. Synchronize derived artifacts
-
-```sh
-npm run sync:all
-npm run sync:check
-```
-
-`sync:all` is the only writer for generated manifests and catalog entries. If
-an output is wrong, modify `lib/source.json`, not the emitted file. A clean
-`sync:check` proves the checked-in derived state matches the source; it does
-not replace semantic or package validation.
-
-## 5. Validate the package boundary
+For documentation synchronization, run:
 
 ```sh
-npm run validate:all
+npm run documentation:gate -- --base <base> --head <head>
 ```
 
-This validates the source schema, generated output drift, marketplace schema,
-plugin and agent schemas, required package documents, declared package set, and
-effective filesystem containment.
+`npm run check` is the complete repository gate: formatting, linting, script and
+TypeScript checks, tests and coverage, plus the read-only marketplace check.
+Do not lower coverage thresholds to pass a change.
 
-Containment failures are release blockers. Reject any package where a symbolic
-link, skills directory, agent manifest, icon, asset, executable, or referenced
-resource resolves outside `plugins/<plugin-id>/`. Do not replace this check by
-testing from the repository root; release archives distribute only the package
-tree.
+Release identifiers use exactly `plugin/<plugin-id>/v<semver>`. Release
+validation checks that the plugin exists, the tag version matches its manifest,
+and the changelog has a dated section for that version. Passing validation is
+evidence only; it is not permission to tag, push, publish, create a PR, merge,
+or perform another remote action.
 
-## 6. Run quality gates
+## Failure routing
 
-Use the narrowest check that proves the requested change, plus all gates made
-necessary by the changed area.
-
-```sh
-npm run format:check
-npm run lint -- --max-warnings=0
-npm run typecheck
-npm run typecheck:scripts
-npx tsc6 --noEmit
-npm test
-npm run validate:all
-```
-
-For internal tooling, schemas, templates, validation, CI, or release behavior,
-prefer the complete gate:
-
-```sh
-npm run check
-```
-
-The Vitest policy requires at least 96% per file. Do not lower thresholds or
-exclude a branch merely to pass coverage; add a meaningful test or simplify an
-unreachable invariant.
-
-## 7. Prepare a release candidate
-
-Release tags use this exact form:
-
-```text
-plugin/<plugin-id>/v<semver>
-```
-
-Before creating or pushing a tag, run:
-
-```sh
-npm run check
-npm run sync:check
-npm run validate:release -- plugin/<plugin-id>/v<semver>
-```
-
-The release validator requires a matching manifest name and version, an
-`Unreleased` changelog section, a versioned release heading, and a fully
-self-contained package tree. A passing local release validation is evidence,
-not permission to tag or publish.
-
-## 8. Review and publication protocol
-
-Before an authorized commit or pull request, inspect the intended paths and
-diff. Stage named paths only; never stage the whole worktree by default. A
-product PR must explain derived-artifact changes, containment implications,
-compatibility effects, and exact verification output.
-
-Use a feature branch when starting from `main`. Create pull requests as drafts
-unless the user explicitly requests a ready-for-review PR. Before merging,
-read all review comments and checks, address valid findings, and rerun affected
-validation. Integrate with a merge commit unless the user explicitly requests
-another strategy.
+- Package or containment failure: run `npm run validate:plugins`.
+- Catalog schema or drift failure: run `npm run marketplace:build` and inspect
+  the validated manifest if it still fails.
+- Tooling, type, lint, test, hook, or schema failure: run `npm run check`.
+- Release failure: compare the exact tag, manifest version, and dated changelog
+  heading before any remote operation.
