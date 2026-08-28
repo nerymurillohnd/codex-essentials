@@ -1,5 +1,13 @@
 # DocKeeper Design
 
+> **Status: Superseded historical record**
+>
+> This design records an earlier implementation approach and is retained for
+> historical context. It was superseded by [ADR-0007](../../decisions/adr-0007-plugin-manifest-marketplace-contract.md).
+> Do not use its source-of-truth, synchronization, validation, or release
+> commands as current instructions. Use the current [architecture guidance](../../agent-guidelines/architecture.md),
+> `npm run marketplace:build`, and `npm run marketplace:check` instead.
+
 ## Purpose
 
 DocKeeper is a distributable Codex plugin for maintaining project history and

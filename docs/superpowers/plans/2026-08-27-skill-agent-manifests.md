@@ -1,5 +1,13 @@
 # Skill Agent Manifests Implementation Plan
 
+> **Status: Superseded historical record**
+>
+> This plan records an earlier implementation approach and is retained for
+> historical context. It was superseded by [ADR-0007](../../decisions/adr-0007-plugin-manifest-marketplace-contract.md).
+> Do not use its source-of-truth, synchronization, validation, or release
+> commands as current instructions. Use the current [architecture guidance](../../agent-guidelines/architecture.md),
+> `npm run marketplace:build`, and `npm run marketplace:check` instead.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make every distributed plugin skill carry a validated Codex agent manifest and keep package documentation, generators, validators, schemas, tests, versions, and release metadata synchronized.
