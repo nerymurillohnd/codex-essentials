@@ -4,6 +4,7 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -22,6 +23,10 @@ function createFixture(): string {
   for (const name of ["plugins", "schemas", "templates", "scripts"] as const) {
     cpSync(join(repositoryRoot, name), join(root, name), { recursive: true });
   }
+  cpSync(
+    join(repositoryRoot, "lib", "schemas", "agent.schema.json"),
+    join(root, "lib", "schemas", "agent.schema.json"),
+  );
   cpSync(join(repositoryRoot, "package.json"), join(root, "package.json"));
   return root;
 }
@@ -134,6 +139,29 @@ describe("strict plugin-to-marketplace pipeline", () => {
 
     expect(validation.status).not.toBe(0);
     expect(validation.stderr).toContain(".mcp.json is missing");
+  });
+
+  it("rejects missing skill agent metadata and symlinks anywhere in a plugin package", () => {
+    const root = createFixture();
+    rmSync(
+      join(
+        root,
+        "plugins",
+        "astro-cli-commands",
+        "skills",
+        "astro-commands",
+        "agents",
+        "openai.yaml",
+      ),
+    );
+    expect(run(root, "validate-plugins.cjs").status).not.toBe(0);
+
+    const secondRoot = createFixture();
+    symlinkSync(
+      "/tmp",
+      join(secondRoot, "plugins", "astro-cli-commands", "unexpected-link"),
+    );
+    expect(run(secondRoot, "validate-plugins.cjs").status).not.toBe(0);
   });
 
   it("rejects a catalog whose entries no longer exactly derive from the manifests", () => {

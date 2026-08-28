@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const Ajv2020 = require("ajv/dist/2020").default;
+const YAML = require("yaml");
 
 const MARKETPLACE = Object.freeze({
   name: "codex-essentials",
@@ -17,6 +18,7 @@ const MARKETPLACE_OUTPUT = path.join(".agents", "plugins", "marketplace.json");
 const PLUGIN_SCHEMA = path.join("schemas", "plugin.schema.json");
 const MARKETPLACE_SCHEMA = path.join("schemas", "marketplace.schema.json");
 const PLUGIN_TEMPLATE = path.join("templates", "codex-plugin-plugin.json");
+const AGENT_SCHEMA = path.join("lib", "schemas", "agent.schema.json");
 const ALLOWED_PLUGIN_DIRECTORY_FILES = new Set(["AGENTS.md"]);
 const TEMPLATE_FIXED_PATHS = [
   ["author", "name"],
@@ -40,6 +42,10 @@ function loadPluginManifests(root) {
     "plugin manifest schema",
   );
   const template = loadTemplateProfile(root);
+  const agentSchema = loadJson(
+    path.join(root, AGENT_SCHEMA),
+    "skill agent schema",
+  );
   const pluginDirectories = fs
     .readdirSync(pluginsRoot, { withFileTypes: true })
     .filter((entry) => !entry.name.startsWith("."))
@@ -60,6 +66,7 @@ function loadPluginManifests(root) {
     const pluginRoot = path.join(pluginsRoot, entry.name);
     assertDirectory(pluginRoot, `plugins/${entry.name}`);
     assertContained(pluginsRoot, pluginRoot, `plugins/${entry.name}`);
+    assertNoSymlinks(pluginRoot);
     const manifestPath = path.join(pluginRoot, PLUGIN_MANIFEST);
     assertRegularFile(manifestPath, `plugins/${entry.name}/${PLUGIN_MANIFEST}`);
     assertContained(pluginRoot, manifestPath, manifestPath);
@@ -70,7 +77,7 @@ function loadPluginManifests(root) {
     if (record.name !== entry.name) {
       throw new Error(`${manifestPath} name must match plugins/${entry.name}`);
     }
-    validatePluginResources(pluginRoot, record);
+    validatePluginResources(pluginRoot, record, agentSchema);
     return { name: entry.name, pluginRoot, manifest: record };
   });
 }
@@ -148,12 +155,12 @@ function writeMarketplace(root, marketplace) {
 }
 
 /** @param {string} pluginRoot @param {Record<string, unknown>} manifest */
-function validatePluginResources(pluginRoot, manifest) {
+function validatePluginResources(pluginRoot, manifest, agentSchema) {
   validateDeclaredComponents(pluginRoot, manifest);
   if (typeof manifest.skills === "string") {
     const skillsRoot = resolvePluginPath(pluginRoot, manifest.skills, "skills");
     assertDirectory(skillsRoot, `${manifest.skills}`);
-    assertSkillDirectory(skillsRoot, manifest.skills);
+    assertSkillDirectory(skillsRoot, manifest.skills, agentSchema);
   }
   for (const field of ["mcpServers", "apps"]) {
     const value = manifest[field];
@@ -212,7 +219,7 @@ function validateDeclaredComponents(pluginRoot, manifest) {
 }
 
 /** @param {string} skillsRoot @param {string} label */
-function assertSkillDirectory(skillsRoot, label) {
+function assertSkillDirectory(skillsRoot, label, agentSchema) {
   const skillEntries = fs
     .readdirSync(skillsRoot, { withFileTypes: true })
     .filter((entry) => !entry.name.startsWith("."));
@@ -229,6 +236,35 @@ function assertSkillDirectory(skillsRoot, label) {
       path.join(skillRoot, "SKILL.md"),
       `${label}/${entry.name}/SKILL.md`,
     );
+    const agentPath = path.join(skillRoot, "agents", "openai.yaml");
+    assertRegularFile(agentPath, `${label}/${entry.name}/agents/openai.yaml`);
+    const agent = loadYaml(agentPath, "skill agent manifest");
+    validate(agentSchema, agent, agentPath);
+    const agentInterface = asRecord(
+      asRecord(agent, agentPath).interface,
+      agentPath,
+    );
+    for (const field of ["icon_small", "icon_large"]) {
+      if (typeof agentInterface[field] === "string") {
+        assertRegularFile(
+          resolvePluginPath(skillRoot, agentInterface[field], field),
+          agentInterface[field],
+        );
+      }
+    }
+  }
+}
+
+/** @param {string} root */
+function assertNoSymlinks(root) {
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const target = path.join(root, entry.name);
+    if (entry.isSymbolicLink()) {
+      throw new Error(`${target} must not be a symbolic link`);
+    }
+    if (entry.isDirectory()) {
+      assertNoSymlinks(target);
+    }
   }
 }
 
@@ -368,6 +404,17 @@ function assertDirectory(target, label) {
 function loadJson(target, label) {
   try {
     return JSON.parse(fs.readFileSync(target, "utf8"));
+  } catch (error) {
+    throw new Error(
+      `unable to load ${label} at ${target}: ${/** @type {Error} */ (error).message}`,
+    );
+  }
+}
+
+/** @param {string} target @param {string} label */
+function loadYaml(target, label) {
+  try {
+    return YAML.parse(fs.readFileSync(target, "utf8"));
   } catch (error) {
     throw new Error(
       `unable to load ${label} at ${target}: ${/** @type {Error} */ (error).message}`,
