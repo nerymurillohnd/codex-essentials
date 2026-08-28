@@ -4,10 +4,13 @@
   "description": "Format files edited by Codex with Prettier after each change, preferring project-local binaries and falling back to global PATH when needed.",
   "author": {
     "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
     "url": "https://github.com/nerymurillohnd"
   },
+  "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
+  "keywords": ["prettier", "formatter", "hooks", "quality", "developer-tools"],
   "interface": {
     "displayName": "Prettier After Edit",
     "shortDescription": "Auto-format files after each Codex edit.",
@@ -20,7 +23,13 @@
       "Project-local Prettier preference with global fallback",
       "No installation-time project mutations"
     ],
-    "defaultPrompt": "Use Prettier After Edit to format changed files after supported Codex edits."
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use Prettier After Edit to format changed files after supported Codex edits."
+    ]
   },
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
 }
