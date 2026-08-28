@@ -5,15 +5,16 @@ These instructions apply to every local package under `plugins/`. The root
 
 ## Generated Metadata and Package Containment
 
-`lib/source.json` is the repository-wide declarative source of truth for fixed
-plugin metadata. It is development infrastructure, not a resource consumed by
-an installed plugin. The repository synchronizer derives `.codex-plugin/plugin.json`,
-each `skills/<skill-id>/agents/openai.yaml`, and the plugin's marketplace entry.
+Each `plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of
+truth for that distributable plugin. Start it from
+`templates/codex-plugin-plugin.json`, complete its variable fields, and remove
+optional declarations for components the plugin does not use. The generator
+derives only `.agents/plugins/marketplace.json`; it never rewrites a plugin
+manifest or skill metadata.
 
-Do not hand-edit derived metadata. Change the source definition and run the
-synchronizer. `SKILL.md`, `README.md`, and `CHANGELOG.md` are initialized from
-templates but remain author-owned after creation; synchronizers validate their
-contract and must not replace their content.
+`SKILL.md`, `README.md`, and `CHANGELOG.md` remain author-owned package files.
+The marketplace pipeline validates their package context but does not replace
+their content.
 
 Every file, directory, asset, symlink target, executable, and declared runtime
 path used by an installed plugin must resolve within `plugins/<plugin-id>/`.
@@ -36,11 +37,11 @@ generation, validation, packaging, and release.
   skill document owns behavior and operating instructions; the agent manifest
   owns concise presentation metadata and optional prompt bootstrap.
 
-The manifest must validate against `lib/schemas/plugin.schema.json`. Its required
-top-level fields are `name`, `version`, `description`, `author`, and
-`interface`. The interface requires the display metadata, capabilities, and
-exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
-`apps`, or `mcpServers` must be declared.
+The manifest must validate against `schemas/plugin.schema.json`. Its required
+top-level fields include identity, ownership, legal metadata, keywords, and
+`interface`. The interface requires display metadata, capabilities, legal URLs,
+and an array `defaultPrompt`. At least one of `skills`, `hooks`, `apps`, or
+`mcpServers` must be declared.
 
 ## Referenced Resources
 
@@ -59,9 +60,9 @@ exactly one of `defaultPrompt` or `default_prompt`. At least one of `skills`,
 - Keep interface assets under `./assets/`; screenshot paths must point to PNG
   files. Do not use `..` path segments.
 - Codex supports explicit top-level `hooks` paths and automatically discovers
-  `hooks/hooks.json` when the field is omitted. Until this repository's
-  declarative source and plugin schema model explicit hook paths, use the
-  conventional file and do not hand-edit generated manifests to add `hooks`.
+  `hooks/hooks.json` when the field is omitted. Declare
+  `"hooks": "./hooks/hooks.json"` when the package uses the conventional hook
+  file so the package contract is explicit.
 
 ## Product Documentation
 
@@ -83,31 +84,27 @@ marketplace registration synchronized in the same change. Product changes are
 gated in pull requests; documentation-only changes may update only the
 affected document.
 
-Use [`lib/templates/README.md`](../lib/templates/README.md) and
-[`lib/templates/CHANGELOG.md`](../lib/templates/CHANGELOG.md) as the canonical starting
-points. Preserve Keep a Changelog headings, use ISO 8601 dates, and add
-migration notes for breaking changes. Area labels are conditional metadata,
-not a checklist: do not add entries for unaffected areas, and remove empty
-sections from published releases. Release tags use
-`plugin/<plugin-id>/v<semver>`.
+Use the package's existing documentation as the canonical starting point.
+Preserve Keep a Changelog headings, use ISO 8601 dates, and add migration notes
+for breaking changes. Area labels are conditional metadata, not a checklist:
+do not add entries for unaffected areas, and remove empty sections from
+published releases. Release tags use `plugin/<plugin-id>/v<semver>`.
 
 ## Catalog and Workflow
 
 - Register local packages in `.agents/plugins/marketplace.json` with a local
   source path such as `./plugins/<plugin-id>`.
-- Prefer the repository helpers so manifests and catalog entries stay aligned:
+- Use the repository pipeline so manifests and catalog entries stay aligned:
 
   ```sh
-  npm run scaffold:plugin -- <plugin-id>
-  npm run sync:all
-  npm run validate:all
+  npm run marketplace:build
+  npm run marketplace:check
   npm run check
   ```
 
-`scaffold:plugin` preserves existing author-owned documents while initializing
-missing files. `sync:all` rewrites only derived metadata. Never commit
-credentials or real secret values in plugin files; use `${VAR}`
-references and document required configuration instead.
+Never commit credentials or real secret values in plugin files; use `${VAR}`
+references and document required configuration instead. The generated catalog
+must not be hand-edited.
 
 ## Consistency and Drift Review
 

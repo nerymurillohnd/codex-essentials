@@ -11,8 +11,11 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 ### Changed
 
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository
-  declarative source and strengthened release validation to reject resources
-  resolving outside this package.
+  plugin manifest and strengthened package validation to reject incomplete skill
+  metadata, unsafe links, and resources resolving outside this package.
+- **[Area: Manifest]** Added the explicit `hooks` declaration and recorded the
+  complete author, legal, interface, and component metadata; the marketplace
+  entry is generated and reverse-validated from this manifest.
 
 ## [0.1.1] - 2026-08-27
 

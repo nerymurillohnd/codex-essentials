@@ -13,6 +13,10 @@ DocKeeper does not invent history. It never publishes or mutates remote state;
 an authorized owning workflow performs those actions after DocKeeper's document
 pass.
 
+The package-local `.codex-plugin/plugin.json` is the source of truth for this
+plugin's identity and install metadata. The repository derives and validates
+the marketplace catalog from it.
+
 ## Included Components
 
 - `skills/doc-keeper/SKILL.md` routes each request and enforces shared evidence,
@@ -167,8 +171,8 @@ For behavioral verification, also exercise these cases after installation:
 Package maintainers can validate the skill with:
 
 ```bash
-npm run validate:all
-npm run validate:release -- plugin/doc-keeper/v0.1.0
+npm run validate:plugins
+npm run validate:marketplace
 ```
 
 Both commands are repository-maintainer checks, not plugin runtime dependencies.

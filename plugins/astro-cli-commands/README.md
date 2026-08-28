@@ -99,6 +99,10 @@ they disagree with this package.
 The marketplace repository maintains the plugin package. It does not install
 its own `npm` dependencies into a user's Astro project.
 
+The package-local `.codex-plugin/plugin.json` is the source of truth for this
+plugin's identity and install metadata. The repository derives and validates
+the marketplace catalog from it.
+
 The intended maintenance rhythm is a weekly compatibility check plus manual
 dispatch when Astro releases meaningful CLI changes. Updates should arrive as
 reviewable pull requests; they should not rewrite `main` or publish silently.
@@ -210,12 +214,13 @@ For manifest-only checks, use:
 
 ```bash
 npm run validate:plugins
-npm run validate:all
-npm run validate:release -- plugin/astro-cli-commands/v0.1.1
+npm run validate:marketplace
+npm run marketplace:build
 ```
 
-`validate:all` checks the catalog, schemas, plugin directories, and
-cross-references; it does not replace `npm run check`.
+`marketplace:build` validates every plugin package, regenerates the catalog,
+and reverse-validates the generated result. `marketplace:check` performs the
+same checks without writing the catalog.
 
 From Codex, maintainers can ask:
 
@@ -224,10 +229,10 @@ Use the plugin-creator Skill to validate plugins/astro-cli-commands.
 ```
 
 The external `plugin-creator` compatibility checker is optional and is not
-stored in this repository. Its terminal form uses a local Skill path:
+stored in this repository. The repository's strict local package check is:
 
 ```bash
-npm run validate:all
+npm run marketplace:check
 ```
 
 In a target Astro project, verify the installed command surface:

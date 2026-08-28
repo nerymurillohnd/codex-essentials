@@ -58,6 +58,30 @@ function runGuard(root: string, event: unknown) {
   );
 }
 
+function runDocumentationGate(root: string, base: string, head: string) {
+  return spawnSync(
+    process.execPath,
+    [
+      join(repositoryRoot, "scripts", "documentation-gate.cjs"),
+      "--root",
+      root,
+      "--base",
+      base,
+      "--head",
+      head,
+    ],
+    { encoding: "utf8" },
+  );
+}
+
+function git(root: string, args: string[]): string {
+  const result = spawnSync("git", ["-C", root, ...args], {
+    encoding: "utf8",
+  });
+  expect(result.status).toBe(0);
+  return result.stdout.trim();
+}
+
 function readJson(root: string, relativePath: string): unknown {
   return JSON.parse(readFileSync(join(root, relativePath), "utf8")) as unknown;
 }
@@ -139,6 +163,70 @@ describe("strict plugin-to-marketplace pipeline", () => {
 
     expect(validation.status).not.toBe(0);
     expect(validation.stderr).toContain(".mcp.json is missing");
+  });
+
+  it("rejects a plugin manifest without a functional component", () => {
+    const root = createFixture();
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    rmSync(join(pluginRoot, "skills"), { recursive: true });
+    const manifestPath = join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    delete manifest["skills"];
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("functional component");
+  });
+
+  it("requires README and changelog changes for product plugin changes", () => {
+    const root = createFixture();
+    git(root, ["init"]);
+    git(root, ["config", "user.email", "test@example.com"]);
+    git(root, ["config", "user.name", "Test"]);
+    git(root, ["add", "."]);
+    git(root, ["commit", "-m", "fixture"]);
+    const base = git(root, ["rev-parse", "HEAD"]);
+    const manifestPath = join(
+      root,
+      "plugins",
+      "doc-keeper",
+      ".codex-plugin",
+      "plugin.json",
+    );
+    writeFileSync(
+      manifestPath,
+      `${readFileSync(manifestPath, "utf8").replace("0.1.0", "0.1.1")}\n`,
+    );
+    git(root, ["add", manifestPath]);
+    git(root, ["commit", "-m", "manifest change"]);
+    const headWithoutDocs = git(root, ["rev-parse", "HEAD"]);
+
+    const failure = runDocumentationGate(root, base, headWithoutDocs);
+
+    expect(failure.status).not.toBe(0);
+    expect(failure.stderr).toContain("README.md");
+    expect(failure.stderr).toContain("CHANGELOG.md");
+
+    for (const file of [
+      "plugins/doc-keeper/README.md",
+      "plugins/doc-keeper/CHANGELOG.md",
+    ]) {
+      const target = join(root, file);
+      writeFileSync(
+        target,
+        `${readFileSync(target, "utf8")}\nDocumentation update.\n`,
+      );
+    }
+    git(root, ["add", "."]);
+    git(root, ["commit", "-m", "document manifest change"]);
+    const headWithDocs = git(root, ["rev-parse", "HEAD"]);
+
+    expect(runDocumentationGate(root, base, headWithDocs).status).toBe(0);
   });
 
   it("rejects missing skill agent metadata and symlinks anywhere in a plugin package", () => {

@@ -30,3 +30,5 @@ jobs:
         run: npm ci
       - name: Validate plugin manifests and generated marketplace
         run: npm run marketplace:check
+      - name: Enforce plugin documentation synchronization
+        run: npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"

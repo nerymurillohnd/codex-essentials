@@ -6,9 +6,9 @@ This repository is a community marketplace for Codex plugins and data. It is not
 
 - `.agents/plugins/marketplace.json` is the catalog.
 - `plugins/` contains local plugin packages; see [Plugin package guidelines](plugins/AGENTS.md) for their structure, manifests, resources, and catalog registration.
-- `lib/` contains the declarative source, schemas, templates, domain modules, and colocated Vitest tests; `types/` contains TypeScript contracts.
+- `schemas/` contains the strict plugin and marketplace schemas, `templates/` contains the complete plugin creation form, `scripts/` contains the generators and validators, and `lib/` contains bounded domain modules with colocated tests.
 - `.github/` contains issue forms, the pull-request contract, release-note categories, and CI documentation gates. `docs/operations/` documents organization-level Projects.
-- `tsconfig.scripts.json` checks the JavaScript modules under `lib/` with the Node-aware `checkJs` configuration.
+- `tsconfig.scripts.json` checks the JavaScript modules under `lib/` and `scripts/` with the Node-aware `checkJs` configuration.
 - `docs/`, `adapters/`, and `config/` contain supporting material. There is no repository-level `skills/` directory.
 
 ## Development Commands
@@ -17,12 +17,12 @@ This repository is a community marketplace for Codex plugins and data. It is not
 - `npm run format` — write Prettier formatting; use `npm run format:check` for a read-only check.
 - `npm run check` — run formatting, linting, typechecking, Vitest coverage, and complete manifest validation.
 - `npm run documentation:gate -- --base <base> --head <head>` — enforce README/changelog synchronization for changed plugins.
-- `npm run validate:release -- plugin/<plugin-id>/v<semver>` — validate an independent plugin release tag.
 - `GITHUB_ORG="${GITHUB_ORG}" PROJECT_TITLE="${PROJECT_TITLE}" npm run project:bootstrap -- --dry-run` — preview organization Project bootstrap.
 - `npx tsc --noEmit` / `npx tsc6 --noEmit` — run the TypeScript 7 native compiler or the TypeScript 6 API-compatible compiler explicitly.
-- `npm run validate:all` — validate the catalog, schemas, plugin directories, and cross-references; targeted plugin commands are documented in `plugins/AGENTS.md`.
-- `npm run scaffold:plugin -- <plugin-id>` — add a source declaration and initialize only missing author-owned package documents.
-- `npm run sync:all` / `npm run sync:check` — write or read-only check metadata derived from `lib/source.json`.
+- `npm run validate:plugins` — validate every package-local plugin manifest and its resources.
+- `npm run validate:marketplace` — validate the catalog and reverse-link it to package manifests.
+- `npm run marketplace:build` — run the complete validate, generate, and reverse-validate pipeline.
+- `npm run marketplace:check` — run the complete read-only package and catalog validation.
 
 ## Coding and Testing
 
@@ -43,34 +43,32 @@ Run applicable diagnostics and tests before declaring work complete. Keep docs s
 
 ## Operational Architecture and Source of Truth
 
-The repository operates from one declarative, non-executable source of truth:
-`lib/source.json`. It describes every maintained plugin's identity, version,
-author, license, repository, interface metadata, marketplace policy, skills,
-apps, MCP declarations, and declared assets.
+Each `plugins/<plugin-id>/.codex-plugin/plugin.json` is the sole authored source
+of truth for that distributable plugin's identity, version, metadata, and
+declared components. Create it from `templates/codex-plugin-plugin.json`, then
+remove optional declarations that the package does not use.
 
-- `lib/source.json` is the sole owner of fixed metadata. Do not hand-edit a
-  derived `plugin.json`, `agents/openai.yaml`, or marketplace entry.
-- `lib/schemas/` contains the JSON Schemas that validate the source model and
-  emitted runtime artifacts. Ajv is the runtime schema validator.
-- `lib/templates/` contains the initial README, changelog, and skill document
-  templates. Templates initialize author-owned files; synchronization must not
-  overwrite authored `SKILL.md`, `README.md`, or `CHANGELOG.md` content.
-- `lib/<domain>/` contains one bounded operational area per directory, its
-  executable code, and its colocated tests. The repository does not maintain
-  root `scripts/`, `tests/`, or `templates/` directories.
-- The source file is development and CI infrastructure only. Codex-installed
-  plugins neither execute nor import `lib/`, repository tooling, another
-  plugin, or any resource outside their package.
-- A plugin is distributable only when every effective path, including symbolic
-  links after canonicalization, resolves inside `plugins/<plugin-id>/`.
-  Reject external paths before generation, validation, archiving, or release.
-- CI must verify that derived artifacts are synchronized with `lib/source.json`
-  and that the release archive contains a complete, self-contained package.
+- `schemas/plugin.schema.json` defines the strict manifest contract.
+- `schemas/marketplace.schema.json` defines the strict generated catalog contract.
+- `lib/schemas/agent.schema.json` defines the required metadata for every
+  `skills/<skill-id>/agents/openai.yaml` file.
+- `scripts/marketplace-contract.cjs` validates package resources and builds the
+  catalog only from validated manifests.
+- `scripts/generate-marketplace.cjs` writes `.agents/plugins/marketplace.json`
+  atomically; `scripts/validate-marketplace.cjs` validates the catalog and
+  compares it exactly with the manifests that generated it.
+- `scripts/plugin-manifest-guard.cjs` runs the complete build after a relevant
+  Codex edit. The local hook requires explicit trust in Codex; CI remains the
+  authoritative gate.
+- Plugins must be self-contained. Every file, executable, declared resource,
+  and symbolic link must remain inside its owning plugin package; symlinks are
+  rejected before generation or release.
+- Plugins must have at least one functional component: `skills`, `hooks`,
+  `mcpServers`, or `apps`.
 
-The implementation commands are `scaffold`, `sync`, and `validate`: scaffold
-creates missing valid package structure, sync regenerates only derived
-artifacts from the source of truth, and validate is read-only and strict.
-Neither a generator nor a validator is part of a plugin runtime contract.
+The marketplace is generated from package-local manifests only. The generator,
+validator, schemas, templates, and hook are repository maintenance tooling and
+are not runtime dependencies of installed plugins.
 
 ## Commits and Pull Requests
 

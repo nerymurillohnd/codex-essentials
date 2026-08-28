@@ -46,6 +46,12 @@
     },
     "interface": { "$ref": "#/$defs/interface" }
   },
+  "anyOf": [
+    { "required": ["skills"], "properties": { "skills": {} } },
+    { "required": ["hooks"], "properties": { "hooks": {} } },
+    { "required": ["mcpServers"], "properties": { "mcpServers": {} } },
+    { "required": ["apps"], "properties": { "apps": {} } }
+  ],
   "$defs": {
     "identifier": {
       "type": "string",

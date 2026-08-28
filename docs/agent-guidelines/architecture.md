@@ -5,10 +5,10 @@ This is a community marketplace for Codex plugins and data. It is not a web appl
 - `.agents/plugins/marketplace.json` is the catalog and must remain at that exact path.
 - `plugins/` is the collection of local plugin packages; see [Plugin Package Guidelines](../../plugins/AGENTS.md) for package-level structure and manifest rules.
 - There is no repository-level `skills/` directory today. Skill content belongs inside the plugin that distributes it.
-- `lib/source.json` is the sole declarative source for fixed plugin metadata. `lib/schemas/` contains marketplace, plugin, source, and skill-agent schemas; `lib/templates/` contains product-documentation templates; and `lib/<domain>/` contains bounded helpers with their colocated Vitest tests. `types/` contains TypeScript contracts.
+- Each `plugins/<plugin-id>/.codex-plugin/plugin.json` is the package source of truth. `schemas/` contains the plugin and marketplace schemas, `templates/` contains the complete plugin creation form, `scripts/` contains the generator and validators, and `lib/` contains bounded helpers with colocated Vitest tests.
 - `.github/` contains contribution forms, release-note categories, and CI workflows. Organization-level Project structure is specified in `docs/operations/`.
 - `tsconfig.scripts.json` is the separate no-emit `checkJs` project for runtime JavaScript, CJS, and MJS files; the root `tsconfig.json` remains TypeScript-only.
-- `tsconfig.scripts.json` directly associates JavaScript helpers under `lib/` with the Node-aware configuration.
+- `tsconfig.scripts.json` directly checks JavaScript helpers under `lib/` and `scripts/` with the Node-aware configuration.
 - `docs/`, `adapters/`, and `config/` contain supporting material and integrations.
 
 Keep local marketplace paths relative (`./plugins/<plugin-id>`) and inside the repository. Do not add `src/`, `public/`, `pages/`, or other web-oriented structure without an explicit architecture decision.

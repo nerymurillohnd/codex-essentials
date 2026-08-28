@@ -32,6 +32,7 @@ const TEMPLATE_FIXED_PATHS = [
   ["interface", "privacyPolicyURL"],
   ["interface", "termsOfServiceURL"],
 ];
+const FUNCTIONAL_COMPONENT_FIELDS = ["skills", "hooks", "mcpServers", "apps"];
 
 /** @param {string} root */
 function loadPluginManifests(root) {
@@ -71,8 +72,9 @@ function loadPluginManifests(root) {
     assertRegularFile(manifestPath, `plugins/${entry.name}/${PLUGIN_MANIFEST}`);
     assertContained(pluginRoot, manifestPath, manifestPath);
     const manifest = loadJson(manifestPath, "plugin manifest");
-    validate(pluginSchema, manifest, manifestPath);
     const record = asRecord(manifest, manifestPath);
+    assertFunctionalComponent(record, manifestPath);
+    validate(pluginSchema, manifest, manifestPath);
     validateFixedTemplateFields(record, template, manifestPath);
     if (record.name !== entry.name) {
       throw new Error(`${manifestPath} name must match plugins/${entry.name}`);
@@ -115,6 +117,24 @@ function validateMarketplace(root, marketplace) {
     "marketplace schema",
   );
   validate(schema, marketplace, path.join(root, MARKETPLACE_OUTPUT));
+  assertUniqueMarketplacePluginNames(marketplace);
+}
+
+/** @param {unknown} marketplace */
+function assertUniqueMarketplacePluginNames(marketplace) {
+  const catalog = asRecord(marketplace, "marketplace catalog");
+  const entries = /** @type {unknown[]} */ (catalog.plugins);
+  const names = new Set();
+  for (const entry of entries) {
+    const name = asRecord(entry, "marketplace plugin entry").name;
+    if (typeof name !== "string") {
+      throw new Error("marketplace plugin entry name must be a string");
+    }
+    if (names.has(name)) {
+      throw new Error(`marketplace plugin name must be unique: ${name}`);
+    }
+    names.add(name);
+  }
 }
 
 /** @param {string} root */
@@ -190,6 +210,17 @@ function validatePluginResources(pluginRoot, manifest, agentSchema) {
         screenshot,
       );
     }
+  }
+}
+
+/** @param {Record<string, unknown>} manifest @param {string} label */
+function assertFunctionalComponent(manifest, label) {
+  if (
+    !FUNCTIONAL_COMPONENT_FIELDS.some((field) => manifest[field] !== undefined)
+  ) {
+    throw new Error(
+      `${label} must declare at least one functional component: ${FUNCTIONAL_COMPONENT_FIELDS.join(", ")}`,
+    );
   }
 }
 
@@ -312,20 +343,7 @@ function resolvePluginPath(pluginRoot, relativePath, field) {
 function loadTemplateProfile(root) {
   const templatePath = path.join(root, PLUGIN_TEMPLATE);
   const rawTemplate = fs.readFileSync(templatePath, "utf8");
-  const substitutions = new Map([
-    ["{{PLUGIN_KEYWORDS_JSON}}", '["placeholder"]'],
-    ["{{PLUGIN_MCP_SERVERS_JSON}}", '"./.mcp.json"'],
-    ["{{PLUGIN_APPS_JSON}}", '"./.app.json"'],
-    ["{{PLUGIN_HOOKS_JSON}}", '"./hooks/hooks.json"'],
-    ["{{PLUGIN_CAPABILITIES_JSON}}", '["Read"]'],
-    ["{{PLUGIN_DEFAULT_PROMPTS_JSON}}", '["Placeholder prompt"]'],
-    ["{{PLUGIN_SCREENSHOTS_JSON}}", '["./assets/screenshot.png"]'],
-  ]);
-  let rendered = rawTemplate;
-  for (const [token, replacement] of substitutions) {
-    rendered = rendered.replaceAll(token, replacement);
-  }
-  rendered = rendered.replace(/\{\{[A-Z_]+\}\}/gu, "placeholder");
+  const rendered = rawTemplate.replace(/\{\{[A-Z_]+\}\}/gu, "placeholder");
   return asRecord(JSON.parse(rendered), templatePath);
 }
 
