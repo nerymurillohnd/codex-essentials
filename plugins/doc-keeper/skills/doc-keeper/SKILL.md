@@ -16,6 +16,12 @@ parallel script, hook, release engine, document generator, or state machine to
 duplicate it. Add DocKeeper-specific automation only after proving a real gap,
 keeping the extension minimal, and obtaining authorization for the change.
 
+If a configured mechanism owns an artifact but cannot run because it is absent,
+unavailable, or prohibited by the task, stop that part and report the exact
+blocker. Never simulate the owner's output by manually editing generated
+changelogs, version files, release manifests, Release PR state, tags, releases,
+or publication state.
+
 Do not use this skill as a release publisher, Git tagger, or generic prose
 editor. For mixed requests, apply DocKeeper only to the changelog or ADR portion
 and let the authorized release workflow own publication and remote state.

@@ -45,3 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made infrastructure-first integration explicit: use or wire native Codex,
   GitHub, release, and ADR mechanisms; add custom automation only for a proven
   gap.
+- Prevented manual simulation of version files, release manifests, changelogs,
+  Release PR state, tags, or publication when their configured owner is
+  unavailable or prohibited.

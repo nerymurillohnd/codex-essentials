@@ -196,6 +196,11 @@ Introduce custom automation only when the existing infrastructure cannot meet a
 confirmed requirement; record the gap and keep the extension smaller than the
 native capability it complements.
 
+When a configured owner controls the requested changelog, version file,
+manifest, Release PR, tag, or publication state but cannot be invoked, leave its
+artifacts unchanged and report the blocked owner operation. A prohibition on
+running the owner is not authorization to reproduce its output manually.
+
 ### Partial releases and dry runs
 
 On a failed or partial release, inspect changelog, version files, manifest,

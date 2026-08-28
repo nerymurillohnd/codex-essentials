@@ -194,6 +194,9 @@ codex plugin marketplace remove codex-essentials
   should be added only if consumer evals demonstrate material missed closeouts.
 - Generated documents may require changes to their owning configuration rather
   than direct edits.
+- When an owning release or ADR mechanism is unavailable or prohibited,
+  DocKeeper reports that operation as blocked instead of simulating its output
+  manually.
 - Private evidence must not be copied into public documentation.
 
 ## Failure and Recovery
