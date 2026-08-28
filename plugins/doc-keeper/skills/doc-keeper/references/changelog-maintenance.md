@@ -14,6 +14,9 @@ equivalent. This file explains the procedure. The default output shape lives in
 - The example defines the document format.
 - This reference defines when to create, update, roll over, audit, repair, and
   save it.
+- Include only change-type headings that contain at least one confirmed entry.
+  Preserve the example's relative category order among the headings that remain.
+  An empty `Unreleased` heading may remain when the local convention keeps one.
 - Remove all instructional placeholders before saving.
 
 ## What belongs in a changelog
@@ -156,6 +159,29 @@ improvements separately. Do not edit.
 5. Verify whether dependency-only changes trigger a release. Do not infer
    monorepo behavior from a tool name alone.
 
+### Prereleases
+
+1. Confirm the complete prerelease identifier, base version, channel or
+   distribution tag, package scope, and owning release workflow.
+2. Preserve every confirmed published prerelease as a separate historical
+   release. Do not rename, delete, merge, or silently rewrite its section during
+   stable promotion.
+3. Follow the repository's established stable-release convention when it
+   determines whether the stable entry is cumulative or contains only changes
+   since the latest prerelease.
+4. With no established convention, make the stable entry a curated summary of
+   every confirmed consumer-relevant change since the previous stable release.
+   Keep the prerelease sections as history and deduplicate repeated facts within
+   the stable entry.
+5. Do not promote a prerelease entry merely because its core version matches a
+   planned stable version. Confirm that the stable release includes that change
+   from source, release inputs, or the owning workflow.
+6. Keep changes introduced after the latest prerelease distinct from earlier
+   prerelease content, then place both according to the selected cumulative or
+   delta convention.
+7. Treat a stable version, tag, date, channel change, and publication as separate
+   states. Do not mark any of them complete from prerelease history alone.
+
 ### Generated changelogs
 
 1. Identify the generating tool, its configuration, and the sections it owns.
@@ -178,10 +204,20 @@ is not already owned.
   path, and active Release PR. Treat automation-owned PR titles, bodies,
   branches, labels, and manifests as release state. Do not normalize them as
   ordinary prose.
-- **semantic-release:** inspect the ordered plugin list. `semantic-release`
-  orchestrates release-note generation through its configured or default
-  plugins, but writes a changelog file only when a changelog plugin is
-  configured. Do not assume file ownership from the core package alone.
+- **semantic-release:** inspect the ordered plugin list and the lifecycle step
+  each plugin implements. A commit-analyzer plugin proposes the release type;
+  semantic-release core combines that result with Git history, tags, branch,
+  and channel policy to derive the exact version. A release-notes plugin
+  produces notes. A committed changelog exists only when a configured
+  `prepare` plugin or command writes one. Do not infer ownership from the core
+  package or `package.json` alone.
+- **`@semantic-release/github`:** it can publish the GitHub Release, upload
+  configured assets, update the Release prerelease flag for a channel, and
+  mutate related issues or pull requests through success and failure steps. It
+  does not calculate the version, build assets, publish a registry package, or
+  write `CHANGELOG.md` by itself. Treat each configured remote effect as a
+  separately authorized operation, and require execution evidence before
+  recording it as completed.
 - **Changesets:** preserve package scopes, changeset intent, and the repository's
   fixed or independent version policy.
 - **standard-version:** inspect its configured local bump, changelog, commit,

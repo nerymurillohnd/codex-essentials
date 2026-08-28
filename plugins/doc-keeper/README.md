@@ -38,9 +38,16 @@ It supports single-package repositories, monorepos, generated changelogs,
 prereleases, and categorized ADR directories. Existing repository instructions
 and document conventions govern unless an authorized repair corrects a proven
 defect.
+For prereleases, it preserves published prerelease sections and follows the
+project's cumulative or delta convention. With no local convention, the stable
+entry summarizes confirmed changes since the previous stable release while the
+prerelease sections remain as history.
 It detects release ownership from native GitHub release notes and established
 tools such as release-please, semantic-release, Changesets, standard-version,
 and git-extras without replacing their lifecycle.
+It distinguishes `@semantic-release/github` ownership of GitHub Releases,
+configured asset uploads, and issue or pull-request mutations from changelog,
+version-calculation, asset-build, and registry-publication ownership.
 
 ## Inputs and Outputs
 
