@@ -1,5 +1,6 @@
 import {
   cpSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   realpathSync,
@@ -362,7 +363,9 @@ describe("strict plugin-to-marketplace pipeline", () => {
       root,
       "plugins/doc-keeper/.codex-plugin/plugin.json",
     ) as { interface: Record<string, unknown> };
-    writeFileSync(join(pluginRoot, "assets", "screenshot.jpg"), "jpeg");
+    const assets = join(pluginRoot, "assets");
+    mkdirSync(assets, { recursive: true });
+    writeFileSync(join(assets, "screenshot.jpg"), "jpeg");
     manifest.interface["screenshots"] = ["./assets/screenshot.jpg"];
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
@@ -375,7 +378,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
       "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c63000100000500010d0a2db00000000049454e44ae426082",
       "hex",
     );
-    writeFileSync(join(pluginRoot, "assets", "screenshot.png"), png);
+    writeFileSync(join(assets, "screenshot.png"), png);
     manifest.interface["screenshots"] = ["./assets/screenshot.png"];
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
