@@ -19,6 +19,7 @@ const PLUGIN_SCHEMA = path.join("schemas", "plugin.schema.json");
 const MARKETPLACE_SCHEMA = path.join("schemas", "marketplace.schema.json");
 const PLUGIN_TEMPLATE = path.join("templates", "codex-plugin-plugin.json");
 const AGENT_SCHEMA = path.join("lib", "schemas", "agent.schema.json");
+const HOOK_SCHEMA = path.join("schemas", "hooks.schema.json");
 const ALLOWED_PLUGIN_DIRECTORY_FILES = new Set(["AGENTS.md"]);
 const TEMPLATE_FIXED_PATHS = [
   ["author", "name"],
@@ -63,6 +64,10 @@ function loadPluginManifests(root) {
     path.join(root, AGENT_SCHEMA),
     "skill agent schema",
   );
+  const hooksSchema = loadJson(
+    path.join(root, HOOK_SCHEMA),
+    "plugin hooks schema",
+  );
   const pluginDirectories = fs
     .readdirSync(pluginsRoot, { withFileTypes: true })
     .filter((entry) => !entry.name.startsWith("."))
@@ -96,7 +101,7 @@ function loadPluginManifests(root) {
     if (record.name !== entry.name) {
       throw new Error(`${manifestPath} name must match plugins/${entry.name}`);
     }
-    validatePluginResources(pluginRoot, record, agentSchema);
+    validatePluginResources(pluginRoot, record, agentSchema, hooksSchema);
     return { name: entry.name, pluginRoot, manifest: record };
   });
 }
@@ -191,8 +196,13 @@ function writeMarketplace(root, marketplace) {
   assertContained(root, outputPath, MARKETPLACE_OUTPUT);
 }
 
-/** @param {string} pluginRoot @param {Record<string, unknown>} manifest */
-function validatePluginResources(pluginRoot, manifest, agentSchema) {
+/** @param {string} pluginRoot @param {Record<string, unknown>} manifest @param {unknown} agentSchema @param {unknown} hooksSchema */
+function validatePluginResources(
+  pluginRoot,
+  manifest,
+  agentSchema,
+  hooksSchema,
+) {
   validateDeclaredComponents(pluginRoot, manifest);
   if (typeof manifest.skills === "string") {
     const skillsRoot = resolvePluginPath(pluginRoot, manifest.skills, "skills");
@@ -209,6 +219,8 @@ function validatePluginResources(pluginRoot, manifest, agentSchema) {
   for (const hookPath of hookPaths(manifest.hooks)) {
     const target = resolvePluginPath(pluginRoot, hookPath, "hooks");
     assertRegularFile(target, hookPath);
+    const hookConfiguration = loadJson(target, "plugin hooks configuration");
+    validate(hooksSchema, hookConfiguration, target);
   }
   const interfaceValue = asRecord(manifest.interface, "plugin interface");
   for (const field of ["composerIcon", "logo"]) {

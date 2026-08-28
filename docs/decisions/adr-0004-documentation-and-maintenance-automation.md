@@ -73,7 +73,7 @@ npm run lint
 npm run typecheck
 npm run typecheck:scripts
 npm test -- --coverage
-npm run validate:all
+npm run marketplace:check
 ```
 
 The release and validation workflows use pinned immutable action commits. The
