@@ -217,6 +217,22 @@ jobs:
       - name: Build and inspect candidate archives
         run: npm run package:preflight
 
+  validate-label-contract:
+    name: GitHub label contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate label references
+        run: npm run validate:github-labels
+
   required:
     name: Required quality gates
     runs-on: ubuntu-latest
@@ -232,6 +248,7 @@ jobs:
       - conventional-title
       - plugin-scope
       - package-preflight
+      - validate-label-contract
     steps:
       - name: Fail when a required gate fails
         env:
@@ -245,6 +262,7 @@ jobs:
                 "${{ needs.test.result }}" != "success" ||
                 "${{ needs.validate-manifests.result }}" != "success" ||
                 "${{ needs.package-preflight.result }}" != "success" ||
+                "${{ needs.validate-label-contract.result }}" != "success" ||
                 ( "$EVENT_NAME" == "pull_request" &&
                   ( "${{ needs.conventional-title.result }}" != "success" ||
                     "${{ needs.plugin-scope.result }}" != "success" ) ) ]]; then
