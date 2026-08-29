@@ -164,7 +164,7 @@ jobs:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          PR_LABELS: ${{ github.event.action == 'labeled' && github.event.label.name || join(github.event.pull_request.labels.*.name, ',') }}
           PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
         run: |
           npm run validate:pr-scope -- \
