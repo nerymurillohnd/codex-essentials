@@ -120,6 +120,27 @@ describe("GitHub label contract", () => {
     );
   });
 
+  it("reports unterminated Markdown front matter instead of ignoring metadata", () => {
+    const root = createFixture({
+      contract: { labels: [definition("bug")] },
+      templates: [
+        [
+          "legacy-unterminated.md",
+          "---\nlabels: undeclared\n# Missing closing delimiter\n",
+        ],
+      ],
+    });
+
+    const collection = labels.collectLabelReferences(root);
+
+    expect(collection.errors).toContain(
+      ".github/ISSUE_TEMPLATE/legacy-unterminated.md has malformed or unterminated front matter",
+    );
+    expect(() => labels.validateLabelContract(root)).toThrow(
+      /malformed or unterminated front matter/u,
+    );
+  });
+
   it("rejects malformed and duplicate contract definitions", () => {
     const malformed = createFixture({ contract: {} });
     expect(() => labels.loadLabelContract(malformed)).toThrow(
