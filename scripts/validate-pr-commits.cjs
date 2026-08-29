@@ -51,7 +51,7 @@ function usage() {
 function readCommitSubjects(root, base, head) {
   const output = childProcess.execFileSync(
     "git",
-    ["log", "--no-merges", "--format=%H%x00%s", `${base}...${head}`],
+    ["log", "--no-merges", "--format=%H%x00%s", `${base}..${head}`],
     { cwd: root, encoding: "utf8" },
   );
   if (!output.trim()) {
