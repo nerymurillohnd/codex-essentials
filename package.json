@@ -21,6 +21,7 @@
     "generate:marketplace": "node scripts/generate-marketplace.cjs",
     "validate:marketplace": "node scripts/validate-marketplace.cjs",
     "validate:pr-title": "node scripts/validate-pr-title.cjs",
+    "validate:pr-commits": "node scripts/validate-pr-commits.cjs",
     "validate:pr-scope": "node scripts/validate-pr-scope.cjs",
     "validate:release-set": "node scripts/validate-release-set.cjs",
     "package:preflight": "node scripts/package-plugin.cjs --preflight --ref HEAD --output-dir dist/preflight --output dist/preflight-artifacts.json",

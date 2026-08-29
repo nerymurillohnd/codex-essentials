@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 env:
   HUSKY: "0"
@@ -18,12 +19,21 @@ jobs:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       PR_TITLE: ${{ github.event.pull_request.title }}
       PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
-      PR_LABELS: ${{ github.event.action == 'labeled' && github.event.label.name || join(github.event.pull_request.labels.*.name, ',') }}
     steps:
       - name: Check out repository history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      - name: Read current pull request labels
+        id: labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          labels="$(gh api "repos/${REPOSITORY}/pulls/${PR_NUMBER}" --jq '[.labels[].name] | join(",")')"
+          printf 'value=%s\n' "$labels" >> "$GITHUB_OUTPUT"
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -40,4 +50,4 @@ jobs:
             --head "$HEAD_SHA" \
             --title "$PR_TITLE" \
             --author-type "$PR_AUTHOR_TYPE" \
-            --labels "$PR_LABELS"
+            --labels "${{ steps.labels.outputs.value }}"

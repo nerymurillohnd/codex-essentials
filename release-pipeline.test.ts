@@ -114,6 +114,46 @@ describe("Release Please integration boundary", () => {
     expect(rejected.stderr).toContain("Conventional Commit");
   });
 
+  it("validates every non-merge commit subject in the pull request range", () => {
+    const root = createFixture();
+    const firstBase = git(root, ["rev-parse", "HEAD"]);
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "README.md"),
+      "Conventional change\n",
+    );
+    git(root, ["add", "plugins/doc-keeper/README.md"]);
+    git(root, ["commit", "-m", "fix(doc-keeper): validate commit subject"]);
+    const conventionalHead = git(root, ["rev-parse", "HEAD"]);
+
+    const accepted = runScript(root, "validate-pr-commits.cjs", [
+      "--base",
+      firstBase,
+      "--head",
+      conventionalHead,
+    ]);
+
+    expect(accepted.status, accepted.stderr).toBe(0);
+
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "README.md"),
+      "Non-conventional change\n",
+    );
+    git(root, ["add", "plugins/doc-keeper/README.md"]);
+    git(root, ["commit", "-m", "Update documentation without a type"]);
+    const invalidHead = git(root, ["rev-parse", "HEAD"]);
+
+    const rejected = runScript(root, "validate-pr-commits.cjs", [
+      "--base",
+      firstBase,
+      "--head",
+      invalidHead,
+    ]);
+
+    expect(rejected.status).not.toBe(0);
+    expect(rejected.stderr).toContain("Update documentation without a type");
+    expect(rejected.stderr).toContain("Conventional Commit");
+  });
+
   it("captures one explicit field per Release Please output", () => {
     const root = createFixture();
     const currentSha = git(root, ["rev-parse", "HEAD"]);

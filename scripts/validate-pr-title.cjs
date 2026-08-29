@@ -9,14 +9,21 @@ function parseTitle(args) {
   return args[1].trim();
 }
 
-/** @param {string} title */
-function validateTitle(title) {
-  const conventionalCommit = /^[a-z][a-z0-9-]*(?:\([^()\r\n]+\))?!?:\s+\S.*$/u;
-  if (!conventionalCommit.test(title)) {
+const CONVENTIONAL_COMMIT_SUBJECT =
+  /^[a-z][a-z0-9-]*(?:\([^()\r\n]+\))?!?:\s+\S.*$/u;
+
+/** @param {string} subject @param {string} label */
+function validateSubject(subject, label) {
+  if (!CONVENTIONAL_COMMIT_SUBJECT.test(subject)) {
     throw new Error(
-      `pull request title is not a Conventional Commit subject: ${title}`,
+      `${label} is not a Conventional Commit subject: ${subject}`,
     );
   }
+}
+
+/** @param {string} title */
+function validateTitle(title) {
+  validateSubject(title, "pull request title");
 }
 
 function main() {
@@ -34,4 +41,9 @@ try {
   process.exitCode = 1;
 }
 
-module.exports = { parseTitle, validateTitle };
+module.exports = {
+  CONVENTIONAL_COMMIT_SUBJECT,
+  parseTitle,
+  validateSubject,
+  validateTitle,
+};
