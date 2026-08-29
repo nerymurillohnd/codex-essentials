@@ -87,7 +87,8 @@ and the complete quality command:
 
 ```bash
 npm run check
-npm run validate:release -- plugin/<plugin-id>/v<semver>
+npm run package:preflight
+npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
 
 ## Pros and Cons of the Options

@@ -44,8 +44,10 @@ use `plugin/<plugin-id>/v<semver>`.
 
 GitHub Issue Forms, a Markdown pull-request template, and native release-note
 categories standardize contribution metadata. A documentation gate rejects
-product changes without synchronized documents. The release workflow generates
-release metadata but never rewrites curated changelog history.
+product changes without synchronized documents. Release mechanics are defined
+by ADR-0008: Release Please generates component release sections from
+Conventional Commits, while contributors retain ownership of product
+documentation and the Unreleased intent.
 
 The organization-level Project is specified in repository documentation and
 bootstrapped idempotently with `${GITHUB_ORG}` and `${PROJECT_TITLE}`. Project

@@ -75,19 +75,6 @@ function runDocumentationGate(root: string, base: string, head: string) {
   );
 }
 
-function runReleaseValidation(root: string, tag: string) {
-  return spawnSync(
-    process.execPath,
-    [
-      join(repositoryRoot, "scripts", "validate-release.cjs"),
-      "--root",
-      root,
-      tag,
-    ],
-    { encoding: "utf8" },
-  );
-}
-
 function git(root: string, args: string[]): string {
   const result = spawnSync("git", ["-C", root, ...args], {
     encoding: "utf8",
@@ -432,36 +419,6 @@ describe("strict plugin-to-marketplace pipeline", () => {
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
     expect(run(root, "validate-plugins.cjs").status).toBe(0);
-  });
-
-  it("requires a release tag version and matching changelog section", () => {
-    const root = createFixture();
-
-    expect(runReleaseValidation(root, "plugin/doc-keeper/v0.1.0").status).toBe(
-      0,
-    );
-
-    const mismatch = runReleaseValidation(root, "plugin/doc-keeper/v9.0.0");
-
-    expect(mismatch.status).not.toBe(0);
-    expect(mismatch.stderr).toContain("does not match manifest version");
-
-    const changelogPath = join(root, "plugins", "doc-keeper", "CHANGELOG.md");
-    writeFileSync(
-      changelogPath,
-      readFileSync(changelogPath, "utf8").replace(
-        "## [0.1.0] - 2026-08-28",
-        "## [0.0.9] - 2026-08-28",
-      ),
-    );
-
-    const missingSection = runReleaseValidation(
-      root,
-      "plugin/doc-keeper/v0.1.0",
-    );
-
-    expect(missingSection.status).not.toBe(0);
-    expect(missingSection.stderr).toContain("release section");
   });
 
   it("rejects missing skill agent metadata and symlinks anywhere in a plugin package", () => {

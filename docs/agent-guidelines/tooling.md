@@ -19,8 +19,11 @@
   the release tag. Use full SHA pins, not floating tags. The current workflow
   pins are `actions/checkout` `v7.0.1`
   (`3d3c42e5aac5ba805825da76410c181273ba90b1`) and `actions/setup-node`
-  `v7.0.0` (`820762786026740c76f36085b0efc47a31fe5020`). Re-check upstream
-  release pages before changing these pins.
+  `v7.0.0` (`820762786026740c76f36085b0efc47a31fe5020`). Release automation
+  additionally pins the official `googleapis/release-please-action` v5.0.0
+  (`45996ed1f6d02564a971a2fa1b5860e934307cf7`), the GitHub App token action,
+  and artifact actions. Re-check upstream release pages before changing
+  these pins.
 - Use project-local dependencies for build, test, lint, format, and type checks. Use global PATH tools only for host automation and hooks; do not replace the declared manager.
 - uv manages Python 3.14, `ruff`, `basedpyright`, and `pre-commit`. Do not install those tools with pip, Homebrew, npm, or global site-packages.
 - Homebrew manages `git`, `gh`, `jq`, `shellcheck`, `shfmt`, and `yq`; prefer `/opt/homebrew/bin`.

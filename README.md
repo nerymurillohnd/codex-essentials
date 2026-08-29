@@ -180,6 +180,29 @@ bypasses use `HUSKY=0` or `--no-verify`. The contributor quality vocabulary is:
 Rollback means restoring prior marketplace metadata and removing the
 corresponding release artifacts.
 
+### Automated plugin releases
+
+Release Please manifest mode owns Conventional Commit analysis, SemVer,
+plugin-local changelogs, the combined Release PR, component tags, and draft
+GitHub Releases. It uses the native `go` changelog-only strategy because the
+current `simple` strategy requires a `version.txt` file; JSON `extra-files`
+updates the real `$.version` field in each plugin manifest. No fictitious
+`package.json` or `version.txt` is added to a plugin.
+
+The release workflow records the action's exact per-component `tag_name` and
+`sha` outputs in an auditable JSON artifact, packages from those tags with
+`git archive`, validates deterministic tarballs and basename-safe SHA-256
+files, uploads them to drafts, and pauses at the protected `release`
+environment. It does not rely on tag or release events to start a second
+workflow.
+
+Use Conventional Commit subjects in commits reaching `main`. A `docs:` commit
+does not release by itself; distributed documentation that deserves a patch
+uses `fix(docs): ...` (touching the plugin path) or an explicit `Release-As`
+footer. Keep product PRs to one releasable plugin. The scope is descriptive;
+changed paths determine the Release Please component. The repository policy
+does not require squash merging.
+
 ## 📚 Documentation
 
 - [Architecture and paths](docs/agent-guidelines/architecture.md)
@@ -195,6 +218,7 @@ corresponding release artifacts.
 - [Documentation automation decision](docs/decisions/adr-0004-documentation-and-maintenance-automation.md)
 - [Hooks and quality gates decision](docs/decisions/adr-0005-hooks-and-quality-gates.md)
 - [Skill agent manifests decision](docs/decisions/adr-0006-skill-agent-manifests.md)
+- [Release Please manifest releases decision](docs/decisions/adr-0008-release-please-manifest-releases.md)
 
 ## 🤝 Contribution Style
 

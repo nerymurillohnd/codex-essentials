@@ -10,6 +10,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: read
 
 env:
   HUSKY: "0"
@@ -127,6 +128,42 @@ jobs:
       - name: Validate manifests
         run: npm run marketplace:check
 
+  conventional-title:
+    name: Conventional Commit PR title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - name: Validate pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: npm run validate:pr-title -- --title "$PR_TITLE"
+
+  package-preflight:
+    name: Package preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate marketplace
+        run: npm run marketplace:check
+      - name: Build and inspect candidate archives
+        run: npm run package:preflight
+
   required:
     name: Required quality gates
     runs-on: ubuntu-latest
@@ -139,6 +176,8 @@ jobs:
       - typecheck-compatibility
       - test
       - validate-manifests
+      - conventional-title
+      - package-preflight
     steps:
       - name: Fail when a required gate fails
         run: |
@@ -148,6 +187,9 @@ jobs:
                 "${{ needs.typecheck-scripts.result }}" != "success" ||
                 "${{ needs.typecheck-compatibility.result }}" != "success" ||
                 "${{ needs.test.result }}" != "success" ||
-                "${{ needs.validate-manifests.result }}" != "success" ]]; then
+                "${{ needs.validate-manifests.result }}" != "success" ||
+                "${{ needs.package-preflight.result }}" != "success" ||
+                ( "$GITHUB_EVENT_NAME" == "pull_request" &&
+                  "${{ needs.conventional-title.result }}" != "success" ) ]]; then
             exit 1
           fi
