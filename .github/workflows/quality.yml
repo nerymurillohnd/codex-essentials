@@ -3,6 +3,7 @@ name: Quality
 on:
   push:
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
 
 concurrency:
   group: quality-${{ github.workflow }}-${{ github.ref }}
