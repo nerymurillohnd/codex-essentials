@@ -89,9 +89,12 @@ assets are uploaded.
 
 ## Pre-merge and Publication Controls
 
-The normal quality workflow requires Conventional Commit PR-title validation,
-marketplace/domain validation, and package preflight before a Release Please
-PR can merge. The post-release path repeats validation as defense in depth.
+The normal quality workflow requires Conventional Commit PR-title and
+non-merge commit-subject validation, marketplace/domain validation, and package
+preflight before a Release Please PR can merge. The subject check covers the
+actual `<base>...<head>` range, because this repository integrates with merge
+commits and Release Please analyzes the subjects that reach `main`. The
+post-release path repeats validation as defense in depth.
 The protected release environment is reached only after every draft has the
 expected tag and both expected assets; all drafts are verified before any are
 published with --latest=false.
