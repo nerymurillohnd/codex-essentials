@@ -39,6 +39,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Validate Release Please output capture contract
+        run: node scripts/validate-release-workflow-outputs.cjs
+
       - name: Create GitHub App installation token
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -89,6 +92,22 @@ jobs:
           mkdir -p dist
           node scripts/capture-release-please-outputs.cjs \
             --output dist/release-please-outputs.json
+
+      - name: Normalize Release Please changelog PRs
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_PLEASE_PR: ${{ steps.release.outputs.pr }}
+          RELEASE_PLEASE_PRS: ${{ steps.release.outputs.prs }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          node scripts/normalize-release-pr-changelogs.cjs \
+            --base "$GITHUB_SHA" \
+            --repository "$REPOSITORY" \
+            --pr "$RELEASE_PLEASE_PR" \
+            --prs "$RELEASE_PLEASE_PRS"
 
       - name: Upload Release Please output contract
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -303,10 +322,6 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
-          while IFS= read -r release; do
-            tag="$(jq -r '.tag' <<<"$release")"
-            gh release edit "$tag" \
-              --draft=false \
-              --latest=false \
-              --repo "$GITHUB_REPOSITORY"
-          done < <(jq -c '.[]' dist/release-artifacts.json)
+          node scripts/publish-release-drafts.cjs \
+            --artifacts dist/release-artifacts.json \
+            --repository "$GITHUB_REPOSITORY"

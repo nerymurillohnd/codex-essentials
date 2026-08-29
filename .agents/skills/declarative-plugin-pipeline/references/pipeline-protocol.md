@@ -18,8 +18,9 @@ authorize publication or other remote actions.
   only when the same change touches `plugins/`.
 - Documentation-only package correction: update only the affected document and
   run the applicable documentation gate.
-- Release candidate: run `npm run check`, `npm run marketplace:check`, and
-  `npm run validate:release-set -- --plan <release-plan.json> [--archives]`.
+- Release candidate: run `npm run check`, `npm run marketplace:check`,
+  `npm run validate:release-workflow`, and `npm run validate:release-set -- --plan
+<release-plan.json> [--archives]`.
 
 Apply the union when a change spans categories. `npm run check` never replaces
 the documentation gate for a non-document plugin change.

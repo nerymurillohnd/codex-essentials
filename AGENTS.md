@@ -22,6 +22,7 @@ This repository is a community marketplace for Codex plugins and data. It is not
 - `npm run validate:plugins` — validate every package-local plugin manifest and its resources.
 - `npm run validate:marketplace` — validate the catalog and reverse-link it to package manifests.
 - `npm run validate:release-set -- --plan <release-plan.json> [--archives]` — validate exact Release Please tag outputs and optional artifacts.
+- `npm run validate:release-workflow` — validate that the Release Please workflow captures every configured component output.
 - `npm run marketplace:build` — run the complete validate, generate, and reverse-validate pipeline.
 - `npm run marketplace:check` — run the complete read-only package and catalog validation.
 

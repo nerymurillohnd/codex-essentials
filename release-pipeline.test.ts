@@ -185,6 +185,33 @@ describe("Release Please integration boundary", () => {
     });
   });
 
+  it("detects Release Please output capture drift before release creation", () => {
+    const root = createFixture();
+    const workflow =
+      require("./scripts/validate-release-workflow-outputs.cjs") as {
+        validateReleaseWorkflowOutputs(root: string): void;
+      };
+    mkdirSync(join(root, ".github", "workflows"), { recursive: true });
+    cpSync(
+      join(repositoryRoot, ".github", "workflows", "release-please.yml"),
+      join(root, ".github", "workflows", "release-please.yml"),
+    );
+    const configPath = join(root, "release-please-config.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as {
+      packages: Record<string, unknown>;
+    };
+    config.packages["plugins/example-plugin"] = {
+      "package-name": "example-plugin",
+      component: "plugin/example-plugin",
+      "changelog-path": "CHANGELOG.md",
+    };
+    writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+    expect(() => workflow.validateReleaseWorkflowOutputs(root)).toThrow(
+      "RELEASE_OUTPUT__PLUGINS_EXAMPLE_PLUGIN__RELEASE_CREATED",
+    );
+  });
+
   it("normalizes exact per-component tag and SHA outputs", () => {
     const root = createFixture();
     const currentSha = git(root, ["rev-parse", "HEAD"]);
@@ -429,6 +456,62 @@ describe("Release Please integration boundary", () => {
     ]);
 
     expect(validation.status, validation.stderr).toBe(0);
+  });
+
+  it("rolls manual Unreleased entries into the generated release section", () => {
+    const { rollReleaseChangelog } =
+      require("./scripts/roll-release-changelogs.cjs") as {
+        rollReleaseChangelog(
+          content: string,
+          version: string,
+        ): {
+          changed: boolean;
+          content: string;
+        };
+      };
+    const original = `# Changelog
+
+## [Unreleased]
+
+### Changed
+
+- Manual package intent.
+
+## 0.1.0 (2026-08-29)
+
+### Bug Fixes
+
+* generated release note
+
+## [0.1.0] - 2026-08-28
+
+### Added
+
+- Historical manual section.
+`;
+
+    const result = rollReleaseChangelog(original, "0.1.0");
+
+    expect(result.changed).toBe(true);
+    expect(result.content).toBe(`# Changelog
+
+## [Unreleased]
+
+## 0.1.0 (2026-08-29)
+
+### Changed
+
+- Manual package intent.
+
+### Bug Fixes
+
+* generated release note
+
+### Added
+
+- Historical manual section.
+`);
+    expect(rollReleaseChangelog(result.content, "0.1.0").changed).toBe(false);
   });
 
   it("preflights every plugin from the commit and excludes untracked files", () => {
@@ -742,6 +825,17 @@ describe("Release Please integration boundary", () => {
       ),
     ).toThrow("missing required asset");
     expect(() =>
+      remote.validateRemoteRelease(
+        entry,
+        {
+          tagName: entry.tag,
+          isDraft: false,
+          assets: [{ name: entry.archiveName }, { name: entry.checksumName }],
+        },
+        entry.sha,
+      ),
+    ).not.toThrow();
+    expect(() =>
       remote.validateDownloadedAssets(
         { ...entry, sha256 },
         archive,
@@ -755,6 +849,31 @@ describe("Release Please integration boundary", () => {
         `${sha256}  ${entry.archiveName}\n`,
       ),
     ).toThrow("archive checksum");
+  });
+
+  it("skips already-published releases when resuming publication", () => {
+    const publisher = require("./scripts/publish-release-drafts.cjs") as {
+      publishReleaseDrafts(
+        repository: string,
+        artifacts: Array<{ tag: string }>,
+        readRelease: (repository: string, tag: string) => { isDraft: boolean },
+        publishRelease: (repository: string, tag: string) => void,
+      ): { published: string[]; skipped: string[] };
+    };
+    const published: string[] = [];
+
+    const result = publisher.publishReleaseDrafts(
+      "owner/repo",
+      [{ tag: "plugin/one/v0.1.0" }, { tag: "plugin/two/v0.1.0" }],
+      (_repository, tag) => ({ isDraft: tag.endsWith("/one/v0.1.0") }),
+      (_repository, tag) => published.push(tag),
+    );
+
+    expect(published).toEqual(["plugin/one/v0.1.0"]);
+    expect(result).toEqual({
+      published: ["plugin/one/v0.1.0"],
+      skipped: ["plugin/two/v0.1.0"],
+    });
   });
 
   it("rejects archive checksums and symlink members that do not satisfy the contract", () => {

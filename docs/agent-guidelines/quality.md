@@ -10,14 +10,16 @@
 - Required local checks are `npm run format:check`,
   `npm run lint -- --max-warnings=0`, `npm run typecheck`,
   `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
-  `npm run marketplace:check`, `npm run package:preflight`,
+  `npm run marketplace:check`, `npm run validate:release-workflow`,
+  `npm run package:preflight`,
   `npm run documentation:gate -- --base <base>
 --head <head>`, `actionlint`, and `git diff --check`.
 - Keep branch-protection required checks aligned to the quality workflow's
   stable `required` aggregator plus independently visible pull-request
   documentation and security jobs. The aggregator includes Conventional
-  Commit PR-title validation and package preflight, so a Release Please PR
-  cannot merge before its plugin packages and archives pass validation.
+  Commit PR-title validation, Release Please output capture validation, and
+  package preflight, so a Release Please PR cannot merge before its plugin
+  packages and archives pass validation.
 - Add applicable language-server diagnostics and unit, integration, regression, security, and adversarial tests. Keep documentation synchronized with behavior.
 - Re-check version-sensitive claims against the target release or latest changelog before planning and again before execution.
 - Report skipped checks, missing tools, unresolved diagnostics, and residual risks explicitly.

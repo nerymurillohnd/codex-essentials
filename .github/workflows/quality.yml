@@ -212,6 +212,8 @@ jobs:
         run: npm ci
       - name: Validate marketplace
         run: npm run marketplace:check
+      - name: Validate Release Please output capture
+        run: npm run validate:release-workflow
       - name: Build and inspect candidate archives
         run: npm run package:preflight
 

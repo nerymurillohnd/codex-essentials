@@ -103,8 +103,11 @@ function remoteTagSha(repository, tag) {
 
 /** @param {ReleaseArtifact} entry @param {JsonObject} release @param {string} tagSha */
 function validateRemoteRelease(entry, release, tagSha) {
-  if (release.tagName !== entry.tag || release.isDraft !== true) {
-    throw new Error(`remote release is not the expected draft: ${entry.tag}`);
+  if (
+    release.tagName !== entry.tag ||
+    (release.isDraft !== true && release.isDraft !== false)
+  ) {
+    throw new Error(`remote release is not the expected entry: ${entry.tag}`);
   }
   if (tagSha !== entry.sha) {
     throw new Error(

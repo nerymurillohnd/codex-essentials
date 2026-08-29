@@ -77,6 +77,7 @@ Run the strict repository pipeline so generated fields remain consistent:
 ```bash
 npm run marketplace:build
 npm run marketplace:check
+npm run validate:release-workflow
 npm run package:preflight
 npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
@@ -99,6 +100,7 @@ npm run typecheck:scripts
 npx tsc6 --noEmit
 npm test
 npm run marketplace:check
+npm run validate:release-workflow
 ```
 
 For product-affecting plugin changes, also verify that the plugin README and
@@ -130,6 +132,7 @@ Validate a release candidate before Release Please creates its tag:
 
 ```bash
 npm run marketplace:check
+npm run validate:release-workflow
 npm run package:preflight
 npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
