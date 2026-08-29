@@ -151,8 +151,10 @@ creates the release.
 Product PR policy requires one releasable plugin per PR, and the quality
 workflow enforces that rule from the actual base/head file diff. Release Please
 PRs are explicitly exempt because one combined Release PR may update several
-components. The scope in a Conventional Commit is descriptive; changed paths
-determine component membership. Coordinated product changes must be split
+components. The one-time migration PR may use the maintainer-controlled
+`release-migration` label while removing stale version claims from multiple
+plugin READMEs; the scope in a Conventional Commit is descriptive, and changed
+paths determine component membership. Coordinated product changes must be split
 unless their shared bump intent is deliberately reviewed.
 
 The repository's existing integration policy prohibits squash merging by

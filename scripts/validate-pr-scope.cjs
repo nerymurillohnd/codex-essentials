@@ -3,7 +3,10 @@
 
 const childProcess = require("node:child_process");
 const path = require("node:path");
-const { isTrustedReleasePleasePullRequest } = require("./release-pr-auth.cjs");
+const {
+  isTrustedReleaseMigration,
+  isTrustedReleasePleasePullRequest,
+} = require("./release-pr-auth.cjs");
 
 /** @param {string[]} args @param {string} defaultRoot */
 function parseArguments(args, defaultRoot) {
@@ -100,7 +103,10 @@ function validatePullRequestScope(
     .split(",")
     .map((label) => label.trim())
     .filter(Boolean);
-  if (isReleasePleasePullRequest(title, labels, authorType)) {
+  if (
+    isReleasePleasePullRequest(title, labels, authorType) ||
+    isTrustedReleaseMigration(labels)
+  ) {
     return { skipped: true, plugins: [] };
   }
   const plugins = releasablePluginPaths(changedPaths(root, base, head));

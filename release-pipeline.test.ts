@@ -597,6 +597,57 @@ describe("Release Please integration boundary", () => {
     expect(titleOnly.stderr).toContain("one releasable plugin");
   });
 
+  it("only exempts a maintainer-labeled release migration from the single-plugin rule", () => {
+    const root = createFixture();
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "README.md"),
+      "DocKeeper change\n",
+    );
+    writeFileSync(
+      join(root, "plugins", "prettier-after-edit", "README.md"),
+      "Prettier change\n",
+    );
+    git(root, [
+      "add",
+      "plugins/doc-keeper/README.md",
+      "plugins/prettier-after-edit/README.md",
+    ]);
+    git(root, ["commit", "-m", "chore: prepare release migration"]);
+    const base = git(root, ["rev-parse", "HEAD^"]);
+    const head = git(root, ["rev-parse", "HEAD"]);
+
+    const migration = runScript(root, "validate-pr-scope.cjs", [
+      "--base",
+      base,
+      "--head",
+      head,
+      "--title",
+      "chore: prepare release migration",
+      "--labels",
+      "release-migration",
+      "--author-type",
+      "User",
+    ]);
+
+    expect(migration.status, migration.stderr).toBe(0);
+
+    const unlabelled = runScript(root, "validate-pr-scope.cjs", [
+      "--base",
+      base,
+      "--head",
+      head,
+      "--title",
+      "chore: prepare release migration",
+      "--labels",
+      "",
+      "--author-type",
+      "User",
+    ]);
+
+    expect(unlabelled.status).not.toBe(0);
+    expect(unlabelled.stderr).toContain("one releasable plugin");
+  });
+
   it("checks remote tag and asset integrity before publication", () => {
     const remote = require("./scripts/verify-release-assets.cjs") as {
       validateRemoteRelease: (

@@ -119,6 +119,12 @@ changes require explicit review and should normally be split. The repository's
 existing policy does not require squash merging, so this ADR does not silently
 change that policy.
 
+The one-time migration PR may carry the maintainer-controlled
+`release-migration` label because it removes stale version claims from more
+than one plugin README. The scope gate accepts that label as a narrow,
+explicitly reviewable exception; a release-shaped title alone never bypasses
+the gate.
+
 docs: is visible in changelog sections but does not create a release by itself
 under the default analyzer. Distributed documentation that deserves a patch
 release uses fix(docs): ... while touching the plugin path, or an explicit
