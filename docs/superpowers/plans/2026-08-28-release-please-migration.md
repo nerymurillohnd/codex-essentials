@@ -51,8 +51,8 @@ listing, `gh`, and GitHub's protected `release` environment.
   `bump-minor-pre-major: true`, visible `feat`, `fix`, `docs`, and `deps`
   sections, but no docs-only bump policy.
 - Add `.release-please-manifest.json` with values reconciled against published
-  history; document the DocKeeper first-release discrepancy if it cannot be
-  resolved without remote mutation.
+  history; represent DocKeeper's unpublished baseline as `0.0.0` with an
+  explicit `initial-version` of `0.1.0`.
 - Verify the changelog-only strategy with JSON `extra-files`, local changelog
   paths, component tags, draft releases, and forced tag creation using a pinned
   Release Please CLI dry run or equivalent local fixture. Record why `simple`
@@ -63,7 +63,7 @@ listing, `gh`, and GitHub's protected `release` environment.
 
 - Add tests covering explicit action outputs, exact tag/sha consumption,
   malformed tags, missing manifests, manifest name/version mismatches, stale
-  SHAs, and empty plans.
+  SHAs, exact component sets, and empty plans.
 - Implement `scripts/capture-release-please-outputs.cjs` and
   `scripts/prepare-release-plan.cjs`; no draft census is the source protocol.
 

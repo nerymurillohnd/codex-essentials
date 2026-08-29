@@ -11,6 +11,7 @@ const {
   resolveTagSha,
 } = require("./prepare-release-plan.cjs");
 const { validateArchiveMembers } = require("./validate-release-set.cjs");
+const { resolveContainedPath } = require("./path-utils.cjs");
 
 /** @typedef {Record<string, unknown>} JsonObject */
 /** @typedef {{tag: string, pluginPath: string, name: string, version: string, sha: string}} ReleaseEntry */
@@ -196,7 +197,7 @@ function packageReleasePlan(root, value, outputDir) {
   if (!Array.isArray(value) || value.length === 0) {
     throw new Error("release plan must be a non-empty array");
   }
-  const absoluteOutputDir = path.resolve(root, outputDir);
+  const absoluteOutputDir = resolveContainedPath(root, outputDir);
   fs.mkdirSync(absoluteOutputDir, { recursive: true });
   return value.map((entry) => {
     if (!isObject(entry)) {
@@ -211,7 +212,7 @@ function packageReleasePlan(root, value, outputDir) {
 function packagePreflight(root, ref, outputDir) {
   const sourceSha = resolveRefSha(root, ref);
   const plugins = loadPluginManifests(root);
-  const absoluteOutputDir = path.resolve(root, outputDir);
+  const absoluteOutputDir = resolveContainedPath(root, outputDir);
   fs.mkdirSync(absoluteOutputDir, { recursive: true });
   return plugins.map(({ name, pluginRoot, manifest }) => {
     /** @type {PackageEntry} */
@@ -227,17 +228,6 @@ function packagePreflight(root, ref, outputDir) {
   });
 }
 
-/** @param {string} root @param {string} output */
-function resolveContainedPath(root, output) {
-  const resolvedRoot = path.resolve(root);
-  const resolvedOutput = path.resolve(root, output);
-  const relative = path.relative(resolvedRoot, resolvedOutput);
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error(`output must remain inside repository root: ${output}`);
-  }
-  return resolvedOutput;
-}
-
 function main() {
   const options = parseArguments(
     process.argv.slice(2),
@@ -247,7 +237,7 @@ function main() {
     ? packagePreflight(options.root, options.ref, options.outputDir)
     : packageReleasePlan(
         options.root,
-        readJson(path.resolve(options.root, options.plan)),
+        readJson(resolveContainedPath(options.root, options.plan)),
         options.outputDir,
       );
   const outputPath = resolveContainedPath(options.root, options.output);

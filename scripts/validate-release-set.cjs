@@ -9,6 +9,7 @@ const {
   parseReleaseTag,
   resolveTagSha,
 } = require("./prepare-release-plan.cjs");
+const { resolveContainedPath } = require("./path-utils.cjs");
 
 /** @typedef {Record<string, unknown>} JsonObject */
 
@@ -59,12 +60,7 @@ function readJson(filePath) {
 
 /** @param {string} root @param {string} relativePath */
 function containedFile(root, relativePath) {
-  const rootPath = path.resolve(root);
-  const filePath = path.resolve(root, relativePath);
-  const relative = path.relative(rootPath, filePath);
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error(`path escapes repository root: ${relativePath}`);
-  }
+  const filePath = resolveContainedPath(root, relativePath);
   if (!fs.existsSync(filePath) || fs.lstatSync(filePath).isSymbolicLink()) {
     throw new Error(
       `required release file is missing or symbolic: ${relativePath}`,
@@ -169,6 +165,18 @@ function validateChecksum(root, entry) {
 function isSensitiveMember(member) {
   const basename = member.split("/").pop() ?? "";
   const segments = member.split("/");
+  const sensitiveBasenames = new Set([
+    ".netrc",
+    ".npmrc",
+    "credentials.json",
+    "credentials.yml",
+    "credentials.yaml",
+    "service-account.json",
+    "service-account-key.json",
+    "id_ecdsa",
+    "id_ed25519",
+    "id_rsa",
+  ]);
   return (
     segments.some(
       (segment) =>
@@ -177,10 +185,11 @@ function isSensitiveMember(member) {
         segment === "coverage" ||
         segment === "dist" ||
         segment === ".env" ||
-        segment.startsWith(".env."),
+        segment.startsWith(".env.") ||
+        segment === ".envrc",
     ) ||
-    /\.(?:pem|key)$/iu.test(basename) ||
-    basename === "id_rsa"
+    /\.(?:key|p12|pfx|pem)$/iu.test(basename) ||
+    sensitiveBasenames.has(basename)
   );
 }
 
@@ -277,7 +286,7 @@ function main() {
   );
   const count = validateReleaseSet(
     options.root,
-    readJson(path.resolve(options.root, options.plan)),
+    readJson(resolveContainedPath(options.root, options.plan)),
     options.archives,
   );
   console.log(

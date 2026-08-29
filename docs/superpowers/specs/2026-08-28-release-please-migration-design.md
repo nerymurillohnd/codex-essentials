@@ -64,8 +64,10 @@ claim that the plugins are Go modules. The manifest stores the last released
 version per component and must be bootstrapped from published tag/release
 history, not from an unverified working tree version. The pinned action embeds
 Release Please 17.6.0; a newer standalone CLI is not assumed to match it. The
-current repository history has no published DocKeeper tag or release, so that component requires an
-explicit migration decision before the first production Release Please run.
+current repository history has no published DocKeeper tag or release. Its
+manifest baseline is therefore 0.0.0 and its package configuration explicitly
+sets initial-version to 0.1.0; a future releasable DocKeeper change will create
+the first 0.1.0 release without claiming a nonexistent prior release.
 
 ## Release-plan protocol
 
@@ -142,10 +144,12 @@ when a nonstandard bump is required. The `docs` changelog section remains
 visible only so those entries are retained when another releasable commit
 creates the release.
 
-Product PR policy requires one releasable plugin per PR. The scope in a
-Conventional Commit is descriptive; changed paths determine component
-membership. Repository guidance records that coordinated multi-plugin changes
-must be split unless their shared bump intent is deliberately reviewed.
+Product PR policy requires one releasable plugin per PR, and the quality
+workflow enforces that rule from the actual base/head file diff. Release Please
+PRs are explicitly exempt because one combined Release PR may update several
+components. The scope in a Conventional Commit is descriptive; changed paths
+determine component membership. Coordinated product changes must be split
+unless their shared bump intent is deliberately reviewed.
 
 The repository's existing integration policy prohibits squash merging by
 default. Release Please therefore relies on Conventional Commit subjects in

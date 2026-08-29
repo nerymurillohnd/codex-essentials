@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const childProcess = require("node:child_process");
 const { configuredPaths } = require("./capture-release-please-outputs.cjs");
+const { resolveContainedPath } = require("./path-utils.cjs");
 
 const RELEASE_TAG_PATTERN =
   /^plugin\/(?<name>[a-z0-9]+(?:-[a-z0-9]+)*)\/v(?<version>(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?)$/u;
@@ -161,8 +162,26 @@ function normalizeReleasePlan(
   if (pathsReleased.length === 0) {
     throw new Error("release-please outputs report no released paths");
   }
+  const configured = configuredPaths(root);
+  const configuredSet = new Set(configured);
+  const pathsReleasedSet = new Set(pathsReleased);
+  if (pathsReleasedSet.size !== pathsReleased.length) {
+    throw new Error("paths_released contains duplicate component paths");
+  }
+  for (const componentPath of pathsReleased) {
+    if (!configuredSet.has(componentPath)) {
+      throw new Error(
+        `paths_released contains an unconfigured component: ${componentPath}`,
+      );
+    }
+    if (!isTrue(payload[`${componentPath}--release_created`])) {
+      throw new Error(
+        `paths_released is missing release_created output: ${componentPath}`,
+      );
+    }
+  }
   const plan = [];
-  for (const componentPath of configuredPaths(root)) {
+  for (const componentPath of configured) {
     const prefix = `${componentPath}--`;
     if (!isTrue(payload[`${prefix}release_created`])) {
       continue;
@@ -221,6 +240,17 @@ function normalizeReleasePlan(
       sha,
     });
   }
+  const plannedPaths = new Set(plan.map((entry) => entry.pluginPath));
+  if (
+    plannedPaths.size !== pathsReleasedSet.size ||
+    [...pathsReleasedSet].some(
+      (componentPath) => !plannedPaths.has(componentPath),
+    )
+  ) {
+    throw new Error(
+      "Release Please paths_released does not exactly match released component outputs",
+    );
+  }
   if (plan.length === 0) {
     throw new Error(
       "release-please reported a release, but no component output was created",
@@ -231,17 +261,6 @@ function normalizeReleasePlan(
   );
 }
 
-/** @param {string} root @param {string} output */
-function resolveContainedPath(root, output) {
-  const resolvedRoot = path.resolve(root);
-  const resolvedOutput = path.resolve(root, output);
-  const relative = path.relative(resolvedRoot, resolvedOutput);
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error(`output must remain inside repository root: ${output}`);
-  }
-  return resolvedOutput;
-}
-
 function main() {
   const options = parseArguments(
     process.argv.slice(2),
@@ -249,7 +268,7 @@ function main() {
   );
   const plan = normalizeReleasePlan(
     options.root,
-    readJson(path.resolve(options.root, options.outputs)),
+    readJson(resolveContainedPath(options.root, options.outputs)),
     options.expectedSha,
   );
   const outputPath = resolveContainedPath(options.root, options.output);

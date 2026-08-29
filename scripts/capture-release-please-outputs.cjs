@@ -3,6 +3,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { resolveContainedPath } = require("./path-utils.cjs");
 
 const OUTPUT_FIELDS = [
   "release_created",
@@ -89,17 +90,6 @@ function captureReleasePleaseOutputs(root, environment) {
     }
   }
   return outputs;
-}
-
-/** @param {string} root @param {string} output */
-function resolveContainedPath(root, output) {
-  const resolvedRoot = path.resolve(root);
-  const resolvedOutput = path.resolve(root, output);
-  const relative = path.relative(resolvedRoot, resolvedOutput);
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error(`output must remain inside repository root: ${output}`);
-  }
-  return resolvedOutput;
 }
 
 function main() {

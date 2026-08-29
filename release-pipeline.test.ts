@@ -9,12 +9,15 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
+import { createHash } from "node:crypto";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 
 const repositoryRoot = resolve(import.meta.dirname);
+const require = createRequire(import.meta.url);
 const fixtures: string[] = [];
 
 function createFixture(): string {
@@ -176,6 +179,38 @@ describe("Release Please integration boundary", () => {
         sha: currentSha,
       },
     ]);
+  });
+
+  it("rejects duplicate or unconfigured released paths", () => {
+    const root = createFixture();
+    const currentSha = git(root, ["rev-parse", "HEAD"]);
+    git(root, ["tag", "plugin/doc-keeper/v0.1.0"]);
+
+    for (const pathsReleased of [
+      '["plugins/doc-keeper", "plugins/doc-keeper"]',
+      '["plugins/doc-keeper", "plugins/not-configured"]',
+    ]) {
+      const outputsPath = writeOutputs(root, {
+        releases_created: "true",
+        paths_released: pathsReleased,
+        "plugins/doc-keeper--release_created": "true",
+        "plugins/doc-keeper--tag_name": "plugin/doc-keeper/v0.1.0",
+        "plugins/doc-keeper--version": "0.1.0",
+        "plugins/doc-keeper--sha": currentSha,
+      });
+
+      const result = runScript(root, "prepare-release-plan.cjs", [
+        "--outputs",
+        outputsPath,
+        "--expected-sha",
+        currentSha,
+        "--output",
+        "release-plan.json",
+      ]);
+
+      expect(result.status).not.toBe(0);
+      expect(result.stderr).toMatch(/duplicate|configured|exact/u);
+    }
   });
 
   it("rejects a Release Please output whose tag SHA is stale", () => {
@@ -400,6 +435,217 @@ describe("Release Please integration boundary", () => {
     );
     expect(archiveListing.status).toBe(0);
     expect(archiveListing.stdout).not.toContain(".env.local");
+  });
+
+  it("rejects output paths that escape through a symbolic-link directory", () => {
+    const root = createFixture();
+    const outside = realpathSync(
+      mkdtempSync(join(tmpdir(), "codex-essentials-release-outside-")),
+    );
+    fixtures.push(outside);
+    symlinkSync(outside, join(root, "outside-link"), "dir");
+
+    const result = runScript(root, "package-plugin.cjs", [
+      "--preflight",
+      "--ref",
+      "HEAD",
+      "--output-dir",
+      "outside-link/artifacts",
+      "--output",
+      "outside-link/release-artifacts.json",
+    ]);
+
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain("repository root");
+  });
+
+  it("rejects alternative credential filenames from release archives", () => {
+    for (const filename of [
+      ".npmrc",
+      "credentials.json",
+      "service-account.json",
+      "id_ed25519",
+    ]) {
+      const root = createFixture();
+      writeFileSync(
+        join(root, "plugins", "doc-keeper", filename),
+        "secret material\n",
+      );
+      git(root, ["add", `plugins/doc-keeper/${filename}`]);
+      git(root, ["commit", "-m", "test: add sensitive archive fixture"]);
+      const currentSha = git(root, ["rev-parse", "HEAD"]);
+      git(root, ["tag", "plugin/doc-keeper/v0.1.0"]);
+      writeFileSync(
+        join(root, "release-plan.json"),
+        `${JSON.stringify(
+          [
+            {
+              tag: "plugin/doc-keeper/v0.1.0",
+              pluginPath: "plugins/doc-keeper",
+              name: "doc-keeper",
+              version: "0.1.0",
+              sha: currentSha,
+            },
+          ],
+          null,
+          2,
+        )}\n`,
+      );
+
+      const packaging = runScript(root, "package-plugin.cjs", [
+        "--plan",
+        "release-plan.json",
+        "--output-dir",
+        "dist/artifacts",
+        "--output",
+        "dist/release-artifacts.json",
+      ]);
+      expect(packaging.status, packaging.stderr).toBe(0);
+
+      const validation = runScript(root, "validate-release-set.cjs", [
+        "--plan",
+        "dist/release-artifacts.json",
+        "--archives",
+      ]);
+      expect(validation.status).not.toBe(0);
+      expect(validation.stderr).toContain("sensitive path");
+    }
+  });
+
+  it("rejects product PRs that release more than one plugin", () => {
+    const root = createFixture();
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "README.md"),
+      "DocKeeper change\n",
+    );
+    writeFileSync(
+      join(root, "plugins", "prettier-after-edit", "README.md"),
+      "Prettier change\n",
+    );
+    git(root, [
+      "add",
+      "plugins/doc-keeper/README.md",
+      "plugins/prettier-after-edit/README.md",
+    ]);
+    git(root, ["commit", "-m", "feat: change two plugins"]);
+    const base = git(root, ["rev-parse", "HEAD^"]);
+    const head = git(root, ["rev-parse", "HEAD"]);
+
+    const result = runScript(root, "validate-pr-scope.cjs", [
+      "--base",
+      base,
+      "--head",
+      head,
+      "--title",
+      "feat: change two plugins",
+      "--labels",
+      "",
+    ]);
+
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain("one releasable plugin");
+  });
+
+  it("allows Release Please PRs to update multiple plugin paths", () => {
+    const root = createFixture();
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "README.md"),
+      "DocKeeper change\n",
+    );
+    writeFileSync(
+      join(root, "plugins", "prettier-after-edit", "README.md"),
+      "Prettier change\n",
+    );
+    git(root, [
+      "add",
+      "plugins/doc-keeper/README.md",
+      "plugins/prettier-after-edit/README.md",
+    ]);
+    git(root, ["commit", "-m", "chore(main): release 0.2.0"]);
+    const base = git(root, ["rev-parse", "HEAD^"]);
+    const head = git(root, ["rev-parse", "HEAD"]);
+
+    const result = runScript(root, "validate-pr-scope.cjs", [
+      "--base",
+      base,
+      "--head",
+      head,
+      "--title",
+      "chore(main): release 0.2.0",
+      "--labels",
+      "autorelease: pending",
+    ]);
+
+    expect(result.status, result.stderr).toBe(0);
+  });
+
+  it("checks remote tag and asset integrity before publication", () => {
+    const remote = require("./scripts/verify-release-assets.cjs") as {
+      validateRemoteRelease: (
+        entry: {
+          tag: string;
+          sha: string;
+          archiveName: string;
+          checksumName: string;
+        },
+        release: {
+          tagName: string;
+          isDraft: boolean;
+          assets: Array<{ name: string }>;
+        },
+        tagSha: string,
+      ) => void;
+      validateDownloadedAssets: (
+        entry: { archiveName: string; sha256: string },
+        archive: Buffer,
+        checksum: string,
+      ) => void;
+    };
+    const entry = {
+      tag: "plugin/doc-keeper/v0.1.0",
+      sha: "a".repeat(40),
+      archiveName: "doc-keeper-0.1.0.tar.gz",
+      checksumName: "doc-keeper-0.1.0.tar.gz.sha256",
+    };
+    const archive = Buffer.from("archive bytes\n");
+    const sha256 = createHash("sha256").update(archive).digest("hex");
+
+    expect(() =>
+      remote.validateRemoteRelease(
+        entry,
+        {
+          tagName: entry.tag,
+          isDraft: true,
+          assets: [{ name: entry.archiveName }, { name: entry.checksumName }],
+        },
+        entry.sha,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      remote.validateRemoteRelease(
+        entry,
+        {
+          tagName: entry.tag,
+          isDraft: true,
+          assets: [{ name: entry.archiveName }],
+        },
+        entry.sha,
+      ),
+    ).toThrow("missing required asset");
+    expect(() =>
+      remote.validateDownloadedAssets(
+        { ...entry, sha256 },
+        archive,
+        `${sha256}  ${entry.archiveName}\n`,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      remote.validateDownloadedAssets(
+        { ...entry, sha256: "b".repeat(64) },
+        archive,
+        `${sha256}  ${entry.archiveName}\n`,
+      ),
+    ).toThrow("archive checksum");
   });
 
   it("rejects archive checksums and symlink members that do not satisfy the contract", () => {

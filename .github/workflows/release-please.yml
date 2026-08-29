@@ -262,6 +262,18 @@ jobs:
     environment:
       name: release
     steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
       - name: Download packaged artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
@@ -282,30 +294,9 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
-          while IFS= read -r release; do
-            tag="$(jq -r '.tag' <<<"$release")"
-            archive_name="$(jq -r '.archiveName' <<<"$release")"
-            checksum_name="$(jq -r '.checksumName' <<<"$release")"
-            remote="$(gh release view "$tag" \
-              --repo "$GITHUB_REPOSITORY" \
-              --json tagName,isDraft,assets)"
-
-            jq -e --arg tag "$tag" \
-              '.tagName == $tag and .isDraft == true' \
-              <<<"$remote" >/dev/null || {
-              echo "Refusing to publish non-draft or mismatched release: $tag" >&2
-              exit 1
-            }
-
-            for required_asset in "$archive_name" "$checksum_name"; do
-              jq -e --arg name "$required_asset" \
-                '.assets[] | select(.name == $name)' \
-                <<<"$remote" >/dev/null || {
-                echo "Release $tag is missing required asset $required_asset" >&2
-                exit 1
-              }
-            done
-          done < <(jq -c '.[]' dist/release-artifacts.json)
+          node scripts/verify-release-assets.cjs \
+            --artifacts dist/release-artifacts.json \
+            --repository "$GITHUB_REPOSITORY"
 
       - name: Publish verified drafts
         env:

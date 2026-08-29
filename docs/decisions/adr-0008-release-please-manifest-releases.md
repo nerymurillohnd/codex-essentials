@@ -129,9 +129,10 @@ strategy solely to make docs: bump versions.
   repository administration outside this change.
 - Bad, because shared files outside a plugin path do not automatically imply
   releases for every plugin.
-- Bad, because the current repository history has no published DocKeeper tag
-  or release. Its 0.1.0 manifest baseline is therefore provisional and
-  requires an explicit first-release decision before production activation.
+- Good, because DocKeeper's absent published baseline is represented honestly
+  as 0.0.0 while its configured initial release remains 0.1.0. A future
+  releasable DocKeeper change can therefore create its first release without
+  pretending that 0.1.0 already exists remotely.
 
 ## Confirmation
 

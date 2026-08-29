@@ -144,6 +144,33 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: npm run validate:pr-title -- --title "$PR_TITLE"
 
+  plugin-scope:
+    name: Single releasable plugin per product PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - name: Validate product PR scope
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          npm run validate:pr-scope -- \
+            --base "$PR_BASE_SHA" \
+            --head "$PR_HEAD_SHA" \
+            --title "$PR_TITLE" \
+            --labels "$PR_LABELS"
+
   package-preflight:
     name: Package preflight
     runs-on: ubuntu-latest
@@ -177,6 +204,7 @@ jobs:
       - test
       - validate-manifests
       - conventional-title
+      - plugin-scope
       - package-preflight
     steps:
       - name: Fail when a required gate fails
@@ -190,6 +218,7 @@ jobs:
                 "${{ needs.validate-manifests.result }}" != "success" ||
                 "${{ needs.package-preflight.result }}" != "success" ||
                 ( "$GITHUB_EVENT_NAME" == "pull_request" &&
-                  "${{ needs.conventional-title.result }}" != "success" ) ]]; then
+                  ( "${{ needs.conventional-title.result }}" != "success" ||
+                    "${{ needs.plugin-scope.result }}" != "success" ) ) ]]; then
             exit 1
           fi
