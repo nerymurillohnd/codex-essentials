@@ -101,7 +101,11 @@ The existing quality workflow gains a package preflight which validates the
 marketplace and builds/inspects archives from the candidate commit before a
 Release PR can merge. The post-release jobs repeat domain validation and build
 from the exact tags before uploading assets. Release Please is not used as a
-substitute for those checks.
+substitute for those checks. The documentation gate still validates current
+plugin documentation, while its README-diff requirement is waived only when
+the pull request is identified as a Bot release PR with a release title and
+the maintainer-controlled `autorelease: pending` or `autorelease: tagged`
+label. A title alone never authenticates that exception.
 
 ## Publication safety
 

@@ -164,12 +164,14 @@ jobs:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
         run: |
           npm run validate:pr-scope -- \
             --base "$PR_BASE_SHA" \
             --head "$PR_HEAD_SHA" \
             --title "$PR_TITLE" \
-            --labels "$PR_LABELS"
+            --labels "$PR_LABELS" \
+            --author-type "$PR_AUTHOR_TYPE"
 
   package-preflight:
     name: Package preflight

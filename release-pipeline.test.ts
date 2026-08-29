@@ -546,7 +546,7 @@ describe("Release Please integration boundary", () => {
     expect(result.stderr).toContain("one releasable plugin");
   });
 
-  it("allows Release Please PRs to update multiple plugin paths", () => {
+  it("only exempts authenticated Release Please PRs from the single-plugin rule", () => {
     const root = createFixture();
     writeFileSync(
       join(root, "plugins", "doc-keeper", "README.md"),
@@ -574,9 +574,27 @@ describe("Release Please integration boundary", () => {
       "chore(main): release 0.2.0",
       "--labels",
       "autorelease: pending",
+      "--author-type",
+      "Bot",
     ]);
 
     expect(result.status, result.stderr).toBe(0);
+
+    const titleOnly = runScript(root, "validate-pr-scope.cjs", [
+      "--base",
+      base,
+      "--head",
+      head,
+      "--title",
+      "chore(main): release 0.2.0",
+      "--labels",
+      "",
+      "--author-type",
+      "Bot",
+    ]);
+
+    expect(titleOnly.status).not.toBe(0);
+    expect(titleOnly.stderr).toContain("one releasable plugin");
   });
 
   it("checks remote tag and asset integrity before publication", () => {

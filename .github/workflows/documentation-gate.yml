@@ -16,6 +16,9 @@ jobs:
     env:
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+      PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
     steps:
       - name: Check out repository history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -31,4 +34,10 @@ jobs:
       - name: Validate plugin manifests and generated marketplace
         run: npm run marketplace:check
       - name: Enforce plugin documentation synchronization
-        run: npm run documentation:gate -- --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: |
+          npm run documentation:gate -- \
+            --base "$BASE_SHA" \
+            --head "$HEAD_SHA" \
+            --title "$PR_TITLE" \
+            --author-type "$PR_AUTHOR_TYPE" \
+            --labels "$PR_LABELS"

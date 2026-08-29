@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { isTrustedReleasePleasePullRequest } = require("./release-pr-auth.cjs");
 const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
 const CREDENTIAL_PATTERN =
   /\b(?:api[_-]?key|access[_-]?token|secret|password|token)\b\s*[:=]\s*(?!\$\{[A-Z][A-Z0-9_]*\})(?!["'`])\S+/iu;
@@ -13,26 +14,58 @@ function parseArguments(args, defaultRoot) {
   let root = defaultRoot;
   let base;
   let head;
+  let title = "";
+  let authorType = "";
+  let labels = "";
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     const value = args[index + 1];
-    if (argument === "--root" && value) {
-      root = path.resolve(value);
-      index += 1;
-    } else if (argument === "--base" && value) {
-      base = value;
-      index += 1;
-    } else if (argument === "--head" && value) {
-      head = value;
+    if (
+      argument === "--root" ||
+      argument === "--base" ||
+      argument === "--head" ||
+      argument === "--title" ||
+      argument === "--author-type" ||
+      argument === "--labels"
+    ) {
+      if (
+        value === undefined ||
+        value.startsWith("--") ||
+        (argument !== "--labels" && !value)
+      ) {
+        throw new Error(
+          "usage: --base <base> --head <head> [--title <title>] [--author-type <type>] [--labels <comma-separated-labels>]",
+        );
+      }
+      if (argument === "--root") {
+        root = path.resolve(value);
+      }
+      if (argument === "--base") {
+        base = value;
+      }
+      if (argument === "--head") {
+        head = value;
+      }
+      if (argument === "--title") {
+        title = value;
+      }
+      if (argument === "--author-type") {
+        authorType = value;
+      }
+      if (argument === "--labels") {
+        labels = value;
+      }
       index += 1;
     } else {
-      throw new Error("usage: --base <base> --head <head>");
+      throw new Error(
+        "usage: --base <base> --head <head> [--title <title>] [--author-type <type>] [--labels <comma-separated-labels>]",
+      );
     }
   }
   if (!base || !head) {
     throw new Error("usage: --base <base> --head <head>");
   }
-  return { root, base, head };
+  return { root, base, head, title, authorType, labels };
 }
 
 /** @param {string} root @param {string} base @param {string} head */
@@ -83,8 +116,8 @@ function containsUnmaskedCredential(text) {
   return CREDENTIAL_PATTERN.test(text);
 }
 
-/** @param {string} root @param {string[]} files */
-function validatePluginDocumentation(root, files) {
+/** @param {string} root @param {string[]} files @param {boolean} isReleasePleasePr */
+function validatePluginDocumentation(root, files, isReleasePleasePr) {
   const pluginFiles = new Map();
   for (const file of files) {
     const match = /^plugins\/([^/]+)\/(.+)$/u.exec(file);
@@ -106,12 +139,12 @@ function validatePluginDocumentation(root, files) {
       validateCurrentDocuments(root, pluginId, errors);
       continue;
     }
-    if (!changed.has("README.md")) {
+    if (!isReleasePleasePr && !changed.has("README.md")) {
       errors.push(
         `plugins/${pluginId}/README.md must change with product files`,
       );
     }
-    if (!changed.has("CHANGELOG.md")) {
+    if (!isReleasePleasePr && !changed.has("CHANGELOG.md")) {
       errors.push(
         `plugins/${pluginId}/CHANGELOG.md must change with product files`,
       );
@@ -149,9 +182,22 @@ function validateCurrentDocuments(root, pluginId, errors) {
 }
 
 function main() {
-  const { root, base, head } = parseArguments(
-    process.argv.slice(2),
-    path.resolve(__dirname, ".."),
+  const {
+    root,
+    base,
+    head,
+    title,
+    authorType,
+    labels: labelsValue,
+  } = parseArguments(process.argv.slice(2), path.resolve(__dirname, ".."));
+  const labels = labelsValue
+    .split(",")
+    .map((label) => label.trim())
+    .filter(Boolean);
+  const isReleasePleasePr = isTrustedReleasePleasePullRequest(
+    title,
+    authorType,
+    labels,
   );
   const errors = [];
   if (
@@ -160,7 +206,11 @@ function main() {
     errors.push("diff contains an unmasked credential; use ${VAR}");
   }
   try {
-    validatePluginDocumentation(root, changedPluginFiles(root, base, head));
+    validatePluginDocumentation(
+      root,
+      changedPluginFiles(root, base, head),
+      isReleasePleasePr,
+    );
   } catch (error) {
     errors.push(/** @type {Error} */ (error).message);
   }

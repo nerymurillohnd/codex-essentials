@@ -96,6 +96,13 @@ The protected release environment is reached only after every draft has the
 expected tag and both expected assets; all drafts are verified before any are
 published with --latest=false.
 
+The documentation gate keeps validating the current plugin README and
+CHANGELOG, but does not require a README diff for a generated Release Please
+PR. That narrow exception requires the pull request event to identify a Bot,
+use a release title, and carry Release Please's maintainer-controlled
+autorelease label. A contributor cannot obtain the exception by choosing a
+release-shaped title alone.
+
 Release Please uses an ephemeral GitHub App installation token rather than a
 personal token. The App must have repository-scoped Contents write, Pull
 requests write, and Issues write permissions. The App ID, private key, branch

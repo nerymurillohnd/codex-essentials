@@ -3,6 +3,7 @@
 
 const childProcess = require("node:child_process");
 const path = require("node:path");
+const { isTrustedReleasePleasePullRequest } = require("./release-pr-auth.cjs");
 
 /** @param {string[]} args @param {string} defaultRoot */
 function parseArguments(args, defaultRoot) {
@@ -11,6 +12,7 @@ function parseArguments(args, defaultRoot) {
   let head;
   let title;
   let labels = "";
+  let authorType = "";
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     const value = args[index + 1];
@@ -19,7 +21,8 @@ function parseArguments(args, defaultRoot) {
       argument === "--base" ||
       argument === "--head" ||
       argument === "--title" ||
-      argument === "--labels"
+      argument === "--labels" ||
+      argument === "--author-type"
     ) {
       if (argument !== "--labels" && (!value || value.startsWith("--"))) {
         throw new Error(usage());
@@ -39,6 +42,9 @@ function parseArguments(args, defaultRoot) {
       if (argument === "--labels") {
         labels = value ?? "";
       }
+      if (argument === "--author-type") {
+        authorType = value ?? "";
+      }
       index += 1;
     } else {
       throw new Error(usage());
@@ -47,20 +53,16 @@ function parseArguments(args, defaultRoot) {
   if (!base || !head || !title) {
     throw new Error(usage());
   }
-  return { root, base, head, title, labels };
+  return { root, base, head, title, labels, authorType };
 }
 
 function usage() {
   return "usage: [--root <repository-root>] --base <ref> --head <ref> --title <title> [--labels <comma-separated-labels>]";
 }
 
-/** @param {string} title @param {string[]} labels */
-function isReleasePleasePullRequest(title, labels) {
-  return (
-    /^chore(?:\([^()\r\n]+\))?: release\b/u.test(title) ||
-    labels.includes("autorelease: pending") ||
-    labels.includes("autorelease: tagged")
-  );
+/** @param {string} title @param {string[]} labels @param {string} authorType */
+function isReleasePleasePullRequest(title, labels, authorType) {
+  return isTrustedReleasePleasePullRequest(title, authorType, labels);
 }
 
 /** @param {string} root @param {string} base @param {string} head */
@@ -85,13 +87,20 @@ function releasablePluginPaths(paths) {
   ].sort();
 }
 
-/** @param {string} root @param {string} base @param {string} head @param {string} title @param {string} labelsValue */
-function validatePullRequestScope(root, base, head, title, labelsValue) {
+/** @param {string} root @param {string} base @param {string} head @param {string} title @param {string} labelsValue @param {string} authorType */
+function validatePullRequestScope(
+  root,
+  base,
+  head,
+  title,
+  labelsValue,
+  authorType,
+) {
   const labels = labelsValue
     .split(",")
     .map((label) => label.trim())
     .filter(Boolean);
-  if (isReleasePleasePullRequest(title, labels)) {
+  if (isReleasePleasePullRequest(title, labels, authorType)) {
     return { skipped: true, plugins: [] };
   }
   const plugins = releasablePluginPaths(changedPaths(root, base, head));
@@ -114,6 +123,7 @@ function main() {
     options.head,
     options.title,
     options.labels,
+    options.authorType,
   );
   if (result.skipped) {
     console.log("Release Please PR scope check skipped.");
