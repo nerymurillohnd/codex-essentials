@@ -9,9 +9,11 @@ guidance. The allowed paths are:
 - `AGENTS.md`
 - `README.md`
 
-The authored `.husky/pre-push` hook compares the complete update against the
-remote `main` base and rejects every other path. It then runs `npm run check`
-before allowing the push to continue.
+The authored `.husky/pre-push` hook first requires the pushed SHA to equal the
+checked-out `HEAD` in a clean worktree. It rejects non-descendant updates, then
+enumerates paths from every commit between the remote base and pushed SHA so a
+forbidden change cannot be hidden by a later revert. It then runs `npm run
+check` against that same clean tree before allowing the push to continue.
 
 Do not mix documentation with plugin, tooling, workflow, schema, test,
 security, release, or other product-behavior changes in a direct push. Route

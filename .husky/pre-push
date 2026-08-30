@@ -7,6 +7,7 @@ main_push=false
 while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
 	if [ "${remote_ref}" = "refs/heads/main" ]; then
 		main_push=true
+		# The validator binds the check to a clean pushed SHA and scans every commit.
 		node "${repository_root}/scripts/validate-direct-push.cjs" \
 			--root "${repository_root}" \
 			--remote "${remote_sha}" \
