@@ -35,6 +35,15 @@ branch force-push, deletion, administrator, and conversation-resolution
 controls. Treat the local classifier and pull-request review process as the
 path-aware integration controls.
 
+## Implementation record
+
+- Implemented on 2026-08-30 through [PR #25](https://github.com/nerymurillohnd/codex-essentials/pull/25), merged as `9bd8100`.
+- The remote `main` protection now has no global pull-request or required-status-check rules.
+- Force-push, branch deletion, administrator enforcement, and conversation-resolution protections remain enabled.
+- The four repository workflows now trigger only from pull-request events, with release processing limited to merged pull requests targeting `main`.
+- The local pre-push classifier accepts the documented paths and rejects product, tooling, workflow, security, and other non-documentation paths.
+- Verification completed with `npm run check`, `actionlint`, `shellcheck .husky/pre-push`, the documentation gate, and a successful `git push origin main` after the remote change.
+
 ## Consequences
 
 - Small documentation updates can be committed and pushed directly after the
