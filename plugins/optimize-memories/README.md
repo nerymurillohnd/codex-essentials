@@ -167,13 +167,18 @@ approval state, and final verification result; a tool invocation alone is not ev
 - Official source retrieval depends on tools and network access available in the session.
 - Memory roots and formats must be discovered from current state.
 - The workflow stops on unresolved conflicts, missing approval, target drift, or failed gates.
-- If a write fails, preserve pre-write fingerprints and use the recorded proposal to recover safely.
+- Pre-write fingerprints identify target state but are not a complete before-image.
+- For a write that needs guaranteed rollback, verify a full backup or before-image first;
+  if none is available, stop and report that recovery is unavailable.
 
 ## 🩺 Failure and Recovery
 
 If scope, roots, authority, permissions, or target identity cannot be established,
 stop and report the blocker. If a write fails or drift is detected, use the
-recorded pre-write fingerprints and proposed diffs to recover safely.
+existing backup, before-image, version-control diff, or recovery record. Do not
+represent fingerprints or a proposed diff as recovery of untouched original bytes;
+if no recoverable record exists, report that limitation instead of promising safe
+recovery.
 
 ## ❓ FAQ
 
