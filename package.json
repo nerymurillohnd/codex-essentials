@@ -24,6 +24,7 @@
     "validate:pr-title": "node scripts/validate-pr-title.cjs",
     "validate:pr-commits": "node scripts/validate-pr-commits.cjs",
     "validate:pr-scope": "node scripts/validate-pr-scope.cjs",
+    "validate:direct-push": "node scripts/validate-direct-push.cjs",
     "validate:release-set": "node scripts/validate-release-set.cjs",
     "validate:release-workflow": "node scripts/validate-release-workflow-outputs.cjs",
     "package:preflight": "node scripts/package-plugin.cjs --preflight --ref HEAD --output-dir dist/preflight --output dist/preflight-artifacts.json",

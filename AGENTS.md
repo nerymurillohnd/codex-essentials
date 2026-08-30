@@ -89,14 +89,23 @@ Use concise imperative Conventional Commit subjects (for example, `feat: add npm
 
 Route changes according to their risk and distribution impact:
 
+- **Direct push to `main` allowed:** only changes entirely contained in
+  `docs/**`, the root `AGENTS.md`, or the root `README.md`, after the local
+  pre-push policy accepts the complete diff and `npm run check` passes.
 - **Pull request required:** plugin packages, manifests, marketplace catalog
   entries, scripts, tests, schemas, workflows, release behavior, permissions,
-  security controls, or any change that alters product behavior, installation,
-  validation, or compatibility.
-- **Direct commit to `main` allowed:** small documentation corrections,
-  wording or formatting adjustments, minor `AGENTS.md` or contributor-guidance
-  clarifications, and other changes with no product or runtime impact. Run the
-  relevant formatter and validation for the affected files first.
+  security controls, refactors, substantive plugin changes, version bumps, or
+  any change that alters product behavior, installation, validation, or
+  compatibility.
+- **Mixed changes:** route the complete change through a pull request whenever
+  one changed path falls outside the direct-push allowlist.
+- GitHub Actions workflows trigger only for pull requests; direct pushes rely
+  on the local pre-push boundary and complete local check.
+
+The detailed procedure lives in
+[docs/operations/direct-push-policy.md](docs/operations/direct-push-policy.md),
+and the durable decision is recorded in
+[ADR-0009](docs/decisions/adr-0009-direct-push-and-pr-routing.md).
 
 | Issue type                                    | PR needed now?                                            |
 | --------------------------------------------- | --------------------------------------------------------- |

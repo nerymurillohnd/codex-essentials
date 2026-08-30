@@ -1,9 +1,10 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-28
 decision-makers: Nery Samuel Murillo, Codex
 consulted: Release Please and GitHub Actions documentation
 informed: Codex Essentials contributors and plugin consumers
+superseded-by: ADR-0009
 ---
 
 # Use Release Please manifest mode for plugin releases

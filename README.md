@@ -170,10 +170,11 @@ live in [AGENTS.md](AGENTS.md) and the linked
 [quality guidelines](docs/agent-guidelines/quality.md).
 
 The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6
-compatibility checks. CI is authoritative, uses full SHA pins, and protects
-branch-required checks with release environment approval. Local hooks are
-no-shim and advisory; `HUSKY=0` is used in CI, while authorized local emergency
-bypasses use `HUSKY=0` or `--no-verify`. The contributor quality vocabulary is:
+compatibility checks. GitHub Actions workflows run only for pull requests and
+use full SHA pins. The local pre-push hook enforces the direct documentation
+lane and runs the complete check before an allowed push to `main`; authorized
+emergency bypasses use `HUSKY=0` or `--no-verify` and require manual follow-up.
+The contributor quality vocabulary is:
 `npm run format:check`, `npm run lint -- --max-warnings=0`, `npm run typecheck`,
 `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
 `npm run marketplace:check`, `npm run documentation:gate`, and `actionlint`.

@@ -4,9 +4,10 @@
   `24.19.0` and GitHub Actions jobs that execute repository Node tooling must
   select the Node.js 24 major line explicitly. Keep `package.json` engines and `.npmrc`
   `engine-strict=true` aligned when present.
-- The repository policy is that local hooks are advisory and CI is authoritative. Husky installs the local
-  pre-commit hook through `prepare`, and CI sets HUSKY=0 in CI to avoid local
-  hook side effects during `npm ci`.
+- The direct-push policy uses the authored pre-push hook as the local path
+  boundary and runs `npm run check` for accepted pushes to `main`; CI workflows
+  run only for pull requests. Husky installs hooks through `prepare`, and CI
+  sets HUSKY=0 during `npm ci` to avoid local hook side effects.
 - The Husky hook must keep the no-shim, POSIX-compatible format: do not source
   `_/husky.sh`, do not use `HUSKY_SKIP_HOOKS`, and invoke
   `npx --no-install lint-staged` directly. Treat `.husky/_/*` as generated

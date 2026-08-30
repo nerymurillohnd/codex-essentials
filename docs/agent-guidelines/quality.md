@@ -4,9 +4,13 @@
   covers formatting, warning-strict ESLint, TypeScript 7 typechecking, script
   typechecking, TypeScript 6 compatibility, Vitest coverage, and full manifest
   validation.
-- Treat local hooks as advisory; CI is authoritative. Developers may bypass a
-  local hook only for an authorized emergency with `HUSKY=0` or `--no-verify`,
-  but the CI gates remain mandatory.
+- Treat the direct-push pre-push hook as the authoritative local boundary for
+  low-risk documentation pushes; it rejects non-documentation paths and runs
+  `npm run check`. Developers may bypass it only for an authorized emergency
+  with `HUSKY=0` or `--no-verify`, followed by documented manual verification.
+- Run GitHub Actions validation workflows only for pull requests. Use pull
+  requests for every product, tooling, workflow, release, security, schema,
+  test, or compatibility change.
 - Required local checks are `npm run format:check`,
   `npm run lint -- --max-warnings=0`, `npm run typecheck`,
   `npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
@@ -14,12 +18,12 @@
   `npm run package:preflight`,
   `npm run documentation:gate -- --base <base>
 --head <head>`, `actionlint`, and `git diff --check`.
-- Keep branch-protection required checks aligned to the quality workflow's
-  stable `required` aggregator plus independently visible pull-request
-  documentation and security jobs. The aggregator includes Conventional
-  Commit PR-title validation, Release Please output capture validation, and
-  package preflight, so a Release Please PR cannot merge before its plugin
-  packages and archives pass validation.
+- Do not describe pull-request checks as remote branch requirements for
+  `main`; the direct documentation lane intentionally cannot coexist with
+  globally required status checks in native GitHub branch protection.
+- Keep the path-aware integration rules synchronized with
+  [the direct-push policy](../operations/direct-push-policy.md) and
+  [ADR-0009](../decisions/adr-0009-direct-push-and-pr-routing.md).
 - Add applicable language-server diagnostics and unit, integration, regression, security, and adversarial tests. Keep documentation synchronized with behavior.
 - Re-check version-sensitive claims against the target release or latest changelog before planning and again before execution.
 - Report skipped checks, missing tools, unresolved diagnostics, and residual risks explicitly.
@@ -28,7 +32,8 @@
 - Validate changed plugin documentation with `npm run documentation:gate -- --base <base> --head <head>`; the gate requires README and changelog changes for product-affecting edits.
 - Use `plugin/<plugin-id>/v<semver>` tags for independent releases. Release
   Please owns versioning, changelog updates, tags, and draft GitHub Releases;
-  the workflow consumes its exact tag output and never reconstructs tags.
+  the workflow consumes its exact tag output and never reconstructs tags. Its
+  workflow is invoked after a merged pull request to `main`.
 - The first release cut uses the native `go` changelog-only strategy with JSON
   `extra-files` for `plugin.json`. `simple` is intentionally not used
   because the current implementation requires a `version.txt` update.
