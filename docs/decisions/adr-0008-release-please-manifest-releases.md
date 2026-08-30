@@ -111,7 +111,9 @@ personal token. The App must have repository-scoped Contents write, Pull
 requests write, and Issues write permissions. The App ID, private key, branch
 protection, required checks, and protected environment are repository settings
 that must be configured separately; this repository change does not mutate
-remote settings.
+remote settings. Until the App ID and private key exist, the workflow exits
+successfully with an explicit skip notice rather than failing every push to
+`main`.
 
 ## Commit and Documentation Policy
 

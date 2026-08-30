@@ -212,6 +212,36 @@ describe("Release Please integration boundary", () => {
     );
   });
 
+  it("skips release automation when GitHub App credentials are unavailable", () => {
+    const workflow = readFileSync(
+      join(repositoryRoot, ".github", "workflows", "release-please.yml"),
+      "utf8",
+    );
+
+    expect(workflow).toContain("id: release-credentials");
+    expect(workflow).toContain(
+      "RELEASE_PLEASE_APP_ID: ${{ vars.RELEASE_PLEASE_APP_ID }}",
+    );
+    expect(workflow).toContain(
+      "RELEASE_PLEASE_APP_PRIVATE_KEY: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}",
+    );
+    expect(workflow).toMatch(
+      /- name: Create GitHub App installation token\s+id: app-token\s+if: steps\.release-credentials\.outputs\.available == 'true'/u,
+    );
+    expect(workflow).toMatch(
+      /- name: Run Release Please\s+id: release\s+if: steps\.release-credentials\.outputs\.available == 'true'/u,
+    );
+    expect(workflow).toMatch(
+      /- name: Capture Release Please outputs\s+if: steps\.release-credentials\.outputs\.available == 'true'/u,
+    );
+    expect(workflow).toContain(
+      "if: steps.release-credentials.outputs.available == 'true' && steps.release.outputs.prs_created == 'true'",
+    );
+    expect(workflow).toContain(
+      "Release Please GitHub App credentials are not configured; skipping release automation.",
+    );
+  });
+
   it("normalizes exact per-component tag and SHA outputs", () => {
     const root = createFixture();
     const currentSha = git(root, ["rev-parse", "HEAD"]);

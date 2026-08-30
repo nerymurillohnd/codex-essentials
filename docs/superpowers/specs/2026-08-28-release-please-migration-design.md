@@ -144,6 +144,10 @@ write, and Issues write permissions. Required CI checks, including Conventional
 Commit PR-title validation and package preflight, must be configured as branch
 protection rules outside this repository change.
 
+If the GitHub App ID or private key is not configured yet, the workflow skips
+Release Please with an explicit notice instead of failing the push-to-main
+run. Real release automation starts only after those repository settings exist.
+
 The first cut does not make `docs:` commits independently releasable. A change
 to distributed documentation that deserves a patch release uses
 `fix(docs): ...` (and touches the plugin path), or an explicit Release-As footer

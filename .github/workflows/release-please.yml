@@ -42,8 +42,23 @@ jobs:
       - name: Validate Release Please output capture contract
         run: node scripts/validate-release-workflow-outputs.cjs
 
+      - name: Check Release Please credentials
+        id: release-credentials
+        env:
+          RELEASE_PLEASE_APP_ID: ${{ vars.RELEASE_PLEASE_APP_ID }}
+          RELEASE_PLEASE_APP_PRIVATE_KEY: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$RELEASE_PLEASE_APP_ID" && -n "$RELEASE_PLEASE_APP_PRIVATE_KEY" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Release Please GitHub App credentials are not configured; skipping release automation."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create GitHub App installation token
         id: app-token
+        if: steps.release-credentials.outputs.available == 'true'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
@@ -53,6 +68,7 @@ jobs:
 
       - name: Run Release Please
         id: release
+        if: steps.release-credentials.outputs.available == 'true'
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -60,6 +76,7 @@ jobs:
           manifest-file: .release-please-manifest.json
 
       - name: Capture Release Please outputs
+        if: steps.release-credentials.outputs.available == 'true'
         env:
           RELEASES_CREATED: ${{ steps.release.outputs.releases_created }}
           PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
@@ -94,7 +111,7 @@ jobs:
             --output dist/release-please-outputs.json
 
       - name: Normalize Release Please changelog PRs
-        if: steps.release.outputs.prs_created == 'true'
+        if: steps.release-credentials.outputs.available == 'true' && steps.release.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           RELEASE_PLEASE_PR: ${{ steps.release.outputs.pr }}
@@ -110,6 +127,7 @@ jobs:
             --prs "$RELEASE_PLEASE_PRS"
 
       - name: Upload Release Please output contract
+        if: steps.release-credentials.outputs.available == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: codex-release-please-outputs
@@ -118,6 +136,7 @@ jobs:
           retention-days: 30
 
       - name: Show release state
+        if: steps.release-credentials.outputs.available == 'true'
         env:
           RELEASES_CREATED: ${{ steps.release.outputs.releases_created }}
           PRS_CREATED: ${{ steps.release.outputs.prs_created }}
@@ -129,6 +148,15 @@ jobs:
             echo "- releases_created: \`$RELEASES_CREATED\`"
             echo "- prs_created: \`$PRS_CREATED\`"
             echo "- paths_released: \`$PATHS_RELEASED\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Show skipped release state
+        if: steps.release-credentials.outputs.available != 'true'
+        run: |
+          {
+            echo "## Release Please"
+            echo
+            echo "- skipped: GitHub App credentials are not configured."
           } >> "$GITHUB_STEP_SUMMARY"
 
   prepare-release-plan:

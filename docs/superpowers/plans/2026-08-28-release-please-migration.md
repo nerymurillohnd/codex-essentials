@@ -90,6 +90,8 @@ listing, `gh`, and GitHub's protected `release` environment.
 - Remove the manual `workflow_dispatch` and tag-triggered workflow.
 - Add one push-to-main workflow using the official pinned
   `googleapis/release-please-action` v5.0.0 and a GitHub App installation token.
+- Skip Release Please with an explicit notice when the App credentials are not
+  configured yet, so `main` is not left red by incomplete repository settings.
 - Record action outputs as an artifact, build the normalized plan from exact
   per-component outputs, package exact tags, upload assets, then pause at the
   protected `release` environment.
