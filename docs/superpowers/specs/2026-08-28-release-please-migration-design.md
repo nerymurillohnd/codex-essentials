@@ -2,14 +2,17 @@
 
 ## Status
 
-Approved implementation design for the `codex-essentials` release pipeline.
+Superseded publication-control design for the `codex-essentials` release
+pipeline. The publication-approval decision is superseded by
+[ADR-0010](../../decisions/adr-0010-release-publication-without-environment.md);
+the remaining Release Please architecture remains the reference design.
 
 ## Goal
 
 Replace the repository-owned SemVer, tag, changelog, and GitHub Release
 orchestration with Release Please manifest mode. Keep repository code focused on
 Codex-specific plugin validation, deterministic archive creation, SHA-256
-checksums, asset attachment, and the protected publication gate.
+checksums, asset attachment, and the automated publication gate.
 
 ## Scope
 
@@ -37,7 +40,6 @@ push to main
   -> validate the release plan and current plugin contract
   -> git archive each exact tag and create deterministic tar.gz + SHA-256
   -> validate archive contents and attach assets to matching drafts
-  -> protected release environment pauses the workflow
   -> verify every draft and required asset
   -> publish every verified draft
 ```
@@ -112,11 +114,13 @@ title alone never authenticates that exception.
 
 ## Publication safety
 
-Asset upload happens before the protected `release` environment. The protected
-job first verifies every planned release remotely: exact tag, draft state, and
-the two required asset names. Only after all entries pass preflight does it
-change any draft to published, preventing a validation failure from publishing
-the first entries in a partial batch.
+Asset upload happens before the final publication job. That job first verifies
+every planned release remotely: exact tag, draft state, and the two required
+asset names. Only after all entries pass preflight does it change any draft to
+published, preventing a validation failure from publishing the first entries
+in a partial batch. The merged Release Please PR is the final human
+authorization point; ADR-0010 records why no second environment approval is
+required.
 
 ## Non-goals
 
