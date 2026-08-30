@@ -77,6 +77,7 @@
     "config/**/*.ts",
     "plugins/**/*.ts",
     "lib/**/*.ts",
+    "tests/**/*.ts",
     "types/**/*.d.ts",
     "*.ts"
   ],

@@ -13,7 +13,7 @@ import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 
-const repositoryRoot = resolve(import.meta.dirname);
+const repositoryRoot = resolve(import.meta.dirname, "..");
 const temporaryRoots: string[] = [];
 
 function createFixture(): string {
@@ -120,6 +120,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
       plugins: [
         { name: "astro-cli-commands" },
         { name: "doc-keeper" },
+        { name: "optimize-memories" },
         { name: "prettier-after-edit" },
       ],
     });

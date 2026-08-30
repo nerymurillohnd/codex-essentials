@@ -16,7 +16,7 @@ import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 
-const repositoryRoot = resolve(import.meta.dirname);
+const repositoryRoot = resolve(import.meta.dirname, "..");
 const require = createRequire(import.meta.url);
 const fixtures: string[] = [];
 
@@ -188,7 +188,7 @@ describe("Release Please integration boundary", () => {
   it("detects Release Please output capture drift before release creation", () => {
     const root = createFixture();
     const workflow =
-      require("./scripts/validate-release-workflow-outputs.cjs") as {
+      require("../scripts/validate-release-workflow-outputs.cjs") as {
         validateReleaseWorkflowOutputs(root: string): void;
       };
     mkdirSync(join(root, ".github", "workflows"), { recursive: true });
@@ -490,7 +490,7 @@ describe("Release Please integration boundary", () => {
 
   it("rolls manual Unreleased entries into the generated release section", () => {
     const { rollReleaseChangelog } =
-      require("./scripts/roll-release-changelogs.cjs") as {
+      require("../scripts/roll-release-changelogs.cjs") as {
         rollReleaseChangelog(
           content: string,
           version: string,
@@ -576,7 +576,7 @@ describe("Release Please integration boundary", () => {
     const secondArtifacts = JSON.parse(
       readFileSync(join(root, "dist", "preflight-two.json"), "utf8"),
     ) as Array<{ name: string; sha256: string }>;
-    expect(firstArtifacts).toHaveLength(3);
+    expect(firstArtifacts).toHaveLength(4);
     expect(firstArtifacts.map(({ sha256 }) => sha256)).toEqual(
       secondArtifacts.map(({ sha256 }) => sha256),
     );
@@ -802,7 +802,7 @@ describe("Release Please integration boundary", () => {
   });
 
   it("checks remote tag and asset integrity before publication", () => {
-    const remote = require("./scripts/verify-release-assets.cjs") as {
+    const remote = require("../scripts/verify-release-assets.cjs") as {
       validateRemoteRelease: (
         entry: {
           tag: string;
@@ -882,7 +882,7 @@ describe("Release Please integration boundary", () => {
   });
 
   it("skips already-published releases when resuming publication", () => {
-    const publisher = require("./scripts/publish-release-drafts.cjs") as {
+    const publisher = require("../scripts/publish-release-drafts.cjs") as {
       publishReleaseDrafts(
         repository: string,
         artifacts: Array<{ tag: string }>,

@@ -29,6 +29,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "optimize-memories",
+      "source": {
+        "source": "local",
+        "path": "./plugins/optimize-memories"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "prettier-after-edit",
       "source": {
         "source": "local",
