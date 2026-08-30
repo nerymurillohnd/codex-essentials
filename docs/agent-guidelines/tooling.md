@@ -1,7 +1,7 @@
 # Tooling and Runtime Guidelines
 
 - Use npm for project dependencies. Node.js is managed by nvm; `.nvmrc` is
-  `24.19.0` and GitHub Actions jobs that execute repository Node tooling must
+  `24.20.0` and GitHub Actions jobs that execute repository Node tooling must
   select the Node.js 24 major line explicitly. Keep `package.json` engines and `.npmrc`
   `engine-strict=true` aligned when present.
 - The direct-push policy uses the authored pre-push hook as the local path

@@ -307,7 +307,7 @@ jobs:
               --repo "$GITHUB_REPOSITORY"
           done < <(jq -c '.[]' dist/release-artifacts.json)
 
-  approve-and-publish:
+  publish-releases:
     name: Verify and publish releases
     needs:
       - package
@@ -316,8 +316,6 @@ jobs:
     permissions:
       contents: read
       actions: read
-    environment:
-      name: release
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

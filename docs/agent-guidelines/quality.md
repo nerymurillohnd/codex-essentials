@@ -40,9 +40,10 @@
 - `docs:` does not create a release by itself. Distributed documentation that
   merits a patch uses a `fix(docs): ...` Conventional Commit (touching the
   plugin path), or an explicit `Release-As` footer when appropriate.
-- Release publication requires release environment approval through the
-  protected `release` environment. Artifacts are built from exact tags with
-  `git archive`, compressed with deterministic `gzip -n` semantics, checked
-  with basename-safe SHA-256 files, and uploaded before approval. Rollback
-  means restoring prior marketplace metadata and handling the corresponding
-  GitHub release and tag under the repository's protected release procedures.
+- Release publication proceeds automatically after the Release Please release
+  PR is merged and every automated release gate passes. Artifacts are built
+  from exact tags with `git archive`, compressed with deterministic `gzip -n`
+  semantics, checked with basename-safe SHA-256 files, and uploaded before
+  final draft verification. Rollback means restoring prior marketplace
+  metadata and handling the corresponding GitHub release and tag under the
+  repository's protected release procedures.

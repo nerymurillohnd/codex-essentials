@@ -10,5 +10,5 @@
 - GitHub Actions security gates must use least privilege: dependency review adds
   only `pull-requests: read`, CodeQL adds only `security-events: write`, draft
   release creation uses `contents: write` only to create an unpublished release
-  and attach the plugin archive, and final publication runs only after release
-  environment approval.
+  and attach the plugin archive, and final publication runs only after exact
+  tag, artifact, archive, checksum, and draft verification.
