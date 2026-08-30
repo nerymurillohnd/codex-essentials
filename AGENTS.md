@@ -7,9 +7,18 @@ This repository is a community marketplace for Codex plugins and data. It is not
 - `.agents/plugins/marketplace.json` is the catalog.
 - `plugins/` contains local plugin packages; see [Plugin package guidelines](plugins/AGENTS.md) for their structure, manifests, resources, and catalog registration.
 - `schemas/` contains the strict plugin and marketplace schemas, `templates/` contains the complete plugin creation form, `scripts/` contains the generators and validators, and `lib/` contains bounded domain modules with colocated tests.
-- `.github/` contains issue forms, the pull-request contract, release-note categories, and CI documentation gates. `docs/operations/` documents organization-level Projects.
+- `.github/` contains issue forms, the pull-request contract, release-note categories, and CI documentation gates.
 - `tsconfig.scripts.json` checks the JavaScript modules under `lib/` and `scripts/` with the Node-aware `checkJs` configuration.
-- `docs/`, `adapters/`, and `config/` contain supporting material. There is no repository-level `skills/` directory.
+- `docs/` is the canonical home for repository documentation; read [docs/AGENTS.md](docs/AGENTS.md) before operating inside it.
+- `adapters/` and `config/` contain supporting material. There is no repository-level `skills/` directory.
+
+## Documentation Authority
+
+- Keep all repository plans, specifications, maintenance records, decisions, operational procedures, contributor guidance, additional agent instructions, and audit reports under `docs/`.
+- Use `docs/agent-guidelines/` for durable policy documents, `docs/decisions/` for ADRs, `docs/maintenance/` for technical debt, and `docs/operations/` for runbooks and external-service procedures.
+- Use `docs/superpowers/plans/` for implementation plans, `docs/superpowers/specs/` for approved designs, and `docs/audits/` for dated audit and assessment reports.
+- Keep root-level documentation limited to cross-cutting entry points and link detailed guidance from the relevant document authority.
+- Read and follow `docs/AGENTS.md` before creating, editing, moving, or deleting any file under `docs/`.
 
 ## Development Commands
 
@@ -32,7 +41,7 @@ Use the repository Prettier/ESLint conventions, two-space indentation, LF ending
 
 ## Quality and Documentation
 
-Run applicable diagnostics and tests before declaring work complete. Keep docs synchronized, verify version-sensitive claims against current releases, and report skipped checks, missing tools, unresolved diagnostics, and residual risks. Maintain debt files under `docs/maintenance/` and durable decisions under `docs/decisions/`.
+Run applicable diagnostics and tests before declaring work complete. Keep docs synchronized, verify version-sensitive claims against current releases, and report skipped checks, missing tools, unresolved diagnostics, and residual risks. Apply the folder-specific documentation rules in [docs/AGENTS.md](docs/AGENTS.md).
 
 ## Detailed Policies
 
