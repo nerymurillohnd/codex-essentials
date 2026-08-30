@@ -127,6 +127,22 @@ jobs:
       - name: Validate manifests
         run: npm run marketplace:check
 
+  validate-label-contract:
+    name: GitHub label contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate label references
+        run: npm run validate:github-labels
+
   required:
     name: Required quality gates
     runs-on: ubuntu-latest
@@ -139,6 +155,7 @@ jobs:
       - typecheck-compatibility
       - test
       - validate-manifests
+      - validate-label-contract
     steps:
       - name: Fail when a required gate fails
         run: |
@@ -148,6 +165,7 @@ jobs:
                 "${{ needs.typecheck-scripts.result }}" != "success" ||
                 "${{ needs.typecheck-compatibility.result }}" != "success" ||
                 "${{ needs.test.result }}" != "success" ||
-                "${{ needs.validate-manifests.result }}" != "success" ]]; then
+                "${{ needs.validate-manifests.result }}" != "success" ||
+                "${{ needs.validate-label-contract.result }}" != "success" ]]; then
             exit 1
           fi
