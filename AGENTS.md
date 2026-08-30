@@ -10,7 +10,7 @@ This repository is a community marketplace for Codex plugins and data. It is not
 - `.github/` contains issue forms, the pull-request contract, release-note categories, and CI documentation gates.
 - `tsconfig.scripts.json` checks the JavaScript modules under `lib/` and `scripts/` with the Node-aware `checkJs` configuration.
 - `docs/` is the canonical home for repository documentation; read [docs/AGENTS.md](docs/AGENTS.md) before operating inside it.
-- `adapters/` and `config/` contain supporting material. There is no repository-level `skills/` directory.
+- `adapters/` and `config/` are reserved boundaries for supporting integrations and repository configuration. Keep a `.gitkeep` marker in either directory while it is empty. There is no repository-level `skills/` directory.
 
 ## Documentation Authority
 
