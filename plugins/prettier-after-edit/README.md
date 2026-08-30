@@ -179,7 +179,12 @@ fixture and inspect the JSON status output.
 ## 🩺 Failure and Recovery
 
 If formatting fails, verify the target is readable and the selected formatter is
-executable. If output is missing, check the payload shape and hook registration.
+executable. For a `jq not found` skip, expose an installed `jq` executable on the
+hook process's `PATH`. For a `target file not found` skip, correct the payload's
+`cwd` or file path and ensure that the target exists. For a `prettier not found`
+skip, install Prettier in the target project's dependencies or expose an existing
+`prettier` executable on `PATH`; this plugin does not install it. If output is
+missing, check the payload shape and hook registration, then rerun the smoke test.
 
 ## ❓ FAQ
 
