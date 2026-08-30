@@ -191,7 +191,9 @@ commit or publication.
 <summary>Does installing DocKeeper modify my project?</summary>
 
 No. Installation changes Codex-managed plugin state. Document writes happen only
-in a separately authorized local document operation.
+in an authorized local document operation. A notable implementation request may
+also authorize the relevant local changelog or ADR companion closeout when its
+threshold is met; neither path authorizes remote mutations.
 </details>
 
 <details>
