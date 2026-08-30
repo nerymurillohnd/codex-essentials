@@ -97,7 +97,7 @@ or **Optimize Memories** (`optimize-memories`).
 Refresh the marketplace metadata when you want to discover catalog changes:
 
 ```bash
-codex plugin marketplace update codex-essentials
+codex plugin marketplace upgrade codex-essentials
 ```
 
 Remove only the plugin:

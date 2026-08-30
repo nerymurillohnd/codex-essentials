@@ -169,7 +169,7 @@ The skill acts only when invoked for a memory task.
 ### 🔄 Update
 
 ```bash
-codex plugin marketplace update codex-essentials
+codex plugin marketplace upgrade codex-essentials
 codex plugin list
 ```
 

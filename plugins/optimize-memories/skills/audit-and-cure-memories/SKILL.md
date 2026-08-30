@@ -156,7 +156,7 @@ Tasks:
 discrepancy/anomaly, evidence status, and local evidence.
 4.3 Propose explicit corrected text, deletion, merge, move, or retention for each finding.
 4.4 Include a complete unified diff or complete before/after block for every affected file.
-4.5 Cite direct official sources and exact evidence locations supporting every correction.
+4.5 Cite direct official sources for corrections about Codex behavior, capabilities, or configuration; cite authoritative local or project evidence for project-specific corrections; include exact evidence locations for every correction.
 4.6 Include risk, rationale, rollback, verification method, and confidence for each change.
 4.7 Include all proposed changes in one consolidated change set; do not hide follow-up edits.
 4.8 State clearly that no memory change has been made.

@@ -8,6 +8,14 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- **[Area: Skill]** Clarified that Codex-behavior corrections require official
+  sources while project-specific corrections may use authoritative local
+  evidence.
+- **[Area: Documentation]** Updated the marketplace refresh command to use the
+  supported `codex plugin marketplace upgrade` subcommand.
+
 ### Added
 
 - **[Area: Manifest]** Added the `optimize-memories` plugin manifest with
