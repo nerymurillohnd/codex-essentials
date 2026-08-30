@@ -33,10 +33,11 @@ date promises before release readiness is verified.
 
 ## Public Documentation
 
-- Keep the GitHub Wiki as the public homepage while the repository remains a
-  lightweight marketplace and data source rather than a web application.
-- Link installation, contribution, validation, release, and rollback guidance
-  from the README and Wiki.
+- Keep the repository README as the public homepage while the repository
+  remains a lightweight marketplace and data source rather than a web
+  application.
+- Keep installation, contribution, validation, release, and rollback guidance
+  in versioned repository documentation.
 - Add examples only when they can be validated against real plugin packages.
 
 ## Contribution Maturity

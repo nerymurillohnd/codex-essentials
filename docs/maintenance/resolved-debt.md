@@ -54,10 +54,10 @@ Move completed maintenance items here with the resolution date and verification 
   diagnostics output, Python caches, build output, and operating-system files.
   Removed local `.DS_Store` files and documented that authored hooks are linted
   separately from generated `.husky/_/*` infrastructure.
-- 2026-08-27 — Published the public Codex Essentials Wiki `Home` page with
-  marketplace status, installation, roadmap, contribution direction, release
-  expectations, operating principles, and ownership. Verified through the Wiki
-  repository at `nerymurillohnd/codex-essentials.wiki`.
+- 2026-08-30 — Retired the duplicate public Codex Essentials Wiki and removed
+  its `Home` page. The repository README is the public homepage and `docs/` is
+  the canonical versioned documentation surface. See
+  [ADR-0011](../decisions/adr-0011-retire-github-wiki.md).
 - 2026-08-27 — Added `.github/dependabot.yml` for weekly npm and GitHub Actions
   dependency updates, with a limit of 10 open pull requests per ecosystem.
   Verified the configuration with Prettier and observed Dependabot update runs

@@ -227,6 +227,7 @@ does not require squash merging.
 - [Hooks and quality gates decision](docs/decisions/adr-0005-hooks-and-quality-gates.md)
 - [Skill agent manifests decision](docs/decisions/adr-0006-skill-agent-manifests.md)
 - [Release Please manifest releases decision](docs/decisions/adr-0008-release-please-manifest-releases.md)
+- [GitHub Wiki retirement decision](docs/decisions/adr-0011-retire-github-wiki.md)
 
 ## 🤝 Contribution Style
 
