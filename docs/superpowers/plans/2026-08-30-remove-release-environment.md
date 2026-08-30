@@ -63,6 +63,7 @@
 
 - Remote resource: GitHub environment `release` in `nerymurillohnd/codex-essentials`
 
-- [ ] After this workflow change is merged and `main` no longer references the
+- [x] After this workflow change is merged and `main` no longer references the
       environment, delete the remote `release` environment through the GitHub
       repository settings/API and verify that the environment no longer exists.
+      The final GitHub API verification returned `404 Not Found`.
