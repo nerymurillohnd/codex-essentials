@@ -77,7 +77,9 @@ Run the strict repository pipeline so generated fields remain consistent:
 ```bash
 npm run marketplace:build
 npm run marketplace:check
-npm run validate:release -- plugin/<plugin-id>/v<semver>
+npm run validate:release-workflow
+npm run package:preflight
+npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
 
 Do not hand-edit the generated marketplace catalog. The pipeline validates
@@ -98,6 +100,7 @@ npm run typecheck:scripts
 npx tsc6 --noEmit
 npm test
 npm run marketplace:check
+npm run validate:release-workflow
 ```
 
 For product-affecting plugin changes, also verify that the plugin README and
@@ -125,12 +128,15 @@ Plugin release tags use this format:
 plugin/<plugin-id>/v<semver>
 ```
 
-Validate a release candidate before tagging:
+Validate a release candidate before Release Please creates its tag:
 
 ```bash
 npm run marketplace:check
-npm run validate:release -- plugin/<plugin-id>/v<semver>
+npm run validate:release-workflow
+npm run package:preflight
+npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
 
-Generated GitHub release notes supplement the curated plugin changelog; they do
-not replace it.
+Release Please-generated plugin changelog sections are reviewed in the Release
+PR. Contributors still own the package README and the `Unreleased` intent;
+GitHub release-page notes do not replace those package documents.

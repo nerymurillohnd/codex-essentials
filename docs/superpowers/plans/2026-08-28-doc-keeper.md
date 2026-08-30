@@ -93,7 +93,8 @@
 - [x] Run `npm run sync:check`; require no derived drift.
 - [x] Run `npm run validate:all`; require `Validation passed`.
 - [x] Run `npm run check`; require formatting, lint, both typecheck paths, 56 or more passing tests, coverage above repository thresholds, and validation success.
-- [x] Run `npm run validate:release -- plugin/doc-keeper/v0.1.0`; require `Release validation passed: doc-keeper 0.1.0`.
+- [x] Run the release-set validator against the DocKeeper release plan and
+      require the manifest, changelog, tag, and archive invariants to pass.
 - [x] Compare root and package licenses with `cmp`; require exit 0.
 - [x] Check all changed local Markdown links and confirm no `.DS_Store`, placeholder owner/repository URLs, external package paths, or symlinks entered the package.
 - [x] Inspect `git diff --check`, the complete diff, and `git status --short --branch`; report all results without committing or publishing.

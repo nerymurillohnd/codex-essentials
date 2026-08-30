@@ -42,11 +42,10 @@ stable `required` aggregator for branch-protection required checks. CI jobs set
 HUSKY=0 in CI so npm installation does not install or run local hooks.
 
 Security and release automation are separate workflows. The security workflow
-runs dependency review, CodeQL, and actionlint with least privilege. The release
-workflow checks out and validates the exact release tag with read-only
-permissions, builds a deterministic plugin archive for the draft release, and
-publishes only after release environment approval through the protected
-`release` environment.
+runs dependency review, CodeQL, and actionlint with least privilege. Release
+workflow details are defined by ADR-0008: Release Please creates the exact
+component tags and drafts, the same workflow validates and packages those tags,
+and publication requires approval through the protected `release` environment.
 
 ## Alternatives
 
@@ -105,12 +104,12 @@ step.
 ## Verification
 
 The implementation is covered by Vitest contract tests for package
-configuration, Husky hooks, workflow YAML, release validation, and documentation
-policy. The required local verification commands are `npm run format:check`,
-`npm run lint -- --max-warnings=0`, `npm run typecheck`,
-`npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
-`npm run marketplace:check`, `npm run validate:release`, `actionlint`, and
-`git diff --check`.
+configuration, Husky hooks, workflow YAML, release-plan validation, archive
+packaging, and documentation policy. The required local verification commands
+are `npm run format:check`, `npm run lint -- --max-warnings=0`,
+`npm run typecheck`, `npm run typecheck:scripts`, `npx tsc6 --noEmit`,
+`npm test`, `npm run marketplace:check`, `npm run validate:release-workflow`,
+`npm run package:preflight`, `actionlint`, and `git diff --check`.
 
 References:
 

@@ -59,33 +59,35 @@ function runGuard(root: string, event: unknown) {
   );
 }
 
-function runDocumentationGate(root: string, base: string, head: string) {
-  return spawnSync(
-    process.execPath,
-    [
-      join(repositoryRoot, "scripts", "documentation-gate.cjs"),
-      "--root",
-      root,
-      "--base",
-      base,
-      "--head",
-      head,
-    ],
-    { encoding: "utf8" },
-  );
-}
-
-function runReleaseValidation(root: string, tag: string) {
-  return spawnSync(
-    process.execPath,
-    [
-      join(repositoryRoot, "scripts", "validate-release.cjs"),
-      "--root",
-      root,
-      tag,
-    ],
-    { encoding: "utf8" },
-  );
+function runDocumentationGate(
+  root: string,
+  base: string,
+  head: string,
+  metadata: {
+    title?: string;
+    authorType?: string;
+    labels?: string;
+  } = {},
+) {
+  const args = [
+    join(repositoryRoot, "scripts", "documentation-gate.cjs"),
+    "--root",
+    root,
+    "--base",
+    base,
+    "--head",
+    head,
+  ];
+  for (const [name, value] of [
+    ["--title", metadata.title],
+    ["--author-type", metadata.authorType],
+    ["--labels", metadata.labels],
+  ] as const) {
+    if (value !== undefined) {
+      args.push(name, value);
+    }
+  }
+  return spawnSync(process.execPath, args, { encoding: "utf8" });
 }
 
 function git(root: string, args: string[]): string {
@@ -298,6 +300,23 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(failure.stderr).toContain("README.md");
     expect(failure.stderr).toContain("CHANGELOG.md");
 
+    const trustedRelease = runDocumentationGate(root, base, headWithoutDocs, {
+      title: "chore(main): release 0.1.1",
+      authorType: "Bot",
+      labels: "autorelease: pending",
+    });
+
+    expect(trustedRelease.status, trustedRelease.stderr).toBe(0);
+
+    const titleOnly = runDocumentationGate(root, base, headWithoutDocs, {
+      title: "chore(main): release 0.1.1",
+      authorType: "Bot",
+      labels: "",
+    });
+
+    expect(titleOnly.status).not.toBe(0);
+    expect(titleOnly.stderr).toContain("README.md");
+
     for (const file of [
       "plugins/doc-keeper/README.md",
       "plugins/doc-keeper/CHANGELOG.md",
@@ -432,36 +451,6 @@ describe("strict plugin-to-marketplace pipeline", () => {
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
     expect(run(root, "validate-plugins.cjs").status).toBe(0);
-  });
-
-  it("requires a release tag version and matching changelog section", () => {
-    const root = createFixture();
-
-    expect(runReleaseValidation(root, "plugin/doc-keeper/v0.1.0").status).toBe(
-      0,
-    );
-
-    const mismatch = runReleaseValidation(root, "plugin/doc-keeper/v9.0.0");
-
-    expect(mismatch.status).not.toBe(0);
-    expect(mismatch.stderr).toContain("does not match manifest version");
-
-    const changelogPath = join(root, "plugins", "doc-keeper", "CHANGELOG.md");
-    writeFileSync(
-      changelogPath,
-      readFileSync(changelogPath, "utf8").replace(
-        "## [0.1.0] - 2026-08-28",
-        "## [0.0.9] - 2026-08-28",
-      ),
-    );
-
-    const missingSection = runReleaseValidation(
-      root,
-      "plugin/doc-keeper/v0.1.0",
-    );
-
-    expect(missingSection.status).not.toBe(0);
-    expect(missingSection.stderr).toContain("release section");
   });
 
   it("rejects missing skill agent metadata and symlinks anywhere in a plugin package", () => {

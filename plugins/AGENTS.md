@@ -120,8 +120,9 @@ Required consistency checks:
 
 - `<plugin-id>` must match `plugin.json` name and marketplace `name`.
 - Marketplace registration path must be `./plugins/<plugin-id>`.
-- `README.md` version badge and `CHANGELOG.md` unreleased section should reflect
-  manifest/versioned intent.
+- `plugin.json` is the sole version source; README files must not make a
+  hard-coded version claim, and `CHANGELOG.md` must reflect manifest/versioned
+  intent.
 - Capability and installation claims in README should match actual files present
   (`hooks`, `skills`, `agents`, `references`, etc.) and runtime assumptions.
 - Each `SKILL.md` must have exactly one schema-valid `agents/openai.yaml`; its

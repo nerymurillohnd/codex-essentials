@@ -51,13 +51,16 @@ historical `scaffold:plugin`, `sync:*`, or `validate:all` commands.
    Any non-document change under `plugins/<plugin-id>/` requires updating
    that package's README and CHANGELOG and running
    `npm run documentation:gate -- --base <base> --head <head>`. Use
-   `npm run marketplace:build` after manifest/catalog changes and
-   `npm run marketplace:check` for a read-only consistency check.
+   `npm run marketplace:build` after manifest/catalog changes,
+   `npm run marketplace:check` for a read-only consistency check, and
+   `npm run validate:release-workflow` after changing Release Please
+   component configuration or workflow output capture.
 5. Use `npm run check` for changes to repository tooling, schemas, templates,
    hooks, validators, generators, release behavior, or tests.
-6. Before an authorized release, validate
-   `plugin/<plugin-id>/v<semver>` with `npm run validate:release -- ...` and
-   review the package boundary and changelog.
+6. Before an authorized release, validate the normalized Release Please plan
+   with `npm run validate:release-set -- --plan <release-plan.json>
+[--archives]` and review the exact tag, package boundary, archive, checksum,
+   and changelog invariants.
 
 ## Boundaries
 

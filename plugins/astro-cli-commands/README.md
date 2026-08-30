@@ -1,7 +1,6 @@
 # Astro Commands
 
 ![Astro](https://img.shields.io/badge/Astro-Commands-ff5d01.svg)
-![Plugin version](https://img.shields.io/badge/version-0.1.1-111827.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)
 
 > Let Astro's own CLI lead the work.

@@ -1,0 +1,327 @@
+name: Release Codex Essentials plugins
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: release-codex-essentials-main
+  cancel-in-progress: false
+
+env:
+  HUSKY: "0"
+
+jobs:
+  release-please:
+    name: Propose or create releases
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Validate Release Please output capture contract
+        run: node scripts/validate-release-workflow-outputs.cjs
+
+      - name: Create GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Run Release Please
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Capture Release Please outputs
+        env:
+          RELEASES_CREATED: ${{ steps.release.outputs.releases_created }}
+          PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
+          PRS_CREATED: ${{ steps.release.outputs.prs_created }}
+          PR: ${{ steps.release.outputs.pr }}
+          PRS: ${{ steps.release.outputs.prs }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__RELEASE_CREATED: ${{ steps.release.outputs['plugins/astro-cli-commands--release_created'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__TAG_NAME: ${{ steps.release.outputs['plugins/astro-cli-commands--tag_name'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__VERSION: ${{ steps.release.outputs['plugins/astro-cli-commands--version'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__SHA: ${{ steps.release.outputs['plugins/astro-cli-commands--sha'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__UPLOAD_URL: ${{ steps.release.outputs['plugins/astro-cli-commands--upload_url'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__HTML_URL: ${{ steps.release.outputs['plugins/astro-cli-commands--html_url'] }}
+          RELEASE_OUTPUT__PLUGINS_ASTRO_CLI_COMMANDS__BODY: ${{ steps.release.outputs['plugins/astro-cli-commands--body'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__RELEASE_CREATED: ${{ steps.release.outputs['plugins/doc-keeper--release_created'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__TAG_NAME: ${{ steps.release.outputs['plugins/doc-keeper--tag_name'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__VERSION: ${{ steps.release.outputs['plugins/doc-keeper--version'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__SHA: ${{ steps.release.outputs['plugins/doc-keeper--sha'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__UPLOAD_URL: ${{ steps.release.outputs['plugins/doc-keeper--upload_url'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__HTML_URL: ${{ steps.release.outputs['plugins/doc-keeper--html_url'] }}
+          RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__BODY: ${{ steps.release.outputs['plugins/doc-keeper--body'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__RELEASE_CREATED: ${{ steps.release.outputs['plugins/prettier-after-edit--release_created'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__TAG_NAME: ${{ steps.release.outputs['plugins/prettier-after-edit--tag_name'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__VERSION: ${{ steps.release.outputs['plugins/prettier-after-edit--version'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__SHA: ${{ steps.release.outputs['plugins/prettier-after-edit--sha'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__UPLOAD_URL: ${{ steps.release.outputs['plugins/prettier-after-edit--upload_url'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__HTML_URL: ${{ steps.release.outputs['plugins/prettier-after-edit--html_url'] }}
+          RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__BODY: ${{ steps.release.outputs['plugins/prettier-after-edit--body'] }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          node scripts/capture-release-please-outputs.cjs \
+            --output dist/release-please-outputs.json
+
+      - name: Normalize Release Please changelog PRs
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_PLEASE_PR: ${{ steps.release.outputs.pr }}
+          RELEASE_PLEASE_PRS: ${{ steps.release.outputs.prs }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          node scripts/normalize-release-pr-changelogs.cjs \
+            --base "$GITHUB_SHA" \
+            --repository "$REPOSITORY" \
+            --pr "$RELEASE_PLEASE_PR" \
+            --prs "$RELEASE_PLEASE_PRS"
+
+      - name: Upload Release Please output contract
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: codex-release-please-outputs
+          path: dist/release-please-outputs.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Show release state
+        env:
+          RELEASES_CREATED: ${{ steps.release.outputs.releases_created }}
+          PRS_CREATED: ${{ steps.release.outputs.prs_created }}
+          PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
+        run: |
+          {
+            echo "## Release Please"
+            echo
+            echo "- releases_created: \`$RELEASES_CREATED\`"
+            echo "- prs_created: \`$PRS_CREATED\`"
+            echo "- paths_released: \`$PATHS_RELEASED\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  prepare-release-plan:
+    name: Normalize release outputs
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Download Release Please output contract
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: codex-release-please-outputs
+          path: dist
+
+      - name: Build normalized release plan
+        run: |
+          set -euo pipefail
+          node scripts/prepare-release-plan.cjs \
+            --outputs dist/release-please-outputs.json \
+            --expected-sha "$GITHUB_SHA" \
+            --output dist/release-plan.json
+
+      - name: Upload normalized release plan
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: codex-release-plan
+          path: dist/release-plan.json
+          if-no-files-found: error
+          retention-days: 30
+
+  package:
+    name: Validate and package release tags
+    needs: prepare-release-plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download normalized release plan
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: codex-release-plan
+          path: dist
+
+      - name: Validate marketplace and released plugin set
+        run: |
+          set -euo pipefail
+          npm run marketplace:check
+          node scripts/validate-release-set.cjs \
+            --plan dist/release-plan.json
+
+      - name: Create deterministic archives and checksums
+        run: |
+          set -euo pipefail
+          node scripts/package-plugin.cjs \
+            --plan dist/release-plan.json \
+            --output-dir dist/artifacts \
+            --output dist/release-artifacts.json
+          node scripts/validate-release-set.cjs \
+            --plan dist/release-artifacts.json \
+            --archives
+
+      - name: Upload packaged artifacts for approval
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: codex-plugin-release-artifacts
+          path: |
+            dist/release-artifacts.json
+            dist/artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+  upload-assets:
+    name: Attach assets to draft releases
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: codex-plugin-release-artifacts
+          path: dist
+
+      - name: Create GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Upload assets to exact draft tags
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r release; do
+            tag="$(jq -r '.tag' <<<"$release")"
+            archive="$(jq -r '.archive' <<<"$release")"
+            checksum="$(jq -r '.checksum' <<<"$release")"
+            gh release upload "$tag" "$archive" "$checksum" \
+              --clobber \
+              --repo "$GITHUB_REPOSITORY"
+          done < <(jq -c '.[]' dist/release-artifacts.json)
+
+  approve-and-publish:
+    name: Verify and publish releases
+    needs:
+      - package
+      - upload-assets
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    environment:
+      name: release
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: codex-plugin-release-artifacts
+          path: dist
+
+      - name: Create GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Verify every draft and required asset
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node scripts/verify-release-assets.cjs \
+            --artifacts dist/release-artifacts.json \
+            --repository "$GITHUB_REPOSITORY"
+
+      - name: Publish verified drafts
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node scripts/publish-release-drafts.cjs \
+            --artifacts dist/release-artifacts.json \
+            --repository "$GITHUB_REPOSITORY"
