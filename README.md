@@ -3,236 +3,185 @@
 [![Quality](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml)
 [![Documentation gate](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml/badge.svg)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml)
 [![Security](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml)
-[![Latest release](https://img.shields.io/github/v/release/nerymurillohnd/codex-essentials?include_prereleases&sort=semver)](https://github.com/nerymurillohnd/codex-essentials/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
-**Codex Essentials** is a community marketplace and data repository for
-distributable Codex plugins. It provides the catalog, schemas, generators,
-validators, documentation, and quality gates needed to publish reusable skills,
-MCP integrations, and supporting assets.
+> A curated repository marketplace for reusable Codex plugins.
 
-> **Current status:** the marketplace publishes four installable plugins:
-> `Astro Commands` (`astro-cli-commands`), `Prettier After Edit`
-> (`prettier-after-edit`), `DocKeeper` (`doc-keeper`), and `Optimize Memories`
-> (`optimize-memories`).
+**Explore:** [Plugins](#-plugin-catalog) · [Install](#-quick-start) ·
+[Documentation](#-documentation-map) · [Contribute](#-contributing) ·
+[Support](#-support-and-project-links)
 
-## ✨ Start Here
+Codex Essentials packages practical skills and integrations for repeatable
+development workflows. The repository contains the plugin catalog, package
+manifests, validation, documentation, and release records.
 
-Codex Essentials is the distribution layer. Its own `npm` dependencies maintain
-the catalog and quality gates; they are **not installed into every user's
-Astro project**. Users add the remote marketplace and install only the plugins
-they need.
+> [!IMPORTANT]
+> This is a curated repository/CLI distribution source. It is not, by itself,
+> evidence that these plugins are listed in the universal public Plugins
+> Directory. Supported surfaces and availability can vary by Codex host.
 
-| Product                 | Purpose                                                                                          | Install ID            |
-| ----------------------- | ------------------------------------------------------------------------------------------------ | --------------------- |
-| **Astro Commands**      | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands`  |
-| **Prettier After Edit** | Automatically formats edited files with local or PATH Prettier using a Codex post-edit hook.     | `prettier-after-edit` |
-| **DocKeeper**           | Maintains accurate changelogs and ADRs through evidence-first, authorization-aware procedures.   | `doc-keeper`          |
-| **Optimize Memories**   | Audits and reconciles Codex memory artifacts with evidence and approval-gated changes.           | `optimize-memories`   |
+> [!TIP]
+> Start with a [use case](#-choose-by-use-case), inspect the linked plugin README,
+> then install only the plugin that matches your need.
 
-### Install the Marketplace
+## 🧩 Plugin catalog
 
-Use `main` to install the complete current catalog:
+| Plugin                                                       | Best for                                                               | Install ID            |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------- | --------------------- |
+| [Astro Commands](plugins/astro-cli-commands/README.md)       | Astro CLI discovery, project checks, preview, and server coordination. | `astro-cli-commands`  |
+| [Prettier After Edit](plugins/prettier-after-edit/README.md) | Formatting edited files with project-local or PATH Prettier.           | `prettier-after-edit` |
+| [DocKeeper](plugins/doc-keeper/README.md)                    | Evidence-based changelog and ADR maintenance.                          | `doc-keeper`          |
+| [Codex Memory Audit](plugins/optimize-memories/README.md)    | Auditing and reconciling Codex memory artifacts.                       | `optimize-memories`   |
+
+_Choose a plugin by outcome, then open its linked README for requirements,
+permissions, side effects, and examples._
+
+## 🎯 Choose by use case
+
+| If you need to...                                      | Start with...                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------ |
+| Discover and install curated Codex plugins             | [Plugin catalog](#-plugin-catalog)                           |
+| Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)       |
+| Format files automatically after Codex edits           | [Prettier After Edit](plugins/prettier-after-edit/README.md) |
+| Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                    |
+| Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)    |
+
+_Use cases describe the user's starting problem; the linked plugin README
+explains behavior, requirements, boundaries, and expected results._
+
+**Explore by keyword:** [Codex plugins](https://developers.openai.com/plugins/build/plugins)
+· [Astro CLI](plugins/astro-cli-commands/README.md) ·
+[Prettier hooks](plugins/prettier-after-edit/README.md) ·
+[Changelog and ADRs](plugins/doc-keeper/README.md) ·
+[Memory audit](plugins/optimize-memories/README.md)
+
+## ⚡ Quick start
+
+Add the marketplace and install the plugin you need:
 
 ```bash
 codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
-codex plugin marketplace list
-```
-
-Use an immutable release tag only after confirming that it contains the plugin
-you need. Plugin release tags are marketplace snapshots and can predate other
-catalog entries:
-
-```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.0
-codex plugin marketplace list
-```
-
-### Install marketplace plugins
-
-```bash
-codex plugin add astro-cli-commands@codex-essentials
-codex plugin add prettier-after-edit@codex-essentials
-codex plugin add doc-keeper@codex-essentials
-codex plugin add optimize-memories@codex-essentials
+codex plugin add <plugin-id>@codex-essentials
 codex plugin list
 ```
 
-Then open the target project in Codex and use the appropriate plugin explicitly.
+`main` exposes the current catalog. Use an immutable plugin release tag only
+after confirming that its marketplace snapshot contains the plugin you need.
+Plugin release tags are independent snapshots; they are not a single
+marketplace version.
 
-- Use **Astro Commands** for project planning, checks, preview, and CLI coordination.
-- Use **Prettier After Edit** to auto-format changed files in Codex editing flows.
-- Use **DocKeeper** to create, complete, audit, update, or repair changelogs and
-  ADRs from repository evidence.
-- Use **Optimize Memories** to audit and reconcile project, global, or complete
-  Codex memory artifacts before approved changes.
-
-## 👤 Ownership and Repository
-
-- **Owner:** Nery Samuel Murillo
-- **GitHub:** [@nerymurillohnd](https://github.com/nerymurillohnd)
-- **Declared repository:** [nerymurillohnd/codex-essentials](https://github.com/nerymurillohnd/codex-essentials)
-- **Configured Git remote:** `https://github.com/nerymurillohnd/codex-essentials.git`.
-- **License:** [MIT](LICENSE.md)
-
-## 📦 Marketplace Lifecycle
-
-Codex can track a repository marketplace directly from its Git remote. The
-`--ref` option pins the source to a branch or tag:
+Example:
 
 ```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
-codex plugin marketplace list
+codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.1
+codex plugin add astro-cli-commands@codex-essentials
 ```
 
-The `main` branch exposes the complete current catalog. An immutable plugin
-release tag is appropriate when its marketplace snapshot contains every plugin
-you intend to install.
+Read the linked plugin README before installing a plugin with hooks, file
+writes, network access, or other side effects.
 
-Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install **Astro Commands** (`astro-cli-commands`),
-**Prettier After Edit** (`prettier-after-edit`), **DocKeeper** (`doc-keeper`),
-or **Optimize Memories** (`optimize-memories`).
+## 🔁 Update or remove
 
-Refresh the marketplace metadata when you want to discover catalog changes:
+Refresh a configured marketplace:
 
 ```bash
 codex plugin marketplace upgrade codex-essentials
 ```
 
-Remove only the plugin:
+Remove a plugin without removing the marketplace:
 
 ```bash
-codex plugin remove astro-cli-commands@codex-essentials
-codex plugin remove prettier-after-edit@codex-essentials
-codex plugin remove doc-keeper@codex-essentials
-codex plugin remove optimize-memories@codex-essentials
+codex plugin remove <plugin-id>@codex-essentials
 ```
 
-Remove the marketplace registration:
+Remove the marketplace registration after its plugins are removed:
 
 ```bash
 codex plugin marketplace remove codex-essentials
 ```
 
 See the [official Codex plugin packaging guide](https://developers.openai.com/plugins/build/plugins)
-for current marketplace, plugin, path, and distribution behavior.
+for current host, marketplace, manifest, and distribution behavior.
 
-For the complete product explanation, installation guide, references,
-approval boundaries, rollback behavior, and troubleshooting:
+## 📦 What is included
 
-- [Astro Commands product README](plugins/astro-cli-commands/README.md)
-- [Prettier After Edit product README](plugins/prettier-after-edit/README.md)
-- [DocKeeper product README](plugins/doc-keeper/README.md)
-- [Optimize Memories product README](plugins/optimize-memories/README.md)
+| Path                                  | Role                                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------ |
+| `.agents/plugins/marketplace.json`    | Generated catalog and plugin ordering.                                         |
+| `plugins/<plugin-id>/`                | Self-contained distributable plugin packages.                                  |
+| `plugins/*/.codex-plugin/plugin.json` | Authored plugin identity, version, and component declarations.                 |
+| `docs/`                               | Maintainer architecture, contributor, operational, and decision documentation. |
+| `lib/`, `scripts/`, `.github/`        | Repository maintenance, validation, and CI implementation.                     |
 
-## 🗂️ Directory Reference
+The repository does not install its own npm dependencies into a user's project.
+Each plugin declares its own behavior, requirements, permissions, and side
+effects in its product README and authoritative skill documents.
 
-| Path                               | Purpose                                                                        |
-| ---------------------------------- | ------------------------------------------------------------------------------ |
-| `.agents/plugins/marketplace.json` | Required marketplace catalog and plugin ordering.                              |
-| `plugins/<plugin-id>/`             | Plugin packages; each requires `.codex-plugin/plugin.json`.                    |
-| `lib/`                             | Bounded domain modules and colocated tests for repository maintenance.         |
-| `.github/`                         | Issue forms, pull-request contract, release categories, and CI gates.          |
-| `tsconfig.scripts.json`            | Dedicated `checkJs` project for JavaScript, CJS, and MJS sources.              |
-| `types/`                           | TypeScript contracts and declaration-only interfaces.                          |
-| `docs/agent-guidelines/`           | Detailed architecture, tooling, security, quality, and communication guidance. |
-| `docs/decisions/`                  | Architecture Decision Records and the reusable ADR template.                   |
-| `docs/maintenance/`                | Pending and resolved maintenance debt.                                         |
-| `docs/operations/`                 | Community GitHub Projects and operational automation guidance.                 |
-| `adapters/`, `config/`             | Supporting integration and repository configuration material.                  |
+## 🧭 Documentation map
 
-There is intentionally no repository-level `skills/` directory. Skills belong
-inside the plugin that distributes them, for example
-`plugins/example/skills/example-workflow/SKILL.md`. Every distributed skill
-also exposes its Codex agent metadata at
-`plugins/example/skills/example-workflow/agents/openai.yaml`; it provides the
-skill label, concise catalog description, and optional initial prompt, while
-`SKILL.md` remains the behavioral instruction source.
+| Need                                 | Start here                                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Choose or install a plugin           | This README and the plugin catalog above.                                                                          |
+| Understand plugin behavior           | The plugin's `README.md`, then its `SKILL.md`.                                                                     |
+| Read detailed references or examples | The links in the plugin README.                                                                                    |
+| Contribute or maintain packages      | [Plugin submission guidelines](docs/contributing/plugins.md).                                                      |
+| Understand repository architecture   | [Architecture and paths](docs/agent-guidelines/architecture.md).                                                   |
+| Review quality and security rules    | [Quality guidelines](docs/agent-guidelines/quality.md) and [security guidance](docs/agent-guidelines/security.md). |
+| Review releases and decisions        | [Decisions](docs/decisions/) and [operations](docs/operations/).                                                   |
 
-The official Codex packaging contract supports explicit top-level `hooks` and
-automatically discovers the conventional `hooks/hooks.json` file when the field
-is omitted. Plugins that use the conventional hook file declare
-`"hooks": "./hooks/hooks.json"` so their package contract is explicit.
-
-## 🛠️ For Contributors
-
-Each plugin's `.codex-plugin/plugin.json` is its authored source of truth for
-identity, version, install metadata, and declared components. Create it from
-`templates/codex-plugin-plugin.json`; the repository derives only the catalog,
-and never rewrites plugin-owned manifests, skills, README files, or changelogs.
-Start with:
+## 🤝 Contributing
 
 ```bash
 npm install
 npm run check
 ```
 
-Before submitting a plugin change, update its manifest, README, and changelog
-together, then run `npm run marketplace:build`. Plugins are self-contained
-release packages: no executable, asset, import, or symbolic link may resolve
-outside `plugins/<plugin-id>/`, and every plugin must declare at least one
-functional component. The complete contributor workflow and operational rules
-live in [AGENTS.md](AGENTS.md) and the linked
-[quality guidelines](docs/agent-guidelines/quality.md).
+For a plugin change, update its manifest, README, and changelog together, then
+run the repository marketplace checks. The catalog is generated from validated
+package manifests; do not hand-edit generated metadata.
 
-The repository runs on Node 24 and keeps TypeScript 7 and TypeScript 6
-compatibility checks. GitHub Actions workflows run only for pull requests and
-use full SHA pins. The local pre-push hook enforces the direct documentation
-lane and runs the complete check before an allowed push to `main`; authorized
-emergency bypasses use `HUSKY=0` or `--no-verify` and require manual follow-up.
-The contributor quality vocabulary is:
-`npm run format:check`, `npm run lint -- --max-warnings=0`, `npm run typecheck`,
-`npm run typecheck:scripts`, `npx tsc6 --noEmit`, `npm test`,
-`npm run marketplace:check`, `npm run documentation:gate`, and `actionlint`.
-Rollback means restoring prior marketplace metadata and removing the
-corresponding release artifacts.
+See [AGENTS.md](AGENTS.md) for the complete contributor contract and
+[quality guidelines](docs/agent-guidelines/quality.md) for validation details.
 
-### Automated plugin releases
+## 🏷️ Releases and repository metadata
 
-Release Please manifest mode owns Conventional Commit analysis, SemVer,
-plugin-local changelogs, the combined Release PR, component tags, and draft
-GitHub Releases. It uses the native `go` changelog-only strategy because the
-current `simple` strategy requires a `version.txt` file; JSON `extra-files`
-updates the real `$.version` field in each plugin manifest. No fictitious
-`package.json` or `version.txt` is added to a plugin.
+- [Plugin releases and Git tags](https://github.com/nerymurillohnd/codex-essentials/releases)
+  identify immutable plugin snapshots. They are not a single marketplace version.
+- GitHub **topics** support repository discovery; the README links to plugins by
+  intent rather than duplicating a tag cloud.
+- GitHub **issue labels** support maintainer triage and are managed in Issues and
+  contribution templates, not as product documentation.
 
-The release workflow records the action's exact per-component `tag_name` and
-`sha` outputs in an auditable JSON artifact, packages from those tags with
-`git archive`, validates deterministic tarballs and basename-safe SHA-256
-files, uploads them to drafts, and pauses at the protected `release`
-environment. It does not rely on tag or release events to start a second
-workflow.
+## ❓ FAQ
 
-Use Conventional Commit subjects in commits reaching `main`. A `docs:` commit
-does not release by itself; distributed documentation that deserves a patch
-uses `fix(docs): ...` (touching the plugin path) or an explicit `Release-As`
-footer. Keep product PRs to one releasable plugin. The scope is descriptive;
-changed paths determine the Release Please component. The repository policy
-does not require squash merging.
+<details>
+<summary>Is this the universal public Plugins Directory?</summary>
 
-## 📚 Documentation
+No. This is a curated repository/CLI marketplace. Availability in a particular
+Codex or ChatGPT surface depends on that host's current support.
+</details>
 
-- [Architecture and paths](docs/agent-guidelines/architecture.md)
-- [Tooling and runtimes](docs/agent-guidelines/tooling.md)
-- [Security and credentials](docs/agent-guidelines/security.md)
-- [Quality and maintenance](docs/agent-guidelines/quality.md)
-- [Public roadmap](docs/roadmap.md)
-- [Plugin submission guidelines](docs/contributing/plugins.md)
-- [ADR template](docs/decisions/adr-template.md)
-- [TypeScript side-by-side decision](docs/decisions/typescript-side-by-side.md)
-- [Maintenance records](docs/maintenance/)
-- [GitHub Projects operations](docs/operations/github-project-template.md)
-- [Documentation automation decision](docs/decisions/adr-0004-documentation-and-maintenance-automation.md)
-- [Hooks and quality gates decision](docs/decisions/adr-0005-hooks-and-quality-gates.md)
-- [Skill agent manifests decision](docs/decisions/adr-0006-skill-agent-manifests.md)
-- [Release Please manifest releases decision](docs/decisions/adr-0008-release-please-manifest-releases.md)
-- [GitHub Wiki retirement decision](docs/decisions/adr-0011-retire-github-wiki.md)
+<details>
+<summary>Does installing a plugin install npm dependencies into my project?</summary>
 
-## 🤝 Contribution Style
+No. The marketplace manages plugin packages in Codex. A plugin may still declare
+its own project-level requirements or side effects; read its README first.
+</details>
 
-Use clear Markdown, semantic headings, restrained emoji, and descriptive file
-names. Keep plugin paths relative and `./`-prefixed, avoid `any` and magic
-strings, never commit credentials, and include validation evidence in pull
-requests. All repository artifacts are written in English; conversation and
-issue coordination may use Spanish.
+<details>
+<summary>Which plugin should I install?</summary>
+
+Start with [Choose by use case](#-choose-by-use-case), then follow the plugin link
+for requirements, permissions, and verification.
+</details>
+
+## 🆘 Support and project links
+
+- [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
+- [Discussions](https://github.com/nerymurillohnd/codex-essentials/discussions)
+- [Releases](https://github.com/nerymurillohnd/codex-essentials/releases)
+- [Roadmap](docs/roadmap.md)
+- [MIT License](LICENSE.md)
+
+Codex Essentials is community-maintained and is not an official OpenAI, Codex,
+Astro, or Prettier product.
