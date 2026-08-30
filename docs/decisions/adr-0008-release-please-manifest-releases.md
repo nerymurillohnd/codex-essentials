@@ -157,7 +157,7 @@ strategy solely to make docs: bump versions.
 
 - release-please-config.json uses go, bump-minor-pre-major, visible changelog
   sections, local changelogs, and JSON extra-files.
-- release-pipeline.test.ts tests output capture, exact tag/SHA normalization,
+- tests/release-pipeline.test.ts tests output capture, exact tag/SHA normalization,
   stale output rejection, tag-based packaging, checksum safety, archive
   inspection, and untracked-file exclusion.
 - npm run package:preflight validates every current plugin from the candidate

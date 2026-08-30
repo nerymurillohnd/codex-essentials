@@ -100,6 +100,13 @@ jobs:
           RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__UPLOAD_URL: ${{ steps.release.outputs['plugins/doc-keeper--upload_url'] }}
           RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__HTML_URL: ${{ steps.release.outputs['plugins/doc-keeper--html_url'] }}
           RELEASE_OUTPUT__PLUGINS_DOC_KEEPER__BODY: ${{ steps.release.outputs['plugins/doc-keeper--body'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__RELEASE_CREATED: ${{ steps.release.outputs['plugins/optimize-memories--release_created'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__TAG_NAME: ${{ steps.release.outputs['plugins/optimize-memories--tag_name'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__VERSION: ${{ steps.release.outputs['plugins/optimize-memories--version'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__SHA: ${{ steps.release.outputs['plugins/optimize-memories--sha'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__UPLOAD_URL: ${{ steps.release.outputs['plugins/optimize-memories--upload_url'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__HTML_URL: ${{ steps.release.outputs['plugins/optimize-memories--html_url'] }}
+          RELEASE_OUTPUT__PLUGINS_OPTIMIZE_MEMORIES__BODY: ${{ steps.release.outputs['plugins/optimize-memories--body'] }}
           RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__RELEASE_CREATED: ${{ steps.release.outputs['plugins/prettier-after-edit--release_created'] }}
           RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__TAG_NAME: ${{ steps.release.outputs['plugins/prettier-after-edit--tag_name'] }}
           RELEASE_OUTPUT__PLUGINS_PRETTIER_AFTER_EDIT__VERSION: ${{ steps.release.outputs['plugins/prettier-after-edit--version'] }}

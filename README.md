@@ -11,9 +11,10 @@ distributable Codex plugins. It provides the catalog, schemas, generators,
 validators, documentation, and quality gates needed to publish reusable skills,
 MCP integrations, and supporting assets.
 
-> **Current status:** the marketplace publishes three installable plugins:
+> **Current status:** the marketplace publishes four installable plugins:
 > `Astro Commands` (`astro-cli-commands`), `Prettier After Edit`
-> (`prettier-after-edit`), and `DocKeeper` (`doc-keeper`).
+> (`prettier-after-edit`), `DocKeeper` (`doc-keeper`), and `Optimize Memories`
+> (`optimize-memories`).
 
 ## ✨ Start Here
 
@@ -27,6 +28,7 @@ they need.
 | **Astro Commands**      | Helps Codex discover and use Astro's official CLI capabilities before creating custom workflows. | `astro-cli-commands`  |
 | **Prettier After Edit** | Automatically formats edited files with local or PATH Prettier using a Codex post-edit hook.     | `prettier-after-edit` |
 | **DocKeeper**           | Maintains accurate changelogs and ADRs through evidence-first, authorization-aware procedures.   | `doc-keeper`          |
+| **Optimize Memories**   | Audits and reconciles Codex memory artifacts with evidence and approval-gated changes.           | `optimize-memories`   |
 
 ### Install the Marketplace
 
@@ -52,6 +54,7 @@ codex plugin marketplace list
 codex plugin add astro-cli-commands@codex-essentials
 codex plugin add prettier-after-edit@codex-essentials
 codex plugin add doc-keeper@codex-essentials
+codex plugin add optimize-memories@codex-essentials
 codex plugin list
 ```
 
@@ -61,6 +64,8 @@ Then open the target project in Codex and use the appropriate plugin explicitly.
 - Use **Prettier After Edit** to auto-format changed files in Codex editing flows.
 - Use **DocKeeper** to create, complete, audit, update, or repair changelogs and
   ADRs from repository evidence.
+- Use **Optimize Memories** to audit and reconcile project, global, or complete
+  Codex memory artifacts before approved changes.
 
 ## 👤 Ownership and Repository
 
@@ -85,14 +90,14 @@ release tag is appropriate when its marketplace snapshot contains every plugin
 you intend to install.
 
 Open the Plugins Directory in the ChatGPT desktop app, select **Codex
-Essentials**, and install **Astro Commands** (`astro-cli-commands`) or
-**Prettier After Edit** (`prettier-after-edit`) or **DocKeeper**
-(`doc-keeper`).
+Essentials**, and install **Astro Commands** (`astro-cli-commands`),
+**Prettier After Edit** (`prettier-after-edit`), **DocKeeper** (`doc-keeper`),
+or **Optimize Memories** (`optimize-memories`).
 
 Refresh the marketplace metadata when you want to discover catalog changes:
 
 ```bash
-codex plugin marketplace update codex-essentials
+codex plugin marketplace upgrade codex-essentials
 ```
 
 Remove only the plugin:
@@ -101,6 +106,7 @@ Remove only the plugin:
 codex plugin remove astro-cli-commands@codex-essentials
 codex plugin remove prettier-after-edit@codex-essentials
 codex plugin remove doc-keeper@codex-essentials
+codex plugin remove optimize-memories@codex-essentials
 ```
 
 Remove the marketplace registration:
@@ -118,6 +124,7 @@ approval boundaries, rollback behavior, and troubleshooting:
 - [Astro Commands product README](plugins/astro-cli-commands/README.md)
 - [Prettier After Edit product README](plugins/prettier-after-edit/README.md)
 - [DocKeeper product README](plugins/doc-keeper/README.md)
+- [Optimize Memories product README](plugins/optimize-memories/README.md)
 
 ## 🗂️ Directory Reference
 
