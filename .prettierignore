@@ -1,5 +1,6 @@
 # Local Codex and diagnostics state
-.codex/
+.codex/*
+!.codex/hooks.json
 .diagnostics/
 .tmp/
 

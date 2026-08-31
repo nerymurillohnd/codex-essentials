@@ -7,17 +7,20 @@ module.exports = {
   useTabs: false,
   semi: true,
   singleQuote: false,
+  jsxSingleQuote: false,
   quoteProps: "as-needed",
   trailingComma: "all",
   bracketSpacing: true,
+  objectWrap: "preserve",
   bracketSameLine: false,
   arrowParens: "always",
-  endOfLine: "lf", // must match .gitattributes `eol=lf`
-
-  // --- Markdown ---
-  // "preserve" keeps authored line breaks, so editing one sentence touches one line.
-  // "always" would reflow whole paragraphs to printWidth and make content diffs unreadable.
+  endOfLine: "lf",
   proseWrap: "preserve",
-  // Format fenced code blocks inside markdown with the matching parser.
+  htmlWhitespaceSensitivity: "css",
+  vueIndentScriptAndStyle: false,
   embeddedLanguageFormatting: "auto",
+  singleAttributePerLine: false,
+  requirePragma: false,
+  insertPragma: false,
+  checkIgnorePragma: false,
 };
