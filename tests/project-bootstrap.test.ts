@@ -18,7 +18,12 @@ const project = require("../scripts/project-bootstrap.cjs") as {
   errorMessage(error: unknown): string;
   execute(command: string, args: string[]): string;
   listCommand(org: string): string[];
-  main(): void;
+  main(
+    args?: string[],
+    environment?: Record<string, string | undefined>,
+    io?: { error(message: string): void; log(message: string): void },
+    runner?: (command: string, args: string[]) => string,
+  ): number;
   parseArgs(
     argv: string[],
     environment?: Record<string, string | undefined>,
@@ -92,25 +97,59 @@ describe("GitHub Projects bootstrap", () => {
     expect(project.errorMessage("failure")).toBe("failure");
   });
 
-  it("executes the dry-run and reuse CLI branches", () => {
-    const argv = process.argv;
-    const org = process.env["GITHUB_ORG"];
-    const title = process.env["PROJECT_TITLE"];
-    const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
-    process.env["GITHUB_ORG"] = "org";
-    process.env["PROJECT_TITLE"] = "Project";
-    process.argv = [process.execPath, "project-bootstrap.cjs", "--dry-run"];
-    project.main();
-    vi.spyOn(childProcess, "execFileSync").mockReturnValueOnce(
-      '[{"title":"Project","number":1}]' as never,
+  it("executes dry-run, reuse, and failure branches without mutating process state", () => {
+    const logs: string[] = [];
+    const errors: string[] = [];
+    const io = {
+      error: (message: string) => errors.push(message),
+      log: (message: string) => logs.push(message),
+    };
+    const environment = { GITHUB_ORG: "org", PROJECT_TITLE: "Project" };
+
+    expect(project.main(["--dry-run"], environment, io)).toBe(0);
+    expect(
+      project.main(
+        [],
+        environment,
+        io,
+        () => '[{"title":"Project","number":1}]',
+      ),
+    ).toBe(0);
+    expect(project.main([], {}, io)).toBe(1);
+    expect(logs.join("\n")).toContain("Dry run: gh project create");
+    expect(logs.join("\n")).toContain("Reused project: Project");
+    expect(errors).toEqual([
+      "Project bootstrap failed: GITHUB_ORG is required",
+    ]);
+  });
+
+  it("preserves binary success and failure exit codes", () => {
+    const success = childProcess.spawnSync(
+      process.execPath,
+      ["scripts/project-bootstrap.cjs", "--dry-run"],
+      {
+        cwd: require("node:path").resolve(import.meta.dirname, ".."),
+        encoding: "utf8",
+        env: {
+          GITHUB_ORG: "org",
+          PROJECT_TITLE: "Project",
+          PATH: process.env["PATH"],
+        },
+      },
     );
-    process.argv = [process.execPath, "project-bootstrap.cjs"];
-    project.main();
-    expect(log).toHaveBeenCalled();
-    process.argv = argv;
-    if (org === undefined) delete process.env["GITHUB_ORG"];
-    else process.env["GITHUB_ORG"] = org;
-    if (title === undefined) delete process.env["PROJECT_TITLE"];
-    else process.env["PROJECT_TITLE"] = title;
+    const failure = childProcess.spawnSync(
+      process.execPath,
+      ["scripts/project-bootstrap.cjs"],
+      {
+        cwd: require("node:path").resolve(import.meta.dirname, ".."),
+        encoding: "utf8",
+        env: { PATH: process.env["PATH"] },
+      },
+    );
+
+    expect(success.status).toBe(0);
+    expect(success.stdout).toContain("Dry run: gh project create");
+    expect(failure.status).toBe(1);
+    expect(failure.stderr).toContain("GITHUB_ORG is required");
   });
 });

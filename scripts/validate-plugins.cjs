@@ -2,25 +2,35 @@
 // @ts-check
 
 const path = require("node:path");
+const { formatError } = require("./error-utils.cjs");
 const {
   loadPluginManifests,
   resolveRootFromArgs,
 } = require("./marketplace-contract.cjs");
 
-function main() {
-  const root = resolveRootFromArgs(
-    process.argv.slice(2),
-    path.resolve(__dirname, ".."),
-  );
+/** @param {string[]} args */
+function main(args = process.argv.slice(2)) {
+  const root = resolveRootFromArgs(args, path.resolve(__dirname, ".."));
   const plugins = loadPluginManifests(root);
   console.log(
     `Validated ${plugins.length} complete plugin manifests against the template profile.`,
   );
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(/** @type {Error} */ (error).message);
-  process.exitCode = 1;
+/** @param {string[]} args */
+function run(args = process.argv.slice(2)) {
+  try {
+    main(args);
+    return 0;
+  } catch (error) {
+    console.error(formatError(error));
+    return 1;
+  }
 }
+
+/* c8 ignore next 3 -- exercised through the child-process integration test. */
+if (require.main === module) {
+  process.exitCode = run();
+}
+
+module.exports = { main, run };

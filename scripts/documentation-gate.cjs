@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { formatError } = require("./error-utils.cjs");
 const REQUIRED_PLUGIN_DOCUMENTS = ["README.md", "CHANGELOG.md"];
 const CREDENTIAL_PATTERN =
   /\b(?:api[_-]?key|access[_-]?token|secret|password|token)\b\s*[:=]\s*(?!\$\{[A-Z][A-Z0-9_]*\})(?!["'`])\S+/iu;
@@ -44,9 +45,9 @@ function parseArguments(args, defaultRoot) {
   return { root, base, head };
 }
 
-/** @param {string} root @param {string} base @param {string} head */
-function changedPluginFiles(root, base, head) {
-  const result = spawnSync(
+/** @param {string} root @param {string} base @param {string} head @param {typeof spawnSync} execute */
+function changedPluginFiles(root, base, head, execute = spawnSync) {
+  const result = execute(
     "git",
     ["diff", "--name-only", `${base}...${head}`, "--", "plugins"],
     { cwd: root, encoding: "utf8" },
@@ -62,9 +63,9 @@ function changedPluginFiles(root, base, head) {
     .filter(Boolean);
 }
 
-/** @param {string} root @param {string} base @param {string} head */
-function pluginDiffText(root, base, head) {
-  const result = spawnSync(
+/** @param {string} root @param {string} base @param {string} head @param {typeof spawnSync} execute */
+function pluginDiffText(root, base, head, execute = spawnSync) {
+  const result = execute(
     "git",
     ["diff", `${base}...${head}`, "--", "plugins"],
     {
@@ -157,9 +158,10 @@ function validateCurrentDocuments(root, pluginId, errors) {
   }
 }
 
-function main() {
+/** @param {string[]} args */
+function main(args = process.argv.slice(2)) {
   const { root, base, head } = parseArguments(
-    process.argv.slice(2),
+    args,
     path.resolve(__dirname, ".."),
   );
   const errors = [];
@@ -171,26 +173,37 @@ function main() {
   try {
     validatePluginDocumentation(root, changedPluginFiles(root, base, head));
   } catch (error) {
-    errors.push(/** @type {Error} */ (error).message);
+    errors.push(formatError(error));
   }
   if (errors.length > 0) {
     throw new Error(errors.join("\n"));
   }
-  console.log("Plugin documentation gate passed.");
+  return "Plugin documentation gate passed.";
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(/** @type {Error} */ (error).message);
-  process.exitCode = 1;
+/** @param {string[]} args @param {{log(message: string): void, error(message: string): void}} io */
+function run(args = process.argv.slice(2), io = console) {
+  try {
+    io.log(main(args));
+    return 0;
+  } catch (error) {
+    io.error(formatError(error));
+    return 1;
+  }
+}
+
+/* c8 ignore next 3 -- exercised through child-process integration tests. */
+if (require.main === module) {
+  process.exitCode = run();
 }
 
 module.exports = {
   addedDiffText,
   changedPluginFiles,
   containsUnmaskedCredential,
+  main,
   parseArguments,
   pluginDiffText,
+  run,
   validatePluginDocumentation,
 };

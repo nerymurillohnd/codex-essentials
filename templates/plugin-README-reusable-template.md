@@ -5,8 +5,8 @@
 
 > {{One-sentence outcome in the user's language.}}
 
-**Explore:** [Install](#-quick-start) · [Capabilities](#-what-it-does) ·
-[Requirements](#-requirements-and-compatibility) · [Safety](#-behavior-and-boundaries) ·
+**Explore:** [Install](#-quick-start) · [Purpose](#-purpose) ·
+[Environments](#-supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
 {{Plugin name}} is a Codex plugin for {{target users and task}}. It {{primary
@@ -49,7 +49,7 @@ execution, network access, or authentication.
 
 **Not a fit when:** {{one clear non-use case or boundary.}}
 
-## 🎯 What it does
+## 🎯 Purpose
 
 - {{Outcome 1.}}
 - {{Outcome 2.}}
@@ -58,7 +58,7 @@ execution, network access, or authentication.
 Use cases should describe the user's starting situation, not repeat the component
 inventory or implementation details.
 
-## 🧰 Included components
+## 🧰 Included Components
 
 List only paths that actually exist in this package. Link each navigable path.
 
@@ -73,7 +73,7 @@ List only paths that actually exist in this package. Link each navigable path.
 {{Add rows for hooks, MCP/app manifests, references, examples, or assets only
 when they are present and supported by this plugin.}}
 
-## 🖥️ Requirements and compatibility
+## 🖥️ Supported Environments
 
 | Requirement   | Supported value or behavior                             |
 | ------------- | ------------------------------------------------------- |
@@ -89,12 +89,17 @@ precedence over static compatibility claims in this package.
 
 ## 🔐 Behavior and boundaries
 
-### Inputs and outputs
+## Inputs and Outputs
 
 **Inputs:** {{user request, event payload, files, configuration, or evidence}}  
 **Outputs:** {{files, messages, reports, commands, or verification results}}
 
-### Permissions and side effects
+## Required Tools and Credentials
+
+{{State the required executable, package-manager, runtime, extension, or
+credential. Say “none” when no credential is required.}}
+
+## Permissions
 
 | Access or effect | What this plugin may do                                      |
 | ---------------- | ------------------------------------------------------------ |
@@ -104,16 +109,23 @@ precedence over static compatibility claims in this package.
 | Network          | {{Destinations and purpose; say “not used” if none.}}        |
 | Authentication   | {{Install/first-use behavior; say “not required” if none.}}  |
 
+## Side Effects
+
 {{State whether installation changes the target project, lockfiles, caches, or
 Codex managed plugin state.}}
 
-### Human approval
+## Human Approval Boundaries
 
 {{State what is read-only and what requires explicit approval. For hooks, state
 that users should review and trust the current hook implementation before enabling
 it in a critical repository.}}
 
-## 🔁 Update, remove, and rollback
+## Installation Behavior
+
+{{State precisely what installation changes in Codex-managed state and what it
+does not change in the target project.}}
+
+## 🔁 Uninstall and Rollback Behavior
 
 Refresh the configured marketplace with the current Codex command:
 
@@ -143,11 +155,14 @@ npm run marketplace:check
 directory. If a command mutates files, say so and provide a read-only alternative
 where possible.}}
 
-## 🚧 Limitations and recovery
+## 🚧 Known Limitations
 
 - {{Known limitation 1 and the observable symptom.}}
 - {{Known limitation 2 and the safe diagnostic step.}}
-- {{Failure message and recovery action.}}
+
+## Failure and Recovery
+
+{{State the failure message, safe diagnostic step, and recovery action.}}
 
 Stop and report the state when required permissions, scope, authority, or a
 verification gate is unavailable. Do not invent missing evidence or silently
@@ -171,7 +186,7 @@ important boundary in one sentence.}}
 <details>
 <summary>How do I update, remove, or roll back this plugin?</summary>
 
-Use the [update, remove, and rollback](#-update-remove-and-rollback) instructions
+Use the [uninstall and rollback](#-uninstall-and-rollback-behavior) instructions
 above. {{Add any plugin-specific recovery detail.}}
 </details>
 

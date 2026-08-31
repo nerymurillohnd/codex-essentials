@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "tsc": "tsc --noEmit",
     "typecheck": "node scripts/typecheck.cjs",
-    "typecheck:scripts": "tsc --project tsconfig.scripts.json --pretty false",
+    "typecheck:scripts": "tsc --project scripts/tsconfig.json --pretty false",
     "test": "vitest run --passWithNoTests --coverage",
     "test:watch": "vitest --passWithNoTests",
     "validate:plugins": "node scripts/validate-plugins.cjs",

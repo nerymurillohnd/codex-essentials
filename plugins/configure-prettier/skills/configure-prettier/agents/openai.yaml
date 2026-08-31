@@ -1,0 +1,6 @@
+interface:
+  display_name: "Configure Prettier"
+  short_description: "Audit and propose repository-first Prettier changes"
+  default_prompt: "Use $configure-prettier to audit this repository and propose an approval-gated Prettier plan."
+policy:
+  allow_implicit_invocation: true

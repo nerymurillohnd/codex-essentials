@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { parse } = require("yaml");
+const { formatError } = require("./error-utils.cjs");
 
 const CONTRACT_PATH = path.join(".github", "label-contract.json");
 const ISSUE_TEMPLATE_DIRECTORY = path.join(".github", "ISSUE_TEMPLATE");
@@ -154,7 +155,7 @@ function collectLabelReferences(root) {
         document = readMarkdownFrontMatter(filePath);
       } catch (error) {
         collection.errors.push(
-          `${source} ${String(error).replace(/^Error:\s*/u, "")}`,
+          `${source} ${formatError(error).replace(/^Error:\s*/u, "")}`,
         );
         continue;
       }

@@ -1,5 +1,6 @@
 {
   "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+  "js/ts.tsdk.path": "./node_modules/@typescript/old/lib",
   "js/ts.experimental.useTsgo": false,
   "js/ts.format.enabled": false,
   "js/ts.tsserver.automaticTypeAcquisition.enabled": false,
@@ -22,5 +23,15 @@
   "js/ts.tsserver.maxMemory": 8192,
   "vitest.rootConfig": "./vitest.config.ts",
   "vitest.ignoreWorkspace": true,
-  "vitest.applyDiagnostic": true
+  "vitest.configSearchPatternInclude": "**/vitest.config.ts",
+  "vitest.runtime": "node",
+  "vitest.shellType": "child_process",
+  "vitest.filesWatcherInclude": "**/*",
+  "vitest.applyDiagnostic": true,
+  "vitest.showImportsDuration": true,
+  "vitest.showInlineConsoleLog": true,
+  "vitest.debugExclude": ["<node_internals>/**", "**/node_modules/**"],
+  "vitest.forceCancelTimeout": 5000,
+  "vitest.logLevel": "info",
+  "vitest.watchOnStartup": false
 }

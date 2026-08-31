@@ -4,46 +4,61 @@
 const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
+const { formatError } = require("./error-utils.cjs");
 
-const repositoryRoot = process.env.CODEX_ESSENTIALS_REPOSITORY_ROOT
-  ? path.resolve(process.env.CODEX_ESSENTIALS_REPOSITORY_ROOT)
-  : path.resolve(__dirname, "..");
 const manifestPathPattern =
   /(?:^|[\s\\/])plugins[\\/][a-z0-9]+(?:-[a-z0-9]+)*[\\/]\.codex-plugin[\\/]plugin\.json(?=$|[\s"'])/u;
 
-function main() {
-  const event = readEvent();
+/** @param {Record<string, string | undefined>} environment */
+function resolveRepositoryRoot(environment = process.env) {
+  const configuredRoot = environment["CODEX_ESSENTIALS_REPOSITORY_ROOT"];
+  return configuredRoot
+    ? path.resolve(configuredRoot)
+    : path.resolve(__dirname, "..");
+}
+
+const repositoryRoot = resolveRepositoryRoot();
+
+/** @param {unknown} event @param {string} root @param {(root: string) => import("node:child_process").SpawnSyncReturns<string>} executePipeline */
+function main(
+  event,
+  root = repositoryRoot,
+  executePipeline = runMarketplacePipeline,
+) {
   if (!eventTouchesPluginManifest(event)) {
-    return;
+    return undefined;
   }
-  const result = spawnSync("npm", ["run", "marketplace:build"], {
-    cwd: repositoryRoot,
-    encoding: "utf8",
-  });
+  const result = executePipeline(root);
   if (result.status === 0) {
-    return;
+    return undefined;
   }
-  const details = [result.stdout, result.stderr]
+  const details = [result.stdout || "", result.stderr || ""]
     .filter(Boolean)
     .join("\n")
     .trim();
-  process.stdout.write(
-    `${JSON.stringify({
-      continue: false,
-      stopReason: "Plugin manifest pipeline failed.",
-      systemMessage: details || "Plugin manifest pipeline failed.",
-    })}\n`,
-  );
+  return {
+    continue: false,
+    stopReason: "Plugin manifest pipeline failed.",
+    systemMessage: details || "Plugin manifest pipeline failed.",
+  };
 }
 
-/** @returns {unknown} */
-function readEvent() {
-  const input = fs.readFileSync(0, "utf8").trim();
-  if (input.length === 0) {
+/** @param {string} root @param {typeof spawnSync} execute */
+function runMarketplacePipeline(root, execute = spawnSync) {
+  return execute("npm", ["run", "marketplace:build"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+}
+
+/** @param {string} input @returns {unknown} */
+function readEvent(input = fs.readFileSync(0, "utf8")) {
+  const trimmed = input.trim();
+  if (trimmed.length === 0) {
     return {};
   }
   try {
-    return JSON.parse(input);
+    return JSON.parse(trimmed);
   } catch {
     return {};
   }
@@ -65,14 +80,45 @@ function eventTouchesPluginManifest(value) {
   return false;
 }
 
-try {
-  main();
-} catch (error) {
-  process.stdout.write(
-    `${JSON.stringify({
-      continue: false,
-      stopReason: "Plugin manifest guard failed.",
-      systemMessage: /** @type {Error} */ (error).message,
-    })}\n`,
-  );
+/** @param {unknown} event @param {string} root @param {{write(message: string): void}} output @param {(root: string) => import("node:child_process").SpawnSyncReturns<string>} executePipeline */
+function run(
+  event = undefined,
+  root = repositoryRoot,
+  output = process.stdout,
+  executePipeline = runMarketplacePipeline,
+) {
+  try {
+    const response = main(
+      event === undefined ? readEvent() : event,
+      root,
+      executePipeline,
+    );
+    if (response) {
+      output.write(`${JSON.stringify(response)}\n`);
+    }
+    return 0;
+  } catch (error) {
+    output.write(
+      `${JSON.stringify({
+        continue: false,
+        stopReason: "Plugin manifest guard failed.",
+        systemMessage: formatError(error),
+      })}\n`,
+    );
+    return 1;
+  }
 }
+
+/* c8 ignore next 3 -- exercised through child-process integration tests. */
+if (require.main === module) {
+  process.exitCode = run();
+}
+
+module.exports = {
+  eventTouchesPluginManifest,
+  main,
+  readEvent,
+  resolveRepositoryRoot,
+  run,
+  runMarketplacePipeline,
+};

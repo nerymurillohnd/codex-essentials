@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import {
   cpSync,
   mkdirSync,
@@ -8,12 +9,20 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { spawnSync } from "node:child_process";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
+const require = createRequire(import.meta.url);
+const marketplaceContract = require("../scripts/marketplace-contract.cjs");
+const documentationGate = require("../scripts/documentation-gate.cjs");
+const marketplaceCli = {
+  "validate-plugins.cjs": require("../scripts/validate-plugins.cjs"),
+  "generate-marketplace.cjs": require("../scripts/generate-marketplace.cjs"),
+  "validate-marketplace.cjs": require("../scripts/validate-marketplace.cjs"),
+} as const;
 const temporaryRoots: string[] = [];
 
 function createFixture(): string {
@@ -33,12 +42,29 @@ function createFixture(): string {
 }
 
 function run(root: string, script: string) {
+  const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+  const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+  try {
+    const status = marketplaceCli[script as keyof typeof marketplaceCli].run([
+      "--root",
+      root,
+    ]);
+    return {
+      status,
+      stdout: log.mock.calls.flat().join("\n"),
+      stderr: error.mock.calls.flat().join("\n"),
+    };
+  } finally {
+    log.mockRestore();
+    error.mockRestore();
+  }
+}
+
+function runExecutable(root: string, script: string) {
   return spawnSync(
     process.execPath,
     [join(repositoryRoot, "scripts", script), "--root", root],
-    {
-      encoding: "utf8",
-    },
+    { encoding: "utf8" },
   );
 }
 
@@ -60,16 +86,22 @@ function runGuard(root: string, event: unknown) {
 }
 
 function runDocumentationGate(root: string, base: string, head: string) {
-  const args = [
-    join(repositoryRoot, "scripts", "documentation-gate.cjs"),
-    "--root",
-    root,
-    "--base",
-    base,
-    "--head",
-    head,
-  ];
-  return spawnSync(process.execPath, args, { encoding: "utf8" });
+  const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+  const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+  try {
+    const status = documentationGate.run(
+      ["--root", root, "--base", base, "--head", head],
+      console,
+    );
+    return {
+      status,
+      stdout: log.mock.calls.flat().join("\n"),
+      stderr: error.mock.calls.flat().join("\n"),
+    };
+  } finally {
+    log.mockRestore();
+    error.mockRestore();
+  }
 }
 
 function git(root: string, args: string[]): string {
@@ -91,6 +123,291 @@ afterEach(() => {
 });
 
 describe("strict plugin-to-marketplace pipeline", () => {
+  it("exposes each pipeline CLI for instrumented execution", () => {
+    for (const cli of Object.values(marketplaceCli)) {
+      expect(cli.main).toBeTypeOf("function");
+      expect(cli.run).toBeTypeOf("function");
+    }
+  });
+
+  it("executes every marketplace CLI as a Node entrypoint", () => {
+    const root = createFixture();
+    for (const script of [
+      "validate-plugins.cjs",
+      "generate-marketplace.cjs",
+      "validate-marketplace.cjs",
+    ]) {
+      expect(runExecutable(root, script).status).toBe(0);
+    }
+  });
+
+  it("preserves every marketplace CLI failure exit code", () => {
+    const root = createFixture();
+    const missingRoot = join(root, "missing-root");
+
+    for (const script of [
+      "validate-plugins.cjs",
+      "generate-marketplace.cjs",
+      "validate-marketplace.cjs",
+    ]) {
+      const result = runExecutable(missingRoot, script);
+      expect(result.status).toBe(1);
+      expect(result.stderr).not.toBe("");
+    }
+  });
+
+  it("rejects invalid contract inputs at every filesystem and schema boundary", () => {
+    const root = createFixture();
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    const missing = join(root, "missing");
+    const linkedRoot = join(tmpdir(), `codex-essentials-link-${Date.now()}`);
+    symlinkSync(root, linkedRoot);
+    temporaryRoots.push(linkedRoot);
+
+    expect(marketplaceContract.resolveRootFromArgs([], root)).toBe(root);
+    expect(() =>
+      marketplaceContract.resolveRootFromArgs(["--root"], root),
+    ).toThrow("usage: --root <repository-root>");
+    expect(() => marketplaceContract.asRecord(null, "value")).toThrow(
+      "value must be an object",
+    );
+    expect(() => marketplaceContract.asRecord([], "value")).toThrow(
+      "value must be an object",
+    );
+    expect(marketplaceContract.hookPaths("./hooks.json")).toEqual([
+      "./hooks.json",
+    ]);
+    expect(marketplaceContract.hookPaths([])).toEqual([]);
+    expect(() => marketplaceContract.hookPaths(["./hooks.json", 1])).toThrow(
+      "hooks path array must contain only paths",
+    );
+    expect(() =>
+      marketplaceContract.resolvePluginPath(pluginRoot, "hooks.json", "hooks"),
+    ).toThrow("hooks path must start with ./");
+    expect(() =>
+      marketplaceContract.resolvePluginPath(pluginRoot, "./../escape", "hooks"),
+    ).toThrow("remain inside the plugin root");
+    expect(() =>
+      marketplaceContract.resolvePluginPath(pluginRoot, "./", "hooks"),
+    ).toThrow("resolves outside the plugin root");
+    expect(() =>
+      marketplaceContract.assertContained(root, missing, "missing"),
+    ).toThrow();
+    expect(() =>
+      marketplaceContract.assertRegularFile(missing, "missing"),
+    ).toThrow("missing is missing");
+    expect(() =>
+      marketplaceContract.assertDirectory(missing, "missing"),
+    ).toThrow("missing is missing");
+    expect(() =>
+      marketplaceContract.loadJson(join(root, "package.json"), "package"),
+    ).not.toThrow();
+    writeFileSync(join(root, "invalid.json"), "{");
+    expect(() =>
+      marketplaceContract.loadJson(join(root, "invalid.json"), "invalid"),
+    ).toThrow("unable to load invalid");
+    writeFileSync(join(root, "invalid.yaml"), "field: [");
+    expect(() =>
+      marketplaceContract.loadYaml(join(root, "invalid.yaml"), "invalid"),
+    ).toThrow("unable to load invalid");
+    expect(() => marketplaceContract.buildMarketplace(linkedRoot, [])).toThrow(
+      "repository root must not be a symbolic link",
+    );
+    expect(() =>
+      marketplaceContract.assertUniqueMarketplacePluginNames({
+        plugins: [{ name: "duplicate" }, { name: "duplicate" }],
+      }),
+    ).toThrow("marketplace plugin name must be unique");
+    expect(() =>
+      marketplaceContract.assertUniqueMarketplacePluginNames({
+        plugins: [{ name: 1 }],
+      }),
+    ).toThrow("marketplace plugin entry name must be a string");
+    expect(() =>
+      marketplaceContract.assertFunctionalComponent({}, "manifest"),
+    ).toThrow("functional component");
+    expect(() =>
+      marketplaceContract.getField(
+        { missing: null },
+        ["missing", "child"],
+        "manifest",
+      ),
+    ).toThrow("manifest must be an object");
+    expect(() =>
+      marketplaceContract.validate({ type: "string" }, 1, "payload"),
+    ).toThrow("payload is invalid");
+  });
+
+  it("exercises defensive marketplace package guards", () => {
+    const root = createFixture();
+    const pluginsRoot = join(root, "plugins");
+    writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(5);
+
+    const emptyRoot = createFixture();
+    rmSync(join(emptyRoot, "plugins"), { recursive: true });
+    mkdirSync(join(emptyRoot, "plugins"));
+    expect(() => marketplaceContract.loadPluginManifests(emptyRoot)).toThrow(
+      "at least one plugin",
+    );
+
+    const mismatchedRoot = createFixture();
+    const mismatchPath = join(
+      mismatchedRoot,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    );
+    const mismatch = readJson(
+      mismatchedRoot,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    mismatch["name"] = "wrong-name";
+    writeFileSync(mismatchPath, `${JSON.stringify(mismatch, null, 2)}\n`);
+    expect(() =>
+      marketplaceContract.loadPluginManifests(mismatchedRoot),
+    ).toThrow("name must match");
+
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    expect(() =>
+      marketplaceContract.validateDeclaredComponents(pluginRoot, {}),
+    ).toThrow("skills must declare");
+    expect(() =>
+      marketplaceContract.validateDeclaredComponents(join(root, "missing"), {
+        skills: "./skills",
+      }),
+    ).toThrow("./skills is missing");
+
+    const emptySkills = join(root, "empty-skills");
+    mkdirSync(emptySkills);
+    expect(() =>
+      marketplaceContract.assertSkillDirectory(
+        emptySkills,
+        "./skills",
+        readJson(root, "schemas/agent.schema.json"),
+      ),
+    ).toThrow("at least one skill directory");
+    writeFileSync(join(emptySkills, "not-a-directory"), "file\n");
+    expect(() =>
+      marketplaceContract.assertSkillDirectory(
+        emptySkills,
+        "./skills",
+        readJson(root, "schemas/agent.schema.json"),
+      ),
+    ).toThrow("must be a real directory");
+
+    expect(() =>
+      marketplaceContract.assertRegularFile(pluginRoot, "plugin"),
+    ).toThrow("must be a regular file");
+    expect(() =>
+      marketplaceContract.assertDirectory(
+        join(pluginRoot, "README.md"),
+        "readme",
+      ),
+    ).toThrow("must be a real directory");
+    expect(() =>
+      marketplaceContract.assertContained(root, tmpdir(), "temporary"),
+    ).toThrow("resolves outside");
+  });
+
+  it("rejects unsafe catalog writes and malformed optional resources", () => {
+    const root = createFixture();
+    const marketplace = marketplaceContract.buildMarketplace(
+      root,
+      marketplaceContract.loadPluginManifests(root),
+    );
+    const catalogDirectory = join(root, ".agents", "plugins");
+    mkdirSync(catalogDirectory, { recursive: true });
+    const catalogPath = join(catalogDirectory, "marketplace.json");
+    symlinkSync(join(root, "package.json"), catalogPath);
+    expect(() =>
+      marketplaceContract.writeMarketplace(root, marketplace),
+    ).toThrow("must not be a symbolic link");
+    rmSync(catalogPath);
+    writeFileSync(`${catalogPath}.tmp`, "stale\n");
+    expect(() =>
+      marketplaceContract.writeMarketplace(root, marketplace),
+    ).toThrow(".tmp already exists");
+    rmSync(`${catalogPath}.tmp`);
+
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["interface"] = { screenshots: ["./README.md"] };
+    expect(() =>
+      marketplaceContract.validatePluginResources(
+        pluginRoot,
+        manifest,
+        readJson(root, "schemas/agent.schema.json"),
+        readJson(root, "schemas/hooks.schema.json"),
+      ),
+    ).not.toThrow();
+
+    const changelog = join(pluginRoot, "CHANGELOG.md");
+    writeFileSync(changelog, "# Changelog\n");
+    expect(() =>
+      marketplaceContract.validatePluginDocumentation(pluginRoot, "plugin"),
+    ).toThrow("must contain an Unreleased section");
+
+    expect(() =>
+      marketplaceContract.validateFixedTemplateFields(
+        { author: { name: "wrong" } },
+        { author: { name: "expected" } },
+        "manifest",
+      ),
+    ).toThrow("must equal the fixed template value");
+  });
+
+  it("validates optional skill icons and rejects non-string screenshots", () => {
+    const root = createFixture();
+    const skillRoot = join(
+      root,
+      "plugins",
+      "doc-keeper",
+      "skills",
+      "doc-keeper",
+    );
+    const agentPath = join(skillRoot, "agents", "openai.yaml");
+    mkdirSync(join(skillRoot, "assets"));
+    writeFileSync(join(skillRoot, "assets", "icon.png"), "png");
+    writeFileSync(
+      agentPath,
+      `${readFileSync(agentPath, "utf8")}  icon_small: ./assets/icon.png\n`,
+    );
+    expect(() =>
+      marketplaceContract.assertSkillDirectory(
+        join(root, "plugins", "doc-keeper", "skills"),
+        "./skills",
+        readJson(root, "schemas/agent.schema.json"),
+      ),
+    ).not.toThrow();
+
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["interface"] = { screenshots: [1] };
+    expect(() =>
+      marketplaceContract.validatePluginResources(
+        join(root, "plugins", "doc-keeper"),
+        manifest,
+        readJson(root, "schemas/agent.schema.json"),
+        readJson(root, "schemas/hooks.schema.json"),
+      ),
+    ).toThrow("screenshots must contain only paths");
+
+    const barePlugin = join(root, "bare-plugin");
+    mkdirSync(barePlugin);
+    expect(() =>
+      marketplaceContract.validatePluginResources(
+        barePlugin,
+        { interface: {} },
+        readJson(root, "schemas/agent.schema.json"),
+        readJson(root, "schemas/hooks.schema.json"),
+      ),
+    ).not.toThrow();
+  });
+
   it("validates all complete manifests, generates the catalog, and reverse-validates it", () => {
     const root = createFixture();
 
@@ -101,6 +418,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
       name: "codex-essentials",
       plugins: [
         { name: "astro-cli-commands" },
+        { name: "configure-prettier" },
         { name: "doc-keeper" },
         { name: "optimize-memories" },
         { name: "prettier-after-edit" },
@@ -371,6 +689,74 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(
       runDocumentationGate(root, headWithCredential, headMasked).status,
     ).toBe(0);
+  });
+
+  it("fails closed for invalid Git revisions and unchanged invalid plugin documents", () => {
+    const root = createFixture();
+    const changelog = join(root, "plugins", "doc-keeper", "CHANGELOG.md");
+    writeFileSync(changelog, "# Changelog\n");
+
+    expect(() =>
+      documentationGate.validatePluginDocumentation(root, [
+        "README.md",
+        "plugins/doc-keeper/CHANGELOG.md",
+      ]),
+    ).toThrow("CHANGELOG.md must contain an Unreleased section");
+
+    const result = runDocumentationGate(root, "missing-base", "missing-head");
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).not.toBe("");
+  });
+
+  it("parses every documentation-gate option and reports Git discovery failures", () => {
+    const root = createFixture();
+
+    expect(
+      documentationGate.parseArguments(
+        ["--base", "base", "--head", "head"],
+        root,
+      ),
+    ).toEqual({ root, base: "base", head: "head" });
+    expect(
+      documentationGate.parseArguments(
+        ["--head", "head", "--root", root, "--base", "base"],
+        "unused-root",
+      ),
+    ).toEqual({ root, base: "base", head: "head" });
+    expect(() => documentationGate.parseArguments(["--base"], root)).toThrow(
+      "usage: --base <base> --head <head>",
+    );
+    expect(() => documentationGate.parseArguments([], root)).toThrow(
+      "usage: --base <base> --head <head>",
+    );
+    expect(() =>
+      documentationGate.parseArguments(
+        ["--unexpected", "value", "--base", "base", "--head", "head"],
+        root,
+      ),
+    ).toThrow("usage: --base <base> --head <head>");
+    expect(() =>
+      documentationGate.changedPluginFiles(
+        root,
+        "missing-base",
+        "missing-head",
+      ),
+    ).toThrow();
+    expect(() =>
+      documentationGate.changedPluginFiles(root, "base", "head", () => ({
+        status: 1,
+        stderr: "",
+        stdout: "",
+      })),
+    ).toThrow("unable to inspect plugin changes");
+    expect(() =>
+      documentationGate.pluginDiffText(root, "base", "head", () => ({
+        status: 1,
+        stderr: "",
+        stdout: "",
+      })),
+    ).toThrow("unable to inspect plugin diff");
   });
 
   it("rejects a plugin README that omits a required operational section", () => {

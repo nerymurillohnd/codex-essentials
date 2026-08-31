@@ -1,0 +1,40 @@
+{
+  "name": "configure-prettier",
+  "version": "0.1.0",
+  "description": "Audit and propose repository-first Prettier configuration with explicit approval before any repository mutation.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "prettier",
+    "formatter",
+    "configuration",
+    "quality",
+    "developer-tools"
+  ],
+  "interface": {
+    "displayName": "Configure Prettier",
+    "shortDescription": "Audit and propose approval-gated Prettier changes.",
+    "longDescription": "Configure Prettier audits repository formatting evidence, resolves CLI and IDE behavior, and produces complete approval-gated plans for justified Prettier changes without modifying the target repository during discovery.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only Prettier configuration audits",
+      "Repository-first convention resolution",
+      "CLI and VS Code parity analysis",
+      "Approval-gated configuration proposals"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use Configure Prettier to audit this repository and propose an approval-gated Prettier plan."
+    ]
+  },
+  "skills": "./skills/"
+}

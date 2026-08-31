@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -19,6 +20,13 @@ const labels = require("../scripts/github-labels.cjs") as {
     labels: Array<{ name: string; color: string; description: string }>;
     references: string[];
   };
+};
+const labelEntrypoint = require("../scripts/validate-github-labels.cjs") as {
+  resolveRootFromArgs(args: string[] | string, defaultRoot: string): string;
+  run(
+    root: string,
+    io: { error(message: string): void; log(message: string): void },
+  ): number;
 };
 const fixtures: string[] = [];
 
@@ -147,5 +155,55 @@ describe("GitHub label contract", () => {
         createFixture({ labels: [definition("bug"), definition("bug")] }),
       ),
     ).toThrow("duplicate label");
+  });
+
+  it("reports label-contract wrapper failures without relying on process.exitCode", () => {
+    const errors: string[] = [];
+    const logs: string[] = [];
+    const root = createFixture({ labels: [{ name: "bug" }] });
+
+    expect(
+      labelEntrypoint.run(root, {
+        error: (message: string) => errors.push(message),
+        log: (message: string) => logs.push(message),
+      }),
+    ).toBe(1);
+    expect(errors.join("\n")).toContain("must have a six-character hex color");
+    expect(logs).toEqual([]);
+  });
+
+  it("preserves label validation failure as a process exit code", () => {
+    const root = createFixture({ labels: [{ name: "bug" }] });
+    const result = spawnSync(
+      process.execPath,
+      [
+        path.resolve(
+          import.meta.dirname,
+          "../scripts/validate-github-labels.cjs",
+        ),
+        "--root",
+        root,
+      ],
+      { encoding: "utf8" },
+    );
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("must have a six-character hex color");
+  });
+
+  it("parses label CLI roots without accepting ambiguous arguments", () => {
+    const root = createFixture({ labels: [definition("bug")] });
+
+    expect(labelEntrypoint.resolveRootFromArgs(root, "unused")).toBe(root);
+    expect(labelEntrypoint.resolveRootFromArgs([], root)).toBe(root);
+    expect(
+      labelEntrypoint.resolveRootFromArgs(["--root", root], "unused"),
+    ).toBe(path.resolve(root));
+    expect(() =>
+      labelEntrypoint.resolveRootFromArgs(["--root", "--invalid"], root),
+    ).toThrow("usage: --root <repository-root>");
+    expect(() =>
+      labelEntrypoint.resolveRootFromArgs(["--invalid", root], root),
+    ).toThrow("usage: --root <repository-root>");
   });
 });
