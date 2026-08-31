@@ -14,6 +14,7 @@ export const coverageProfiles = {
   ],
   "path-utils.test.ts": ["scripts/path-utils.cjs"],
   "project-bootstrap.test.ts": ["scripts/project-bootstrap.cjs"],
+  "quality-workflow.test.ts": [],
   "script-entrypoints.test.ts": ["scripts/plugin-manifest-guard.cjs"],
   "typecheck.test.ts": ["scripts/typecheck.cjs"],
 } as const;
