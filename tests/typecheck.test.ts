@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const require = createRequire(import.meta.url);
-const typecheck = require("./typecheck.cjs") as {
+const typecheck = require("../scripts/typecheck.cjs") as {
   main(): void;
   runTypecheck(root?: string, io?: { stdio?: "ignore" | "inherit" }): number;
 };

@@ -1,130 +1,95 @@
 # Repository Guidelines
 
-This repository is a community marketplace for Codex plugins and data. It is not a web application. Keep repository-specific instructions here and use the linked policy documents for detailed guidance.
+This repository designs, builds, validates, versions, and distributes a
+Git-backed Codex marketplace of plugins and skills for stable use cases.
 
-## Project Structure
+## Scope
 
-- `.agents/plugins/marketplace.json` is the catalog.
-- `plugins/` contains local plugin packages; see [Plugin package guidelines](plugins/AGENTS.md) for their structure, manifests, resources, and catalog registration.
-- `schemas/` contains the strict plugin and marketplace schemas, `templates/` contains the complete plugin creation form, `scripts/` contains the generators and validators, and `lib/` contains bounded domain modules with colocated tests.
-- `.github/` contains issue forms, the pull-request contract, release-note categories, and CI documentation gates.
-- `tsconfig.scripts.json` checks the JavaScript modules under `lib/` and `scripts/` with the Node-aware `checkJs` configuration.
-- `docs/` is the canonical home for repository documentation; read [docs/AGENTS.md](docs/AGENTS.md) before operating inside it.
-- `adapters/` and `config/` are reserved boundaries for supporting integrations and repository configuration. Keep a `.gitkeep` marker in either directory while it is empty. There is no repository-level `skills/` directory.
+- Automation and operations: hooks, gates, scripts, scheduled tasks, maintenance, recurring operations, and CI/CD pipelines.
+- Integrations and engineering: MCP, app, API, CLI, LSP, GitHub, repository, external tools, software development, code quality, formatting, linting, typechecking, diagnostics, and testing.
+- Documentation, security, analysis, and business: documentation sync/freshness, pull requests/reviews, Actions/runners, security analysis/validation/enforcement/remediation, evidence-backed data analysis, and operational workflows.
 
-## Documentation Authority
+## Session Start Protocol
 
-- Keep all repository plans, specifications, maintenance records, decisions, operational procedures, contributor guidance, additional agent instructions, and audit reports under `docs/`.
-- Use `docs/agent-guidelines/` for durable policy documents, `docs/decisions/` for ADRs, `docs/maintenance/` for technical debt, and `docs/operations/` for runbooks and external-service procedures.
-- Use `docs/superpowers/plans/` for implementation plans, `docs/superpowers/specs/` for approved designs, and `docs/audits/` for dated audit and assessment reports.
-- Keep root-level documentation limited to cross-cutting entry points and link detailed guidance from the relevant document authority.
-- Read and follow `docs/AGENTS.md` before creating, editing, moving, or deleting any file under `docs/`.
+Before making repository changes, complete every step in this checklist:
 
-## Development Commands
+- Inspect the repository, existing products, active toolchain, Git state, and execution environment.
+- Run `codex --version`.
+- Run `codex plugin --help`.
+- Run `codex plugin marketplace --help`.
+- Run all available `codex doctor` diagnostics.
+- Read [`pending-debt.md`](docs/maintenance/pending-debt.md).
+- Read [`resolved-debt.md`](docs/maintenance/resolved-debt.md).
+- Check the [official Codex release notes](https://openai.com/products/release-notes/) for relevant changes from the previous 30 days.
+- Probe every required tool using its current `--version` or `--help` output.
+- If a required maintenance file is missing during repository bootstrap, create it before proceeding or report the missing prerequisite explicitly.
 
-- `npm install` — install project dependencies.
-- `npm run format` — write Prettier formatting; use `npm run format:check` for a read-only check.
-- `npm run check` — run formatting, linting, typechecking, Vitest coverage, and complete manifest validation.
-- `npm run documentation:gate -- --base <base> --head <head>` — enforce README/changelog synchronization for changed plugins.
-- `GITHUB_ORG="${GITHUB_ORG}" PROJECT_TITLE="${PROJECT_TITLE}" npm run project:bootstrap -- --dry-run` — preview organization Project bootstrap.
-- `npx tsc --noEmit` / `npx tsc6 --noEmit` — run the TypeScript 7 native compiler or the TypeScript 6 API-compatible compiler explicitly.
-- `npm run validate:plugins` — validate every package-local plugin manifest and its resources.
-- `npm run validate:marketplace` — validate the catalog and reverse-link it to package manifests.
-- `npm run validate:release-set -- --plan <release-plan.json> [--archives]` — validate exact Release Please tag outputs and optional artifacts.
-- `npm run validate:release-workflow` — validate that the Release Please workflow captures every configured component output.
-- `npm run marketplace:build` — run the complete validate, generate, and reverse-validate pipeline.
-- `npm run marketplace:check` — run the complete read-only package and catalog validation.
+## Marketplace Product Protocol
 
-## Coding and Testing
+Before creating or changing any marketplace plugin, skill, hook, script, MCP integration, app integration, schedule, runner, agent artifact, or related product artifact, read and follow [plugins/AGENTS.md](plugins/AGENTS.md). This is mandatory and non-negotiable.
 
-Use the repository Prettier/ESLint conventions, two-space indentation, LF endings, constants instead of magic strings, and no `any`. JavaScript, MJS, and CJS files must begin with `// @ts-check` (after a required shebang) and remain covered by `tsconfig.scripts.json`. Name tests `*.test.ts` so the strict TypeScript project checks them; cover schema behavior, filesystem semantics, and new validation/generation branches. The Vitest gate requires at least 96% per file.
+This protocol governs marketplace products. It does not convert a repository-distributed standalone custom-agent TOML bundle into a plugin.
 
-## Quality and Documentation
+If `plugins/AGENTS.md` does not exist during repository bootstrap, create it before modifying marketplace products or report the missing prerequisite explicitly.
 
-Run applicable diagnostics and tests before declaring work complete. Keep docs synchronized, verify version-sensitive claims against current releases, and report skipped checks, missing tools, unresolved diagnostics, and residual risks. Apply the folder-specific documentation rules in [docs/AGENTS.md](docs/AGENTS.md).
+## Automated Quality Gates and Verification
 
-## Detailed Policies
+These are repository-maintenance controls for us to create, review, maintain, and assess marketplace products. They are not plugin components, plugin dependencies, or runtime behavior, and must not be packaged or declared in a plugin merely because they validate it.
 
-- [Architecture and paths](docs/agent-guidelines/architecture.md)
-- [Tooling and runtimes](docs/agent-guidelines/tooling.md)
-- [Security and credentials](docs/agent-guidelines/security.md)
-- [Communication and writing](docs/agent-guidelines/communication.md)
-- [Quality and maintenance](docs/agent-guidelines/quality.md)
-- [Ownership and private context boundary](docs/agent-guidelines/ownership.md)
+Run applicable checks proactively before declaring work clean and complete:
 
-## Operational Architecture and Source of Truth
+- Formatting.
+- Linting.
+- Typechecking.
+- Relevant language-server diagnostics.
+- Applicable unit, integration, regression, security, and adversarial tests.
+- Documentation synchronization checks.
+- Freshness checks for version-sensitive technical claims.
 
-Each `plugins/<plugin-id>/.codex-plugin/plugin.json` is the sole authored source
-of truth for that distributable plugin's identity, version, metadata, and
-declared components. Create it from `templates/codex-plugin-plugin.json`, then
-remove optional declarations that the package does not use.
+Report unresolved diagnostics, skipped checks, missing tools, and residual risks explicitly.
 
-- `schemas/plugin.schema.json` defines the strict manifest contract.
-- `schemas/marketplace.schema.json` defines the strict generated catalog contract.
-- `lib/schemas/agent.schema.json` defines the required metadata for every
-  `skills/<skill-id>/agents/openai.yaml` file.
-- `scripts/marketplace-contract.cjs` validates package resources and builds the
-  catalog only from validated manifests.
-- `scripts/generate-marketplace.cjs` writes `.agents/plugins/marketplace.json`
-  atomically; `scripts/validate-marketplace.cjs` validates the catalog and
-  compares it exactly with the manifests that generated it.
-- `scripts/plugin-manifest-guard.cjs` runs the complete build after a relevant
-  Codex edit. The local hook requires explicit trust in Codex; CI remains the
-  authoritative gate.
-- Plugins must be self-contained. Every file, executable, declared resource,
-  and symbolic link must remain inside its owning plugin package; symlinks are
-  rejected before generation or release.
-- Plugins must have at least one functional component: `skills`, `hooks`,
-  `mcpServers`, or `apps`.
+## Documentation and Maintenance
 
-The marketplace is generated from package-local manifests only. The generator,
-validator, schemas, templates, and hook are repository maintenance tooling and
-are not runtime dependencies of installed plugins.
+Project documentation is maintained under `docs/`. Read [documentation rules](docs/AGENTS.md) before creating, changing, moving, or deleting documentation.
 
-## Commits and Pull Requests
+- Add unresolved maintenance work to [`docs/maintenance/pending-debt.md`](docs/maintenance/pending-debt.md).
+- Move completed work to [`docs/maintenance/resolved-debt.md`](docs/maintenance/resolved-debt.md).
+- Durable decisions affecting architecture, distribution, permissions, runtime, compatibility, or operations belong in [`docs/decisions/`](docs/decisions/).
+- Plans written with Superpowers skills are stored under [`docs/superpowers/`](docs/superpowers/).
 
-Use concise imperative Conventional Commit subjects (for example, `feat: add npm source schema`). Pull requests should explain the change, show verification commands/output, link an issue when applicable, and note compatibility effects. Product changes must update the affected plugin README and `Unreleased` changelog entry in the same PR. Screenshots are not applicable.
+## Quick Reference
 
-### Change Routing and PR Completion
+- Use npm with Node.js 24.20.0 (`.nvmrc`); run `npm run check` for full validation.
+- Run `npm run marketplace:build` to regenerate and validate the catalog.
+- Run `npm run documentation:gate -- --base <base> --head <head>` for plugin docs.
+- Read [documentation rules](docs/AGENTS.md) and [plugin package rules](plugins/AGENTS.md).
 
-Route changes according to their risk and distribution impact:
+## Directory Map
 
-- **Direct push to `main` allowed:** only changes entirely contained in
-  `docs/**`, the root `AGENTS.md`, or the root `README.md`, after the local
-  pre-push policy accepts the complete diff and `npm run check` passes.
-- **Pull request required:** plugin packages, manifests, marketplace catalog
-  entries, scripts, tests, schemas, workflows, release behavior, permissions,
-  security controls, refactors, substantive plugin changes, version bumps, or
-  any change that alters product behavior, installation, validation, or
-  compatibility.
-- **Mixed changes:** route the complete change through a pull request whenever
-  one changed path falls outside the direct-push allowlist.
-- GitHub Actions workflows trigger only for pull requests; direct pushes rely
-  on the local pre-push boundary and complete local check.
+- `schemas/`: all repository schemas. `scripts/`: generators, validators, and pipeline/code-quality tooling. `tests/`: tests for those areas.
+- `docs/`: official documentation for decisions, audits, maintenance debts, operations, and superpowers plans/specs; read `docs/AGENTS.md` first.
+- `templates/`: reusable manifest, README, changelog, and license templates.
 
-The detailed procedure lives in
-[docs/operations/direct-push-policy.md](docs/operations/direct-push-policy.md),
-and the durable decision is recorded in
-[ADR-0009](docs/decisions/adr-0009-direct-push-and-pr-routing.md).
+## Source of Truth
 
-| Issue type                                    | PR needed now?                                            |
-| --------------------------------------------- | --------------------------------------------------------- |
-| Badges / roadmap / contributor docs           | No                                                        |
-| Branch protection                             | No                                                        |
-| Homepage metadata                             | No                                                        |
-| Packages                                      | No action now                                             |
-| First stable release                          | Likely yes for prep docs; release action after validation |
-| Future plugin/catalog/schema/workflow changes | Yes                                                       |
+- `plugins/<plugin-id>/.codex-plugin/plugin.json` owns plugin identity, version, metadata, and components.
+- `.agents/plugins/marketplace.json` is generated from validated manifests; do not hand-edit it.
+- Plugins are self-contained. Distribution is the public repository and `main` catalog: no automated releases, tags, archives, or release credentials.
 
-For every pull request, read all review comments, checks, and requested
-changes before integrating. Evaluate each finding against the repository; fix
-it when technically valid, reply in the review thread with the result, and
-resolve the conversation after the fix is pushed. Do not dismiss or resolve a
-valid review finding without addressing it. Re-run the applicable validation
-after review changes.
+## Working Rules
 
-When a pull request is ready, integrate it with an explicit **merge commit**.
-Do not squash unless Nery explicitly requests it. After merging, delete the
-feature branch from the remote and local checkout, run `git fetch --prune`,
-fast-forward `main` with `git pull --ff-only origin main`, and confirm
-`git status --short --branch` is clean and synchronized with `origin/main`.
+- Use pull requests for product, package, catalog, script, test, schema, security, permission, refactor, and compatibility changes.
+- Product changes update the affected README, `CHANGELOG.md`, and manifest; include validation evidence.
+- Run applicable checks, report skips and risks, and keep docs synchronized.
+- Follow the global `AGENTS.md` policy for credentials.
+- Use Conventional Commits; do not commit or push without explicit request.
+- Owner: Nery Samuel Murillo (`nerymurillohnd`). Keep personal and Forestal MT business context outside this public guide; do not infer private business requirements from this repository.
+
+## Roadmap
+
+- Strengthen validation for plugin skills, apps, MCP integrations, and assets; expand the catalog with explicit permissions and recovery behavior.
+- Keep README as the public homepage; expand contributor guidance and require validation evidence.
+
+## Template Use
+
+Read and use the matching template before creating or updating `plugin.json`, root/plugin `README.md`, `CHANGELOG.md`, or `LICENSE.md`: manifest `templates/codex-plugin-plugin.json`; root README `templates/root-README-recommended-template.md`; plugin README `templates/plugin-README-reusable-template.md`; changelog `templates/CHANGELOG-reusable-template.md`; license `templates/LICENSE-reusable-template.md`.

@@ -1,27 +1,23 @@
 # GitHub Label Contract
 
-The repository uses GitHub labels for issue intake and release-note
-categorization. `.github/label-contract.json` is the versioned contract for
-labels referenced by repository configuration; it does not delete GitHub's
-default labels.
+The repository uses GitHub labels for issue intake and triage.
+`.github/label-contract.json` is the versioned contract for labels referenced
+by repository configuration; it does not delete GitHub's default labels.
 
 ## Maintained labels
 
-| Label             | Use                                          |
-| ----------------- | -------------------------------------------- |
-| `bug`             | Reproducible problems and fixes              |
-| `breaking-change` | Changes that require migration               |
-| `dependencies`    | Dependency updates and maintenance           |
-| `documentation`   | Documentation changes                        |
-| `enhancement`     | New features or improvements                 |
-| `github_actions`  | GitHub Actions changes                       |
-| `plugin-change`   | Marketplace plugin change proposals          |
-| `security`        | Security-related changes                     |
-| `skip-changelog`  | Exclude an item from generated release notes |
+| Label             | Use                                 |
+| ----------------- | ----------------------------------- |
+| `bug`             | Reproducible problems and fixes     |
+| `breaking-change` | Changes that require migration      |
+| `dependencies`    | Dependency updates and maintenance  |
+| `documentation`   | Documentation changes               |
+| `enhancement`     | New features or improvements        |
+| `github_actions`  | GitHub Actions changes              |
+| `plugin-change`   | Marketplace plugin change proposals |
+| `security`        | Security-related changes            |
 
-The issue templates and `.github/release.yml` may reference only labels listed
-in the contract. The `*` release category fallback is intentionally not a
-label and is excluded from validation.
+Issue templates may reference only labels listed in the contract.
 
 ## Validation
 

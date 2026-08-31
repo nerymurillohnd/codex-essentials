@@ -1,7 +1,6 @@
 # {{Emoji}} {{Display Name}}
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Version: {{version}}]({{release-badge-url}})]({{release-url}})
 [← Back to Codex Essentials](../../README.md)
 
 > {{One-sentence outcome in the user's language.}}
@@ -13,9 +12,8 @@
 {{Plugin name}} is a Codex plugin for {{target users and task}}. It {{primary
 behavior}} and does not {{important non-goal or boundary}}.
 
-| Version       | Release                                | Install ref                 |
-| ------------- | -------------------------------------- | --------------------------- |
-| `{{version}}` | [Release {{version}}]({{release-url}}) | `{{immutable-tag-or-main}}` |
+The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+the package from the repository's `main` catalog.
 
 > [!CAUTION]
 > {{One concise statement of the most important permission, hook, write, network,
@@ -27,7 +25,7 @@ behavior}} and does not {{important non-goal or boundary}}.
 Add the marketplace and install the plugin:
 
 ```bash
-codex plugin marketplace add {{owner/repository}} --ref {{main-or-immutable-ref}}
+codex plugin marketplace add {{owner/repository}} --ref main
 codex plugin add {{plugin-id}}@{{marketplace-name}}
 codex plugin list
 ```
@@ -69,7 +67,7 @@ List only paths that actually exist in this package. Link each navigable path.
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                               | Plugin identity, version, and component declarations. |
 | [`skills/{{skill-name}}/SKILL.md`](skills/{{skill-name}}/SKILL.md)                     | Authoritative behavior and workflow contract.         |
 | [`skills/{{skill-name}}/agents/openai.yaml`](skills/{{skill-name}}/agents/openai.yaml) | Codex-facing label and concise invocation metadata.   |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                         | User-facing release history.                          |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                         | User-facing change history.                           |
 | [`LICENSE.md`](LICENSE.md)                                                             | License terms.                                        |
 
 {{Add rows for hooks, MCP/app manifests, references, examples, or assets only
@@ -87,7 +85,7 @@ when they are present and supported by this plugin.}}
 | Last verified | `{{YYYY-MM-DD}}` against `{{version/source}}`           |
 
 The installed project, its lockfile, and current official documentation take
-precedence over a versioned reference in this package.
+precedence over static compatibility claims in this package.
 
 ## 🔐 Behavior and boundaries
 

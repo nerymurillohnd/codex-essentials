@@ -39,11 +39,6 @@
       "name": "breaking-change",
       "color": "5319e7",
       "description": "Changes that require migration"
-    },
-    {
-      "name": "skip-changelog",
-      "color": "ffffff",
-      "description": "Exclude this item from generated release notes"
     }
   ]
 }

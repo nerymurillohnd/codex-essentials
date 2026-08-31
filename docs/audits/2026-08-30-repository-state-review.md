@@ -6,6 +6,11 @@
 **Branch:** `main`<br>
 **Review type:** Read-only repository, CI, release, operational, documentation, and security review
 
+> **Post-audit migration note (2026-08-31):** This historical review predates
+> the removal of `lib/`. Repository tooling is now organized under `schemas/`,
+> `scripts/`, and `tests/`; the project bootstrap evidence referenced below
+> moved to `scripts/project-bootstrap.cjs`.
+
 ## Executive Summary
 
 The repository is functional, consistent, and passing its main local quality gates. Its marketplace architecture is clearly defined and currently contains three valid plugins.
@@ -210,8 +215,8 @@ The implementation declares expected fields, views, and workflows, but currently
 
 Evidence:
 
-- [`lib/projects/bootstrap.cjs` lines 15–25](../../lib/projects/bootstrap.cjs#L15)
-- [`lib/projects/bootstrap.cjs` lines 75–119](../../lib/projects/bootstrap.cjs#L75)
+- [`scripts/project-bootstrap.cjs` lines 15–24](../../scripts/project-bootstrap.cjs#L15)
+- [`scripts/project-bootstrap.cjs` lines 74–118](../../scripts/project-bootstrap.cjs#L74)
 - [`github-project-template.md` lines 26–40](../operations/github-project-template.md#L26)
 
 The documentation promises configuration that the implementation does not yet apply.

@@ -5,7 +5,7 @@
 > This plan records an earlier implementation approach and is retained for
 > historical context. It was superseded by [ADR-0007](../../decisions/adr-0007-plugin-manifest-marketplace-contract.md).
 > Do not use its source-of-truth, synchronization, validation, or release
-> commands as current instructions. Use the current [architecture guidance](../../agent-guidelines/architecture.md),
+> commands as current instructions. Use the current [architecture guidance](../../../AGENTS.md),
 > `npm run marketplace:build`, and `npm run marketplace:check` instead.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans`

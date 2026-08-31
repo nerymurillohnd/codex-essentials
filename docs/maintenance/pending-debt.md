@@ -2,26 +2,20 @@
 
 Use this file for unresolved maintenance work, known limitations, and follow-up tasks.
 
-- 2026-08-27 — Select and authorize the GitHub organization represented by
-  `${GITHUB_ORG}` before running the real Project bootstrap. The repository can
-  validate the specification and dry-run command now, but organization-level
-  Project creation remains an external administrative action.
-- 2026-08-27 — Verify the GitHub remote configuration and the remaining
-  security settings.
-  Dependabot/security settings are partially resolved: Dependabot configuration
-  is now present and producing update runs, while the remaining repository
-  security settings still need live verification. Move this entry to
-  `resolved-debt.md` only after the remaining settings have been verified live
-  on GitHub.
-- 2026-08-27 — Publish the next marketplace products from the reusable document
-  and spreadsheet template Skills. Prioritize the following workflow and
-  reporting products:
-  - `Sales Pipeline`
-  - `Operating Review`
-  - `Project Tracker`
-  - `Operating Calendar`
-  - `Market Trends Report`
-    Consider `Legal Memorandum`, `Minimal Letterhead`, and `Project Kickoff` as
-    the next document and presentation products. Each product must receive its
-    own manifest, user-facing README, references, changelog, catalog entry,
-    validation evidence, and release tag before it is distributed.
+- 2026-08-31 — Reconcile current GitHub branch protection and security controls
+  with the documented policy. Verified live: `main` rejects force pushes and
+  deletion and enforces administrators; the plugin release-tag ruleset is
+  active; Dependabot security updates, secret scanning, secret scanning push
+  protection, and automated security fixes are enabled. Current gaps or
+  decisions: `main` has no required pull-request reviews or status checks,
+  `secret_scanning_non_provider_patterns` and validity checks are disabled, and
+  the historical resolved-debt entry records a stronger branch-protection
+  state. Decide and record whether the current direct-documentation routing is
+  intentional before closing this item.
+- 2026-08-31 — Decide whether to activate the organization-level GitHub Project
+  bootstrap. `GITHUB_ORG` and `PROJECT_TITLE` are not configured in the current
+  local environment, and the authenticated `gh` token lacks `read:project`, so
+  the existence of the target Project cannot be verified. Keep this optional
+  until an organization, title, and Projects-scoped authorization are
+  explicitly selected; do not treat the helper or its template as evidence
+  that a Project exists.

@@ -26,7 +26,7 @@ Add these only when the plugin actually uses them:
 Do not create a repository-level `skills/` directory. Skill content belongs
 inside the plugin package that distributes it.
 
-Each `agents/openai.yaml` validates against `lib/schemas/agent.schema.json` after
+Each `agents/openai.yaml` validates against `schemas/agent.schema.json` after
 YAML parsing. It requires `interface.display_name` and
 `interface.short_description`; an `interface.default_prompt` is optional and
 provides concise invocation framing. The file is metadata and prompt bootstrap,
@@ -77,9 +77,6 @@ Run the strict repository pipeline so generated fields remain consistent:
 ```bash
 npm run marketplace:build
 npm run marketplace:check
-npm run validate:release-workflow
-npm run package:preflight
-npm run validate:release-set -- --plan <release-plan.json> [--archives]
 ```
 
 Do not hand-edit the generated marketplace catalog. The pipeline validates
@@ -100,7 +97,6 @@ npm run typecheck:scripts
 npx tsc6 --noEmit
 npm test
 npm run marketplace:check
-npm run validate:release-workflow
 ```
 
 For product-affecting plugin changes, also verify that the plugin README and
@@ -120,23 +116,10 @@ external services, and rollback behavior in the plugin README. Reviewers should
 be able to decide whether a plugin is safe to install without reading hidden
 implementation assumptions.
 
-## Release Expectations
+## Version and changelog expectations
 
-Plugin release tags use this format:
-
-```text
-plugin/<plugin-id>/v<semver>
-```
-
-Validate a release candidate before Release Please creates its tag:
-
-```bash
-npm run marketplace:check
-npm run validate:release-workflow
-npm run package:preflight
-npm run validate:release-set -- --plan <release-plan.json> [--archives]
-```
-
-Release Please-generated plugin changelog sections are reviewed in the Release
-PR. Contributors still own the package README and the `Unreleased` intent;
-GitHub release-page notes do not replace those package documents.
+Keep the plugin version in `plugins/<plugin-id>/.codex-plugin/plugin.json` and
+record product changes under the package's `Unreleased` changelog section. The
+public installation reference is the repository's `main` branch and generated
+marketplace catalog. There is no release workflow, tag convention, archive, or
+release credential to configure.

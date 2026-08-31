@@ -15,13 +15,6 @@
     "skipLibCheck": true,
     "noErrorTruncation": true
   },
-  "include": [
-    "eslint.config.cjs",
-    "prettier.config.cjs",
-    "scripts/**/*.cjs",
-    "lib/**/*.js",
-    "lib/**/*.cjs",
-    "lib/**/*.mjs"
-  ],
+  "include": ["eslint.config.cjs", "prettier.config.cjs", "scripts/**/*.cjs"],
   "exclude": ["node_modules", "coverage", "dist"]
 }

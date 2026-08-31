@@ -3,7 +3,7 @@ import childProcess from "node:child_process";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const require = createRequire(import.meta.url);
-const project = require("./bootstrap.cjs") as {
+const project = require("../scripts/project-bootstrap.cjs") as {
   bootstrapProject(
     options: { organization: string; title: string; dryRun: boolean },
     runner?: (command: string, args: string[]) => string,
@@ -34,7 +34,10 @@ afterEach(() => {
 
 describe("GitHub Projects bootstrap", () => {
   it("defines and parses the project contract", () => {
-    expect(project.buildProjectSpec("Codex").fields).toContain("Status");
+    const spec = project.buildProjectSpec("Codex");
+    expect(spec.fields).toContain("Status");
+    expect(spec.fields).not.toContain("Release target");
+    expect(spec.views).not.toContain("Release readiness");
     expect(
       project.parseArgs(["--org", "community", "--title", "Marketplace"]),
     ).toEqual({
@@ -96,12 +99,12 @@ describe("GitHub Projects bootstrap", () => {
     const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
     process.env["GITHUB_ORG"] = "org";
     process.env["PROJECT_TITLE"] = "Project";
-    process.argv = [process.execPath, "bootstrap.cjs", "--dry-run"];
+    process.argv = [process.execPath, "project-bootstrap.cjs", "--dry-run"];
     project.main();
     vi.spyOn(childProcess, "execFileSync").mockReturnValueOnce(
       '[{"title":"Project","number":1}]' as never,
     );
-    process.argv = [process.execPath, "bootstrap.cjs"];
+    process.argv = [process.execPath, "project-bootstrap.cjs"];
     project.main();
     expect(log).toHaveBeenCalled();
     process.argv = argv;

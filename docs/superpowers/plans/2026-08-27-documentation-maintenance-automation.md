@@ -5,7 +5,7 @@
 > This plan records an earlier implementation approach and is retained for
 > historical context. It was superseded by [ADR-0007](../../decisions/adr-0007-plugin-manifest-marketplace-contract.md).
 > Do not use its source-of-truth, synchronization, validation, or release
-> commands as current instructions. Use the current [architecture guidance](../../agent-guidelines/architecture.md),
+> commands as current instructions. Use the current [architecture guidance](../../../AGENTS.md),
 > `npm run marketplace:build`, and `npm run marketplace:check` instead.
 
 ## Summary
@@ -83,7 +83,7 @@ and release automation publishes notes without overwriting curated history.
    token with Projects scope; do not use the repo-scoped default token for
    organization mutations.
 8. **Guidance and maintenance synchronization.** Update `AGENTS.md`,
-   `README.md`, `docs/agent-guidelines/*`, and maintenance records so the
+   `README.md`, `AGENTS.md`, and maintenance records so the
    actual data/plugin structure, commands, release policy, GitHub limitations,
    and unresolved external prerequisites are explicit. Move completed debt to
    `resolved-debt.md` only after verification.

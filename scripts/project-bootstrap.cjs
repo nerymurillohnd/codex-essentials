@@ -19,9 +19,8 @@ const PROJECT_FIELDS = [
   "Review",
   "Documentation",
   "Security",
-  "Release target",
 ];
-const PROJECT_VIEWS = ["Backlog", "Release readiness", "Security"];
+const PROJECT_VIEWS = ["Backlog", "Security"];
 const PROJECT_WORKFLOWS = ["auto-add", "closed-to-done", "auto-archive"];
 
 /** @typedef {{title: string, number?: number, id?: string}} ProjectSummary */

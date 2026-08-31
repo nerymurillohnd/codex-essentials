@@ -14,9 +14,9 @@ release history, and architecture decision records. It preserves existing
 infrastructure, writes only confirmed facts, and does not publish or mutate
 remote state.
 
-| Version source                                           | Release history                                                                | Install ref |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | [Plugin releases](https://github.com/nerymurillohnd/codex-essentials/releases) | `main`      |
+| Version source                                           | Install ref |
+| -------------------------------------------------------- | ----------- |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
 
 > [!CAUTION]
 > DocKeeper never invents history or simulates an owning release/ADR mechanism

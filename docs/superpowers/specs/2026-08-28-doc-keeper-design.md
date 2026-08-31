@@ -5,7 +5,7 @@
 > This design records an earlier implementation approach and is retained for
 > historical context. It was superseded by [ADR-0007](../../decisions/adr-0007-plugin-manifest-marketplace-contract.md).
 > Do not use its source-of-truth, synchronization, validation, or release
-> commands as current instructions. Use the current [architecture guidance](../../agent-guidelines/architecture.md),
+> commands as current instructions. Use the current [architecture guidance](../../../AGENTS.md),
 > `npm run marketplace:build`, and `npm run marketplace:check` instead.
 
 ## Purpose
@@ -137,9 +137,10 @@ must describe the skill, not the entire marketplace.
 ## Repository integration
 
 Author-owned skill, references, examples, README, changelog, and license are
-maintained deliberately. Fixed metadata remains in `lib/source.json`, and the
-repository synchronizer emits the catalog, plugin manifest, and agent metadata.
-The installed package has no dependency on that development pipeline.
+maintained deliberately. The former `lib/source.json` and synchronizer model
+is historical; current fixed metadata lives in package-local manifests and
+repository scripts emit and validate the catalog. The installed package has no
+dependency on that development pipeline.
 
 ## Acceptance criteria
 

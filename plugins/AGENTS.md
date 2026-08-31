@@ -87,8 +87,8 @@ affected document.
 Use the package's existing documentation as the canonical starting point.
 Preserve Keep a Changelog headings, use ISO 8601 dates, and add migration notes
 for breaking changes. Area labels are conditional metadata, not a checklist:
-do not add entries for unaffected areas, and remove empty sections from
-published releases. Release tags use `plugin/<plugin-id>/v<semver>`.
+do not add entries for unaffected areas, and remove empty sections from the
+`Unreleased` section.
 
 ## Catalog and Workflow
 

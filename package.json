@@ -5,7 +5,7 @@
   "main": "index.js",
   "directories": {
     "doc": "docs",
-    "test": "lib"
+    "test": "tests"
   },
   "scripts": {
     "prepare": "husky",
@@ -13,7 +13,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "tsc": "tsc --noEmit",
-    "typecheck": "node lib/quality/typecheck.cjs",
+    "typecheck": "node scripts/typecheck.cjs",
     "typecheck:scripts": "tsc --project tsconfig.scripts.json --pretty false",
     "test": "vitest run --passWithNoTests --coverage",
     "test:watch": "vitest --passWithNoTests",
@@ -21,18 +21,11 @@
     "validate:github-labels": "node scripts/validate-github-labels.cjs",
     "generate:marketplace": "node scripts/generate-marketplace.cjs",
     "validate:marketplace": "node scripts/validate-marketplace.cjs",
-    "validate:pr-title": "node scripts/validate-pr-title.cjs",
-    "validate:pr-commits": "node scripts/validate-pr-commits.cjs",
-    "validate:pr-scope": "node scripts/validate-pr-scope.cjs",
-    "validate:direct-push": "node scripts/validate-direct-push.cjs",
-    "validate:release-set": "node scripts/validate-release-set.cjs",
-    "validate:release-workflow": "node scripts/validate-release-workflow-outputs.cjs",
-    "package:preflight": "node scripts/package-plugin.cjs --preflight --ref HEAD --output-dir dist/preflight --output dist/preflight-artifacts.json",
     "documentation:gate": "node scripts/documentation-gate.cjs",
     "marketplace:check": "npm run validate:plugins && npm run validate:marketplace",
     "marketplace:build": "npm run validate:plugins && npm run generate:marketplace && npm run validate:marketplace",
-    "project:bootstrap": "node lib/projects/bootstrap.cjs",
-    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run marketplace:check && npm run validate:release-workflow && npm run package:preflight"
+    "project:bootstrap": "node scripts/project-bootstrap.cjs",
+    "check": "npm run format:check && npm run lint -- --max-warnings=0 && npm run typecheck && npm run typecheck:scripts && npx tsc6 --noEmit && npm run test && npm run validate:github-labels && npm run marketplace:check"
   },
   "keywords": [],
   "author": "Nery Samuel Murillo",

@@ -25,8 +25,8 @@ function createFixture(): string {
     cpSync(join(repositoryRoot, name), join(root, name), { recursive: true });
   }
   cpSync(
-    join(repositoryRoot, "lib", "schemas", "agent.schema.json"),
-    join(root, "lib", "schemas", "agent.schema.json"),
+    join(repositoryRoot, "schemas", "agent.schema.json"),
+    join(root, "schemas", "agent.schema.json"),
   );
   cpSync(join(repositoryRoot, "package.json"), join(root, "package.json"));
   return root;
@@ -59,16 +59,7 @@ function runGuard(root: string, event: unknown) {
   );
 }
 
-function runDocumentationGate(
-  root: string,
-  base: string,
-  head: string,
-  metadata: {
-    title?: string;
-    authorType?: string;
-    labels?: string;
-  } = {},
-) {
+function runDocumentationGate(root: string, base: string, head: string) {
   const args = [
     join(repositoryRoot, "scripts", "documentation-gate.cjs"),
     "--root",
@@ -78,15 +69,6 @@ function runDocumentationGate(
     "--head",
     head,
   ];
-  for (const [name, value] of [
-    ["--title", metadata.title],
-    ["--author-type", metadata.authorType],
-    ["--labels", metadata.labels],
-  ] as const) {
-    if (value !== undefined) {
-      args.push(name, value);
-    }
-  }
   return spawnSync(process.execPath, args, { encoding: "utf8" });
 }
 
@@ -300,23 +282,6 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(failure.status).not.toBe(0);
     expect(failure.stderr).toContain("README.md");
     expect(failure.stderr).toContain("CHANGELOG.md");
-
-    const trustedRelease = runDocumentationGate(root, base, headWithoutDocs, {
-      title: "chore(main): release 0.1.1",
-      authorType: "Bot",
-      labels: "autorelease: pending",
-    });
-
-    expect(trustedRelease.status, trustedRelease.stderr).toBe(0);
-
-    const titleOnly = runDocumentationGate(root, base, headWithoutDocs, {
-      title: "chore(main): release 0.1.1",
-      authorType: "Bot",
-      labels: "",
-    });
-
-    expect(titleOnly.status).not.toBe(0);
-    expect(titleOnly.stderr).toContain("README.md");
 
     for (const file of [
       "plugins/doc-keeper/README.md",

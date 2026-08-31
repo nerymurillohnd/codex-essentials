@@ -6,7 +6,6 @@ const path = require("node:path");
 const { parse } = require("yaml");
 
 const CONTRACT_PATH = path.join(".github", "label-contract.json");
-const RELEASE_PATH = path.join(".github", "release.yml");
 const ISSUE_TEMPLATE_DIRECTORY = path.join(".github", "ISSUE_TEMPLATE");
 const YAML_EXTENSIONS = new Set([".yml", ".yaml"]);
 const MARKDOWN_EXTENSIONS = new Set([".md"]);
@@ -93,9 +92,8 @@ function loadLabelContract(root) {
  * @param {LabelReferenceCollection} collection
  * @param {unknown} value
  * @param {string} source
- * @param {{allowWildcard?: boolean}} [options]
  */
-function addLabelReferences(collection, value, source, options = {}) {
+function addLabelReferences(collection, value, source) {
   if (value === undefined) {
     return;
   }
@@ -110,12 +108,7 @@ function addLabelReferences(collection, value, source, options = {}) {
     }
     const normalized = label.trim();
     if (normalized === "*") {
-      if (options.allowWildcard) {
-        continue;
-      }
-      collection.errors.push(
-        `${source} may not use the wildcard label outside release categories`,
-      );
+      collection.errors.push(`${source} may not use the wildcard label`);
       continue;
     }
     const sources = collection.references.get(normalized) ?? [];
@@ -184,41 +177,6 @@ function collectLabelReferences(root) {
     );
   }
 
-  const release = readYaml(path.join(root, RELEASE_PATH));
-  if (!isRecord(release)) {
-    collection.errors.push(`${RELEASE_PATH} must contain a mapping`);
-    return collection;
-  }
-  if (release.changelog === undefined) {
-    return collection;
-  }
-  if (!isRecord(release.changelog)) {
-    collection.errors.push(`${RELEASE_PATH} changelog must be a mapping`);
-    return collection;
-  }
-  const changelog = release.changelog;
-  if (changelog.categories !== undefined) {
-    if (!Array.isArray(changelog.categories)) {
-      collection.errors.push(`${RELEASE_PATH} categories must be an array`);
-    } else {
-      for (const category of changelog.categories) {
-        if (!isRecord(category)) {
-          collection.errors.push(`${RELEASE_PATH} category must be a mapping`);
-          continue;
-        }
-        addLabelReferences(collection, category.labels, RELEASE_PATH, {
-          allowWildcard: true,
-        });
-      }
-    }
-  }
-  if (changelog.exclude !== undefined) {
-    if (!isRecord(changelog.exclude)) {
-      collection.errors.push(`${RELEASE_PATH} exclude must be a mapping`);
-    } else {
-      addLabelReferences(collection, changelog.exclude.labels, RELEASE_PATH);
-    }
-  }
   return collection;
 }
 

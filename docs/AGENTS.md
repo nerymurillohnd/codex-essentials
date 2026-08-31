@@ -13,15 +13,8 @@
 ## Root Documentation
 
 - Keep root-level files for cross-cutting entry points that do not belong to a specialized folder.
-- Use `roadmap.md` for prioritized product direction, sequencing, and explicitly accepted scope.
+- Keep prioritized product direction, sequencing, and explicitly accepted scope in the project `AGENTS.md`.
 - Link detailed guidance from the relevant index or instruction file instead of duplicating it.
-
-## `agent-guidelines/`
-
-- Store durable instructions that govern repository architecture, tooling, security, quality, ownership, and communication.
-- Keep each file focused on one policy area and make every rule actionable.
-- Update links from the root `AGENTS.md` whenever a policy file is added, renamed, or removed.
-- Do not place task-specific plans, audit findings, or temporary instructions here.
 
 ## `contributing/`
 

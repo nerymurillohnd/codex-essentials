@@ -2,6 +2,25 @@
 
 Move completed maintenance items here with the resolution date and verification reference.
 
+Entries below are dated historical resolutions. When a later remote or
+repository change supersedes one of them, keep the historical record and track
+the current follow-up in [pending-debt.md](pending-debt.md).
+
+- 2026-08-31 — Reorganized repository tooling into its established boundaries:
+  moved the agent schema to `schemas/`, moved reusable validators, generators,
+  quality helpers, and Project bootstrap code to `scripts/`, moved their tests
+  to `tests/`, and removed the unused `lib/` tree. Updated package scripts,
+  TypeScript/Vitest discovery, current documentation, and historical audit
+  links. Verified with `npm run check`, which passed 24 tests and validated four
+  plugin manifests and the marketplace catalog.
+
+- 2026-08-31 — Retired GitHub Pages from the marketplace repository. Deleted the
+  remote `github-pages` environment after Pages was disabled and verified that
+  no active Pages environment remains and the public Pages URL returns `404`.
+  GitHub's managed `pages-build-deployment` history entry remains visible but
+  is not repository configuration and cannot be deleted or disabled through the
+  available API. See [ADR-0012](../decisions/adr-0012-retire-github-pages.md).
+
 - 2026-08-27 — Closed the skill-agent metadata drift gap by requiring a
   schema-valid `skills/<skill-id>/agents/openai.yaml` for every distributed
   `SKILL.md`, migrating both published plugins, and aligning agent metadata
@@ -52,8 +71,9 @@ Move completed maintenance items here with the resolution date and verification 
   repository quality gate.
 - 2026-08-27 — Normalized repository ignore policy for generated Husky internals,
   diagnostics output, Python caches, build output, and operating-system files.
-  Removed local `.DS_Store` files and documented that authored hooks are linted
-  separately from generated `.husky/_/*` infrastructure.
+  Removed repository-tracked `.DS_Store` files and documented that authored
+  hooks are linted separately from generated `.husky/_/*` infrastructure. Local
+  macOS metadata may reappear, but remains ignored and untracked.
 - 2026-08-30 — Retired the duplicate public Codex Essentials Wiki and removed
   its `Home` page. The repository README is the public homepage and `docs/` is
   the canonical versioned documentation surface. See
@@ -69,10 +89,12 @@ Move completed maintenance items here with the resolution date and verification 
   deletion, required conversation resolution, and required the `Required quality
 gates` quality aggregator plus the `documentation`, `CodeQL`, `Workflow lint`,
   and `Dependency review` checks before merge. Verified through the GitHub
-  branch protection API.
+  branch protection API at that time. The current branch-protection state is
+  tracked separately in [pending-debt.md](pending-debt.md).
 - 2026-08-27 — Added the protected GitHub `release` environment with
   `nerymurillohnd` as a required reviewer and created the active `Protect plugin
 release tags` repository ruleset for `refs/tags/plugin/**/v*`. The ruleset
   blocks tag deletion and non-fast-forward tag updates while still allowing new
   plugin release tags to be created. Verified through the GitHub Environments
-  and Rulesets APIs.
+  and Rulesets APIs. The `release` environment was later retired; the tag
+  ruleset remains active.

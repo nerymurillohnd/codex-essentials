@@ -1,19 +1,22 @@
 # 🧩 Codex Essentials
 
-[![Quality](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/quality.yml)
-[![Documentation gate](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml/badge.svg)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/documentation-gate.yml)
-[![Security](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/nerymurillohnd/codex-essentials/actions/workflows/security.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
-> A curated repository marketplace for reusable Codex plugins.
+> A Git-backed marketplace of Codex plugins and skills for repeatable work.
 
 **Explore:** [Plugins](#-plugin-catalog) · [Install](#-quick-start) ·
 [Documentation](#-documentation-map) · [Contribute](#-contributing) ·
 [Support](#-support-and-project-links)
 
-Codex Essentials packages practical skills and integrations for repeatable
-development workflows. The repository contains the plugin catalog, package
-manifests, validation, documentation, and release records.
+Codex Essentials is for people who want to extend Codex with focused,
+installable capabilities instead of rebuilding the same workflow each time.
+The catalog covers stable use cases across software development, code quality,
+documentation, maintenance, security, data analysis, and external-tool
+integrations.
+
+Each plugin is a self-contained package with its own skills, hooks, MCP servers,
+apps, or other declared components. Its README explains what it does, what it
+can access, which tools it needs, and what side effects or approvals apply.
 
 > [!IMPORTANT]
 > This is a curated repository/CLI distribution source. It is not, by itself,
@@ -65,17 +68,7 @@ codex plugin add <plugin-id>@codex-essentials
 codex plugin list
 ```
 
-`main` exposes the current catalog. Use an immutable plugin release tag only
-after confirming that its marketplace snapshot contains the plugin you need.
-Plugin release tags are independent snapshots; they are not a single
-marketplace version.
-
-Example:
-
-```bash
-codex plugin marketplace add nerymurillohnd/codex-essentials --ref plugin/astro-cli-commands/v0.1.1
-codex plugin add astro-cli-commands@codex-essentials
-```
+`main` exposes the current catalog and is the supported installation reference.
 
 Read the linked plugin README before installing a plugin with hooks, file
 writes, network access, or other side effects.
@@ -111,23 +104,26 @@ for current host, marketplace, manifest, and distribution behavior.
 | `plugins/<plugin-id>/`                | Self-contained distributable plugin packages.                                  |
 | `plugins/*/.codex-plugin/plugin.json` | Authored plugin identity, version, and component declarations.                 |
 | `docs/`                               | Maintainer architecture, contributor, operational, and decision documentation. |
-| `lib/`, `scripts/`, `.github/`        | Repository maintenance, validation, and CI implementation.                     |
+| `schemas/`, `scripts/`, `tests/`      | Repository schemas, generators, validators, tests, and quality tooling.        |
+| `.github/`                            | Repository contribution and issue configuration.                               |
 
-The repository does not install its own npm dependencies into a user's project.
-Each plugin declares its own behavior, requirements, permissions, and side
-effects in its product README and authoritative skill documents.
+The schemas, generators, validators, tests, and quality gates in this
+repository are maintainer tooling used to create, review, and maintain the
+marketplace. They are not packaged into installed plugins. The repository does
+not install its own npm dependencies into a user's project; each plugin declares
+its own behavior, requirements, permissions, and side effects in its product
+README and authoritative skill documents.
 
 ## 🧭 Documentation map
 
-| Need                                 | Start here                                                                                                         |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| Choose or install a plugin           | This README and the plugin catalog above.                                                                          |
-| Understand plugin behavior           | The plugin's `README.md`, then its `SKILL.md`.                                                                     |
-| Read detailed references or examples | The links in the plugin README.                                                                                    |
-| Contribute or maintain packages      | [Plugin submission guidelines](docs/contributing/plugins.md).                                                      |
-| Understand repository architecture   | [Architecture and paths](docs/agent-guidelines/architecture.md).                                                   |
-| Review quality and security rules    | [Quality guidelines](docs/agent-guidelines/quality.md) and [security guidance](docs/agent-guidelines/security.md). |
-| Review releases and decisions        | [Decisions](docs/decisions/) and [operations](docs/operations/).                                                   |
+| Need                                 | Start here                                                             |
+| ------------------------------------ | ---------------------------------------------------------------------- |
+| Choose or install a plugin           | This README and the plugin catalog above.                              |
+| Understand plugin behavior           | The plugin's `README.md`, then its `SKILL.md`.                         |
+| Read detailed references or examples | The links in the plugin README.                                        |
+| Contribute or maintain packages      | [Plugin submission guidelines](docs/contributing/plugins.md).          |
+| Review repository rules              | [AGENTS.md](AGENTS.md) and [documentation guidelines](docs/AGENTS.md). |
+| Review decisions and maintenance     | [Decisions](docs/decisions/) and [maintenance](docs/maintenance/).     |
 
 ## 🤝 Contributing
 
@@ -140,19 +136,14 @@ For a plugin change, update its manifest, README, and changelog together, then
 run the repository marketplace checks. The catalog is generated from validated
 package manifests; do not hand-edit generated metadata.
 
-See [AGENTS.md](AGENTS.md) for the complete contributor contract and
-[quality guidelines](docs/agent-guidelines/quality.md) for validation details.
+See [AGENTS.md](AGENTS.md) for the complete contributor contract and validation
+details.
 
-## 🏷️ Releases and repository metadata
+## 🏷️ Repository metadata
 
-- [Plugin releases and Git tags](https://github.com/nerymurillohnd/codex-essentials/releases)
-  identify immutable plugin snapshots. They are not a single marketplace version.
-- The [release publication decision](docs/decisions/adr-0010-release-publication-without-environment.md)
-  records the current release boundary and approval model.
-- GitHub **topics** support repository discovery; the README links to plugins by
-  intent rather than duplicating a tag cloud.
-- GitHub **issue labels** support maintainer triage and are managed in Issues and
-  contribution templates, not as product documentation.
+GitHub **topics** support repository discovery; the README links to plugins by
+intent rather than duplicating a tag cloud. GitHub **issue labels** support
+maintainer triage and are managed in Issues and contribution templates.
 
 ## ❓ FAQ
 
@@ -181,8 +172,7 @@ for requirements, permissions, and verification.
 
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
 - [Discussions](https://github.com/nerymurillohnd/codex-essentials/discussions)
-- [Releases](https://github.com/nerymurillohnd/codex-essentials/releases)
-- [Roadmap](docs/roadmap.md)
+- [Roadmap](AGENTS.md#roadmap)
 - [MIT License](LICENSE.md)
 
 Codex Essentials is community-maintained and is not an official OpenAI, Codex,

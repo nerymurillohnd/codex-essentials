@@ -2,7 +2,7 @@
 // @ts-check
 
 const path = require("node:path");
-const { validateLabelContract } = require("../lib/quality/github-labels.cjs");
+const { validateLabelContract } = require("./github-labels.cjs");
 
 try {
   const result = validateLabelContract(path.resolve(__dirname, ".."));

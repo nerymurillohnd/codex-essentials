@@ -13,9 +13,9 @@ Astro Commands is a Codex plugin for developers who build, test, preview, and
 debug Astro projects. It checks the installed Astro CLI, prefers supported
 commands, and does not replace the project's package manager or CLI.
 
-| Version source                                           | Release history                                                                | Install ref |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | [Plugin releases](https://github.com/nerymurillohnd/codex-essentials/releases) | `main`      |
+| Version source                                           | Install ref |
+| -------------------------------------------------------- | ----------- |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
 
 > [!CAUTION]
 > Astro Commands can inspect project files, run project commands, coordinate

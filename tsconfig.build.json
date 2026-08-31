@@ -25,10 +25,5 @@
     "sourceMap": true,
     "stripInternal": false
   },
-  "include": [
-    "adapters/**/*.ts",
-    "config/**/*.ts",
-    "plugins/**/*.ts",
-    "types/**/*.d.ts"
-  ]
+  "include": ["plugins/**/*.ts", "types/**/*.d.ts"]
 }

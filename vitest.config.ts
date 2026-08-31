@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      include: ["lib/**/*.cjs"],
+      include: ["scripts/{github-labels,project-bootstrap,typecheck}.cjs"],
       exclude: ["**/node_modules/**"],
       reporter: ["text", "json", "json-summary"],
       thresholds: {

@@ -43,7 +43,7 @@ Chosen option: **Require one `agents/openai.yaml` manifest for every
 
 For a skill at `skills/<skill-id>/SKILL.md`, its agent manifest must be at
 `skills/<skill-id>/agents/openai.yaml`. The canonical schema is
-`lib/schemas/agent.schema.json`, expressed as JSON Schema Draft 2020-12 and
+`schemas/agent.schema.json`, expressed as JSON Schema Draft 2020-12 and
 applied to YAML after parsing.
 
 The required contract is:

@@ -72,21 +72,11 @@
     "skipDefaultLibCheck": false,
     "skipLibCheck": false
   },
-  "include": [
-    "adapters/**/*.ts",
-    "config/**/*.ts",
-    "plugins/**/*.ts",
-    "lib/**/*.ts",
-    "tests/**/*.ts",
-    "types/**/*.d.ts",
-    "*.ts"
-  ],
+  "include": ["plugins/**/*.ts", "tests/**/*.ts", "types/**/*.d.ts", "*.ts"],
   "exclude": [
     "node_modules",
     "coverage",
     "dist",
-    "lib/**/*.cjs",
-    "lib/**/*.mjs",
     "*.config.cjs",
     "*.config.mjs"
   ]

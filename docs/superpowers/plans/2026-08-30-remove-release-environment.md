@@ -32,8 +32,7 @@
 
 **Files:**
 
-- Modify: `docs/agent-guidelines/quality.md:43-46`
-- Modify: `docs/agent-guidelines/security.md:12-14`
+- Modify: `AGENTS.md`
 - Create: `docs/decisions/adr-0010-release-publication-without-environment.md`
 - Modify: `.nvmrc`
 
@@ -46,8 +45,7 @@
 **Files:**
 
 - Test: `.github/workflows/release-please.yml`
-- Test: `docs/agent-guidelines/quality.md`
-- Test: `docs/agent-guidelines/security.md`
+- Test: `AGENTS.md`
 - Test: `docs/decisions/adr-0010-release-publication-without-environment.md`
 
 - [x] Align `.nvmrc` with the installed project runtime at `24.20.0`.

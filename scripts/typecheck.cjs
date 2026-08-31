@@ -7,7 +7,7 @@ const childProcess = require("node:child_process");
 const TYPESCRIPT_EXECUTABLE = "node_modules/@typescript/native/bin/tsc";
 const NO_EMIT_ARGUMENT = "--noEmit";
 
-function runTypecheck(root = path.resolve(__dirname, "..", ".."), io = {}) {
+function runTypecheck(root = path.resolve(__dirname, ".."), io = {}) {
   const tscPath = path.join(root, TYPESCRIPT_EXECUTABLE);
   const result = childProcess.spawnSync(
     process.execPath,

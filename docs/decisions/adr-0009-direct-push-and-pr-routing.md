@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-30
 decision-makers: Nery Samuel Murillo
 consulted: Codex
@@ -7,6 +7,12 @@ informed: Repository contributors
 ---
 
 # Direct Push and Pull Request Routing
+
+> **Status: Superseded historical record**
+>
+> The direct-push hook and classifier described here were removed. This record
+> remains for historical context; follow the current repository routing rules
+> in [AGENTS.md](../../AGENTS.md).
 
 ## Context
 
@@ -20,7 +26,7 @@ pushes and required pull requests or status checks.
 
 Allow direct pushes to `main` only for `docs/**`, the root `AGENTS.md`, and the
 root `README.md`. Enforce the path boundary in `.husky/pre-push` with the
-tested `lib/quality/direct-push-policy.cjs` classifier, and run the complete
+tested direct-push classifier, and run the complete
 `npm run check` gate for accepted direct pushes.
 
 Require pull requests for plugin packages, manifests, catalog data, scripts,

@@ -13,9 +13,9 @@ Codex Memory Audit is installed as `optimize-memories`. It audits and reconciles
 Codex memory artifacts across project and global scopes, verifies claims against
 current authority, and prepares a complete proposal before any approved change.
 
-| Version source                                           | Release history                                                                | Install ref |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | [Plugin releases](https://github.com/nerymurillohnd/codex-essentials/releases) | `main`      |
+| Version source                                           | Install ref |
+| -------------------------------------------------------- | ----------- |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
 
 > [!CAUTION]
 > Discovery, verification, and reporting are non-mutating. Memory changes occur

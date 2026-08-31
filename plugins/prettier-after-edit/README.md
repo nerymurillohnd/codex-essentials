@@ -13,9 +13,9 @@ Prettier After Edit is a Codex plugin with a `PostToolUse` hook. It formats the
 file reported by supported write/edit events, prefers a project-local Prettier,
 and does not install dependencies or change project configuration.
 
-| Version source                                           | Release history                                                                | Install ref |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | [Plugin releases](https://github.com/nerymurillohnd/codex-essentials/releases) | `main`      |
+| Version source                                           | Install ref |
+| -------------------------------------------------------- | ----------- |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
 
 > [!CAUTION]
 > This plugin can write formatted content back to the edited file immediately

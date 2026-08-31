@@ -33,7 +33,7 @@
 - Modify: `docs/superpowers/specs/2026-08-28-doc-keeper-design.md`
 
 - [x] Add the same notice immediately below each document title, stating that the document is a historical record superseded by ADR-0007 and that its source-of-truth, synchronization, validation, and release commands are not current instructions.
-- [x] Point the notice to `docs/decisions/adr-0007-plugin-manifest-marketplace-contract.md` and `docs/agent-guidelines/architecture.md` for current rules.
+- [x] Point the notice to `docs/decisions/adr-0007-plugin-manifest-marketplace-contract.md` and `AGENTS.md` for current rules.
 - [x] Preserve the original plan/spec requirements and examples below the notice so the files remain useful historical records.
 
 ### Task 2: Correct the Astro Commands changelog command reference
