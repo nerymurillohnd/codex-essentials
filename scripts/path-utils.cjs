@@ -39,9 +39,6 @@ function resolveContainedPath(root, relativePath) {
   let existingPath = filePath;
   while (!pathExists(existingPath)) {
     const parent = path.dirname(existingPath);
-    if (parent === existingPath) {
-      break;
-    }
     existingPath = parent;
   }
 

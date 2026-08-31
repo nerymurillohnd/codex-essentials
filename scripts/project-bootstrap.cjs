@@ -2,6 +2,7 @@
 // @ts-check
 
 const childProcess = require("node:child_process");
+const { formatError } = require("./error-utils.cjs");
 
 const ORGANIZATION_OPTION = "--org";
 const TITLE_OPTION = "--title";
@@ -150,48 +151,46 @@ function isProject(value) {
 }
 
 /** @param {string} command @param {string[]} args */
-/* c8 ignore next */
 function execute(command, args) {
   return childProcess.execFileSync(command, args, { encoding: "utf8" });
 }
 
-/* c8 ignore start */
-function main() {
+/** @param {string[]} args @param {Record<string, string | undefined>} environment @param {{log(message: string): void, error(message: string): void}} io @param {(command: string, args: string[]) => string} runner */
+function main(
+  args = process.argv.slice(2),
+  environment = process.env,
+  io = console,
+  runner = execute,
+) {
   try {
-    const options = parseArgs(process.argv.slice(2));
-    const result = bootstrapProject(options);
+    const options = parseArgs(args, environment);
+    const result = bootstrapProject(options, runner);
     const command = "command" in result ? result.command : undefined;
     const project = "project" in result ? result.project : undefined;
     if (options.dryRun && command) {
-      console.log(`Dry run: gh ${command.join(" ")}`);
+      io.log(`Dry run: gh ${command.join(" ")}`);
     } else if (project) {
-      console.log(
+      io.log(
         `${result.created ? "Created" : "Reused"} project: ${project.title}`,
       );
     }
-    console.log(`Fields: ${result.spec.fields.join(", ")}`);
+    io.log(`Fields: ${result.spec.fields.join(", ")}`);
+    return 0;
   } catch (error) {
-    console.error(`Project bootstrap failed: ${errorMessage(error)}`);
-    process.exitCode = 1;
+    io.error(`Project bootstrap failed: ${formatError(error)}`);
+    return 1;
   }
 }
-/* c8 ignore stop */
 
-/** @param {unknown} error */
-function errorMessage(error) {
-  return error instanceof Error ? error.message : String(error);
-}
-
-/* c8 ignore next 2 */
 if (require.main === module) {
-  main();
+  process.exitCode = main();
 }
 
 module.exports = {
   bootstrapProject,
   buildProjectSpec,
   createCommand,
-  errorMessage,
+  errorMessage: formatError,
   execute,
   listCommand,
   main,

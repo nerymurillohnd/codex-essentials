@@ -17,6 +17,18 @@
       "category": "Productivity"
     },
     {
+      "name": "configure-prettier",
+      "source": {
+        "source": "local",
+        "path": "./plugins/configure-prettier"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "doc-keeper",
       "source": {
         "source": "local",

@@ -1,10 +1,13 @@
 import { defineConfig } from "vitest/config";
+import { resolveCoverageInclude } from "./coverage-profiles.js";
+
+const coverageInclude = resolveCoverageInclude(process.argv);
 
 export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      include: ["scripts/{github-labels,project-bootstrap,typecheck}.cjs"],
+      include: coverageInclude,
       exclude: ["**/node_modules/**"],
       reporter: ["text", "json", "json-summary"],
       thresholds: {

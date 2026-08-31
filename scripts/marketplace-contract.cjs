@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const Ajv2020 = require("ajv/dist/2020").default;
 const YAML = require("yaml");
+const { formatError } = require("./error-utils.cjs");
 
 const MARKETPLACE = Object.freeze({
   name: "codex-essentials",
@@ -496,7 +497,7 @@ function loadJson(target, label) {
     return JSON.parse(fs.readFileSync(target, "utf8"));
   } catch (error) {
     throw new Error(
-      `unable to load ${label} at ${target}: ${/** @type {Error} */ (error).message}`,
+      `unable to load ${label} at ${target}: ${formatError(error)}`,
     );
   }
 }
@@ -507,7 +508,7 @@ function loadYaml(target, label) {
     return YAML.parse(fs.readFileSync(target, "utf8"));
   } catch (error) {
     throw new Error(
-      `unable to load ${label} at ${target}: ${/** @type {Error} */ (error).message}`,
+      `unable to load ${label} at ${target}: ${formatError(error)}`,
     );
   }
 }
@@ -537,11 +538,30 @@ function asRecord(value, label) {
 module.exports = {
   MARKETPLACE,
   MARKETPLACE_OUTPUT,
+  assertContained,
+  assertDirectory,
+  assertFunctionalComponent,
+  assertNoSymlinks,
+  assertRegularFile,
+  assertSkillDirectory,
+  assertUniqueMarketplacePluginNames,
   asRecord,
   buildMarketplace,
+  getField,
+  hookPaths,
+  loadJson,
   loadMarketplace,
   loadPluginManifests,
+  loadTemplateProfile,
+  loadYaml,
+  missingReadmeSections,
   resolveRootFromArgs,
+  resolvePluginPath,
+  validate,
+  validateDeclaredComponents,
+  validateFixedTemplateFields,
+  validatePluginDocumentation,
   validateMarketplace,
+  validatePluginResources,
   writeMarketplace,
 };
