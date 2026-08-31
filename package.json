@@ -40,8 +40,8 @@
   "type": "module",
   "lint-staged": {
     "*.{js,cjs,mjs}": [
-      "prettier --write",
-      "eslint --fix --max-warnings=0"
+      "eslint --fix --max-warnings=0",
+      "prettier --write"
     ],
     "*.{ts,tsx,mts,cts,json,jsonc,yaml,yml,md}": [
       "prettier --write"
@@ -55,7 +55,7 @@
     "eslint": "^10.9.1",
     "husky": "9.1.7",
     "lint-staged": "^17.4.1",
-    "prettier": "^3.9.6",
+    "prettier": "3.9.6",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-language-server": "^6.0.0",
     "vitest": "^4.1.11",
