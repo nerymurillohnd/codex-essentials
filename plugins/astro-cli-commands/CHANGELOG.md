@@ -22,6 +22,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - **[Area: Documentation]** Clarified the current Codex lifecycle-hook contract,
   including explicit manifest paths and conventional `hooks/hooks.json`
   discovery.
+- **[Area: Documentation]** Updated the GitHub Actions example to the Node
+  24-compatible `actions/setup-node@v7` action.
 
 ### Added
 

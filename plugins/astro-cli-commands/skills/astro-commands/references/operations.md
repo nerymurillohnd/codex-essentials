@@ -101,7 +101,7 @@ As a GitHub Actions job — `astro check` exiting `1` is what fails the step, so
 env:
   ASTRO_TELEMETRY_DISABLED: 1
 steps:
-  - uses: actions/setup-node@v4
+  - uses: actions/setup-node@v7
     with:
       node-version-file: .nvmrc
       cache: npm
