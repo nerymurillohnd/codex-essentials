@@ -86,6 +86,7 @@ behavior without first re-verifying it against the installed CLI.
 | Codex surface | Codex sessions with filesystem and process access.                          |
 | Runtime/tools | Project-local Node.js, Astro CLI, and existing package manager.             |
 | Project types | Astro projects using npm, pnpm, or Yarn lockfile conventions.               |
+| CI examples   | Use the Node 24-compatible `actions/setup-node@v7` action.                  |
 | Credentials   | None for installation; target tasks may require project secrets.            |
 | Network       | Optional for current docs, dependency installation, or deployment commands. |
 | Last verified | `2026-08-30` against package references; installed CLI wins.                |
