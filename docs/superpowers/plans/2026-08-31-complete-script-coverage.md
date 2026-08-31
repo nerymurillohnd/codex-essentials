@@ -10,6 +10,15 @@
 
 **Spec:** `AGENTS.md` automated quality gate and `docs/maintenance/resolved-debt.md` 2026-08-27 JavaScript coverage record.
 
+**Status:** Completed in `7a1d7b8`. The implementation consolidated the planned
+wrapper tests into `tests/script-entrypoints.test.ts` and the Git-backed
+documentation and guard integration tests into
+`tests/marketplace-pipeline.test.ts`.
+
+**Completion evidence:** `npm run check` passed on 2026-08-31 with 8 test files,
+57 tests, 99.20% line coverage, 97.87% branch coverage, and 100% function
+coverage.
+
 ## Global Constraints
 
 - Preserve per-file 96% thresholds for lines, functions, branches, and statements.
@@ -26,8 +35,8 @@
 - Modify: `scripts/documentation-gate.cjs`
 - Modify: `scripts/plugin-manifest-guard.cjs`
 - Modify: `scripts/validate-github-labels.cjs`
-- Test: `tests/documentation-gate.test.ts`
-- Test: `tests/plugin-manifest-guard.test.ts`
+- Test: `tests/script-entrypoints.test.ts`
+- Test: `tests/marketplace-pipeline.test.ts`
 - Test: `tests/github-labels.test.ts`
 
 **Interfaces:**
@@ -35,17 +44,17 @@
 - Produces: `main(args)` and `run(args)` exports for each CLI; direct execution remains guarded by `require.main === module`.
 - Produces: `eventTouchesPluginManifest(value)` export for manifest-event classification.
 
-- [ ] Write assertions that importing each wrapper exposes its callable interface and that its real child-process entrypoint preserves success and failure exit behavior.
-- [ ] Run each focused test before the wrapper refactor and confirm it fails because the interface is not exported.
-- [ ] Add the smallest `main`/`run` separation that accepts explicit arguments, returns an exit status, and keeps the existing emitted text and CLI behavior.
-- [ ] Run the focused tests and confirm the original child-process behavior and the new in-process branches pass.
+- [x] Write assertions that importing each wrapper exposes its callable interface and that its real child-process entrypoint preserves success and failure exit behavior.
+- [x] Run each focused test before the wrapper refactor and confirm it fails because the interface is not exported.
+- [x] Add the smallest `main`/`run` separation that accepts explicit arguments, returns an exit status, and keeps the existing emitted text and CLI behavior.
+- [x] Run the focused tests and confirm the original child-process behavior and the new in-process branches pass.
 
 ### Task 2: Test uncovered path and documentation boundaries
 
 **Files:**
 
 - Create: `tests/path-utils.test.ts`
-- Modify: `tests/documentation-gate.test.ts`
+- Modify: `tests/script-entrypoints.test.ts`
 - Modify: `tests/marketplace-pipeline.test.ts`
 
 **Interfaces:**
@@ -53,27 +62,29 @@
 - Consumes: `resolveContainedPath(root, relativePath)` and documentation-gate exports.
 - Produces: adversarial assertions for traversal, external and unresolved symlinks, invalid CLI arguments, Git failures, documentation drift, and masked versus unmasked credentials.
 
-- [ ] Write focused tests for normal contained paths and every path rejection mode; use temporary directories and real symbolic links.
-- [ ] Write focused documentation-gate tests using actual temporary Git repositories and commits.
-- [ ] Run the tests before changing coverage configuration; they must initially prove behavior but not make the omitted source visible to the coverage gate.
-- [ ] Retain child-process tests for `documentation-gate.cjs` and `plugin-manifest-guard.cjs` so module-guard wiring is independently exercised.
+- [x] Write focused tests for normal contained paths and every path rejection mode; use temporary directories and real symbolic links.
+- [x] Write focused documentation-gate tests using actual temporary Git repositories and commits.
+- [x] Run the tests before changing coverage configuration; they must initially prove behavior but not make the omitted source visible to the coverage gate.
+- [x] Retain child-process tests for `documentation-gate.cjs` and `plugin-manifest-guard.cjs` so module-guard wiring is independently exercised.
 
 ### Task 3: Make the complete source inventory a coverage contract
 
 **Files:**
 
+- Create: `coverage-profiles.ts`
 - Modify: `vitest.config.ts`
-- Test: `tests/*.test.ts`
+- Test: `tests/coverage-contract.test.ts`
+- Test: the focused files declared in `coverage-profiles.ts`
 
 **Interfaces:**
 
 - Produces: a complete coverage profile map containing every maintained production CJS module exactly once.
 - Produces: focused-test profiles that only include the source exercised by that test file.
 
-- [ ] Add `documentation-gate.cjs`, `plugin-manifest-guard.cjs`, `path-utils.cjs`, and `validate-github-labels.cjs` to the appropriate profiles without changing any threshold.
-- [ ] Run each focused test command with coverage and verify no unrelated script is required by that focused command.
-- [ ] Run `npm run test`, inspect the text coverage table, and verify every module under `scripts/` except `scripts/tsconfig.json` is present and each metric is at least 96%.
-- [ ] Run `npm run check`; report the exact output and any residual diagnostics. Do not commit because authorization has not been granted.
+- [x] Add `documentation-gate.cjs`, `plugin-manifest-guard.cjs`, `path-utils.cjs`, and `validate-github-labels.cjs` to the appropriate profiles without changing any threshold.
+- [x] Run each focused test command with coverage and verify no unrelated script is required by that focused command.
+- [x] Run `npm run test`, inspect the text coverage table, and verify every module under `scripts/` except `scripts/tsconfig.json` is present and each metric is at least 96%.
+- [x] Run `npm run check`; report the exact output and any residual diagnostics. Do not commit because authorization has not been granted.
 
 ### Task 4: Normalize every CJS error boundary
 
@@ -88,7 +99,7 @@
 - Produces: `formatError(error: unknown): string`, returning an Error message only when it is non-empty and otherwise `String(error)`.
 - Consumes: CJS catch boundaries that report errors; bare catches used solely for explicit control flow remain unchanged.
 
-- [ ] Write a failing `formatError` table test for `Error`, string, number, `null`, and `undefined` values.
-- [ ] Replace every blind `/** @type {Error} */` cast and duplicated error formatter in `scripts/*.cjs` with the shared helper.
-- [ ] Preserve the first-line shebang and second-line `// @ts-check` in executable CJS files; retain `.cjs` for every CommonJS runtime boundary.
-- [ ] Run focused coverage for the helper and every affected wrapper, then `npm run check`; do not commit without authorization.
+- [x] Write a failing `formatError` table test for `Error`, string, number, `null`, and `undefined` values.
+- [x] Replace every blind `/** @type {Error} */` cast and duplicated error formatter in `scripts/*.cjs` with the shared helper.
+- [x] Preserve the first-line shebang and second-line `// @ts-check` in executable CJS files; retain `.cjs` for every CommonJS runtime boundary.
+- [x] Run focused coverage for the helper and every affected wrapper, then `npm run check`; do not commit without authorization.
