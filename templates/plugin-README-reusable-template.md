@@ -6,7 +6,7 @@
 > {{One-sentence outcome in the user's language.}}
 
 **Explore:** [Install](#-quick-start) · [Purpose](#-purpose) ·
-[Environments](#-supported-environments) · [Safety](#-behavior-and-boundaries) ·
+[Environments](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
 {{Plugin name}} is a Codex plugin for {{target users and task}}. It {{primary
@@ -73,7 +73,9 @@ List only paths that actually exist in this package. Link each navigable path.
 {{Add rows for hooks, MCP/app manifests, references, examples, or assets only
 when they are present and supported by this plugin.}}
 
-## 🖥️ Supported Environments
+## 🖥️ Requirements and compatibility
+
+## Supported Environments
 
 | Requirement   | Supported value or behavior                             |
 | ------------- | ------------------------------------------------------- |

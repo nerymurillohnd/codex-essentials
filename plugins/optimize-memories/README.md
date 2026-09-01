@@ -6,7 +6,7 @@
 > Audit Codex memories with evidence before changing them.
 
 **Explore:** [Install](#-quick-start) · [Capabilities](#-what-it-does) ·
-[Requirements](#-requirements-and-compatibility) · [Safety](#-behavior-and-boundaries) ·
+[Requirements](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
 Codex Memory Audit is installed as `optimize-memories`. It audits and reconciles

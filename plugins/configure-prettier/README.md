@@ -8,7 +8,7 @@
 
 **Explore:** [Quick start](#-quick-start) ·
 [Purpose](#-purpose) ·
-[Environments](#-supported-environments) ·
+[Environments](#supported-environments) ·
 [Safety](#-behavior-and-boundaries) ·
 [Documentation](#-documentation-and-support)
 
@@ -95,7 +95,9 @@ or a global personal style to override an established repository contract.
 | [`CHANGELOG.md`](CHANGELOG.md)                                                                                                       | User-facing release history.                                          |
 | [`LICENSE.md`](LICENSE.md)                                                                                                           | License terms.                                                        |
 
-## 🖥️ Supported Environments
+## 🖥️ Requirements and compatibility
+
+## Supported Environments
 
 | Requirement         | Supported value or behavior                                                                                                                                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

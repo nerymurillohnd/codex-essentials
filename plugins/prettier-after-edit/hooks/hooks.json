@@ -1,5 +1,5 @@
 {
-  "description": "Format files with Prettier after Codex writes or edits them.",
+  "description": "Format edited files with Prettier and lint configured Markdown files with markdownlint-cli2.",
   "hooks": {
     "PostToolUse": [
       {
@@ -7,9 +7,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${PLUGIN_ROOT}/hooks/prettier-format.sh\"",
-            "timeout": 30,
-            "statusMessage": "Formatting edited files with Prettier"
+            "command": "node \"${PLUGIN_ROOT}/hooks/format-and-lint.mjs\"",
+            "timeout": 60,
+            "statusMessage": "Formatting edited files and linting Markdown"
           }
         ]
       }

@@ -6,7 +6,7 @@
 > Keep changelogs and architecture decisions aligned with evidence.
 
 **Explore:** [Install](#-quick-start) · [Capabilities](#-what-it-does) ·
-[Requirements](#-requirements-and-compatibility) · [Safety](#-behavior-and-boundaries) ·
+[Requirements](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
 DocKeeper is a Codex plugin for maintaining `CHANGELOG.md` files, curated

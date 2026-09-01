@@ -176,7 +176,7 @@ In Codex, prefer plain `astro info` and capture stdout. Use `--copy` only when c
 
 Output shape (values are illustrative, from Astro's own docs — not current releases):
 
-```
+```text
 Astro                    v5.14.1
 Vite                     v6.3.6
 Node                     v22.17.1

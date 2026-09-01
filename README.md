@@ -29,32 +29,32 @@ can access, which tools it needs, and what side effects or approvals apply.
 
 ## 🧩 Plugin catalog
 
-| Plugin                                                       | Best for                                                               | Install ID            |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------- | --------------------- |
-| [Astro Commands](plugins/astro-cli-commands/README.md)       | Astro CLI discovery, project checks, preview, and server coordination. | `astro-cli-commands`  |
-| [Prettier After Edit](plugins/prettier-after-edit/README.md) | Formatting edited files with project-local or PATH Prettier.           | `prettier-after-edit` |
-| [DocKeeper](plugins/doc-keeper/README.md)                    | Evidence-based changelog and ADR maintenance.                          | `doc-keeper`          |
-| [Codex Memory Audit](plugins/optimize-memories/README.md)    | Auditing and reconciling Codex memory artifacts.                       | `optimize-memories`   |
+| Plugin                                                                      | Best for                                                                       | Install ID            |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | --------------------- |
+| [Astro Commands](plugins/astro-cli-commands/README.md)                      | Astro CLI discovery, project checks, preview, and server coordination.         | `astro-cli-commands`  |
+| [Prettier + Markdownlint After Edit](plugins/prettier-after-edit/README.md) | Exact-file Prettier formatting plus configured Markdown fixes and diagnostics. | `prettier-after-edit` |
+| [DocKeeper](plugins/doc-keeper/README.md)                                   | Evidence-based changelog and ADR maintenance.                                  | `doc-keeper`          |
+| [Codex Memory Audit](plugins/optimize-memories/README.md)                   | Auditing and reconciling Codex memory artifacts.                               | `optimize-memories`   |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
 permissions, side effects, and examples._
 
 ## 🎯 Choose by use case
 
-| If you need to...                                      | Start with...                                                |
-| ------------------------------------------------------ | ------------------------------------------------------------ |
-| Discover and install curated Codex plugins             | [Plugin catalog](#-plugin-catalog)                           |
-| Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)       |
-| Format files automatically after Codex edits           | [Prettier After Edit](plugins/prettier-after-edit/README.md) |
-| Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                    |
-| Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)    |
+| If you need to...                                      | Start with...                                                               |
+| ------------------------------------------------------ | --------------------------------------------------------------------------- |
+| Discover and install curated Codex plugins             | [Plugin catalog](#-plugin-catalog)                                          |
+| Plan, check, preview, or coordinate an Astro project   | [Astro Commands](plugins/astro-cli-commands/README.md)                      |
+| Format edits and lint configured Markdown              | [Prettier + Markdownlint After Edit](plugins/prettier-after-edit/README.md) |
+| Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                                   |
+| Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)                   |
 
 _Use cases describe the user's starting problem; the linked plugin README
 explains behavior, requirements, boundaries, and expected results._
 
 **Explore by keyword:** [Codex plugins](https://developers.openai.com/plugins/build/plugins)
 · [Astro CLI](plugins/astro-cli-commands/README.md) ·
-[Prettier hooks](plugins/prettier-after-edit/README.md) ·
+[Prettier and Markdown hooks](plugins/prettier-after-edit/README.md) ·
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
 [Memory audit](plugins/optimize-memories/README.md)
 

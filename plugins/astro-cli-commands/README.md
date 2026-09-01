@@ -6,7 +6,7 @@
 > Let Astro's own CLI lead the work.
 
 **Explore:** [Install](#-quick-start) · [Capabilities](#-what-it-does) ·
-[Requirements](#-requirements-and-compatibility) · [Safety](#-behavior-and-boundaries) ·
+[Requirements](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
 Astro Commands is a Codex plugin for developers who build, test, preview, and
