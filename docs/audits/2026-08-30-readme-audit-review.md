@@ -226,7 +226,7 @@ entries to the root and three plugin-specific FAQ entries to every plugin README
 
 ### Root `README.md`
 
-**What works**
+#### What works
 
 - Strong repository identity, license, workflow, security, and documentation links.
 - The four-plugin catalog is accurate and the installation IDs are visible.
@@ -235,7 +235,7 @@ entries to the root and three plugin-specific FAQ entries to every plugin README
 - It includes contributor commands, package containment, generated catalog behavior,
   and plugin release isolation.
 
-**What fails or underperforms**
+#### What fails or underperforms
 
 - The first screen does not offer a direct linked choice for each plugin.
 - “Start Here” and “Marketplace Lifecycle” overlap.
@@ -248,7 +248,7 @@ entries to the root and three plugin-specific FAQ entries to every plugin README
 - The title emoji and heading emoji are consistent within this file but not across
   the plugin files, and several headings are visually heavy for a technical catalog.
 
-**Recommended target**
+#### Recommended target
 
 Use the supplied root template. Target approximately 120–160 lines. Its order should
 be: value proposition, trust/status, plugin catalog, install, update/remove, docs
@@ -256,7 +256,7 @@ routing, contribution, support/license.
 
 ### `plugins/astro-cli-commands/README.md`
 
-**What works**
+#### What works
 
 - Clear outcome and decision rule.
 - Good explanation of local CLI precedence, side effects, approval boundaries, and
@@ -264,7 +264,7 @@ routing, contribution, support/license.
 - The Reference Library is useful and mostly well linked.
 - It appropriately says the package is independent from Astro.
 
-**Required fixes**
+#### Required fixes
 
 - Correct the three unlinked component paths.
 - Replace `marketplace update` with `marketplace upgrade`.
@@ -280,14 +280,14 @@ high-impact because this README is an installation document.
 
 ### `plugins/doc-keeper/README.md`
 
-**What works**
+#### What works
 
 - The purpose and non-invention principle are excellent.
 - Scope, authorization, side effects, and remote-mutation boundaries are explicit.
 - The component inventory matches the package structure.
 - It explains how existing release tooling remains authoritative.
 
-**What fails or underperforms**
+#### What fails or underperforms
 
 - It starts with a dense policy explanation instead of a one-line value proposition,
   badge, quick start, or direct marketplace link.
@@ -305,7 +305,7 @@ quality. Use it as the accuracy model, not as the length model.
 
 ### `plugins/optimize-memories/README.md`
 
-**What works**
+#### What works
 
 - Best current balance of purpose, scope modes, approval gate, rollback, and
   verification.
@@ -315,7 +315,7 @@ quality. Use it as the accuracy model, not as the length model.
 - The proposal-first behavior is a strong trust/conversion asset for a sensitive
   memory workflow.
 
-**Remaining improvements**
+#### Remaining improvements
 
 - Shorten the document by moving full phase/policy detail into `SKILL.md`.
 - Add reciprocal marketplace/changelog/support links.
@@ -332,7 +332,7 @@ permissions and recovery, then be reduced to a landing-page-sized document.
 
 ### `plugins/prettier-after-edit/README.md`
 
-**What works**
+#### What works
 
 - Explains the hook event contract, local-first resolution, fallback behavior, input
   payloads, output JSON, side effects, and limitations.
@@ -340,7 +340,7 @@ permissions and recovery, then be reduced to a landing-page-sized document.
 - The hook's write behavior is disclosed instead of being hidden behind a generic
   “automatic formatting” promise.
 
-**Required fixes**
+#### Required fixes
 
 - Replace `marketplace update` with `marketplace upgrade`.
 - Make the smoke-test command unambiguous about its working directory. The current

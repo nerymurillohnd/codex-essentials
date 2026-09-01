@@ -113,9 +113,9 @@ are `npm run format:check`, `npm run lint -- --max-warnings=0`,
 
 References:
 
-- https://github.com/typicode/husky/releases
-- https://github.com/typicode/husky/blob/main/docs/get-started.md
-- https://github.com/typicode/husky/blob/main/docs/how-to.md
-- https://github.com/lint-staged/lint-staged
-- https://github.com/prettier/prettier/blob/main/docs/precommit.md
-- https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0
+- <https://github.com/typicode/husky/releases>
+- <https://github.com/typicode/husky/blob/main/docs/get-started.md>
+- <https://github.com/typicode/husky/blob/main/docs/how-to.md>
+- <https://github.com/lint-staged/lint-staged>
+- <https://github.com/prettier/prettier/blob/main/docs/precommit.md>
+- <https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0>

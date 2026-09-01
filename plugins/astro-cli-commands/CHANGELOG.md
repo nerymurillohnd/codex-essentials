@@ -24,6 +24,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   discovery.
 - **[Area: Documentation]** Updated the GitHub Actions example to the Node
   24-compatible `actions/setup-node@v7` action.
+- **[Area: Documentation]** Labeled the illustrative `astro info` output fence
+  as plain text so Markdown linting and rendered documentation agree.
 
 ### Added
 

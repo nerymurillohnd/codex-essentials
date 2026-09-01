@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.2/schema/markdownlint-cli2-config-schema.json",
+  "config": {
+    "extends": "markdownlint/style/prettier",
+    "MD024": {
+      "siblings_only": true,
+    },
+    "MD033": {
+      "allowed_elements": ["br", "details", "summary"],
+    },
+  },
+  "globs": ["**/*.md", "**/*.markdown"],
+  "gitignore": true,
+  "overrides": [
+    {
+      "filter": ["**/LICENSE.md", "templates/LICENSE-reusable-template.md"],
+      "combine": "merge",
+      "config": {
+        "MD036": false,
+      },
+    },
+    {
+      "filter": ["docs/decisions/adr-template.md", "templates/adr-template.md"],
+      "combine": "merge",
+      "config": {
+        "MD026": false,
+        "MD041": false,
+      },
+    },
+  ],
+}

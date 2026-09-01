@@ -1,24 +1,24 @@
 ---
 name: prettier-after-edit
-description: Use this skill first when you need immediate formatting after Codex write/edit operations. It resolves a local project Prettier first, then a global fallback in PATH.
+description: Use this skill first when edited files should be formatted immediately with Prettier and configured Markdown should be fixed or linted with markdownlint-cli2. It resolves project-local tools first, then PATH fallbacks.
 ---
 
-# Prettier After Edit
+# Prettier + Markdownlint After Edit
 
-`prettier-after-edit` is the plugin behavior guide for automatic, event-driven
-formatting. Read this before suggesting ad-hoc formatting commands or manual
-cleanup in the same workflow.
+`prettier-after-edit` is the behavior guide for automatic, event-driven
+formatting and configured Markdown linting. Read this before suggesting ad-hoc
+format commands or manual cleanup in the same workflow.
 
 ## Resolution order
 
-Always use this order:
+Resolve Prettier and markdownlint-cli2 independently for each target:
 
-1. `node_modules/.bin/prettier` found from the edited file path upward.
-2. `command -v prettier` from the current environment.
-3. Skip with a warning status message when no formatter is available.
+1. Search `node_modules/.bin` from the edited file upward through event `cwd`.
+2. Use the first matching executable visible on `PATH` as a fallback.
+3. Skip that phase with an explicit message when no executable is available.
 
-Do not call `npm install`, `pnpm add`, `yarn add`, or `npx prettier` from this
-plugin. The hook only formats when a formatter is already available to the project.
+Do not call `npm install`, `npx`, Corepack, Yarn, or pnpm. The hook only uses
+tools already available to the target project or process environment.
 
 ## Runtime behavior
 
@@ -34,24 +34,41 @@ It collects and deduplicates:
 - `tool_input.file_path`
 - `tool_input.path`
 - `tool_input.file`
-- every `*** Add File:` and `*** Update File:` line from string tool input or
+- every `*** Add File:` and `*** Update File:` line from string `tool_input` or
   `tool_input.command`
 
-Only files reported by the event are formatted. For each file, the hook runs
-from the event `cwd` so project Prettier configuration and ignore policy apply.
+The hook canonicalizes each existing file and rejects any target resolving
+outside event `cwd`. It never expands directories or repository-wide globs.
+
+For every supported target, it runs Prettier first. It reports `formatted` only
+when file bytes change, `unchanged` when they do not, and distinct `skipped` or
+`failed` outcomes for ignore, parser, executable, or process failures.
+
+For `.md` and `.markdown` targets, it then searches for a recognized project
+markdownlint or markdownlint-cli2 configuration. When configuration and an
+executable exist, it runs:
+
+```text
+markdownlint-cli2 --fix --no-globs :relative/path.md
+```
+
+The phase reports `clean`, `fixed`, `issues remain`, `fixed; issues remain`,
+`skipped`, or `failed` and includes the first actionable diagnostic.
 
 ## Failure behavior
 
-- If the hook payload cannot be parsed, it emits `skipped; unable to parse hook payload.` and exits 0.
-- If `jq` is missing, it emits `skipped; jq not found.` and exits 0.
-- If target file resolution fails, it emits `skipped; no target file in hook payload.` or
-  `skipped; target file not found: <file>.` and continues safely.
-- If no formatter exists for a target, it emits
-  `skipped; prettier not found for <file>.` and continues safely.
-- If formatter execution fails, it emits `failed to format <file>.`
+- Invalid or empty payloads produce an explicit skip message.
+- Missing, non-file, and outside-cwd targets are skipped without execution.
+- A missing tool skips only its phase.
+- A child process receives a 20-second timeout; the hook command has a
+  60-second timeout.
+- Failure in one target does not prevent reporting other event targets.
+- The hook exits `0` after reporting because the triggering edit already
+  completed. Repository CLI and CI checks remain the enforcement boundary.
 
 ## Approval boundaries
 
-Use this automatically for selected edit events. For non-idempotent operations
-(bulk refactors, repository-wide rewrites, file move strategy changes), ask for
-explicit approval before enabling formatting in that run.
+Use this automatically for selected edit events. Review and trust the current
+hook implementation before enabling it in a critical repository. Ask for
+explicit approval before bulk rewrites, repository-wide formatting, dependency
+installation, configuration changes, or another non-idempotent expansion.

@@ -12,7 +12,7 @@ superseded-by: ADR-0009
 ## Context and Problem Statement
 
 Codex Essentials has independently versioned plugin packages whose runtime
-metadata lives in plugins/<plugin-id>/.codex-plugin/plugin.json. The previous
+metadata lives in `plugins/<plugin-id>/.codex-plugin/plugin.json`. The previous
 release workflow combined manual version selection, changelog promotion,
 tagging, release creation, and custom validation. That duplicated standard
 release-engine behavior and made the release protocol fragile.
@@ -77,7 +77,7 @@ The normalization step consumes that artifact and rejects missing or malformed
 component outputs, stale SHAs, missing manifests, and mismatches between the
 action's exact tag, SHA, and plugin metadata. It never rebuilds a tag from a
 plugin name and version. The required tag shape is
-plugin/<plugin-id>/v<semver>, and the action's tag_name is the source of truth.
+`plugin/<plugin-id>/v<semver>`, and the action's `tag_name` is the source of truth.
 
 Release Please runs in the same workflow as post-release validation and
 packaging. No push-tag or release workflow is used, because events generated

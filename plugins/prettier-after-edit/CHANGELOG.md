@@ -8,6 +8,12 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Added
+
+- **[Area: Markdown]** Added configured, exact-file markdownlint-cli2 fixes and
+  remaining-issue diagnostics after Prettier for edited `.md` and `.markdown`
+  files.
+
 ### Changed
 
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository
@@ -20,6 +26,12 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   direct input paths, prefer the nearest local Prettier for each target, and
   retain the PATH-visible global fallback without using `npx` or installing
   dependencies.
+- **[Area: Runtime]** Replaced the Bash and jq hook with a self-contained Node
+  orchestrator, increased the hook timeout to 60 seconds, and preserved
+  project-local-first tool resolution with PATH fallback.
+- **[Area: Product]** Expanded the display name and documentation to describe
+  the combined Prettier and markdownlint behavior while retaining the
+  `prettier-after-edit` installation identifier.
 
 ### Fixed
 
@@ -30,6 +42,11 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   event, preserve paths containing spaces, and leave unreported files untouched.
 - **[Area: Formatting]** Run Prettier from the target project with project-local
   paths so its configuration and ignore policy apply to explicit files.
+- **[Area: Status]** Report `formatted` only when Prettier changes file bytes;
+  distinguish unchanged, ignored, unsupported, failed, fixed, clean, and
+  remaining-issue outcomes.
+- **[Area: Scope]** Reject missing, non-file, and outside-cwd targets and prevent
+  markdownlint configuration globs from widening a single edit event.
 - **[Area: Skill]** Removed the unsupported `disable-model-invocation`
   frontmatter key so the distributed skill passes the current skill validator.
 
