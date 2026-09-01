@@ -1,7 +1,6 @@
 ---
 name: prettier-after-edit
 description: Use this skill first when you need immediate formatting after Codex write/edit operations. It resolves a local project Prettier first, then a global fallback in PATH.
-disable-model-invocation: false
 ---
 
 # Prettier After Edit
@@ -29,24 +28,26 @@ The hook runs on `PostToolUse` with matcher:
 apply_patch|Write|Edit|MultiEdit
 ```
 
-It selects:
+It collects and deduplicates:
 
+- `tool_response.filePath`
 - `tool_input.file_path`
 - `tool_input.path`
 - `tool_input.file`
-- first `*** Add File:` or `*** Update File:` line inside `tool_input.command`
+- every `*** Add File:` and `*** Update File:` line from string tool input or
+  `tool_input.command`
 
-in that order.
-
-Only one file is formatted per event.
+Only files reported by the event are formatted. For each file, the hook runs
+from the event `cwd` so project Prettier configuration and ignore policy apply.
 
 ## Failure behavior
 
 - If the hook payload cannot be parsed, it emits `skipped; unable to parse hook payload.` and exits 0.
 - If `jq` is missing, it emits `skipped; jq not found.` and exits 0.
 - If target file resolution fails, it emits `skipped; no target file in hook payload.` or
-  `skipped; target file not found: <file>.` and exits 0 with no formatter invocation.
-- If no formatter exists, it emits `skipped; prettier not found.` and exits 0.
+  `skipped; target file not found: <file>.` and continues safely.
+- If no formatter exists for a target, it emits
+  `skipped; prettier not found for <file>.` and continues safely.
 - If formatter execution fails, it emits `failed to format <file>.`
 
 ## Approval boundaries

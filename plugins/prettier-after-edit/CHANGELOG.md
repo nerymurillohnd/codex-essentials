@@ -16,6 +16,22 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - **[Area: Manifest]** Added the explicit `hooks` declaration and recorded the
   complete author, legal, interface, and component metadata; the marketplace
   entry is generated and reverse-validated from this manifest.
+- **[Area: Runtime]** Accept `tool_response.filePath` in addition to existing
+  direct input paths, prefer the nearest local Prettier for each target, and
+  retain the PATH-visible global fallback without using `npx` or installing
+  dependencies.
+
+### Fixed
+
+- **[Area: Hook]** Replaced the invalid nested shell fallback in the packaged
+  hook command with Codex's `${PLUGIN_ROOT}` contract, preventing startup
+  failures with exit code `127`.
+- **[Area: Hook]** Format every file reported by a multi-file `apply_patch`
+  event, preserve paths containing spaces, and leave unreported files untouched.
+- **[Area: Formatting]** Run Prettier from the target project with project-local
+  paths so its configuration and ignore policy apply to explicit files.
+- **[Area: Skill]** Removed the unsupported `disable-model-invocation`
+  frontmatter key so the distributed skill passes the current skill validator.
 
 ## [0.1.1] - 2026-08-27
 

@@ -21,44 +21,43 @@ fi
 cwd="$(printf '%s' "${parsed_input}" | jq -r '.cwd // empty' 2>/dev/null || true)"
 [[ -n "${cwd}" ]] || cwd="${PWD}"
 
-file="$(printf '%s' "${parsed_input}" | jq -r '.tool_input.file_path // .tool_input.path // .tool_input.file // empty' 2>/dev/null || true)"
-if [[ -z "${file}" ]]; then
-	command_payload="$(printf '%s' "${parsed_input}" | jq -r '
+files=()
+file_count=0
+
+add_file() {
+	local candidate="$1"
+	local existing
+	local index
+
+	[[ -n "${candidate}" ]] || return 0
+	for ((index = 0; index < file_count; index += 1)); do
+		existing="${files[index]}"
+		[[ "${existing}" == "${candidate}" ]] && return 0
+	done
+	files[file_count]="${candidate}"
+	((file_count += 1))
+}
+
+direct_file="$(printf '%s' "${parsed_input}" | jq -r '.tool_response.filePath // .tool_input.file_path // .tool_input.path // .tool_input.file // empty' 2>/dev/null || true)"
+add_file "${direct_file}"
+
+command_payload="$(printf '%s' "${parsed_input}" | jq -r '
 	  if (.tool_input | type) == "string" then
 	    .tool_input
 	  else
 	    .tool_input.command // ""
 	  end
 	' 2>/dev/null || true)"
-	while IFS= read -r line; do
-		case "${line}" in
-		"*** Add File: "*)
-			file="${line#*** Add File: }"
-			break
-			;;
-		"*** Update File: "*)
-			file="${line#*** Update File: }"
-			break
-			;;
-		*)
-			:
-			;;
-		esac
-	done <<<"${command_payload}"
-fi
+while IFS= read -r line; do
+	case "${line}" in
+	"*** Add File: "*) add_file "${line#*** Add File: }" ;;
+	"*** Update File: "*) add_file "${line#*** Update File: }" ;;
+	*) : ;;
+	esac
+done <<<"${command_payload}"
 
-if [[ -z "${file}" ]]; then
+if [[ ${file_count} -eq 0 ]]; then
 	message "skipped; no target file in hook payload."
-	exit 0
-fi
-
-case "${file}" in
-/*) target="${file}" ;;
-*) target="${cwd%/}/${file}" ;;
-esac
-
-if [[ ! -f "${target}" ]]; then
-	message "skipped; target file not found: ${file}."
 	exit 0
 fi
 
@@ -85,27 +84,40 @@ find_local_prettier() {
 	return 1
 }
 
-prettier=""
-set +e
-prettier_from_local="$(find_local_prettier "${target%/*}")"
-set -e
-if [[ -n "${prettier_from_local}" ]]; then
-	prettier="${prettier_from_local}"
-fi
+for ((file_index = 0; file_index < file_count; file_index += 1)); do
+	file="${files[file_index]}"
+	case "${file}" in
+	/*) target="${file}" ;;
+	*) target="${cwd%/}/${file}" ;;
+	esac
 
-if [[ -z "${prettier}" ]]; then
+	if [[ ! -f "${target}" ]]; then
+		message "skipped; target file not found: ${file}."
+		continue
+	fi
+
 	set +e
-	prettier="$(command -v prettier)"
+	prettier="$(find_local_prettier "${target%/*}")"
 	set -e
-fi
+	if [[ -z "${prettier}" ]]; then
+		prettier="$(command -v prettier 2>/dev/null || true)"
+	fi
 
-if [[ -z "${prettier}" ]]; then
-	message "skipped; prettier not found."
-	exit 0
-fi
+	if [[ -z "${prettier}" ]]; then
+		message "skipped; prettier not found for ${file}."
+		continue
+	fi
 
-if "${prettier}" --write --ignore-unknown -- "${target}" >/dev/null 2>&1; then
-	message "formatted ${file}."
-else
-	message "failed to format ${file}."
-fi
+	case "${target}" in
+	"${cwd%/}/"*) format_target="${target#"${cwd%/}/"}" ;;
+	*) format_target="${target}" ;;
+	esac
+
+	if (cd "${cwd}" && "${prettier}" --write --ignore-unknown -- "${format_target}" >/dev/null 2>&1); then
+		message "formatted ${file}."
+	else
+		message "failed to format ${file}."
+	fi
+done
+
+exit 0

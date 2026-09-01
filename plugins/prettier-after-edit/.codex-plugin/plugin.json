@@ -14,12 +14,12 @@
   "interface": {
     "displayName": "Prettier After Edit",
     "shortDescription": "Auto-format files after each Codex edit.",
-    "longDescription": "This plugin formats the file reported by supported Codex edit events with Prettier. It always checks for a project-local Prettier first, then falls back to a PATH-visible global executable. If no executable is available, it skips cleanly without error.",
+    "longDescription": "This plugin formats only the files reported by supported Codex edit events with Prettier. For each file, it checks for a project-local Prettier first, then falls back to a PATH-visible global executable. If no executable is available, it skips cleanly without error.",
     "developerName": "Nery Samuel Murillo",
     "category": "Developer Tools",
     "capabilities": [
       "PostToolUse hook integration",
-      "Per-event file formatting after edits and writes",
+      "Per-event edited-file formatting after edits and writes",
       "Project-local Prettier preference with global fallback",
       "No installation-time project mutations"
     ],

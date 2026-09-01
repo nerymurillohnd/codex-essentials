@@ -9,9 +9,10 @@
 [Requirements](#-requirements-and-compatibility) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
-Prettier After Edit is a Codex plugin with a `PostToolUse` hook. It formats the
-file reported by supported write/edit events, prefers a project-local Prettier,
-and does not install dependencies or change project configuration.
+Prettier After Edit is a Codex plugin with a `PostToolUse` hook. It formats only
+the files reported by supported write/edit events, prefers a project-local
+Prettier for each file, and does not install dependencies or change project
+configuration.
 
 | Version source                                           | Install ref |
 | -------------------------------------------------------- | ----------- |
@@ -24,8 +25,8 @@ and does not install dependencies or change project configuration.
 
 ## 🎯 Purpose
 
-Use Prettier After Edit when Codex should format each supported edited file
-without installing dependencies or running a multi-file formatter.
+Use Prettier After Edit when Codex should format the files changed by each
+supported event without installing dependencies or formatting unrelated files.
 
 ## ⚡ Quick start
 
@@ -45,20 +46,23 @@ Read the write and trust boundaries below before enabling automatic formatting.
 
 ## 🎯 Use cases
 
-| Scenario                                | How this plugin helps                                                                            | Expected result                                    |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| Codex edits a tracked source file.      | Runs the project's [local Prettier after the event](hooks/prettier-format.sh).                   | The file matches project formatting rules.         |
-| A project has no local Prettier binary. | Falls back to a [PATH-visible global executable](skills/prettier-after-edit/SKILL.md).           | Formatting proceeds or skips with a clear message. |
-| An unsupported file type is edited.     | Uses `--ignore-unknown` and one-file-per-event scope from the [hook contract](hooks/hooks.json). | The hook skips safely without a project mutation.  |
+| Scenario                                | How this plugin helps                                                                         | Expected result                                    |
+| --------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Codex edits a tracked source file.      | Runs the project's [local Prettier after the event](hooks/prettier-format.sh).                | The file matches project formatting rules.         |
+| A project has no local Prettier binary. | Falls back to a [PATH-visible global executable](skills/prettier-after-edit/SKILL.md).        | Formatting proceeds or skips with a clear message. |
+| An unsupported file type is edited.     | Uses `--ignore-unknown` with event-reported scope from the [hook contract](hooks/hooks.json). | The hook skips safely without a project mutation.  |
 
-**Not a fit when:** formatting requires a package-managed install, multi-file
-format orchestration, or approval before every automatic write.
+**Not a fit when:** formatting requires a package-managed install,
+repository-wide format orchestration, or approval before every automatic write.
 
 ## 🎯 What it does
 
 - Handles `PostToolUse` events matching `apply_patch|Write|Edit|MultiEdit`.
-- Selects the first supported file path from the event payload.
-- Prefers `node_modules/.bin/prettier`, then falls back to `prettier` in PATH.
+- Collects and deduplicates every supported edited-file path from the event.
+- Prefers the nearest `node_modules/.bin/prettier` for each file, then falls
+  back to `prettier` in PATH.
+- Runs from the target project and passes only event-reported files so project
+  configuration and ignore policy apply without repository-wide formatting.
 - Emits JSON status messages and exits cleanly for normal and skip conditions.
 
 ## 🧰 Included Components
@@ -84,7 +88,7 @@ format orchestration, or approval before every automatic write.
 | Project types | Node ecosystem projects or any project with an accessible Prettier. |
 | Credentials   | None.                                                               |
 | Network       | Not used by the hook; dependencies are not installed.               |
-| Last verified | `2026-08-30` against the hook, manifest, skill, and package tree.   |
+| Last verified | `2026-08-31` against the hook, manifest, skill, and package tree.   |
 
 ## 🧩 Required Tools and Credentials
 
@@ -99,23 +103,25 @@ is the upstream reference for formatter behavior.
 
 ## Inputs and Outputs
 
-**Inputs:** JSON hook payload containing `cwd` and a file path, or an
-`apply_patch` payload containing the first `*** Add File:` or `*** Update File:`.
+**Inputs:** JSON hook payload containing `cwd` and direct response/input file
+paths, or an `apply_patch` payload containing `*** Add File:` or
+`*** Update File:` directives.
 **Outputs:** JSON status lines such as `formatted`, `skipped`, or `failed to
 format`; normal skip and failure conditions exit with status `0`.
 
 ## Permissions and Side Effects
 
-| Access or effect | What this plugin may do                                     |
-| ---------------- | ----------------------------------------------------------- |
-| Read             | Read the hook payload, target path, and formatter metadata. |
-| Write            | Write formatted content to the selected target file only.   |
-| Process          | Invoke `prettier --write --ignore-unknown` through Bash.    |
-| Network          | Not used.                                                   |
-| Authentication   | Not required.                                               |
+| Access or effect | What this plugin may do                                               |
+| ---------------- | --------------------------------------------------------------------- |
+| Read             | Read the hook payload, reported target paths, and formatter metadata. |
+| Write            | Write formatted content only to files reported by the event.          |
+| Process          | Invoke `prettier --write --ignore-unknown` through Bash.              |
+| Network          | Not used.                                                             |
+| Authentication   | Not required.                                                         |
 
-Each matching event formats at most one file. Installation changes Codex-managed
-plugin state and does not alter project lockfiles, configuration, or dependencies.
+Each matching event formats only its reported edited files. Installation changes
+Codex-managed plugin state and does not alter project lockfiles, configuration,
+or dependencies.
 
 ## Human Approval Boundaries
 
@@ -170,8 +176,8 @@ fixture and inspect the JSON status output.
 
 ## 🚧 Known Limitations
 
-- One file is formatted per event; move or folder rename operations are not specially handled.
-- Only the first matching `apply_patch` file directive is selected.
+- Deleted files, directory moves, and folder renames are not formatted.
+- Only direct file fields and `apply_patch` add/update directives are selected.
 - Missing `jq`, target files, or Prettier produce a clean skip message.
 - A formatter failure produces a failure message without hiding the target state.
 - No package-managed Prettier installation is attempted.
@@ -192,7 +198,7 @@ missing, check the payload shape and hook registration, then rerun the smoke tes
 <summary>Does installing this plugin modify my project?</summary>
 
 No. Installation changes Codex-managed plugin state. A matching hook event may
-write only the selected edited file with Prettier output.
+write only the edited files reported by that event with Prettier output.
 </details>
 
 <details>
