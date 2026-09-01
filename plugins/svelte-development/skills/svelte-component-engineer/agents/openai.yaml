@@ -1,0 +1,4 @@
+interface:
+  display_name: Svelte Component Engineer
+  short_description: Write and review Svelte 5 components with current MCP-backed guidance.
+  default_prompt: Use Svelte Component Engineer for this Svelte component change.

@@ -60,5 +60,6 @@
   "vitest.debugExclude": ["<node_internals>/**", "**/node_modules/**"],
   "vitest.forceCancelTimeout": 5000,
   "vitest.logLevel": "info",
-  "vitest.watchOnStartup": false
+  "vitest.watchOnStartup": false,
+  "markdown.validate.enabled": true
 }

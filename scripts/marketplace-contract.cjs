@@ -210,12 +210,21 @@ function validatePluginResources(
     assertDirectory(skillsRoot, `${manifest.skills}`);
     assertSkillDirectory(skillsRoot, manifest.skills, agentSchema);
   }
-  for (const field of ["mcpServers", "apps"]) {
-    const value = manifest[field];
-    if (typeof value === "string") {
-      const target = resolvePluginPath(pluginRoot, value, field);
-      assertRegularFile(target, value);
-    }
+  if (typeof manifest.mcpServers === "string") {
+    const target = resolvePluginPath(
+      pluginRoot,
+      manifest.mcpServers,
+      "mcpServers",
+    );
+    assertRegularFile(target, manifest.mcpServers);
+    validateReferencedMcpConfiguration(
+      loadJson(target, "plugin MCP configuration"),
+      target,
+    );
+  }
+  if (typeof manifest.apps === "string") {
+    const target = resolvePluginPath(pluginRoot, manifest.apps, "apps");
+    assertRegularFile(target, manifest.apps);
   }
   for (const hookPath of hookPaths(manifest.hooks)) {
     const target = resolvePluginPath(pluginRoot, hookPath, "hooks");
@@ -241,6 +250,76 @@ function validatePluginResources(
       );
     }
   }
+}
+
+/** @param {unknown} configuration @param {string} label */
+function validateReferencedMcpConfiguration(configuration, label) {
+  const record = asRecord(configuration, label);
+  if (record.mcp_servers !== undefined) {
+    validateMcpServerMap(record.mcp_servers, `${label} mcp_servers`);
+    return;
+  }
+  validateMcpServerMap(record, `${label} MCP server map`);
+}
+
+/** @param {unknown} value @param {string} label */
+function validateMcpServerMap(value, label) {
+  const servers = asRecord(value, label);
+  const entries = Object.entries(servers);
+  if (entries.length === 0) {
+    throw new Error(`${label} must contain at least one server`);
+  }
+  for (const [name, serverValue] of entries) {
+    if (!/^[A-Za-z0-9_-]+$/u.test(name)) {
+      throw new Error(`${label} server name is invalid: ${name}`);
+    }
+    validateMcpServer(serverValue, `${label}.${name}`);
+  }
+}
+
+/** @param {unknown} value @param {string} label */
+function validateMcpServer(value, label) {
+  const server = asRecord(value, label);
+  const allowedFields = new Set(["command", "args", "env", "url"]);
+  for (const field of Object.keys(server)) {
+    if (!allowedFields.has(field)) {
+      throw new Error(`${label}.${field} is not a supported MCP server field`);
+    }
+  }
+  const hasCommand = isNonEmptyString(server.command);
+  const hasUrl = isNonEmptyString(server.url);
+  if (hasCommand === hasUrl) {
+    throw new Error(`${label} must define exactly one of command or url`);
+  }
+  if (
+    server.args !== undefined &&
+    (!Array.isArray(server.args) ||
+      !server.args.every((entry) => typeof entry === "string"))
+  ) {
+    throw new Error(`${label}.args must be an array of strings`);
+  }
+  if (server.env !== undefined) {
+    const env = asRecord(server.env, `${label}.env`);
+    if (Object.keys(env).length === 0) {
+      throw new Error(`${label}.env must not be empty`);
+    }
+    for (const [key, envValue] of Object.entries(env)) {
+      if (key.length === 0 || typeof envValue !== "string") {
+        throw new Error(`${label}.env must map non-empty keys to strings`);
+      }
+    }
+  }
+  if (
+    server.url !== undefined &&
+    !/^https:\/\/[^\s]+$/u.test(String(server.url))
+  ) {
+    throw new Error(`${label}.url must be an https URL`);
+  }
+}
+
+/** @param {unknown} value */
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.length > 0;
 }
 
 /** @param {Record<string, unknown>} manifest @param {string} label */
@@ -560,8 +639,11 @@ module.exports = {
   validate,
   validateDeclaredComponents,
   validateFixedTemplateFields,
+  validateMcpServer,
+  validateMcpServerMap,
   validatePluginDocumentation,
   validateMarketplace,
   validatePluginResources,
+  validateReferencedMcpConfiguration,
   writeMarketplace,
 };

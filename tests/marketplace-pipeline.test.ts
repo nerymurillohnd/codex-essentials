@@ -242,7 +242,13 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const root = createFixture();
     const pluginsRoot = join(root, "plugins");
     writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
-    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(5);
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(6);
+
+    const invalidEntryRoot = createFixture();
+    writeFileSync(join(invalidEntryRoot, "plugins", "not-a-plugin.txt"), "x");
+    expect(() =>
+      marketplaceContract.loadPluginManifests(invalidEntryRoot),
+    ).toThrow("must be a real plugin directory");
 
     const emptyRoot = createFixture();
     rmSync(join(emptyRoot, "plugins"), { recursive: true });
@@ -386,6 +392,20 @@ describe("strict plugin-to-marketplace pipeline", () => {
       root,
       "plugins/doc-keeper/.codex-plugin/plugin.json",
     ) as Record<string, unknown>;
+    mkdirSync(join(root, "plugins", "doc-keeper", "assets"));
+    writeFileSync(
+      join(root, "plugins", "doc-keeper", "assets", "icon.png"),
+      "x",
+    );
+    manifest["interface"] = { composerIcon: "./assets/icon.png" };
+    expect(() =>
+      marketplaceContract.validatePluginResources(
+        join(root, "plugins", "doc-keeper"),
+        manifest,
+        readJson(root, "schemas/agent.schema.json"),
+        readJson(root, "schemas/hooks.schema.json"),
+      ),
+    ).not.toThrow();
     manifest["interface"] = { screenshots: [1] };
     expect(() =>
       marketplaceContract.validatePluginResources(
@@ -406,6 +426,89 @@ describe("strict plugin-to-marketplace pipeline", () => {
         readJson(root, "schemas/hooks.schema.json"),
       ),
     ).not.toThrow();
+
+    writeFileSync(join(barePlugin, ".app.json"), "{}\n");
+    expect(() =>
+      marketplaceContract.validatePluginResources(
+        barePlugin,
+        { apps: "./.app.json", interface: {} },
+        readJson(root, "schemas/agent.schema.json"),
+        readJson(root, "schemas/hooks.schema.json"),
+      ),
+    ).not.toThrow();
+  });
+
+  it("validates referenced MCP configuration shape directly", () => {
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          svelte: { url: "https://mcp.svelte.dev/mcp" },
+        },
+        "mcp",
+      ),
+    ).not.toThrow();
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          mcp_servers: {
+            docs: {
+              command: "docs-mcp",
+              args: ["--stdio"],
+              env: { DOCS_TOKEN: "${DOCS_TOKEN}" },
+            },
+          },
+        },
+        "mcp",
+      ),
+    ).not.toThrow();
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { mcp_servers: {} },
+        "mcp",
+      ),
+    ).toThrow("at least one server");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { "bad.name": { command: "server" } },
+        "mcp",
+      ),
+    ).toThrow("server name is invalid");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", type: "stdio" } },
+        "mcp",
+      ),
+    ).toThrow("not a supported MCP server field");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", url: "https://mcp.dev" } },
+        "mcp",
+      ),
+    ).toThrow("exactly one");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: {} },
+        "mcp",
+      ),
+    ).toThrow("exactly one");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", args: [1] } },
+        "mcp",
+      ),
+    ).toThrow("array of strings");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", env: {} } },
+        "mcp",
+      ),
+    ).toThrow("must not be empty");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", env: { TOKEN: 1 } } },
+        "mcp",
+      ),
+    ).toThrow("map non-empty keys");
   });
 
   it("validates all complete manifests, generates the catalog, and reverse-validates it", () => {
@@ -422,6 +525,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
         { name: "doc-keeper" },
         { name: "optimize-memories" },
         { name: "prettier-after-edit" },
+        { name: "svelte-development" },
       ],
     });
   });
@@ -503,6 +607,64 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const validation = run(root, "validate-plugins.cjs");
 
     expect(validation.status).toBe(0);
+  });
+
+  it("accepts a referenced remote MCP server configuration", () => {
+    const root = createFixture();
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    const manifestPath = join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["mcpServers"] = "./.mcp.json";
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    writeFileSync(
+      join(pluginRoot, ".mcp.json"),
+      `${JSON.stringify(
+        {
+          mcp_servers: {
+            svelte: { url: "https://mcp.svelte.dev/mcp" },
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).toBe(0);
+  });
+
+  it("rejects structurally invalid referenced MCP server configuration", () => {
+    const root = createFixture();
+    const pluginRoot = join(root, "plugins", "doc-keeper");
+    const manifestPath = join(pluginRoot, ".codex-plugin", "plugin.json");
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["mcpServers"] = "./.mcp.json";
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    writeFileSync(
+      join(pluginRoot, ".mcp.json"),
+      `${JSON.stringify(
+        {
+          mcp_servers: {
+            svelte: { url: "http://mcp.svelte.dev/mcp" },
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain(".mcp.json");
+    expect(validation.stderr).toContain("https URL");
   });
 
   it("rejects malformed referenced hook configuration", () => {

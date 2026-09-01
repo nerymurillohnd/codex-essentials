@@ -1,0 +1,47 @@
+{
+  "name": "svelte-development",
+  "version": "0.1.0",
+  "description": "Svelte Development gives Codex a remote-MCP-backed operating contract for serious Svelte 5 and SvelteKit architecture, implementation, and verification work.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "svelte-5",
+    "mcp",
+    "cli",
+    "codex",
+    "developer-tools"
+  ],
+  "interface": {
+    "displayName": "Svelte Development",
+    "shortDescription": "Engineer Svelte 5 and SvelteKit with official MCP-backed guidance.",
+    "longDescription": "A focused Svelte development plugin for Codex. It packages four skills for architecture, component implementation, SvelteKit server and routing work, and verification. The plugin also declares the official remote Svelte MCP endpoint so agents can prefer current Svelte documentation and MCP static-analysis workflows before relying on stale framework memory.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Svelte 5 architecture planning",
+      "Svelte component implementation guidance",
+      "SvelteKit server and routing workflow",
+      "Official remote Svelte MCP integration",
+      "Verification workflow for Svelte changes"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use Svelte Development to plan this Svelte app.",
+      "Review this SvelteKit change with official MCP docs.",
+      "Validate these Svelte 5 components before finalizing."
+    ],
+    "brandColor": "#FF3E00"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

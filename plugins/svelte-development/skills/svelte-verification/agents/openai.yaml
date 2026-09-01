@@ -1,0 +1,4 @@
+interface:
+  display_name: Svelte Verification
+  short_description: Verify Svelte and SvelteKit changes with MCP, CLI, tests, and builds.
+  default_prompt: Use Svelte Verification before finalizing this Svelte change.
