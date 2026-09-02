@@ -1,0 +1,46 @@
+{
+  "name": "live-research",
+  "version": "0.1.0",
+  "description": "Live Research gives Codex a disciplined workflow for verifying change-sensitive claims against current authoritative evidence.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "live-data",
+    "verification",
+    "evidence",
+    "sources",
+    "codex",
+    "web"
+  ],
+  "interface": {
+    "displayName": "Live Research",
+    "shortDescription": "Verify change-sensitive claims with current authoritative evidence.",
+    "longDescription": "A focused research workflow for Codex that routes time-sensitive questions to the strongest available sources, checks the full compatibility or evidence chain, distinguishes verified facts from interpretation and uncertainty, and reports citations, dates, limitations, and recovery paths.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Education & Research",
+    "capabilities": [
+      "Live verification of change-sensitive claims",
+      "Authoritative-source and evidence routing",
+      "Technical compatibility-chain review",
+      "Conflict and uncertainty reporting",
+      "Cited, auditable research summaries"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use Live Research to verify this claim against current authoritative sources.",
+      "Research the current compatibility and document the evidence chain.",
+      "Check which facts may have changed before answering."
+    ],
+    "brandColor": "#2563EB"
+  },
+  "skills": "./skills/"
+}

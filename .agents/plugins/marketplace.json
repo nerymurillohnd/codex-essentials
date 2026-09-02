@@ -41,6 +41,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "live-research",
+      "source": {
+        "source": "local",
+        "path": "./plugins/live-research"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Education & Research"
+    },
+    {
       "name": "optimize-memories",
       "source": {
         "source": "local",
