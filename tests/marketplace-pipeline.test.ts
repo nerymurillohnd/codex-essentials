@@ -634,6 +634,30 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(validation.status).toBe(0);
   });
 
+  it("rejects an inline HTTP MCP transport without a URL", () => {
+    const root = createFixture();
+    const manifestPath = join(
+      root,
+      "plugins",
+      "doc-keeper",
+      ".codex-plugin",
+      "plugin.json",
+    );
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["mcpServers"] = {
+      docs: { command: "docs-mcp", type: "http" },
+    };
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("must have property url");
+  });
+
   it("accepts a referenced remote MCP server configuration", () => {
     const root = createFixture();
     const pluginRoot = join(root, "plugins", "doc-keeper");
