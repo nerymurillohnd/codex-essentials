@@ -107,6 +107,7 @@
           "propertyNames": { "minLength": 1 },
           "additionalProperties": { "type": "string" }
         },
+        "type": { "const": "http" },
         "url": { "$ref": "#/$defs/httpsUrl" }
       },
       "oneOf": [

@@ -599,7 +599,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(validation.stderr).toContain(".mcp.json is missing");
   });
 
-  it("accepts a documented inline MCP server map", () => {
+  it("accepts an inline remote HTTP MCP server map", () => {
     const root = createFixture();
     const manifestPath = join(
       root,
@@ -613,7 +613,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
       "plugins/doc-keeper/.codex-plugin/plugin.json",
     ) as Record<string, unknown>;
     manifest["mcpServers"] = {
-      docs: { command: "docs-mcp", args: ["--stdio"] },
+      docs: { type: "http", url: "https://docs.example.com/mcp" },
     };
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 

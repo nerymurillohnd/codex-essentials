@@ -6,8 +6,9 @@ This plugin declares the official remote Svelte MCP endpoint:
 
 ```json
 {
-  "mcp_servers": {
+  "mcpServers": {
     "svelte": {
+      "type": "http",
       "url": "https://mcp.svelte.dev/mcp"
     }
   }
