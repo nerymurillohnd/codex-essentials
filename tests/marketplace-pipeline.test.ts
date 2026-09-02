@@ -476,6 +476,20 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).not.toThrow();
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          mcpServers: {
+            svelte: {
+              type: "http",
+              url: "https://mcp.svelte.dev/mcp",
+            },
+          },
+          typo: {},
+        },
+        "mcp",
+      ),
+    ).toThrow("wrapped configuration must contain exactly one top-level key");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
         { mcp_servers: {} },
         "mcp",
       ),

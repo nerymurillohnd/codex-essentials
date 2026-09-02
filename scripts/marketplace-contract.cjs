@@ -257,6 +257,11 @@ function validateReferencedMcpConfiguration(configuration, label) {
   const record = asRecord(configuration, label);
   const wrappedServers = record.mcpServers ?? record.mcp_servers;
   if (wrappedServers !== undefined) {
+    if (Object.keys(record).length !== 1) {
+      throw new Error(
+        `${label} wrapped configuration must contain exactly one top-level key`,
+      );
+    }
     validateMcpServerMap(wrappedServers, `${label} MCP servers`);
     return;
   }
