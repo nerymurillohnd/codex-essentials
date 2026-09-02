@@ -17,6 +17,8 @@ integrations.
 Each plugin is a self-contained package with its own skills, hooks, MCP servers,
 apps, or other declared components. Its README explains what it does, what it
 can access, which tools it needs, and what side effects or approvals apply.
+Live Research can use specialized capabilities already callable in a user's
+session without making those capabilities marketplace dependencies.
 
 > [!IMPORTANT]
 > This is a curated repository/CLI distribution source. It is not, by itself,
@@ -36,6 +38,7 @@ can access, which tools it needs, and what side effects or approvals apply.
 | [Prettier + Markdownlint After Edit](plugins/prettier-after-edit/README.md) | Exact-file Prettier formatting plus configured Markdown fixes and diagnostics. | `prettier-after-edit` |
 | [DocKeeper](plugins/doc-keeper/README.md)                                   | Evidence-based changelog and ADR maintenance.                                  | `doc-keeper`          |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)                   | Auditing and reconciling Codex memory artifacts.                               | `optimize-memories`   |
+| [Live Research](plugins/live-research/README.md)                            | Current research with callable MCP/plugin/skill-first routing and citations.   | `live-research`       |
 | [Svelte Development](plugins/svelte-development/README.md)                  | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.    | `svelte-development`  |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
@@ -51,6 +54,7 @@ permissions, side effects, and examples._
 | Format edits and lint configured Markdown              | [Prettier + Markdownlint After Edit](plugins/prettier-after-edit/README.md) |
 | Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                                   |
 | Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)                   |
+| Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)                            |
 | Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)                  |
 
 _Use cases describe the user's starting problem; the linked plugin README
@@ -62,6 +66,7 @@ explains behavior, requirements, boundaries, and expected results._
 [Prettier and Markdown hooks](plugins/prettier-after-edit/README.md) ·
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
 [Memory audit](plugins/optimize-memories/README.md) ·
+[Live research](plugins/live-research/README.md) ·
 [Svelte development](plugins/svelte-development/README.md)
 
 ## ⚡ Quick start
