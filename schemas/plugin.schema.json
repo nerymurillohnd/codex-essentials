@@ -95,6 +95,7 @@
     "mcpServer": {
       "type": "object",
       "additionalProperties": false,
+      "dependentRequired": { "type": ["url"] },
       "properties": {
         "command": { "$ref": "#/$defs/nonEmptyString" },
         "args": {
@@ -107,6 +108,7 @@
           "propertyNames": { "minLength": 1 },
           "additionalProperties": { "type": "string" }
         },
+        "type": { "const": "http" },
         "url": { "$ref": "#/$defs/httpsUrl" }
       },
       "oneOf": [

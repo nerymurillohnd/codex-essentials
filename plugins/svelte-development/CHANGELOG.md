@@ -8,12 +8,12 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
-### Added
+## [0.1.1] - 2026-09-02
 
-- Add the initial Svelte Development plugin with four focused skills for
-  architecture, component work, SvelteKit engineering, and verification.
-- Declare the official remote Svelte MCP endpoint at
-  `https://mcp.svelte.dev/mcp`.
+### Fixed
+
+- Load the bundled `svelte` remote MCP connection with the runtime-compatible
+  HTTP server declaration when the plugin is installed and enabled.
 
 ## [0.1.0] - 2026-09-01
 

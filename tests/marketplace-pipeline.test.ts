@@ -463,6 +463,33 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).not.toThrow();
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          mcpServers: {
+            svelte: {
+              type: "http",
+              url: "https://mcp.svelte.dev/mcp",
+            },
+          },
+        },
+        "mcp",
+      ),
+    ).not.toThrow();
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          mcpServers: {
+            svelte: {
+              type: "http",
+              url: "https://mcp.svelte.dev/mcp",
+            },
+          },
+          typo: {},
+        },
+        "mcp",
+      ),
+    ).toThrow("wrapped configuration must contain exactly one top-level key");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
         { mcp_servers: {} },
         "mcp",
       ),
@@ -475,10 +502,22 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).toThrow("server name is invalid");
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
-        { bad: { command: "server", type: "stdio" } },
+        { bad: { command: "server", note: "unsupported" } },
         "mcp",
       ),
     ).toThrow("not a supported MCP server field");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { type: "bogus", url: "https://mcp.dev" } },
+        "mcp",
+      ),
+    ).toThrow("type is not a supported MCP server field");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", type: "http" } },
+        "mcp",
+      ),
+    ).toThrow("type is not a supported MCP server field");
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
         { bad: { command: "server", url: "https://mcp.dev" } },
@@ -586,7 +625,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     expect(validation.stderr).toContain(".mcp.json is missing");
   });
 
-  it("accepts a documented inline MCP server map", () => {
+  it("accepts an inline remote HTTP MCP server map", () => {
     const root = createFixture();
     const manifestPath = join(
       root,
@@ -600,13 +639,37 @@ describe("strict plugin-to-marketplace pipeline", () => {
       "plugins/doc-keeper/.codex-plugin/plugin.json",
     ) as Record<string, unknown>;
     manifest["mcpServers"] = {
-      docs: { command: "docs-mcp", args: ["--stdio"] },
+      docs: { type: "http", url: "https://docs.example.com/mcp" },
     };
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
     const validation = run(root, "validate-plugins.cjs");
 
     expect(validation.status).toBe(0);
+  });
+
+  it("rejects an inline HTTP MCP transport without a URL", () => {
+    const root = createFixture();
+    const manifestPath = join(
+      root,
+      "plugins",
+      "doc-keeper",
+      ".codex-plugin",
+      "plugin.json",
+    );
+    const manifest = readJson(
+      root,
+      "plugins/doc-keeper/.codex-plugin/plugin.json",
+    ) as Record<string, unknown>;
+    manifest["mcpServers"] = {
+      docs: { command: "docs-mcp", type: "http" },
+    };
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    const validation = run(root, "validate-plugins.cjs");
+
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("must have property url");
   });
 
   it("accepts a referenced remote MCP server configuration", () => {

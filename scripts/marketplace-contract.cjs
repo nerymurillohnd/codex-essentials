@@ -255,8 +255,14 @@ function validatePluginResources(
 /** @param {unknown} configuration @param {string} label */
 function validateReferencedMcpConfiguration(configuration, label) {
   const record = asRecord(configuration, label);
-  if (record.mcp_servers !== undefined) {
-    validateMcpServerMap(record.mcp_servers, `${label} mcp_servers`);
+  const wrappedServers = record.mcpServers ?? record.mcp_servers;
+  if (wrappedServers !== undefined) {
+    if (Object.keys(record).length !== 1) {
+      throw new Error(
+        `${label} wrapped configuration must contain exactly one top-level key`,
+      );
+    }
+    validateMcpServerMap(wrappedServers, `${label} MCP servers`);
     return;
   }
   validateMcpServerMap(record, `${label} MCP server map`);
@@ -280,9 +286,9 @@ function validateMcpServerMap(value, label) {
 /** @param {unknown} value @param {string} label */
 function validateMcpServer(value, label) {
   const server = asRecord(value, label);
-  const allowedFields = new Set(["command", "args", "env", "url"]);
-  for (const field of Object.keys(server)) {
-    if (!allowedFields.has(field)) {
+  const serverFields = Object.keys(server);
+  for (const field of serverFields) {
+    if (!isSupportedMcpServerField(server, field)) {
       throw new Error(`${label}.${field} is not a supported MCP server field`);
     }
   }
@@ -612,6 +618,15 @@ function asRecord(value, label) {
     throw new Error(`${label} must be an object`);
   }
   return /** @type {Record<string, unknown>} */ (value);
+}
+
+/** @param {Record<string, unknown>} server @param {string} field */
+function isSupportedMcpServerField(server, field) {
+  const baseFields = new Set(["command", "args", "env", "url"]);
+  return (
+    baseFields.has(field) ||
+    (field === "type" && server.type === "http" && isNonEmptyString(server.url))
+  );
 }
 
 module.exports = {

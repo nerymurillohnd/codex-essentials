@@ -1,6 +1,6 @@
 {
   "name": "svelte-development",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Svelte Development gives Codex a remote-MCP-backed operating contract for serious Svelte 5 and SvelteKit architecture, implementation, and verification work.",
   "author": {
     "name": "Nery Samuel Murillo",
