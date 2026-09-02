@@ -255,8 +255,9 @@ function validatePluginResources(
 /** @param {unknown} configuration @param {string} label */
 function validateReferencedMcpConfiguration(configuration, label) {
   const record = asRecord(configuration, label);
-  if (record.mcp_servers !== undefined) {
-    validateMcpServerMap(record.mcp_servers, `${label} mcp_servers`);
+  const wrappedServers = record.mcpServers ?? record.mcp_servers;
+  if (wrappedServers !== undefined) {
+    validateMcpServerMap(wrappedServers, `${label} MCP servers`);
     return;
   }
   validateMcpServerMap(record, `${label} MCP server map`);
@@ -280,7 +281,7 @@ function validateMcpServerMap(value, label) {
 /** @param {unknown} value @param {string} label */
 function validateMcpServer(value, label) {
   const server = asRecord(value, label);
-  const allowedFields = new Set(["command", "args", "env", "url"]);
+  const allowedFields = new Set(["command", "args", "env", "type", "url"]);
   for (const field of Object.keys(server)) {
     if (!allowedFields.has(field)) {
       throw new Error(`${label}.${field} is not a supported MCP server field`);

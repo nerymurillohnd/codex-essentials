@@ -81,7 +81,7 @@ that intentionally produces Svelte code.
 | Project types | Svelte 5 applications, SvelteKit applications, libraries, and migrations into Svelte.                |
 | Credentials   | None required by this plugin. Target projects may have their own secrets; do not expose them to MCP. |
 | Network       | Required for the remote Svelte MCP endpoint and optional live documentation checks.                  |
-| Last verified | `2026-09-01` against official Svelte AI tools documentation and current npm metadata.                |
+| Last verified | `2026-09-02` against Codex 0.152.1 plugin loading and the official Svelte MCP endpoint.              |
 
 The installed project, lockfile, and current official documentation take
 precedence over static compatibility claims in this package.
@@ -142,9 +142,11 @@ configuration only within the scope approved by the user and repository policy.
 
 ## 📦 Installation Behavior
 
-Installation adds this plugin's skills and MCP declaration to Codex-managed
-state. It does not run `sv`, does not install Svelte packages, does not create
-a project, and does not change application repositories.
+Installation adds this plugin's four skills and its `svelte` remote MCP server
+connection to Codex-managed state. When the plugin is enabled, a new Codex
+session loads both the skills and the remote MCP tools. Installation does not
+run `sv`, install Svelte packages, create a project, or change application
+repositories.
 
 ## 🔁 Uninstall and Rollback Behavior
 
@@ -200,8 +202,8 @@ that mutate dependencies, lockfiles, generated files, or project state.
 ## 🩺 Failure and Recovery
 
 - If MCP tools are unavailable, verify the configured `.mcp.json`, confirm
-  network access, and fall back to official Svelte documentation or local
-  project checks.
+  network access, restart Codex to open a fresh session, and fall back to
+  official Svelte documentation or local project checks.
 - If `sv`, Svelte, or SvelteKit commands are missing, inspect `package.json`
   and the lockfile before installing anything. Report the missing executable and
   ask for authorization before dependency changes.

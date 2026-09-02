@@ -463,6 +463,19 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).not.toThrow();
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
+        {
+          mcpServers: {
+            svelte: {
+              type: "http",
+              url: "https://mcp.svelte.dev/mcp",
+            },
+          },
+        },
+        "mcp",
+      ),
+    ).not.toThrow();
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
         { mcp_servers: {} },
         "mcp",
       ),
@@ -475,7 +488,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).toThrow("server name is invalid");
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
-        { bad: { command: "server", type: "stdio" } },
+        { bad: { command: "server", note: "unsupported" } },
         "mcp",
       ),
     ).toThrow("not a supported MCP server field");
