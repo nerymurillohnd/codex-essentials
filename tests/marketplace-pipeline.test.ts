@@ -494,6 +494,18 @@ describe("strict plugin-to-marketplace pipeline", () => {
     ).toThrow("not a supported MCP server field");
     expect(() =>
       marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { type: "bogus", url: "https://mcp.dev" } },
+        "mcp",
+      ),
+    ).toThrow("type is not a supported MCP server field");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
+        { bad: { command: "server", type: "http" } },
+        "mcp",
+      ),
+    ).toThrow("type is not a supported MCP server field");
+    expect(() =>
+      marketplaceContract.validateReferencedMcpConfiguration(
         { bad: { command: "server", url: "https://mcp.dev" } },
         "mcp",
       ),

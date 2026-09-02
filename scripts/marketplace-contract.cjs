@@ -281,9 +281,9 @@ function validateMcpServerMap(value, label) {
 /** @param {unknown} value @param {string} label */
 function validateMcpServer(value, label) {
   const server = asRecord(value, label);
-  const allowedFields = new Set(["command", "args", "env", "type", "url"]);
-  for (const field of Object.keys(server)) {
-    if (!allowedFields.has(field)) {
+  const serverFields = Object.keys(server);
+  for (const field of serverFields) {
+    if (!isSupportedMcpServerField(server, field)) {
       throw new Error(`${label}.${field} is not a supported MCP server field`);
     }
   }
@@ -613,6 +613,15 @@ function asRecord(value, label) {
     throw new Error(`${label} must be an object`);
   }
   return /** @type {Record<string, unknown>} */ (value);
+}
+
+/** @param {Record<string, unknown>} server @param {string} field */
+function isSupportedMcpServerField(server, field) {
+  const baseFields = new Set(["command", "args", "env", "url"]);
+  return (
+    baseFields.has(field) ||
+    (field === "type" && server.type === "http" && isNonEmptyString(server.url))
+  );
 }
 
 module.exports = {
