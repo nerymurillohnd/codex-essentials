@@ -62,7 +62,7 @@ that intentionally produces Svelte code.
 | Component                                                                                | Purpose                                                   |
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                 | Plugin identity, version, and component declarations.     |
-| [`.mcp.json`](.mcp.json)                                                                 | Remote Svelte MCP server declaration.                     |
+| [`.mcp.json`](.mcp.json)                                                                 | Documented direct-map Svelte MCP declaration.             |
 | [`skills/svelte-architect/SKILL.md`](skills/svelte-architect/SKILL.md)                   | Planning contract for Svelte and SvelteKit architecture.  |
 | [`skills/svelte-component-engineer/SKILL.md`](skills/svelte-component-engineer/SKILL.md) | Component and Svelte 5 implementation contract.           |
 | [`skills/sveltekit-engineer/SKILL.md`](skills/sveltekit-engineer/SKILL.md)               | SvelteKit route, server, action, and adapter contract.    |
@@ -81,7 +81,7 @@ that intentionally produces Svelte code.
 | Project types | Svelte 5 applications, SvelteKit applications, libraries, and migrations into Svelte.                |
 | Credentials   | None required by this plugin. Target projects may have their own secrets; do not expose them to MCP. |
 | Network       | Required for the remote Svelte MCP endpoint and optional live documentation checks.                  |
-| Last verified | `2026-09-02` against Codex 0.152.1 plugin loading and the official Svelte MCP endpoint.              |
+| Last verified | `2026-09-02` against Codex 0.152.1 direct-map loading and the official Svelte MCP endpoint.          |
 
 The installed project, lockfile, and current official documentation take
 precedence over static compatibility claims in this package.
