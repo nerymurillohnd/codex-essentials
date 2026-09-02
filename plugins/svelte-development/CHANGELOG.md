@@ -8,6 +8,13 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-02
+
+### Changed
+
+- Use the documented direct server map in `.mcp.json` while preserving the
+  verified remote Svelte MCP connection.
+
 ## [0.1.1] - 2026-09-02
 
 ### Fixed
