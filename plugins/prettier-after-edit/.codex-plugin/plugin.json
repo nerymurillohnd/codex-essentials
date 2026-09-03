@@ -1,7 +1,7 @@
 {
   "name": "prettier-after-edit",
   "version": "0.2.0",
-  "description": "Format files edited by Codex with Prettier and fix or lint configured Markdown files with markdownlint-cli2 after each change.",
+  "description": "Format files edited by Codex with Prettier after each change.",
   "author": {
     "name": "Nery Samuel Murillo",
     "email": "nerymurillohnd@gmail.com",
@@ -10,25 +10,16 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "prettier",
-    "markdownlint",
-    "formatter",
-    "linter",
-    "hooks",
-    "quality",
-    "developer-tools"
-  ],
+  "keywords": ["prettier", "formatter", "hooks", "quality", "developer-tools"],
   "interface": {
-    "displayName": "Prettier + Markdownlint After Edit",
-    "shortDescription": "Format edited files and lint configured Markdown.",
-    "longDescription": "This plugin processes only files reported by supported Codex edit events. It formats supported files with project-local-first Prettier, then applies configured markdownlint-cli2 fixes to edited Markdown files, retaining PATH fallback and reporting changed, unchanged, skipped, failed, and remaining-issue outcomes distinctly.",
+    "displayName": "Prettier After Edit",
+    "shortDescription": "Format edited files with Prettier.",
+    "longDescription": "This plugin processes only files reported by supported Codex edit events. It formats supported files with project-local-first Prettier, retains PATH fallback, and reports changed, unchanged, skipped, and failed outcomes distinctly.",
     "developerName": "Nery Samuel Murillo",
     "category": "Developer Tools",
     "capabilities": [
       "PostToolUse hook integration",
       "Per-event exact-file Prettier formatting with truthful change status",
-      "Configured Markdown fixes and diagnostics with markdownlint-cli2",
       "Project-local tool preference with PATH fallback",
       "No installation-time project mutations"
     ],
@@ -36,7 +27,7 @@
     "privacyPolicyURL": "https://forestal-mt.com/privacy/",
     "termsOfServiceURL": "https://forestal-mt.com/terms/",
     "defaultPrompt": [
-      "Use Prettier + Markdownlint After Edit to format changed files and lint configured Markdown after supported Codex edits."
+      "Use Prettier After Edit to format changed files after supported Codex edits."
     ]
   },
   "skills": "./skills/",

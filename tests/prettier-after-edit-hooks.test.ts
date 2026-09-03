@@ -57,23 +57,6 @@ function useRepositoryPrettier(root: string): void {
   );
 }
 
-function useRepositoryMarkdownlint(root: string): void {
-  const markdownlint = join(root, "node_modules", ".bin", "markdownlint-cli2");
-  symlinkSync(
-    realpathSync(
-      join(repositoryRoot, "node_modules", ".bin", "markdownlint-cli2"),
-    ),
-    markdownlint,
-  );
-}
-
-function configureMarkdownlint(root: string): void {
-  writeFileSync(
-    join(root, ".markdownlint.jsonc"),
-    '{ "default": true, "MD013": false }\n',
-  );
-}
-
 function runHook(
   root: string,
   payload: unknown,
@@ -82,7 +65,7 @@ function runHook(
 ) {
   return spawnSync(
     process.execPath,
-    [resolve(pluginRoot, "hooks", "format-and-lint.mjs")],
+    [resolve(pluginRoot, "hooks", "format.mjs")],
     {
       cwd: executionCwd,
       encoding: "utf8",
@@ -95,7 +78,7 @@ function runHook(
 function runNodeHook(root: string, payload: unknown) {
   return spawnSync(
     process.execPath,
-    [resolve(pluginRoot, "hooks", "format-and-lint.mjs")],
+    [resolve(pluginRoot, "hooks", "format.mjs")],
     {
       cwd: root,
       encoding: "utf8",
@@ -127,7 +110,7 @@ afterEach(() => {
 });
 
 describe("prettier-after-edit hook", () => {
-  it("skips markdownlint for non-Markdown files", () => {
+  it("formats non-Markdown files without a markdownlint phase", () => {
     const root = createProject();
     const target = join(root, "src", "script.js");
     writeFileSync(target, "const value={answer:42}\n");
@@ -138,33 +121,18 @@ describe("prettier-after-edit hook", () => {
     });
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("markdownlint=skipped (not Markdown)");
+    expect(result.stdout).toContain("prettier=formatted");
+    expect(result.stdout).not.toContain("markdownlint=");
   });
 
-  it("skips markdownlint when project configuration is absent", () => {
+  it("formats Markdown without requiring markdownlint configuration", () => {
     const root = createProject();
     useRepositoryPrettier(root);
     const target = join(root, "README.md");
-    writeFileSync(target, "# Title\n");
-
-    const result = runNodeHook(root, {
-      cwd: root,
-      tool_input: { file_path: "README.md" },
-    });
-
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain(
-      "markdownlint=skipped (no project configuration)",
+    writeFileSync(
+      target,
+      "# Fixture\n\n|Column A|Column B|\n|-|-|\n|value one|value two|\n",
     );
-  });
-
-  it("reports a non-fixable second top-level heading", () => {
-    const root = createProject();
-    useRepositoryPrettier(root);
-    useRepositoryMarkdownlint(root);
-    configureMarkdownlint(root);
-    const target = join(root, "README.md");
-    writeFileSync(target, "# Title\n\n# Deliberate formatting error **\n");
 
     const result = runNodeHook(root, {
       cwd: root,
@@ -172,45 +140,9 @@ describe("prettier-after-edit hook", () => {
     });
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("markdownlint=issues remain");
-    expect(result.stdout).toContain("MD025/single-title");
-  });
-
-  it("reports fixed when markdownlint resolves all issues", () => {
-    const root = createProject();
-    useRepositoryPrettier(root);
-    useRepositoryMarkdownlint(root);
-    configureMarkdownlint(root);
-    const target = join(root, "README.md");
-    writeFileSync(target, "#Title\n");
-
-    const result = runNodeHook(root, {
-      cwd: root,
-      tool_input: { file_path: "README.md" },
-    });
-
-    expect(result.status, result.stderr).toBe(0);
-    expect(readFileSync(target, "utf8")).toBe("# Title\n");
-    expect(result.stdout).toContain("markdownlint=fixed");
-  });
-
-  it("reports fixes and remaining issues together", () => {
-    const root = createProject();
-    useRepositoryPrettier(root);
-    useRepositoryMarkdownlint(root);
-    configureMarkdownlint(root);
-    const target = join(root, "README.md");
-    writeFileSync(target, "#Title\n\n# Second title\n");
-
-    const result = runNodeHook(root, {
-      cwd: root,
-      tool_input: { file_path: "README.md" },
-    });
-
-    expect(result.status, result.stderr).toBe(0);
-    expect(readFileSync(target, "utf8")).toContain("# Title\n");
-    expect(result.stdout).toContain("markdownlint=fixed; issues remain");
-    expect(result.stdout).toContain("MD025/single-title");
+    expect(readFileSync(target, "utf8")).toContain("| Column A  | Column B  |");
+    expect(result.stdout).toContain("prettier=formatted");
+    expect(result.stdout).not.toContain("markdownlint=");
   });
 
   it("reports formatted only when Prettier changes file bytes", () => {
@@ -230,6 +162,7 @@ describe("prettier-after-edit hook", () => {
     expect(first.status, first.stderr).toBe(0);
     expect(readFileSync(target, "utf8")).toContain("| Column A  | Column B  |");
     expect(first.stdout).toContain("prettier=formatted");
+    expect(first.stdout).not.toContain("markdownlint=");
     const afterFirstRun = readFileSync(target, "utf8");
 
     const second = runNodeHook(root, {
@@ -239,6 +172,7 @@ describe("prettier-after-edit hook", () => {
 
     expect(second.status, second.stderr).toBe(0);
     expect(second.stdout).toContain("prettier=unchanged");
+    expect(second.stdout).not.toContain("markdownlint=");
     expect(readFileSync(target, "utf8")).toBe(afterFirstRun);
   });
 

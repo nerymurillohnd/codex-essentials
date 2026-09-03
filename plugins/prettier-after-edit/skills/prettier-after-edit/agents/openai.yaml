@@ -1,4 +1,4 @@
 interface:
-  display_name: Prettier + Markdownlint After Edit
-  short_description: Format edits and lint configured Markdown.
-  default_prompt: Use Prettier + Markdownlint After Edit to format changed files and lint configured Markdown after supported Codex edits.
+  display_name: Prettier After Edit
+  short_description: Format edited files with Prettier.
+  default_prompt: Use Prettier After Edit to format changed files after supported Codex edits.
