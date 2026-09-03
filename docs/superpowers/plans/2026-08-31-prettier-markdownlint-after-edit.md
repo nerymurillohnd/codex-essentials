@@ -1,5 +1,16 @@
 # Prettier and Markdownlint After Edit Implementation Plan
 
+**Status:** Superseded
+
+**Superseded by:**
+[`docs/superpowers/specs/2026-09-03-prettier-after-edit-only-design.md`](../specs/2026-09-03-prettier-after-edit-only-design.md)
+
+> Historical note: do not execute this plan as current product authority. It
+> implemented a combined Prettier and markdownlint-cli2 hook. The current
+> approved direction for `plugins/prettier-after-edit` is Prettier-only, with
+> Markdownlint left to each target repository's own scripts, hooks, editor
+> integration, or CI.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use

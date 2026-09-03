@@ -1,29 +1,28 @@
-# ✨ Prettier + Markdownlint After Edit
+# ✨ Prettier After Edit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [← Back to Codex Essentials](../../README.md)
 
-> Format files after Codex edits and lint configured Markdown without widening
-> scope beyond the reported targets.
+> Format files after Codex edits without widening scope beyond the reported
+> targets.
 
 **Explore:** [Install](#-quick-start) · [Purpose](#-purpose) ·
 [Environments](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
 [Docs](#-documentation-and-support)
 
-Prettier + Markdownlint After Edit is installed as `prettier-after-edit`. Its
-single `PostToolUse` hook formats supported edited files with Prettier, then
-fixes and checks edited Markdown when the target project provides markdownlint
-configuration. It never installs dependencies or scans the repository because
-one file changed.
+Prettier After Edit is installed as `prettier-after-edit`. Its single
+`PostToolUse` hook formats supported edited files with Prettier. It never
+installs dependencies, lints Markdown, or scans the repository because one file
+changed.
 
 | Version source                                           | Install ref |
 | -------------------------------------------------------- | ----------- |
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
 
 > [!CAUTION]
-> A matching hook can write Prettier output and markdownlint fixes immediately
-> after an edit. Review the hook and target-project configuration before
-> enabling it in a critical repository.
+> A matching hook can write Prettier output immediately after an edit. Review
+> the hook and target-project configuration before enabling it in a critical
+> repository.
 
 ## ⚡ Quick start
 
@@ -35,28 +34,24 @@ codex plugin add prettier-after-edit@codex-essentials
 codex plugin list
 ```
 
-Provide Prettier in the target project's dependencies or on `PATH`. To enable
-the Markdown phase, also provide markdownlint-cli2 and a recognized
-`.markdownlint*` or `.markdownlint-cli2*` configuration inside the project.
+Provide Prettier in the target project's dependencies or on `PATH`.
 
 ## 🎯 Use cases
 
 | Scenario                                              | How this plugin helps                                                          | Expected result                                                           |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
 | Codex edits a Prettier-supported file.                | Resolves Prettier locally first, formats the exact target, and compares bytes. | Reports `formatted` only after a real change; otherwise `unchanged`.      |
-| Codex edits configured Markdown.                      | Runs markdownlint-cli2 with `--fix --no-globs` after Prettier.                 | Reports `clean`, `fixed`, or the first remaining diagnostic.              |
+| Codex edits a file Prettier ignores or cannot parse.  | Checks Prettier file info before writing.                                      | Reports `skipped` with the reason and leaves the file untouched.          |
 | An edit reports multiple paths or a path with spaces. | Deduplicates arguments and invokes tools without shell interpolation.          | Processes each contained file once and leaves unreported files untouched. |
 
 **Not a fit when:** the workflow requires repository-wide formatting, automatic
-dependency installation, or universal detection of every ambiguous Markdown
-delimiter.
+dependency installation, Markdown linting, or another quality gate after edits.
 
 ## 🎯 Purpose
 
 - Keep supported edited files aligned with project Prettier configuration.
-- Apply project-owned markdownlint fixes and expose non-fixable diagnostics.
-- Make changed, unchanged, skipped, failed, clean, and remaining-issue outcomes
-  distinct and auditable.
+- Make changed, unchanged, skipped, and failed formatting outcomes distinct and
+  auditable.
 
 ## 🧰 Included Components
 
@@ -64,7 +59,7 @@ delimiter.
 | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                         | Plugin identity, version, interface, and component declarations.             |
 | [`hooks/hooks.json`](hooks/hooks.json)                                                           | `PostToolUse` matcher, Node command, timeout, and status text.               |
-| [`hooks/format-and-lint.mjs`](hooks/format-and-lint.mjs)                                         | Payload parsing, containment, tool execution, hashing, and status reporting. |
+| [`hooks/format.mjs`](hooks/format.mjs)                                                           | Payload parsing, containment, tool execution, hashing, and status reporting. |
 | [`skills/prettier-after-edit/SKILL.md`](skills/prettier-after-edit/SKILL.md)                     | Authoritative behavior and approval contract.                                |
 | [`skills/prettier-after-edit/agents/openai.yaml`](skills/prettier-after-edit/agents/openai.yaml) | Codex-facing presentation metadata.                                          |
 | [`CHANGELOG.md`](CHANGELOG.md)                                                                   | User-facing change history.                                                  |
@@ -74,14 +69,14 @@ delimiter.
 
 ## Supported Environments
 
-| Requirement   | Supported value or behavior                                                                                    |
-| ------------- | -------------------------------------------------------------------------------------------------------------- |
-| Codex surface | Hosts that support the declared `PostToolUse` command hook contract.                                           |
-| Runtime/tools | Node.js, Prettier, and optional markdownlint-cli2; project-local first, then `PATH`.                           |
-| Project types | Any project whose available Prettier supports the edited file; Markdown linting requires `.md` or `.markdown`. |
-| Credentials   | None.                                                                                                          |
-| Network       | Not used by the hook.                                                                                          |
-| Last verified | `2026-08-31` with Prettier `3.9.6`, markdownlint-cli2 `0.23.2`, and markdownlint `0.41.1`.                     |
+| Requirement   | Supported value or behavior                                          |
+| ------------- | -------------------------------------------------------------------- |
+| Codex surface | Hosts that support the declared `PostToolUse` command hook contract. |
+| Runtime/tools | Node.js and Prettier; project-local first, then `PATH`.              |
+| Project types | Any project whose available Prettier supports the edited file.       |
+| Credentials   | None.                                                                |
+| Network       | Not used by the hook.                                                |
+| Last verified | `2026-09-03` with Prettier `3.9.6`.                                  |
 
 The target project, its lockfile, and its configuration remain authoritative.
 The hook does not supply or replace project formatting and lint policy.
@@ -93,22 +88,21 @@ The hook does not supply or replace project formatting and lint policy.
 **Inputs:** A JSON hook payload containing event `cwd`, direct file fields, or
 `apply_patch` `*** Add File:` and `*** Update File:` directives.
 
-**Outputs:** One JSON `systemMessage` per target with Prettier and markdownlint
-states plus the first actionable diagnostic when a phase fails or leaves issues.
+**Outputs:** One JSON `systemMessage` per target with the Prettier state plus
+the first actionable diagnostic when formatting fails.
 
 ## Required Tools and Credentials
 
-Node.js executes the packaged hook. Prettier is required for formatting.
-markdownlint-cli2 is optional and runs only for Markdown with project
-configuration. No credentials are required.
+Node.js executes the packaged hook. Prettier is required for formatting. No
+credentials are required.
 
 ## Permissions
 
 | Access or effect | What this plugin may do                                                                    |
 | ---------------- | ------------------------------------------------------------------------------------------ |
 | Read             | Read the hook payload, exact reported files, ignore/config metadata, and executable paths. |
-| Write            | Write Prettier output and markdownlint rule-provided fixes to contained reported files.    |
-| Process          | Invoke `prettier --file-info`, `prettier --write`, and scoped `markdownlint-cli2 --fix`.   |
+| Write            | Write Prettier output to contained reported files.                                         |
+| Process          | Invoke `prettier --file-info` and `prettier --write`.                                      |
 | Network          | Not used.                                                                                  |
 | Authentication   | Not required.                                                                              |
 
@@ -130,9 +124,8 @@ changes, and remote operations require separate explicit approval.
 
 ## Installation Behavior
 
-Installing the plugin does not install Prettier or markdownlint-cli2 into the
-target project. Missing tools and missing Markdown configuration produce
-explicit skip messages.
+Installing the plugin does not install Prettier into the target project. A
+missing Prettier executable produces an explicit skip message.
 
 ## 🔁 Uninstall and Rollback Behavior
 
@@ -165,7 +158,7 @@ To exercise the hook against a disposable or version-controlled target:
 
 ```bash
 printf '%s\n' '{"cwd":"/path/to/project","tool_input":{"file_path":"README.md"}}' \
-  | node plugins/prettier-after-edit/hooks/format-and-lint.mjs
+  | node plugins/prettier-after-edit/hooks/format.mjs
 ```
 
 The smoke test can write the selected file. Inspect its JSON message and Git
@@ -175,17 +168,12 @@ diff afterward.
 
 - Deleted files, directory moves, and folder renames are skipped because no
   existing regular file remains to process.
-- Stock markdownlint does not diagnose every unmatched delimiter that Markdown
-  parsers treat as literal text.
 - PATH fallbacks can drift from project-local versions.
-- JavaScript markdownlint configuration and custom rules require a trusted VS
-  Code workspace.
 
 ## Failure and Recovery
 
-`skipped` states identify missing tools, missing configuration, ignored files,
-unsupported parsers, or invalid targets. `failed` includes the first process
-diagnostic. `issues remain` includes the first markdownlint violation. Reproduce
+`skipped` states identify missing Prettier, ignored files, unsupported parsers,
+or invalid targets. `failed` includes the first process diagnostic. Reproduce
 the corresponding command from project `cwd`, correct the target policy or
 content, and rerun the repository's normal verification command.
 
@@ -202,10 +190,11 @@ may write only the contained file reported by that event.
 </details>
 
 <details>
-<summary>When does markdownlint run?</summary>
+<summary>Does markdownlint run?</summary>
 
-Only for `.md` or `.markdown` files when a recognized project configuration and
-markdownlint-cli2 executable are available.
+No. The hook runs only Prettier. Run markdownlint through the target
+repository's own scripts, hooks, editor integration, or CI when that project
+requires Markdown linting.
 </details>
 
 <details>
@@ -219,17 +208,16 @@ Uninstalling prevents future runs but does not restore previous bytes.
 
 - [Authoritative skill](skills/prettier-after-edit/SKILL.md)
 - [Hook configuration](hooks/hooks.json)
-- [Hook implementation](hooks/format-and-lint.mjs)
+- [Hook implementation](hooks/format.mjs)
 - [Prettier CLI documentation](https://prettier.io/docs/cli)
-- [markdownlint-cli2 documentation](https://github.com/DavidAnson/markdownlint-cli2)
 - [Changelog](CHANGELOG.md)
 - [Codex Essentials marketplace](../../README.md)
 - [Plugin contribution guidelines](../../docs/contributing/plugins.md)
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
 - [License](LICENSE.md)
 
-This plugin is community-maintained and is not an official Prettier,
-markdownlint, or OpenAI infrastructure module.
+This plugin is community-maintained and is not an official Prettier or OpenAI
+infrastructure module.
 
 ## 📄 License
 

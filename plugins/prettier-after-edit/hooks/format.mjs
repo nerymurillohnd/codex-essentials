@@ -13,7 +13,6 @@ import {
 import {
   delimiter,
   dirname,
-  extname,
   isAbsolute,
   join,
   relative,
@@ -240,77 +239,11 @@ function phaseText(name, result) {
   }`;
 }
 
-const markdownlintConfigNames = [
-  ".markdownlint-cli2.jsonc",
-  ".markdownlint-cli2.yaml",
-  ".markdownlint-cli2.cjs",
-  ".markdownlint-cli2.mjs",
-  ".markdownlint.jsonc",
-  ".markdownlint.json",
-  ".markdownlint.yaml",
-  ".markdownlint.yml",
-  ".markdownlint.cjs",
-  ".markdownlint.mjs",
-];
-
-/** @param {string} startDir @param {string} rootDir @returns {boolean} */
-export function hasMarkdownlintConfig(startDir, rootDir) {
-  const root = realpathSync(rootDir);
-  let current = realpathSync(startDir);
-  while (true) {
-    for (const name of markdownlintConfigNames) {
-      const candidate = join(current, name);
-      if (existsSync(candidate) && statSync(candidate).isFile()) {
-        return true;
-      }
-    }
-    if (current === root) {
-      return false;
-    }
-    const parent = dirname(current);
-    const fromRoot = relative(root, parent);
-    if (
-      parent === current ||
-      fromRoot === ".." ||
-      fromRoot.startsWith(`..${sep}`)
-    ) {
-      return false;
-    }
-    current = parent;
-  }
-}
-
-/** @param {string} executable @param {ContainedFile} file @returns {ToolResult} */
-export function runMarkdownlint(executable, file) {
-  const before = fileDigest(file.target);
-  const result = runCommand(
-    executable,
-    ["--fix", "--no-globs", `:${file.relativePath}`],
-    file.root,
-  );
-  const changed = before !== fileDigest(file.target);
-  if (result.status === 0) {
-    return { state: changed ? "fixed" : "clean", diagnostic: "" };
-  }
-  if (result.status === 1) {
-    return {
-      state: changed ? "fixed; issues remain" : "issues remain",
-      diagnostic: firstDiagnostic(result),
-    };
-  }
-  return { state: "failed", diagnostic: firstDiagnostic(result) };
-}
-
-/** @param {string} relativePath @param {ToolResult} prettierResult @param {ToolResult} markdownlintResult @returns {string} */
-export function formatFileMessage(
-  relativePath,
-  prettierResult,
-  markdownlintResult,
-) {
+/** @param {string} relativePath @param {ToolResult} prettierResult @returns {string} */
+export function formatFileMessage(relativePath, prettierResult) {
   return [
     `prettier-after-edit: ${relativePath}`,
     phaseText("prettier", prettierResult),
-    phaseText("markdownlint", markdownlintResult),
   ].join("; ");
 }
 
@@ -355,35 +288,7 @@ export function main(rawInput = readFileSync(0, "utf8"), env = process.env) {
     const prettierResult = prettier
       ? runPrettier(prettier, file)
       : { state: "skipped", diagnostic: "prettier not found" };
-    /** @type {ToolResult} */
-    let markdownlintResult = {
-      state: "skipped",
-      diagnostic: "not Markdown",
-    };
-    if ([".md", ".markdown"].includes(extname(file.target).toLowerCase())) {
-      if (!hasMarkdownlintConfig(dirname(file.target), file.root)) {
-        markdownlintResult = {
-          state: "skipped",
-          diagnostic: "no project configuration",
-        };
-      } else {
-        const markdownlint = findExecutable(
-          dirname(file.target),
-          file.root,
-          "markdownlint-cli2",
-          env,
-        );
-        markdownlintResult = markdownlint
-          ? runMarkdownlint(markdownlint, file)
-          : {
-              state: "skipped",
-              diagnostic: "markdownlint-cli2 not found",
-            };
-      }
-    }
-    emit(
-      formatFileMessage(file.relativePath, prettierResult, markdownlintResult),
-    );
+    emit(formatFileMessage(file.relativePath, prettierResult));
   }
   return 0;
 }

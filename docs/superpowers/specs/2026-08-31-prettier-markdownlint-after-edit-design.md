@@ -1,12 +1,21 @@
 # Prettier and Markdownlint After Edit Design
 
-**Status:** Approved for implementation planning
+**Status:** Superseded
 
 **Date:** 2026-08-31
 
 **Repository revision inspected:** `a1be47d4af1767e634401d9a83d119352e14fcba`
 
 **Affected product:** `plugins/prettier-after-edit`
+
+**Superseded by:**
+[`2026-09-03-prettier-after-edit-only-design.md`](2026-09-03-prettier-after-edit-only-design.md)
+
+> Historical note: this specification described a combined Prettier and
+> markdownlint-cli2 edit hook. It is no longer the active product direction for
+> `plugins/prettier-after-edit`. The current approved design is Prettier-only;
+> Markdownlint remains a repository-owned quality control outside this plugin
+> runtime.
 
 ## Context
 
