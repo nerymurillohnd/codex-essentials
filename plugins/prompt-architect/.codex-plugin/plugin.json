@@ -1,0 +1,56 @@
+{
+  "name": "prompt-architect",
+  "version": "0.1.0",
+  "description": "Prompt Architect turns rough intent into copy-ready prompts with risk, evidence, authority, output, verification, and execution-topology controls.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "prompting",
+    "prompt-engineering",
+    "agents",
+    "codex",
+    "templates",
+    "verification",
+    "official-docs",
+    "actionability",
+    "workflow"
+  ],
+  "interface": {
+    "displayName": "Prompt Architect",
+    "shortDescription": "Build risk-calibrated prompts from rough intent.",
+    "longDescription": "A self-contained prompt-authoring workflow that turns incomplete intent into copy-ready prompts. It calibrates risk and density, resolves only material ambiguity, verifies changing facts against primary sources when needed, selects an execution topology when justified, recommends run settings outside the prompt, and checks requirement coverage before delivery.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Productivity",
+    "capabilities": [
+      "Prompt intake and gap detection",
+      "Official actionability and freshness checks for changing technical claims",
+      "Output density and verbosity calibration",
+      "Model and reasoning recommendations delivered outside the prompt",
+      "Single-agent, parallel-tool, and subagent topology selection",
+      "Bounded subagent contracts, integration, and lifecycle cleanup",
+      "Risk-calibrated prompt depth selection",
+      "Execution-contract prompt drafting",
+      "Domain add-ons for coding, Git, research, writing, strategy, compliance, and infrastructure",
+      "Definition of Done and final delivery gate enforcement",
+      "Prompt self-audit with assumptions and verification",
+      "Optional goal-tracking add-on for long-running Codex tasks",
+      "Deterministic reference and example routing"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use Prompt Architect to turn this rough task into a copy-ready prompt.",
+      "Audit this prompt for ambiguity, authority, actionability, density, and verification gaps.",
+      "Draft a Codex prompt and decide whether single-agent or multi-agent execution fits the task."
+    ],
+    "brandColor": "#0F766E"
+  },
+  "skills": "./skills/"
+}
