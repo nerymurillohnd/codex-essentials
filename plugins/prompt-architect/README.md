@@ -77,14 +77,14 @@ No hooks, MCP servers, apps, external services, or credentials are bundled.
 
 ## Supported Environments
 
-| Requirement   | Supported value or behavior                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------- |
-| Codex surface | Codex hosts that support installed skills.                                                  |
-| Runtime/tools | Codex skill support; the packaged Python helper is optional for maintainers.                |
-| Project types | Prompt authoring for coding, Git, research, writing, strategy, compliance, and operations.  |
-| Credentials   | Not required.                                                                               |
-| Network       | Not used by the plugin. A generated prompt may direct its executor to research when needed. |
-| Last verified | `2026-09-05` against local plugin schemas and Codex plugin documentation.                   |
+| Requirement   | Supported value or behavior                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| Codex surface | Codex hosts that support installed skills.                                                        |
+| Runtime/tools | Codex skill support; the packaged Python helper is optional for maintainers.                      |
+| Project types | Prompt authoring for coding, Git, research, writing, strategy, compliance, and operations.        |
+| Credentials   | Not required.                                                                                     |
+| Network       | Read-only official-source lookups when changing facts are material; no automatic remote mutation. |
+| Last verified | `2026-09-05` against local plugin schemas and Codex plugin documentation.                         |
 
 Current system instructions, project instructions, attached source material,
 and official documentation take precedence over static package content.
@@ -108,8 +108,9 @@ package.
 
 ## Required Tools and Credentials
 
-None. The plugin is skills-only and does not require API keys, accounts,
-external CLIs, or a running service.
+No credentials are required. The plugin uses Codex-provided web access only
+when current official facts are material; do not provide secrets or private
+source material to external sites.
 
 ## Permissions
 
@@ -118,7 +119,7 @@ external CLIs, or a running service.
 | Read             | Read user-provided task material and packaged skill resources.                     |
 | Write            | None by default.                                                                   |
 | Process          | None automatically; maintainers may run the packaged validation helper explicitly. |
-| Network          | Not used by the plugin itself.                                                     |
+| Network          | Read official or primary sources when required to validate changing claims.        |
 | Authentication   | Not required.                                                                      |
 
 ## Side Effects
@@ -218,6 +219,7 @@ No. Both are conditional controls used only when supported and beneficial.
 - [Prompt-engineering canon](skills/prompt-architect/references/00-prompt-engineering-canon.md)
 - [Current-guidance validation](skills/prompt-architect/references/60-current-guidance-validation.md)
 - [Delegation and parallelism](skills/prompt-architect/references/70-delegation-parallelism.md)
+- [Goal-tracking guidance](skills/prompt-architect/references/100-goal-tracking.md)
 - [Prompt templates](skills/prompt-architect/templates/)
 - [Calibration examples](skills/prompt-architect/examples/)
 - [Changelog](CHANGELOG.md)

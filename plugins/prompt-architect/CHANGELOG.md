@@ -10,8 +10,15 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Added
 
+- Add the Prompt Architect marketplace plugin and its self-contained,
+  risk-calibrated prompt-authoring skill.
 - Add Codex-facing skill metadata in `agents/openai.yaml` for consistent
   display and invocation.
+- Add reusable references, templates, examples, domain procedures, validation,
+  and delivery gates for prompt authoring, audits, and execution planning.
+- Add conditional `/goal` guidance for long-running Codex tasks that support
+  persistent goals.
+- Register Prompt Architect in the marketplace catalog and root README.
 
 ### Changed
 
