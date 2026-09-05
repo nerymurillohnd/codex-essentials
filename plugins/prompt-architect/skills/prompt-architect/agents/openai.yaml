@@ -1,0 +1,6 @@
+interface:
+  display_name: "Prompt Architect"
+  short_description: "Build rigorous prompts from rough intent"
+  default_prompt: "Use $prompt-architect to turn this rough task into a copy-ready prompt."
+policy:
+  allow_implicit_invocation: true

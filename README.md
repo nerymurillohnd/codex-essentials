@@ -39,6 +39,7 @@ session without making those capabilities marketplace dependencies.
 | [DocKeeper](plugins/doc-keeper/README.md)                    | Evidence-based changelog and ADR maintenance.                                | `doc-keeper`          |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)    | Auditing and reconciling Codex memory artifacts.                             | `optimize-memories`   |
 | [Live Research](plugins/live-research/README.md)             | Current research with callable MCP/plugin/skill-first routing and citations. | `live-research`       |
+| [Prompt Architect](plugins/prompt-architect/README.md)       | Copy-ready prompts with risk, evidence, and execution guidance.              | `prompt-architect`    |
 | [Svelte Development](plugins/svelte-development/README.md)   | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`  |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
@@ -55,6 +56,7 @@ permissions, side effects, and examples._
 | Create or repair changelogs and architecture decisions | [DocKeeper](plugins/doc-keeper/README.md)                    |
 | Audit or reconcile project and global Codex memories   | [Codex Memory Audit](plugins/optimize-memories/README.md)    |
 | Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)             |
+| Turn rough task intent into a copy-ready prompt        | [Prompt Architect](plugins/prompt-architect/README.md)       |
 | Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)   |
 
 _Use cases describe the user's starting problem; the linked plugin README
@@ -67,6 +69,7 @@ explains behavior, requirements, boundaries, and expected results._
 [Changelog and ADRs](plugins/doc-keeper/README.md) ·
 [Memory audit](plugins/optimize-memories/README.md) ·
 [Live research](plugins/live-research/README.md) ·
+[Prompt architecture](plugins/prompt-architect/README.md) ·
 [Svelte development](plugins/svelte-development/README.md)
 
 ## ⚡ Quick start
