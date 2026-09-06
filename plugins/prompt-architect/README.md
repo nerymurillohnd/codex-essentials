@@ -11,15 +11,15 @@
 
 Prompt Architect is a Codex plugin for people who need to write, improve, audit,
 structure, or generate prompts for consequential work. Its self-contained skill
-classifies risk,
-prompt density, domain, and execution topology; then it uses routed references,
-packaged templates, examples, and delivery gates to produce a copy-ready prompt.
+classifies risk, prompt density, domain, and execution topology; then it loads
+only the routed references, packaged templates, examples, and delivery gates
+needed to produce a copy-ready prompt.
 
 It does not execute the prompt it creates, install tools, send data to a third
 party, or modify the target project by itself.
 
-It includes a packaged `Stop` hook that validates Prompt Architect's final
-output shape before delivery when Codex hook support is available.
+It includes a packaged `Stop` hook that blocks malformed Prompt Architect final
+output before delivery when Codex hook support is available.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
@@ -66,10 +66,10 @@ ordinary explanation instead of prompt design or review.
 | Component                                                                                                              | Purpose                                                      |
 | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                               | Plugin identity, version, interface, and skill declaration.  |
-| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing and prompt-authoring workflow.         |
+| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing, support-file map, and workflow.       |
 | [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                             | Codex-facing display and invocation metadata.                |
 | [`hooks/hooks.json`](hooks/hooks.json)                                                                                 | Stop hook for final-output validation.                       |
-| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Compact final-output gate used by the hook.                  |
+| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Strict final-output gate used by the hook.                   |
 | [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                           | Normative procedures, domain guidance, and delivery gates.   |
 | [`skills/prompt-architect/assets/templates/`](skills/prompt-architect/assets/templates/)                               | Compact, structured, operational, and critical prompt forms. |
 | [`skills/prompt-architect/references/examples/`](skills/prompt-architect/references/examples/)                         | Calibration examples, prompt-audit reference, and scenarios. |
@@ -109,7 +109,8 @@ recommendations and current-guidance notes.
 The skill is the orchestration contract. Its references, packaged templates,
 examples, pressure scenarios, and final-output validator are intentionally
 shipped under `skills/prompt-architect/` so the workflow is reproducible from
-the installed package.
+the installed package. `SKILL.md` routes those support files by condition so
+ordinary prompts do not require loading the full reference set.
 
 ## Required Tools and Credentials
 
@@ -187,7 +188,7 @@ Use Prompt Architect to draft a high-risk Codex prompt for recovering a Git stas
 - The skill improves prompt design; it cannot guarantee perfect downstream
   instruction following by every model or agent.
 - A prompt cannot replace missing material facts or authority for high-risk
-  work. The skill should ask focused questions or return a blocked draft.
+  work. The skill should ask focused questions or return Needs Clarification.
 - Model, tool, API, product, and capability guidance can change. When current
   verification is unavailable, the prompt must label relevant assumptions.
 - Multi-agent execution is conditional on destination support and task

@@ -27,8 +27,13 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 - Normalized the README navigation, heading style, backlink, and plugin version
   source statement to match the current plugin README convention.
+- Refactor `SKILL.md` from a broad mandatory-read sequence into a progressive
+  support-file router with explicit inputs, non-inference rules, ask/stop/decline
+  behavior, and verifiable success criteria.
 - Refine the bundled skill frontmatter description to improve implicit
   invocation precision for prompt authoring and audits.
+- Align Codex-facing skill metadata with the package's risk-calibrated prompt
+  contract.
 - Package the skill's references, templates, examples, and pressure scenarios
   inside `skills/prompt-architect/` so its workflow remains reproducible from an
   installed plugin.
@@ -43,8 +48,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - Make the skill workflow boundary explicit in `SKILL.md`, including expected
   inputs, required output, non-inferable facts, stop conditions, and supporting
   file authority.
-- Replace the linear workflow list with compact phase gates that must pass
-  before moving to the next phase.
+- Replace the linear workflow list with conditional routing that keeps required
+  gates explicit without forcing every reference into context by default.
+- Tighten the final-output validator so malformed `Ready` or
+  `Needs Clarification` outputs cannot pass merely because required prompt
+  sections are absent.
 
 ### Removed
 

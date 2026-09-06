@@ -14,6 +14,10 @@ SECTION_PATTERN = re.compile(
     r")\*\*",
     re.IGNORECASE,
 )
+RESULT_PATTERN = re.compile(
+    r"\*\*Result\*\*\s*(?:-|\u2014|:)?\s*(Ready|Needs Clarification)\b",
+    re.IGNORECASE,
+)
 GATE_EVIDENCE_PATTERN = re.compile(
     r"Gate Evidence:\s*intake=pass;\s*"
     r"classification=R[0-3]/D[0-5]/P[0-3];\s*"
@@ -55,11 +59,14 @@ def _collect_hook_text(raw_input: str) -> str:
 
 def _is_prompt_architect_output(text: str) -> bool:
     return bool(
-        re.search(r"\*\*Result\*\*", text, re.IGNORECASE)
-        and (
-            re.search(r"\*\*Final Prompt\*\*", text, re.IGNORECASE)
-            or re.search(r"\*\*Clarification Questions\*\*", text, re.IGNORECASE)
-            or re.search(r"Gate Evidence:", text, re.IGNORECASE)
+        (RESULT_PATTERN.search(text) and re.search(r"\*\*Assumptions\*\*", text, re.IGNORECASE))
+        or (
+            re.search(r"\*\*Result\*\*", text, re.IGNORECASE)
+            and (
+                re.search(r"\*\*Final Prompt\*\*", text, re.IGNORECASE)
+                or re.search(r"\*\*Clarification Questions\*\*", text, re.IGNORECASE)
+                or re.search(r"Gate Evidence:", text, re.IGNORECASE)
+            )
         )
     )
 
@@ -82,6 +89,15 @@ def _has_ordered_sections(text: str, names: list[str]) -> bool:
     return True
 
 
+def _section_body(text: str, name: str) -> str:
+    match = re.search(rf"\*\*{re.escape(name)}\*\*", text, re.IGNORECASE)
+    if match is None:
+        return ""
+    next_match = SECTION_PATTERN.search(text, match.end())
+    end = next_match.start() if next_match else len(text)
+    return text[match.end() : end]
+
+
 def _validate_ready(text: str) -> list[str]:
     errors: list[str] = []
     required = [
@@ -95,10 +111,11 @@ def _validate_ready(text: str) -> list[str]:
         errors.append("required Ready sections are out of order")
     if re.search(r"\*\*Clarification Questions\*\*", text, re.IGNORECASE):
         errors.append("Ready output must omit Clarification Questions")
+    recommendation = _section_body(text, "Execution Recommendation")
     errors.extend(
         f"Execution Recommendation missing {token}"
         for token in ["model", "reasoning", "P-level", "D-level", "R-level"]
-        if not re.search(re.escape(token), text, re.IGNORECASE)
+        if not re.search(re.escape(token), recommendation, re.IGNORECASE)
     )
     if not GATE_EVIDENCE_PATTERN.search(text):
         errors.append("missing compact Gate Evidence pass line")
@@ -121,13 +138,10 @@ def _validate_needs_clarification(text: str) -> list[str]:
 def _validate_prompt_architect_output(text: str) -> list[str]:
     if not SECTION_PATTERN.search(text) or not _is_prompt_architect_output(text):
         return []
-    if re.search(r"\*\*Result\*\*\s*(?:-|\u2014|:)?\s*Ready\b", text, re.IGNORECASE):
+    result = RESULT_PATTERN.search(text)
+    if result and result.group(1).lower() == "ready":
         return _validate_ready(text)
-    if re.search(
-        r"\*\*Result\*\*\s*(?:-|\u2014|:)?\s*Needs Clarification\b",
-        text,
-        re.IGNORECASE,
-    ):
+    if result and result.group(1).lower() == "needs clarification":
         return _validate_needs_clarification(text)
     return ["Result must be Ready or Needs Clarification"]
 

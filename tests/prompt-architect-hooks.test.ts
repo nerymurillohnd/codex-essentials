@@ -52,6 +52,40 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     expect(result.stdout).toContain("missing compact Gate Evidence pass line");
   });
 
+  it("blocks a Ready result even when the final prompt section is missing", () => {
+    const result = runValidator({
+      response: `
+**Result** - Ready
+**Assumptions** - None.
+`,
+    });
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toContain("missing Final Prompt");
+    expect(result.stdout).toContain("missing Execution Recommendation");
+  });
+
+  it("validates runtime tokens inside the execution recommendation section", () => {
+    const result = runValidator({
+      response: `
+**Result** - Ready
+**Assumptions** - The final prompt can mention model, reasoning, P-level, D-level, and R-level.
+**Final Prompt** - Include the words model, reasoning, P-level, D-level, and R-level here only.
+**Execution Recommendation** - Use the default executor.
+Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=pass; template=pass; output=pass; self-audit=pass.
+`,
+    });
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toContain("Execution Recommendation missing model");
+    expect(result.stdout).toContain(
+      "Execution Recommendation missing reasoning",
+    );
+    expect(result.stdout).toContain("Execution Recommendation missing P-level");
+    expect(result.stdout).toContain("Execution Recommendation missing D-level");
+    expect(result.stdout).toContain("Execution Recommendation missing R-level");
+  });
+
   it("accepts Needs Clarification only when no final prompt is included", () => {
     const result = runValidator({
       response: `
@@ -62,6 +96,22 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     });
 
     expect(result.status, result.stdout + result.stderr).toBe(0);
+  });
+
+  it("blocks Needs Clarification when a final prompt is included", () => {
+    const result = runValidator({
+      response: `
+**Result** - Needs Clarification
+**Assumptions** - None.
+**Clarification Questions** - What repository is in scope?
+**Final Prompt** - Do the work anyway.
+`,
+    });
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toContain(
+      "Needs Clarification output must omit Final Prompt",
+    );
   });
 
   it("skips unrelated Stop payloads", () => {
@@ -76,6 +126,18 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     expect(hooksConfig.hooks.Stop[0]?.hooks[0]?.command).toContain(
       "validate-final-output.py",
     );
+    expect(result.status, result.stdout + result.stderr).toBe(0);
+    expect(result.stdout).toBe("");
+  });
+
+  it("skips a generic Ready report without the Prompt Architect contract", () => {
+    const result = runValidator({
+      response: `
+**Result** - Ready
+Plain operational status with no prompt output contract.
+`,
+    });
+
     expect(result.status, result.stdout + result.stderr).toBe(0);
     expect(result.stdout).toBe("");
   });
