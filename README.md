@@ -41,6 +41,7 @@ session without making those capabilities marketplace dependencies.
 | [Live Research](plugins/live-research/README.md)             | Current research with callable MCP/plugin/skill-first routing and citations. | `live-research`       |
 | [Prompt Architect](plugins/prompt-architect/README.md)       | Copy-ready prompts with risk, evidence, and execution guidance.              | `prompt-architect`    |
 | [Svelte Development](plugins/svelte-development/README.md)   | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`  |
+| [System Ops Audit](plugins/system-ops-audit/README.md)       | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`    |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
 permissions, side effects, and examples._
@@ -58,6 +59,7 @@ permissions, side effects, and examples._
 | Verify change-sensitive facts using available tools    | [Live Research](plugins/live-research/README.md)             |
 | Turn rough task intent into a copy-ready prompt        | [Prompt Architect](plugins/prompt-architect/README.md)       |
 | Architect, build, or verify Svelte and SvelteKit work  | [Svelte Development](plugins/svelte-development/README.md)   |
+| Design a read-only macOS baseline audit                | [System Ops Audit](plugins/system-ops-audit/README.md)       |
 
 _Use cases describe the user's starting problem; the linked plugin README
 explains behavior, requirements, boundaries, and expected results._
@@ -70,7 +72,8 @@ explains behavior, requirements, boundaries, and expected results._
 [Memory audit](plugins/optimize-memories/README.md) ·
 [Live research](plugins/live-research/README.md) ·
 [Prompt architecture](plugins/prompt-architect/README.md) ·
-[Svelte development](plugins/svelte-development/README.md)
+[Svelte development](plugins/svelte-development/README.md) ·
+[System ops audit](plugins/system-ops-audit/README.md)
 
 ## ⚡ Quick start
 

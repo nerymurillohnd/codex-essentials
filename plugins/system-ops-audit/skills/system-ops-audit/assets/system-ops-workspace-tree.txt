@@ -1,0 +1,11 @@
+System-Ops/
+  .codex/
+    hooks/
+    skills/
+      system-ops-audit/
+  archive/
+  audits/
+    environment/
+  decisions/
+  inventory/
+  scripts/

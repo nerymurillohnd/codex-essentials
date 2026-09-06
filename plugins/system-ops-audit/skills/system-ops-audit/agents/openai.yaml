@@ -1,0 +1,7 @@
+interface:
+  display_name: "System Ops Audit"
+  short_description: "Design read-only macOS baseline audits safely"
+  default_prompt: "Use $system-ops-audit to prepare the System-Ops workspace and design a read-only macOS baseline audit before writing or running scripts."
+
+policy:
+  allow_implicit_invocation: true
