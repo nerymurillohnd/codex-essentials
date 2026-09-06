@@ -8,6 +8,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- Refined the bundled skill frontmatter description to clarify read-only macOS
+  baseline scope and exclude repository or product-development audits.
+
 ### Added
 
 - Import the System Ops Audit skill as a Codex Essentials marketplace plugin.

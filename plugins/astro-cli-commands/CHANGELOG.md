@@ -10,6 +10,9 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- **[Area: Skill]** Refined the bundled skill frontmatter description to focus
+  implicit invocation on Astro CLI-dependent work and removed unsupported
+  `disable-model-invocation` metadata.
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository
   plugin manifest and strengthened package validation to reject incomplete skill
   metadata, unsafe links, and resources resolving outside this package.

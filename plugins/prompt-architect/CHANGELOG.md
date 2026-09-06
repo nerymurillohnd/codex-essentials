@@ -22,6 +22,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Refine the bundled skill frontmatter description to improve implicit
+  invocation precision for prompt authoring and audits.
 - Package the skill's references, templates, examples, source canon, and
   pressure scenarios inside `skills/prompt-architect/` so its workflow remains
   reproducible from an installed plugin.

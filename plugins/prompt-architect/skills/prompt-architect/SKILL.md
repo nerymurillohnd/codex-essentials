@@ -1,6 +1,6 @@
 ---
 name: prompt-architect
-description: Use when a user wants to write, improve, audit, structure, or generate a prompt, especially for agentic, coding, research, repository, production-adjacent, multi-step, high-risk, or underspecified work.
+description: Use when writing, improving, auditing, structuring, or generating prompts for agentic, coding, research, repository, production-adjacent, multi-step, high-risk, or underspecified work.
 ---
 
 # Prompt Architect

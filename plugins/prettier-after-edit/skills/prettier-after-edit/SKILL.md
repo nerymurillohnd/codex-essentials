@@ -1,6 +1,6 @@
 ---
 name: prettier-after-edit
-description: Use this skill first when edited files should be formatted immediately with Prettier. It resolves project-local Prettier first, then PATH fallbacks.
+description: Use after Codex edits files that should be formatted with Prettier immediately. Resolve project-local Prettier first, fall back to PATH, and do not install dependencies or change configuration.
 ---
 
 # Prettier After Edit

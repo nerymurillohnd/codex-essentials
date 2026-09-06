@@ -8,6 +8,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- Refined the bundled skill frontmatter description to start with its trigger
+  condition and clarify approval-gated mutation boundaries.
+
 ### Added
 
 - **[Area: Skill]** Added `configure-prettier`, an audit-first,

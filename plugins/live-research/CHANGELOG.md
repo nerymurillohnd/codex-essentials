@@ -8,6 +8,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- Refined the bundled skill frontmatter description to focus implicit
+  invocation on time-sensitive and change-sensitive facts.
+
 ### Added
 
 - Package the Live Research skill as a self-contained Codex marketplace plugin

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refined the bundled skill frontmatter description to improve implicit
+  invocation precision while preserving changelog and ADR routing boundaries.
 - Recorded the complete author, legal, interface, and component metadata in
   `.codex-plugin/plugin.json`; the marketplace entry is now generated and
   reverse-validated from that manifest.

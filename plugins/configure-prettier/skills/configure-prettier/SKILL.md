@@ -1,6 +1,6 @@
 ---
 name: configure-prettier
-description: Audit, recommend, configure, and maintain Prettier with repository-first conventions. Use for Prettier setup, upgrades, conflicts, editor integration, formatting checks, hooks, CI, or update drift; audit first and require explicit approval before every mutation.
+description: Use when auditing, proposing, configuring, upgrading, or troubleshooting repository Prettier setup, editor integration, formatting checks, hooks, CI, conflicts, or version drift. Require explicit approval before mutation.
 ---
 
 # Configure Prettier

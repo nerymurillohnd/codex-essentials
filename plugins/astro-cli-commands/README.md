@@ -24,8 +24,9 @@ commands, and does not replace the project's package manager or CLI.
 
 ## 🎯 Purpose
 
-Use Astro Commands when Codex needs to plan, check, preview, or coordinate an
-Astro project through the installed framework CLI.
+Use Astro Commands when Codex needs to plan, check, preview, or coordinate
+Astro work that depends on installed framework CLI behavior, command flags,
+version drift, integrations, type generation, or dev and preview servers.
 
 ## ⚡ Quick start
 

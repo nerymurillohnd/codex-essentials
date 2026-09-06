@@ -54,6 +54,8 @@ that intentionally produces Svelte code.
   decisions.
 - Give agents a clear route for architecture, components, SvelteKit surfaces,
   and verification instead of one overloaded instruction blob.
+- Keep implicit skill activation precise across architecture planning,
+  component work, SvelteKit route/server work, and final verification.
 - Keep source generation original and license-clean while using public Svelte
   tools and documentation as evidence.
 

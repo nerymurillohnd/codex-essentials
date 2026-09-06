@@ -1,6 +1,6 @@
 ---
 name: live-research
-description: Always prioritize and verify real-time data over training data for time-sensitive facts. Use this approach when the user requests it or when the task involves change-sensitive knowledge about software, APIs, integrations, regulations, statistics, people, products, or compatibility, even if the user does not explicitly request it.
+description: Use when a task involves time-sensitive or change-sensitive facts about software, APIs, integrations, regulations, statistics, people, products, compatibility, prices, schedules, or current events, even when the user does not explicitly ask to browse.
 ---
 
 # Live Research

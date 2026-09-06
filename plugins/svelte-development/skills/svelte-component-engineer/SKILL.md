@@ -1,7 +1,6 @@
 ---
 name: svelte-component-engineer
-description: Use when writing, editing, reviewing, or debugging Svelte 5 components, .svelte.ts modules, props, runes, snippets, bindings, events, accessibility, styles, and component tests.
-disable-model-invocation: false
+description: Use when writing, editing, reviewing, or debugging Svelte 5 components, .svelte.ts modules, props, runes, snippets, bindings, events, accessibility, styles, or component tests. Do not use for route/server-only SvelteKit work.
 ---
 
 # Svelte Component Engineer
