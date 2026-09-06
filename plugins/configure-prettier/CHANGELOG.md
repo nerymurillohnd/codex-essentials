@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Clarified in the README that `.codex-plugin/plugin.json` is the authoritative
+  plugin version source.
 - Refined the bundled skill frontmatter description to start with its trigger
   condition and clarify approval-gated mutation boundaries.
 

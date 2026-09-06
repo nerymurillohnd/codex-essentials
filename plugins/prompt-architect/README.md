@@ -1,13 +1,13 @@
-# Prompt Architect
+# 🧭 Prompt Architect
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[Back to Codex Essentials](../../README.md)
+[← Back to Codex Essentials](../../README.md)
 
 > Turn rough intent into a copy-ready, risk-calibrated prompt.
 
-**Explore:** [Install](#quick-start) · [Purpose](#purpose) ·
-[Environments](#supported-environments) · [Safety](#behavior-and-boundaries) ·
-[Docs](#documentation-and-support)
+**Explore:** [Install](#-quick-start) · [Purpose](#-purpose) ·
+[Environments](#supported-environments) · [Safety](#-behavior-and-boundaries) ·
+[Docs](#-documentation-and-support)
 
 Prompt Architect is a Codex plugin for people who need to write, improve, audit,
 structure, or generate prompts for consequential work. Its self-contained skill
@@ -19,7 +19,10 @@ prompt.
 It does not execute the prompt it creates, install tools, send data to a third
 party, or modify the target project by itself.
 
-## Quick start
+The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+the package from the repository's `main` catalog.
+
+## ⚡ Quick start
 
 ```bash
 codex plugin marketplace add nerymurillohnd/codex-essentials --ref main
@@ -33,7 +36,7 @@ Then ask Codex:
 Use Prompt Architect to turn this rough task into a copy-ready Codex prompt.
 ```
 
-## Use cases
+## 🎯 Use cases
 
 | Scenario                                         | How this plugin helps                                             | Expected result                                |
 | ------------------------------------------------ | ----------------------------------------------------------------- | ---------------------------------------------- |
@@ -45,7 +48,7 @@ Use Prompt Architect to turn this rough task into a copy-ready Codex prompt.
 **Not a fit when:** the user only wants a direct answer, literal rewrite, or
 ordinary explanation instead of prompt design or review.
 
-## Purpose
+## 🎯 Purpose
 
 - Turn incomplete intent into the smallest prompt that closes material ambiguity.
 - Keep authority, procedure, output, validation, and completion conditions
@@ -56,7 +59,7 @@ ordinary explanation instead of prompt design or review.
   the generated prompt when those choices matter.
 - Require a final self-audit before a prompt is described as ready.
 
-## Included Components
+## 🧰 Included Components
 
 | Component                                                                                                    | Purpose                                                      |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -74,7 +77,7 @@ ordinary explanation instead of prompt design or review.
 
 No hooks, MCP servers, apps, external services, or credentials are bundled.
 
-## Requirements and compatibility
+## 🖥️ Requirements and compatibility
 
 ## Supported Environments
 
@@ -90,7 +93,7 @@ No hooks, MCP servers, apps, external services, or credentials are bundled.
 Current system instructions, project instructions, attached source material,
 and official documentation take precedence over static package content.
 
-## Behavior and boundaries
+## 🔐 Behavior and boundaries
 
 ## Inputs and Outputs
 
@@ -146,7 +149,7 @@ Installation makes the `prompt-architect` skill available to Codex. It does
 not install npm packages, alter lockfiles, configure MCP servers, enable hooks,
 or create external accounts.
 
-## Uninstall and Rollback Behavior
+## 🔁 Uninstall and Rollback Behavior
 
 ```bash
 codex plugin marketplace upgrade codex-essentials
@@ -158,7 +161,7 @@ Uninstalling removes Codex-managed plugin state and cache. It does not delete
 prompts, documents, repository changes, or other artifacts from prior sessions.
 A previous package revision in Git is the recoverable rollback record.
 
-## Verification
+## ✅ Verification
 
 Maintainers can run the canonical package checks from the marketplace repository:
 
@@ -176,7 +179,7 @@ Consumer smoke test:
 Use Prompt Architect to draft a high-risk Codex prompt for recovering a Git stash. Ask only for missing material authority, then provide success conditions, authority gates, stop conditions, verification, and final reporting.
 ```
 
-## Known Limitations
+## 🚧 Known Limitations
 
 - The skill improves prompt design; it cannot guarantee perfect downstream
   instruction following by every model or agent.
@@ -193,7 +196,7 @@ If target, authority, required source, output, or verification criteria remain
 materially unclear, the skill returns the smallest useful clarification set or
 reports the blocker. It must not describe an incomplete prompt as ready.
 
-## FAQ
+## ❓ FAQ
 
 <details>
 <summary>Does installing this plugin modify the target project?</summary>
@@ -214,7 +217,7 @@ Yes. Workflow resources are packaged inside `skills/prompt-architect/`.
 No. Both are conditional controls used only when supported and beneficial.
 </details>
 
-## Documentation and support
+## 📚 Documentation and support
 
 - [Authoritative skill](skills/prompt-architect/SKILL.md)
 - [Prompt-engineering canon](skills/prompt-architect/references/00-prompt-engineering-canon.md)
@@ -229,7 +232,7 @@ No. Both are conditional controls used only when supported and beneficial.
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
 - [License](LICENSE.md)
 
-## License
+## 📄 License
 
 MIT. See [LICENSE.md](LICENSE.md).
 

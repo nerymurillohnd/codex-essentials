@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Listed each bundled skill's `agents/openai.yaml` metadata in the README
+  included components table.
 - Refined all bundled skill frontmatter descriptions to make architecture,
   component, SvelteKit, and verification triggers more precise.
 - Removed unsupported `disable-model-invocation` frontmatter from bundled

@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Clarified in the README that `.codex-plugin/plugin.json` is the authoritative
+  plugin version source and listed the manifest in included components.
 - Refined the bundled skill frontmatter description to focus implicit
   invocation on time-sensitive and change-sensitive facts.
 

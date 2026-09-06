@@ -22,6 +22,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Normalized the README navigation, heading style, backlink, and plugin version
+  source statement to match the current plugin README convention.
 - Refine the bundled skill frontmatter description to improve implicit
   invocation precision for prompt authoring and audits.
 - Package the skill's references, templates, examples, source canon, and
