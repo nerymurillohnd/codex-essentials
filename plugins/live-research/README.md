@@ -11,9 +11,9 @@
 
 Live Research is installed as `live-research`. Its single self-contained
 `SKILL.md` tells Codex when a response depends on facts that may have changed,
-prioritizes callable MCPs, plugins, apps, and standalone skills already present
-in the session, and makes the evidence, date, uncertainty, and limitations
-auditable.
+defines required and optional inputs, prioritizes callable MCPs, plugins, apps,
+standalone skills, and authoritative sources already available in the session,
+and makes the evidence, date, uncertainty, conflicts, and limitations auditable.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
@@ -44,11 +44,11 @@ Use Live Research to verify the current facts, cite authoritative sources, and s
 
 ## 🎯 Use cases
 
-| Scenario                                                                     | How this plugin helps                                                                      | Expected result                                                |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| A library, API, CLI, or platform may have changed.                           | Checks current official documentation, releases, versions, and compatibility dependencies. | A cited answer with the exact versions and dates checked.      |
-| A recommendation depends on current prices, availability, safety, or policy. | Uses authoritative sources and reports scope, methodology, and limitations.                | An evidence-backed recommendation with uncertainty called out. |
-| Local instructions conflict with current external evidence.                  | Compares project authority, user instructions, and primary sources.                        | The conflict is surfaced before a risky change is applied.     |
+| Scenario                                                                     | How this plugin helps                                                                               | Expected result                                                |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| A library, API, CLI, or platform may have changed.                           | Checks current official documentation, releases, versions, and material compatibility dependencies. | A cited answer with the exact versions and dates checked.      |
+| A recommendation depends on current prices, availability, safety, or policy. | Uses authoritative sources and reports scope, methodology, uncertainty, and limitations.            | An evidence-backed recommendation with uncertainty called out. |
+| Local instructions conflict with current external evidence.                  | Compares project authority, user instructions, and primary sources before affected work continues.  | The conflict is surfaced before a risky change is applied.     |
 
 **Not a fit when:** the task is pure mathematics, literal translation,
 mechanical transformation, creative writing without external claims, or a
@@ -78,7 +78,7 @@ are bundled; all behavior is defined by the single distributed skill document.
 | Project types | Software repositories, infrastructure, research, operations, business, and general fact-checking workflows.                                       |
 | Credentials   | None required by the plugin. A target source may require user-managed credentials; never expose them to a remote tool.                            |
 | Network       | Required for live retrieval; the workflow falls back to the strongest available read-only source when a preferred route is unavailable.           |
-| Last verified | `2026-09-02` against the package manifest, skill metadata, and marketplace contract.                                                              |
+| Last verified | `2026-09-06` against the package manifest, skill metadata, and marketplace contract.                                                              |
 
 Current project files, lockfiles, official documentation, and source release
 notes take precedence over static compatibility claims in this package.
@@ -99,13 +99,15 @@ by this plugin; a target source may require user-managed credentials.
 
 ## Inputs and Outputs
 
-**Inputs:** the user's request, project and environment state, current source
-material, official documentation, releases, repository evidence, tool output,
-and any explicitly authorized private evidence.
+**Inputs:** the user's request is required. Useful optional inputs include
+jurisdiction, version, product edition, deployment environment, date range,
+budget, risk tolerance, local project evidence, tool output, and explicitly
+authorized private evidence.
 
 **Outputs:** cited findings, exact dates or versions checked, evidence-chain
 summaries, compatibility notes, conflicts, assumptions, limitations, commands,
-and residual-risk or recovery notes.
+residual-risk or recovery notes, and the conditions that required asking,
+stopping, or declining when applicable.
 
 ## Permissions
 
@@ -136,6 +138,8 @@ files without a separate authorized request.
   not authorized that transfer, stop and use local evidence instead.
 - Do not turn an inference, search snippet, stale cache, or unverified claim into
   a confirmed fact.
+- Do not continue when missing evidence or ambiguous tool results would make the
+  conclusion misleading.
 
 ## 📦 Installation Behavior
 

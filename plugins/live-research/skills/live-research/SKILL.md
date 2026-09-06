@@ -1,195 +1,279 @@
 ---
 name: live-research
-description: Use when a task involves time-sensitive or change-sensitive facts about software, APIs, integrations, regulations, statistics, people, products, compatibility, prices, schedules, or current events, even when the user does not explicitly ask to browse.
+description: Verify time-sensitive and change-sensitive claims with current authoritative sources. Use for current facts about software, APIs, integrations, regulations, statistics, people, products, compatibility, prices, schedules, or news, even when the user does not explicitly ask to browse.
 ---
 
 # Live Research
 
 Use current evidence instead of training data whenever a material fact may have
-changed. Activate for change-sensitive people, organizations, prices, products,
-laws, standards, statistics, news, software, APIs, dependencies, integrations,
-infrastructure, configuration, architecture, or compatibility.
+changed. This skill owns the evidence standard, routing decisions, source
+comparison, uncertainty handling, and citation requirements. It does not require
+or install a companion plugin, MCP server, app, credential, or standalone skill.
 
-Skip retrieval for mathematics, pure logic, literal translation, mechanical
-transformation, creative writing without external claims, and content fully
-grounded in user-provided material. If a request mixes stable and changing
-claims, research only the changing portion.
+Skip live retrieval for pure mathematics, pure logic, literal translation,
+mechanical transformation, creative writing without external factual claims, and
+answers fully grounded in user-provided material. If a request mixes stable and
+change-sensitive claims, research only the change-sensitive portion.
 
-## Evidence Routing
+## Required Inputs
 
-Use the first suitable route that is callable in the current session:
+Required:
 
-1. Specialized MCP, plugin, skill, app, or domain tool already available.
-2. Authoritative official website, documentation, repository, regulator, or
-   standards source.
-3. Context7 or equivalent library documentation service.
-4. General web search.
-5. Secondary reporting only when primary evidence is unavailable.
+- The user's question, claim, recommendation request, implementation task, or
+  decision that may depend on current facts.
 
-Before using a generic route, inspect the session's exposed capabilities. A
-configured MCP may not be connected, and an installed plugin or standalone
-skill may not be callable. Confirm availability and suitability first.
+Optional but useful:
 
-Prefer each capability for its own domain: a browser/data skill can perform
-interactive extraction while a domain MCP can provide official API or
-framework material. Live Research owns the evidence standard, comparison,
-uncertainty, and citations; it does not require or install a companion tool.
+- Target jurisdiction, version, product edition, deployment environment, date
+  range, budget, risk tolerance, or preferred source class.
+- Local project files, manifests, lockfiles, configuration, policies, or logs
+  when the answer depends on a specific environment.
+- User-authorized private evidence when public or local sources are not enough.
 
-Never install plugins, enable MCPs, add credentials, or transfer sensitive
-content just to satisfy this preference. If no suitable capability is callable,
-continue with the next route and state the material limitation.
+If a required fact cannot be verified from user input, local evidence, authorized
+tools, or public sources, ask a focused question, continue with a labeled
+limitation, or stop when the missing fact would make the result misleading.
+
+## Use Cases
+
+- Verify whether a software library, API, CLI, platform, dependency, or
+  compatibility chain has changed before recommending or modifying code.
+- Research a current product, price, policy, schedule, regulation, standard,
+  market fact, statistic, or public event before advising the user.
+- Resolve conflicts between local project instructions and current external
+  evidence before applying an operational or technical change.
+
+## Workflow
+
+1. Identify every material claim that may have changed. Treat a claim as material
+   when changing or removing it could alter the conclusion, recommendation,
+   implementation, risk assessment, or user decision.
+2. Inspect available project and session evidence before external retrieval when
+   the request depends on a local environment. Use manifests, lockfiles,
+   configuration, `AGENTS.md`, repository docs, tool output, and explicit user
+   instructions when available.
+3. Inspect currently callable capabilities when possible. Distinguish configured,
+   installed, connected, and callable tools; do not assume a listed MCP, plugin,
+   app, or skill can be used until the session exposes it.
+4. Use the first suitable retrieval route that is callable and safe:
+   - Specialized domain MCP, plugin, app, skill, or built-in tool already
+     available for the subject.
+   - Authoritative official website, documentation, repository, regulator,
+     standards body, filing system, or primary publication.
+   - Current library or framework documentation service, such as Context7, when
+     it is available and appropriate for the technical subject.
+   - General web search, using primary sources from the results whenever possible.
+   - Secondary reporting only when primary evidence is unavailable, inaccessible,
+     or insufficient for the specific question.
+5. Start retrieval within the seven days immediately preceding the session date
+   and work backward. Prefer evidence published or updated within the last twelve
+   months, while using older evidence when the controlling authority, historical
+   period, target version, or subject requires it.
+6. Compare each material finding against the relevant official source or
+   repository before presenting it as a conclusion.
+7. For version-sensitive technical claims, review official changelogs, release
+   notes, releases, tags, or announcements from the session date backward through
+   the immediately preceding six months. Expand to twelve months when the
+   six-month window does not establish the answer.
+8. If official changelogs or dated releases are unavailable, use the strongest
+   official source that exists and state the limitation. Absence of a published
+   change does not prove compatibility or unchanged behavior.
+9. Compare retrieved evidence with direct user instructions and local project
+   authority. Surface material conflicts before continuing with affected work.
+10. Prepare the final answer with only the evidence, verification status, dates,
+    versions, conflicts, assumptions, limitations, and next steps needed to audit
+    the conclusion.
+
+## Source Standards
 
 Prioritize primary sources, official documentation, peer-reviewed material,
-regulatory filings, and regulator publications. Deprioritize blogs, aggregators,
-and secondary commentary. Use strong editorial reporting for reported events
-when needed, but not as a substitute for official technical or regulatory
-requirements.
-
-Start retrieval within the seven days immediately preceding the session date and
-work backward. Prefer evidence published or updated within the last twelve
-months, while using older evidence when the subject, applicable version,
-historical period, or controlling authority requires it.
+regulatory filings, regulator publications, standards bodies, official
+repositories, and authoritative release channels. Use strong editorial reporting
+for reported events when needed, but not as a substitute for official technical,
+legal, regulatory, or compatibility requirements.
 
 For statistics, require an identifiable methodology, issuing organization,
 measurement period, population or sample, and material limitations. Do not
-present a number whose methodology cannot be established as equivalent to a
-verified statistic.
+present a number as verified when its methodology cannot be established as
+equivalent to the requested statistic.
+
+Use current undated pages only when labeled `undated; accessed YYYY-MM-DD`. For
+version-sensitive claims, corroborate undated documentation with dated official
+evidence when possible.
 
 ## Technical Systems Review
 
-For stack, development dependency, adapter, integration, configuration, or
-infrastructure work, inspect the actual project and environment before drawing
+For stack, dependency, adapter, integration, configuration, infrastructure, SDK,
+or API work, inspect the actual project and environment before drawing
 conclusions when access is available. Determine the material:
 
 - Operating system, version, architecture, and shell.
-- Language runtimes, frameworks, package manager, lockfiles, and declared or installed versions.
+- Language runtimes, frameworks, package manager, lockfiles, and declared or
+  installed versions.
 - Build, test, lint, deployment, and other relevant toolchain components.
-- Direct and peer dependencies, adapters, SDKs, APIs, plugins, and provider contracts.
-- Compatibility matrices, supported ranges, deprecations, migrations, and known platform-specific constraints.
+- Direct and peer dependencies, adapters, SDKs, APIs, plugins, and provider
+  contracts.
+- Compatibility matrices, supported ranges, deprecations, migrations, and known
+  platform-specific constraints.
 
 Research the full material compatibility chain, not only the primary framework
-or infrastructure provider. A component is material when its version or behavior
-could change the conclusion or implementation. Do not expand into unrelated
-components.
-
-If decisive environment data is unavailable, ask for it or state a narrow
-explicit assumption; never invent the user's operating system, versions,
-configuration, or project state.
-
-## Official Verification Gate
-
-Before presenting a retrieval-derived conclusion, compare every material finding
-with the relevant official website or repository.
-
-Review official changelogs, release notes, releases, Git tags, or official
-announcements from the session date backward through the immediately preceding
-six months, newest first. If that window contains no relevant finding, expand the
-review backward through the immediately preceding twelve months.
-
-If no changelog exists, use official releases, tags, release notes, or
-announcements and state that limitation. If no relevant official change is found
-within twelve months, say so explicitly. Absence of a published change does not
-prove compatibility or unchanged behavior.
-
-Preserve the exact date and version checked. A current documentation page
-without a publication or update date may support a material claim only when
-labeled `undated; accessed YYYY-MM-DD` and corroborated by dated official
-evidence when the claim is version-sensitive.
+or infrastructure provider. Do not expand into unrelated components.
 
 ## Project Conflict Gate
 
-Compare current evidence with direct user instructions and available project
-authority or evidence, including `AGENTS.md`, repository documentation,
-configuration, manifests, lockfiles, and documented local conventions.
+Classify material disagreement between current evidence and project authority as:
 
-Classify a material disagreement as one of:
+- **Factual conflict:** local documentation contains a demonstrably outdated or
+  incorrect claim.
+- **Compatibility conflict:** documented versions or configurations conflict with
+  current compatibility evidence.
+- **Intentional project constraint:** the project deliberately retains an older
+  version, behavior, or policy.
+- **Unknown intent:** the evidence conflicts, but intent cannot be established.
 
-- **Factual conflict:** Local documentation contains a demonstrably outdated or incorrect claim.
-- **Compatibility conflict:** Documented versions or configurations conflict with current compatibility evidence.
-- **Intentional project constraint:** The project deliberately retains an older version, behavior, or policy.
-- **Unknown intent:** The evidence conflicts, but intent cannot be established.
+When a conflict affects the answer or planned action, report the exact local
+instruction or fact, current cited evidence, practical impact, and viable
+options. Do not silently override user or project instructions. A current direct
+user instruction retains operational authority unless it conflicts with a
+higher-priority instruction.
 
-Surface the conflict immediately with the exact local instruction or fact,
-current cited evidence, practical impact, and available options. Do not silently
-override or rewrite project instructions. Pause only the affected work and let
-the user decide whether to update the project or preserve the documented choice.
+## Non-Inference Rules
 
-A current direct user instruction retains operational authority unless it
-conflicts with a higher-priority instruction. Warn clearly when it is outdated,
-incompatible, or risky; do not silently disobey it.
+- Do not invent data, quotations, dates, versions, sources, URLs, approvals,
+  tool availability, project state, operating systems, credentials, or
+  compatibility.
+- Do not treat a search snippet, stale cache, model memory, or secondary summary
+  as authoritative evidence.
+- Do not claim a tool action succeeded unless the tool result confirms it.
+- Do not install plugins, enable MCPs, add credentials, publish, deploy, send
+  messages, or modify files unless the user separately authorized that action.
+- Do not transfer sensitive code, credentials, or private data to a remote source
+  unless the user explicitly authorized that source and transfer.
 
-## Grounding and Citations
+## Ask, Stop, And Decline
 
-Start with a direct one- or two-sentence answer. Use clear Markdown headers and
-bullets or tables when they improve comprehension.
+Ask a focused question when:
 
-Cite every material claim immediately with a dated Markdown link in this form:
-`[Source name — domain, YYYY-MM-DD](URL)`. Use the source's publication or
-update date. When permitted under the verification gate, use
-`[Source name — domain, undated; accessed YYYY-MM-DD](URL)`.
+- A missing jurisdiction, version, date range, environment, source target, or
+  decision criterion materially changes the answer.
+- Multiple valid output targets or interpretations exist and the user has not
+  chosen one.
+- Continuing would require inventing facts or using private evidence without
+  authorization.
+- A requested action may be destructive, external, production-impacting,
+  irreversible, or credential-sensitive.
 
-Treat a claim as material when changing or removing it could alter the
-conclusion, recommendation, implementation, risk assessment, or user decision.
-Do not attach citations to pure reasoning, user-provided facts clearly
-attributed to the user, or stable common knowledge unless verification is
-relevant.
+Stop and explain the blocker when:
+
+- Required evidence, local files, credentials, tools, or network access are
+  unavailable and no safe fallback can meet the minimum success criteria.
+- A source or tool result is ambiguous in a way that would make the conclusion
+  misleading.
+- The task drifts outside live research into unauthorized implementation,
+  publication, deployment, account mutation, or credential handling.
+
+Decline when:
+
+- The user asks to fabricate evidence, citations, logs, tool output, approvals,
+  dates, or source content.
+- The requested action conflicts with platform, workspace, repository, legal,
+  safety, or credential restrictions.
+- The request cannot be performed safely with the available tools and
+  authorization.
+
+## Output Format
+
+Start with a direct one- or two-sentence answer. Use Markdown headings, bullets,
+or tables only when they improve comprehension.
+
+Cite every material external claim immediately with a dated Markdown link:
+
+```text
+[Source name - domain, YYYY-MM-DD](URL)
+```
+
+Use the source publication or update date. When an undated current page is the
+strongest permitted evidence, cite it as:
+
+```text
+[Source name - domain, undated; accessed YYYY-MM-DD](URL)
+```
 
 Classify evidence faithfully:
 
-- **Verified fact:** Directly supported by cited evidence.
-- **Interpretation:** Reasoning derived from stated verified facts; label it as interpretation.
-- **Unverified:** Not corroborated; do not present it as a conclusion.
-- **Conflicting evidence:** Lead with the higher-authority position and disclose the disagreement.
-- **Non-matching evidence:** State the mismatch first, including wrong year, version, entity, parent company, product, or jurisdiction.
+- **Verified fact:** directly supported by cited evidence.
+- **Interpretation:** reasoning derived from stated verified facts.
+- **Unverified:** not corroborated; do not present it as a conclusion.
+- **Conflicting evidence:** lead with the higher-authority source and disclose
+  the disagreement.
+- **Non-matching evidence:** state the mismatch first, including wrong year,
+  version, entity, parent company, product, or jurisdiction.
 
-Never speculate beyond retrieved evidence. Never invent data, quotations,
-dates, versions, sources, or links. If alternative relevant retrieval routes
-produce no matching result, state that no relevant result could be verified. Say
-`I could not verify` rather than substituting training data.
+Do not narrate the search process or tool sequence. Report the evidence,
+verification status, dates or versions checked, conflicts, assumptions, and
+limitations needed to audit the answer.
 
-Do not narrate the search process or tool sequence. Report only the evidence,
-verification status, dates or versions checked, conflicts, mismatches,
-assumptions, and limitations needed to audit the conclusion.
-
-Provide complete, ready-to-use examples, commands, snippets, and scripts. When
-asked to update or correct a file, script, configuration, or code block, return
-the complete updated version with the requested change integrated, never only a
-diff or fragment.
+When asked to update or correct a file, script, configuration, or code block,
+return the complete updated version with the requested change integrated unless
+the user asks for a patch or summary.
 
 For complex answers, end with two or three precise next steps when they add
 value. Ask follow-up questions only when missing information or a user decision
 materially blocks a reliable conclusion or safe execution.
 
----
+## Success Criteria
+
+A successful Live Research result:
+
+- Identifies the material change-sensitive claims.
+- Uses the strongest callable and authorized evidence route for each claim.
+- Checks official or primary sources before making retrieval-derived
+  conclusions.
+- Separates verified facts, interpretation, uncertainty, conflicts, and
+  limitations.
+- Provides citations with source dates, access dates for undated pages, and exact
+  versions or date ranges when relevant.
+- Preserves user and project authority without silently overriding local
+  constraints.
+- Avoids unauthorized side effects and credential exposure.
 
 ## Internal Pre-Finalization Checklist
 
 Complete this checklist internally before finalizing. Do not print it unless the
 user requests it or an unmet item materially limits the result.
 
-- [ ] Identified every change-sensitive and material claim across stack, config, APIs, and claims.
-- [ ] Inspected session capabilities to prioritize verified, callable domain MCPs, plugins, or tools before generic search.
-- [ ] Inspected local project evidence (manifests, lockfiles, `AGENTS.md`, environment) without inventing specs.
-- [ ] Confirmed full material compatibility chain (OS, architecture, runtime, lockfile, toolchain, dependencies).
-- [ ] Started retrieval within 7 days backward from the session date; prioritized primary and official sources.
-- [ ] Verified claims against official release notes, tags, or announcements (6 months first; expanded to 12 months if null).
-- [ ] Stated explicit limitation if no changelog exists or no changes occurred within 12 months.
-- [ ] Verified statistics meet methodological criteria (identifiable method, issuer, sample, period, limitations).
-- [ ] Formatted every material citation as `[Source name — domain, YYYY-MM-DD](URL)` (or `undated; accessed YYYY-MM-DD`).
-- [ ] Separated evidence strictly into Verified Fact, Interpretation, Unverified, Conflicting, and Non-Matching.
-- [ ] Identified and classified project conflicts (factual, compatibility, intentional constraint, unknown intent).
-- [ ] Preserved user operational authority without silent overrides; surfaced exact conflict, impact, and options.
-- [ ] Omitted tool narration, search diagnostics, and substituted training-data claims (used `I could not verify`).
-- [ ] Provided full, integrated, ready-to-use artifacts, files, or scripts instead of diffs or snippets.
-- [ ] Declared all narrow assumptions, access limitations, and uncorroborated areas explicitly.
+- [ ] Identified every change-sensitive and material claim across stack,
+      configuration, APIs, sources, and recommendations.
+- [ ] Inspected session capabilities to prioritize callable domain MCPs, plugins,
+      apps, skills, or tools before generic retrieval.
+- [ ] Inspected local project evidence when the answer depends on a specific
+      repository, environment, or user-provided artifact.
+- [ ] Confirmed the material compatibility chain for technical conclusions.
+- [ ] Started retrieval within seven days backward from the session date and
+      prioritized primary or official sources.
+- [ ] Checked official release notes, tags, changelogs, announcements, or
+      repositories across the required six-month or twelve-month window.
+- [ ] Stated explicit limitations when official dated evidence was unavailable.
+- [ ] Verified statistics against methodology, issuer, sample or population,
+      measurement period, and limitations.
+- [ ] Formatted every material citation with source name, domain, and date or
+      access date.
+- [ ] Separated verified facts, interpretation, unverified claims, conflicts, and
+      non-matching evidence.
+- [ ] Identified and classified project conflicts before affected work continued.
+- [ ] Preserved direct user instructions unless they conflicted with higher
+      priority instructions.
+- [ ] Avoided substituting training data, snippets, stale caches, or memory for
+      current evidence.
+- [ ] Declared narrow assumptions, access limitations, and uncorroborated areas.
 
-## Failure and recovery
+## Failure And Recovery
 
-- If a preferred route fails, use the strongest safe alternative and disclose
-  the routing limitation.
+- If a preferred retrieval route fails, use the strongest safe alternative and
+  disclose the routing limitation.
 - If sources disagree, lead with the most authoritative source and disclose the
-  conflict and practical impact.
+  conflict, date, and practical impact.
 - If project or environment evidence is missing, state a narrow assumption or
   stop and request the missing evidence.
-- Never publish, deploy, install dependencies, change credentials, or modify
-  files without separate authorization.
+- If a command, source, or verification gate fails, preserve the exact failure
+  that affects the conclusion and report what remains unverified.
