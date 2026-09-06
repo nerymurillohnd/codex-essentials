@@ -18,6 +18,9 @@ multi-repository scope. It produces evidence-based plans and complete diffs; it
 does not install packages, modify configuration, format files, or change
 automation without explicit approval.
 
+The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+the package from the repository's `main` catalog.
+
 > [!CAUTION]
 > The plugin is read-only until the user explicitly approves one or more
 > previously displayed recommendation items. Approval for one item does not
