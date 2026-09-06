@@ -10,9 +10,9 @@
 [Docs](#-documentation-and-support)
 
 System Ops Audit is a Codex plugin for local macOS operational baseline audit
-work. It prepares a fixed System-Ops workspace workflow, requires script design
-before implementation or execution, and keeps baseline collection separate from
-repair.
+work. It routes workspace preparation, baseline design, approved execution, and
+evidence analysis through separate approval boundaries, and keeps collection
+separate from repair.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
@@ -71,8 +71,7 @@ changes, remote fleet management, or collecting secrets.
 | [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                                             | Plugin identity, version, marketplace metadata, and bundled components. |
 | [`skills/system-ops-audit/SKILL.md`](skills/system-ops-audit/SKILL.md)                                                               | Authoritative operating workflow for safe macOS baseline audit work.    |
 | [`skills/system-ops-audit/agents/openai.yaml`](skills/system-ops-audit/agents/openai.yaml)                                           | Codex-facing display metadata and invocation prompt.                    |
-| [`skills/system-ops-audit/assets/system-ops-workspace-tree.txt`](skills/system-ops-audit/assets/system-ops-workspace-tree.txt)       | Reference workspace tree for the expected System-Ops layout.            |
-| [`skills/system-ops-audit/references/macos-baseline-audit-spec.md`](skills/system-ops-audit/references/macos-baseline-audit-spec.md) | Audit scope and evidence model for macOS baseline checks.               |
+| [`skills/system-ops-audit/references/macos-baseline-audit-spec.md`](skills/system-ops-audit/references/macos-baseline-audit-spec.md) | Conditional coverage tiers and evidence model for macOS baselines.      |
 | [`skills/system-ops-audit/references/safety-policy.md`](skills/system-ops-audit/references/safety-policy.md)                         | Safety, privacy, and approval boundaries.                               |
 | [`skills/system-ops-audit/references/script-design-template.md`](skills/system-ops-audit/references/script-design-template.md)       | Template for presenting audit script designs before implementation.     |
 | [`skills/system-ops-audit/references/test-scenarios.md`](skills/system-ops-audit/references/test-scenarios.md)                       | Verification scenarios for generated audit scripts and analysis.        |
@@ -87,17 +86,18 @@ hooks, no MCP server, no app manifest, and no bundled credentials.
 
 ## Supported Environments
 
-| Requirement   | Supported value or behavior                                                            |
-| ------------- | -------------------------------------------------------------------------------------- |
-| Codex surface | Codex hosts that support installed skills and local filesystem and shell access.       |
-| Runtime/tools | Shell access for approved local diagnostics; no package manager dependency is bundled. |
-| Project types | Local macOS operational audit workspaces and evidence review sessions.                 |
-| Credentials   | None required by the plugin; do not collect or print secret values.                    |
-| Network       | Not required for the packaged skill itself.                                            |
-| Last verified | `2026-09-05` against the package manifest and marketplace validator.                   |
+| Requirement   | Supported value or behavior                                                                                |
+| ------------- | ---------------------------------------------------------------------------------------------------------- |
+| Codex surface | Codex hosts that support installed skills and local filesystem and shell access.                           |
+| Runtime/tools | Shell access for approved local diagnostics; no package manager dependency is bundled.                     |
+| Project types | Local macOS operational audit workspaces and evidence review sessions.                                     |
+| Credentials   | None required by the plugin; do not collect or print secret values.                                        |
+| Network       | Not required for the packaged skill itself.                                                                |
+| Last verified | `2026-09-06` against the package manifest, local Codex CLI, OpenAI release notes, and Apple documentation. |
 
-The current installed project, local operating-system state, and current Codex
-behavior take precedence over static compatibility claims in this package.
+The current local operating-system state, current Codex behavior, and current
+Apple documentation take precedence over static compatibility claims in this
+package.
 
 ## 🔐 Behavior and boundaries
 
@@ -108,7 +108,8 @@ script design, read-only command output, and explicitly provided evidence.
 
 **Outputs:** script-design proposals, approved audit scripts when requested,
 read-only diagnostic output, findings summaries, risks, assumptions, and
-follow-up recommendations.
+follow-up recommendations. Every output identifies the verified evidence,
+unavailable checks, privacy exclusions, and any approval still required.
 
 ## Required Tools and Credentials
 
@@ -243,7 +244,12 @@ workspace or Git history.
 - [System Ops Audit skill](skills/system-ops-audit/SKILL.md)
 - [Workspace contract](skills/system-ops-audit/references/workspace-contract.md)
 - [Safety policy](skills/system-ops-audit/references/safety-policy.md)
-- [macOS baseline audit spec](skills/system-ops-audit/references/macos-baseline-audit-spec.md)
+- [macOS baseline coverage and evidence](skills/system-ops-audit/references/macos-baseline-audit-spec.md)
+- [Script design template](skills/system-ops-audit/references/script-design-template.md)
+- [Workflow test scenarios](skills/system-ops-audit/references/test-scenarios.md)
+- [OpenAI release notes](https://openai.com/products/release-notes/)
+- [Apple: manage login items and background tasks](https://support.apple.com/guide/deployment/manage-login-items-background-tasks-mac-depdca572563/web)
+- [Apple: FileVault deployment](https://support.apple.com/guide/deployment/intro-to-filevault-dep82064ec40/web)
 - [Changelog](CHANGELOG.md)
 - [Codex Essentials marketplace](../../README.md)
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)

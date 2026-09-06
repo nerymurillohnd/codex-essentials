@@ -1,150 +1,118 @@
 ---
 name: system-ops-audit
-description: Use when the user asks to review, audit, diagnose, document, or prepare a read-only operational baseline for a local macOS machine, including installed application metadata. Do not use for repository, application-development, or product-development audits.
+description: Plan, run with approval, or analyze a read-only macOS operational baseline for one local machine. Use for System-Ops workspace preparation, privacy-safe diagnostics, and audit findings; do not use for repository, product, fleet-management, or remediation work.
 ---
 
 # System Ops Audit
 
 ## Purpose
 
-Use this skill for local macOS operational baseline audits. The workflow is read-only, privacy-preserving, approval-gated, and separate from repository, application, product, or feature-development audits.
+Use this skill to produce a bounded, privacy-preserving baseline of one local
+macOS machine. It supports five modes:
+
+- Prepare or validate the `System-Ops` workspace.
+- Design a baseline collection before any script is written.
+- Write a user-approved read-only collection script.
+- Run one already approved script with its approved scope and destination.
+- Analyze user-provided or approved audit output.
+
+It does not perform remediation, manage a device fleet, or audit repositories,
+applications, or product features.
+
+## Required Inputs
+
+- A local-macOS objective and one selected mode.
+- For workspace work: the candidate workspace path or permission to inspect the
+  local context.
+- For script design: the requested coverage, intended output path, and privacy
+  constraints.
+- For script writing or execution: explicit approval for the exact script,
+  scope, and output destination.
+- For analysis: the supplied or authorized audit evidence and the user's
+  reporting objective.
+
+Ask one focused question when the mode, target machine, coverage, output
+destination, or approval boundary is missing or materially ambiguous.
 
 ## Hard Boundaries
 
-- Do not treat this as a development-repository audit.
-- Do not remediate during baseline collection.
-- Do not install, update, remove, unload, kill, chmod, chown, clean, rewrite, or reconfigure anything.
-- Do not read secrets, Keychain contents, cookies, browser dumps, password hashes, private keys, real `.env` contents, tokens, credentials, or session stores.
-- Do not read dotfile contents unless the user gives explicit approval and there is a justified reason.
-- Redact or avoid serials, hardware UUIDs, provisioning IDs, tokens, passwords, cookies, credentials, and private keys.
-- Secret-like environment variables may be reported only as name-level presence metadata, never values.
+- Read `references/safety-policy.md` before every mode. It controls data
+  handling, read-only behavior, and the approval boundary.
+- Do not collect or expose secret values, private content, recovery keys,
+  private keys, cookies, session stores, password hashes, or real `.env`
+  contents. Name- and location-level presence metadata is the maximum allowed
+  secret-related output.
+- Do not invent the current state, a command result, command availability,
+  approval, a device-management origin, or a remediation outcome.
+- Do not install, update, remove, unload, kill, clean, change ownership or
+  permissions, rewrite configuration, or otherwise mutate the system during a
+  baseline.
+- Stop when the requested check cannot be performed read-only, safely, or with
+  the approved authority. Explain the limitation and offer a narrower or
+  sanitized alternative when one exists.
+- Decline requests to collect secrets, bypass these boundaries, fabricate
+  evidence, or perform remediation under the guise of a baseline.
 
-## Required References
+## Reference Map
 
-Before preparing a workspace, designing a script, executing an audit, or analyzing audit output, read the relevant files in this skill:
+Load only the reference required by the current mode. Do not preload the full
+coverage specification for workspace-only work or output-only analysis.
 
-- `references/workspace-contract.md`
-- `references/safety-policy.md`
-- `references/macos-baseline-audit-spec.md`
-- `references/script-design-template.md`
+| Mode or decision                    | Required reference                        | Use it to                                                      |
+| ----------------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| Every mode                          | `references/safety-policy.md`             | Apply privacy, reporting, and read-only controls.              |
+| Workspace preparation or validation | `references/workspace-contract.md`        | Check the fixed `System-Ops` layout and its creation boundary. |
+| Design or scope review              | `references/macos-baseline-audit-spec.md` | Select proportionate coverage and required provenance.         |
+| Script proposal or change           | `references/script-design-template.md`    | Produce the approval-ready design before writing code.         |
+| Workflow self-review                | `references/test-scenarios.md`            | Check representative safe and unsafe requests.                 |
 
-Use `references/test-scenarios.md` when validating that the skill behavior is being followed.
+## Workflow
 
-## Operating Flow
+1. Confirm that the request is for one local macOS machine and choose the
+   applicable mode. Route repository, application, product, fleet-management,
+   or remediation work to its own workflow.
+2. Read the safety policy and state any constraint that materially limits the
+   requested result.
+3. For workspace work, read the workspace contract. Inspect only what is
+   needed to determine the candidate path and missing relative directories.
+   Report missing paths and wait for explicit creation approval.
+4. For a design, read the coverage specification and script-design template.
+   Select only the requested categories; preserve the initial-baseline limits
+   unless the user explicitly approves broader coverage. Present the completed
+   design and wait for approval before writing a script.
+5. For script writing, confirm that the approved design matches the exact
+   script path, coverage, and output file. Write only that approved script and
+   validate syntax, output path, forbidden mutations, and secret handling.
+6. For execution, review the existing script against the approved design. Do
+   not run it until the user has approved its exact scope and destination.
+7. For analysis, use only supplied or authorized evidence. Separate direct
+   observations from inferences, unavailable checks, privacy exclusions, and
+   recommendations. Do not imply that a recommendation was performed.
+8. Treat remediation as a separate task. Require new explicit approval before
+   any mutation, even when the finding is critical.
 
-1. Review active user/system/project instructions that limit what may be read, stored, or revealed.
-2. Identify whether the task concerns the local machine operational state, not a repository or product.
-3. Apply the workspace contract before writing any files.
-4. Apply the safety policy before proposing, creating, executing, reading, or analyzing an audit.
-5. If a script is needed and does not already exist, present the script design first and wait for explicit approval before writing it.
-6. If an existing script is present, review its safety and scope before recommending execution.
-7. Do not execute any audit script until the user approves the script, output destination, and collection scope.
-8. Analyze outputs by separating verified observations, unavailable data, privacy-excluded data, assumptions, risks, and recommendations.
-9. Keep remediation as a separate workflow requiring explicit approval.
+When an operating-system command, feature, or management behavior is
+version-sensitive, verify its current availability and semantics from the local
+host or authoritative Apple documentation before relying on it. If it cannot
+be verified, mark the check `UNKNOWN` rather than guessing.
 
-## Workspace Contract
+## Output Format
 
-The standard workspace is named exactly `System-Ops`. The name and internal architecture are contract requirements, not agent suggestions. Only the parent location may vary if the user chooses.
+- Workspace mode: candidate path, verified and missing relative paths, and the
+  exact approval needed for creation.
+- Design mode: use the complete script-design template, including scope,
+  excluded data, privacy risk, validations, and a direct approval request.
+- Execution mode: approved script identity, destination, observed result or
+  failure, and any unavailable checks.
+- Analysis mode: `Verified observations`, `Unavailable or permission-limited`,
+  `Privacy exclusions`, `Findings`, `Recommendations`, and `Approval needed`.
 
-At start:
+Classify findings as `EXPECTED`, `INFORMATIONAL`, `REVIEW`, `WARNING`,
+`CRITICAL`, or `UNKNOWN` when classification helps the next decision.
 
-1. Check whether `/Users/{username}/System-Ops` exists.
-2. If it exists, use it and verify the required architecture.
-3. If it does not exist, inspect the local context and recommend a parent location for `System-Ops`.
-4. Explain that the recommendation concerns only the parent location; `System-Ops` and its internal architecture are fixed.
-5. Ask whether the user confirms creation at the recommended parent or prefers another parent.
-6. Do not create or modify files before explicit confirmation.
+## Completion Checks
 
-If the workspace exists but required directories are missing, report the exact missing directories and ask for approval before creating them.
-
-## Required Workspace Architecture
-
-```text
-System-Ops/
-  .codex/
-    hooks/
-    skills/
-      system-ops-audit/
-  archive/
-  audits/
-    environment/
-  decisions/
-  inventory/
-  scripts/
-```
-
-## Script Rules
-
-- Scripts live only in `scripts/`.
-- The first environment baseline script must be Bash and start with:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-```
-
-- The first script must write its output to `audits/environment/`.
-- For the initial baseline, generate exactly one complete output file.
-- Do not create `raw/`, `summary.md`, `findings.md`, or `manifest.json` for the initial baseline unless the user later approves that structure.
-- The first script audits the operating system and base environment only; it must not perform deep development package inventories.
-
-If the script does not exist, present the design first:
-
-- Script name.
-- Exact output file it will generate.
-- Commands or command families it will use.
-- Data it will include.
-- Data it will exclude.
-- Privacy risks.
-- Validations to run.
-
-Wait for explicit approval before writing the script.
-
-## Baseline Coverage
-
-The first baseline should follow `references/macos-baseline-audit-spec.md` and prioritize:
-
-- System identity.
-- Hardware and storage.
-- Users and groups.
-- Shell and environment metadata.
-- Top-level filesystem structure.
-- Package/runtime manager detection without package inventories.
-- Superficial services/startup inventory.
-- Security posture.
-- Network configuration and listening exposure.
-- Persistence mechanisms.
-- Privilege and authorization metadata.
-- Device management and profiles.
-- Installed application metadata.
-- Runtime process metadata.
-- Storage integrity and backup posture.
-- High-impact privacy/TCC permissions at a structural level.
-- Development/execution environment resolution without deep dependency inventory.
-- Evidence and provenance.
-
-## Reporting Rules
-
-Every final response after audit work must state:
-
-- What was verified.
-- What was not checked.
-- What was intentionally excluded for privacy.
-- What required elevated privilege, if anything.
-- Any findings that are informational, review-worthy, warnings, critical, or unknown.
-- Recommended next action, without performing remediation.
-
-Use these classifications when useful:
-
-```text
-EXPECTED
-INFORMATIONAL
-REVIEW
-WARNING
-CRITICAL
-UNKNOWN
-```
-
-## Non-Negotiable Principle
-
-Baseline collection is observation, not repair. The agent may recommend remediation only after evidence is collected, and remediation requires a separate explicit approval boundary.
+Before responding, confirm that the selected mode had its required inputs,
+reference, and approval; no sensitive value or mutation crossed the boundary;
+and the result distinguishes evidence from inference. For a workflow change,
+consult the test scenarios and correct any behavior that would violate them.

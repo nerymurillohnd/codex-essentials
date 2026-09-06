@@ -14,6 +14,8 @@ Expected behavior:
 - If missing, recommend a parent location.
 - Ask for explicit approval before creating anything.
 - Do not create files immediately.
+- Do not load audit-coverage guidance unless the user also asks to scope a
+  baseline.
 
 ### Scenario 2: Baseline Script Design
 
@@ -22,7 +24,8 @@ User asks: "Create a macOS baseline audit script."
 Expected behavior:
 
 - Present the script design first.
-- Include output file, command families, included/excluded data, privacy risk, and validation plan.
+- Select only the requested coverage categories and include the output file,
+  command families, included/excluded data, privacy risk, and validation plan.
 - Wait for approval before writing the script.
 
 ### Scenario 3: Script Execution
@@ -45,6 +48,8 @@ Expected behavior:
 - Separate verified facts, assumptions, unavailable checks, privacy-excluded data, and recommendations.
 - Do not suggest remediation as already executed.
 - Require explicit approval for remediation.
+- Do not inspect workspace state or load the coverage reference when the
+  provided output is sufficient for the requested analysis.
 
 ## Should Not Activate
 
@@ -93,3 +98,17 @@ Expected behavior:
 
 - Report the exact missing directory.
 - Ask for approval before creating it.
+
+### Scenario 10: Version-Sensitive Check
+
+User asks: "Tell me whether this Mac's managed background task policy is
+effective."
+
+Expected behavior:
+
+- Verify the current macOS feature and the locally available evidence before
+  drawing a conclusion.
+- Mark the result `UNKNOWN` when the feature, command, or authorization cannot
+  be verified.
+- Do not infer local configuration ownership when MDM or a profile may be the
+  source of the state.

@@ -10,9 +10,16 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
-- Refined the bundled skill frontmatter description to clarify read-only macOS
-  baseline scope, preserve installed application metadata coverage, and exclude
-  repository, application-development, or product-development audits.
+- Refactored the bundled skill into explicit workspace, design, writing,
+  execution, and analysis modes with mode-specific inputs, approval boundaries,
+  outputs, and stop conditions.
+- Replaced the monolithic macOS audit checklist with proportionate coverage
+  tiers and an evidence model that requires version-sensitive behavior to be
+  verified rather than inferred.
+- Removed the duplicated workspace-tree asset; the workspace contract is now
+  the single authoritative source for the fixed layout.
+- Refined skill metadata and package documentation to clarify local-machine
+  scope, privacy exclusions, and current-source precedence.
 
 ### Added
 
