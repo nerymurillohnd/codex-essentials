@@ -37,6 +37,28 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     expect(result.stdout).toBe("");
   });
 
+  it("accepts bold downstream headings inside the final prompt", () => {
+    const result = runValidator({
+      response: `
+**Result** - Ready
+**Assumptions** - None.
+**Final Prompt** - Draft a delivery plan. The downstream response must include:
+
+**Clarification Questions**
+Ask only for material missing information.
+
+**Final Report**
+Summarize completed work and unresolved blockers.
+**Execution Recommendation** - model: gpt-5.5; reasoning: medium; P-level: P1; D-level: D3; R-level: R2.
+Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=pass; template=pass; output=pass; self-audit=pass.
+`,
+    });
+
+    expect(result.status, result.stdout + result.stderr).toBe(0);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toBe("");
+  });
+
   it("blocks a Ready output that skipped the gate evidence", () => {
     const result = runValidator({
       response: `
@@ -48,8 +70,9 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     });
 
     expect(result.status).toBe(2);
-    expect(result.stdout).toContain("prompt-architect-final-check: blocked");
-    expect(result.stdout).toContain("missing compact Gate Evidence pass line");
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("prompt-architect-final-check: blocked");
+    expect(result.stderr).toContain("missing compact Gate Evidence pass line");
   });
 
   it("blocks a Ready result even when the final prompt section is missing", () => {
@@ -61,8 +84,9 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     });
 
     expect(result.status).toBe(2);
-    expect(result.stdout).toContain("missing Final Prompt");
-    expect(result.stdout).toContain("missing Execution Recommendation");
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("missing Final Prompt");
+    expect(result.stderr).toContain("missing Execution Recommendation");
   });
 
   it("validates runtime tokens inside the execution recommendation section", () => {
@@ -77,13 +101,14 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     });
 
     expect(result.status).toBe(2);
-    expect(result.stdout).toContain("Execution Recommendation missing model");
-    expect(result.stdout).toContain(
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("Execution Recommendation missing model");
+    expect(result.stderr).toContain(
       "Execution Recommendation missing reasoning",
     );
-    expect(result.stdout).toContain("Execution Recommendation missing P-level");
-    expect(result.stdout).toContain("Execution Recommendation missing D-level");
-    expect(result.stdout).toContain("Execution Recommendation missing R-level");
+    expect(result.stderr).toContain("Execution Recommendation missing P-level");
+    expect(result.stderr).toContain("Execution Recommendation missing D-level");
+    expect(result.stderr).toContain("Execution Recommendation missing R-level");
   });
 
   it("accepts Needs Clarification only when no final prompt is included", () => {
@@ -109,7 +134,8 @@ Gate Evidence: intake=pass; classification=R2/D3/P1; references=pass; placement=
     });
 
     expect(result.status).toBe(2);
-    expect(result.stdout).toContain(
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain(
       "Needs Clarification output must omit Final Prompt",
     );
   });

@@ -54,6 +54,14 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   `Needs Clarification` outputs cannot pass merely because required prompt
   sections are absent.
 
+### Fixed
+
+- Ignore bold headings inside a `Final Prompt` while validating the outer
+  `Ready` response envelope, so generated downstream output contracts do not
+  cause false Stop-hook blocks.
+- Send malformed-output repair reasons through the Stop-hook continuation path
+  instead of writing success-path JSON before returning the blocking exit code.
+
 ### Removed
 
 - Remove the stale packaged `skills/prompt-architect/scripts/validate_skill.py`

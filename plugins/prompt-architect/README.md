@@ -19,7 +19,10 @@ It does not execute the prompt it creates, install tools, send data to a third
 party, or modify the target project by itself.
 
 It includes a packaged `Stop` hook that blocks malformed Prompt Architect final
-output before delivery when Codex hook support is available.
+output before delivery when Codex hook support is available. The validator
+checks the outer response envelope without treating headings inside the generated
+prompt as Prompt Architect sections, and returns a repair reason through the
+hook continuation path when it blocks delivery.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
@@ -69,7 +72,7 @@ ordinary explanation instead of prompt design or review.
 | [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing, support-file map, and workflow.       |
 | [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                             | Codex-facing display and invocation metadata.                |
 | [`hooks/hooks.json`](hooks/hooks.json)                                                                                 | Stop hook for final-output validation.                       |
-| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Strict final-output gate used by the hook.                   |
+| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Outer-envelope final-output gate with repair diagnostics.    |
 | [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                           | Normative procedures, domain guidance, and delivery gates.   |
 | [`skills/prompt-architect/assets/templates/`](skills/prompt-architect/assets/templates/)                               | Compact, structured, operational, and critical prompt forms. |
 | [`skills/prompt-architect/references/examples/`](skills/prompt-architect/references/examples/)                         | Calibration examples, prompt-audit reference, and scenarios. |

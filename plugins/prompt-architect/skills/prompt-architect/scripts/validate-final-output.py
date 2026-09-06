@@ -3,20 +3,22 @@
 
 from __future__ import annotations
 
+from itertools import pairwise
 import json
 import re
 import sys
 
-SECTION_PATTERN = re.compile(
-    r"\*\*("
-    r"Result|Assumptions|Clarification Questions|Final Prompt|"
-    r"Execution Recommendation|Current Guidance Notes|Optional Improvements"
-    r")\*\*",
-    re.IGNORECASE,
+SECTION_NAMES = (
+    "Result",
+    "Assumptions",
+    "Clarification Questions",
+    "Final Prompt",
+    "Execution Recommendation",
+    "Current Guidance Notes",
+    "Optional Improvements",
 )
 RESULT_PATTERN = re.compile(
-    r"\*\*Result\*\*\s*(?:-|\u2014|:)?\s*(Ready|Needs Clarification)\b",
-    re.IGNORECASE,
+    r"(?im)^\s*\*\*Result\*\*\s*(?:-|\u2014|:)?\s*(Ready|Needs Clarification)\b",
 )
 GATE_EVIDENCE_PATTERN = re.compile(
     r"Gate Evidence:\s*intake=pass;\s*"
@@ -27,8 +29,27 @@ GATE_EVIDENCE_PATTERN = re.compile(
 )
 
 
+def _section_matches(text: str, name: str) -> list[re.Match[str]]:
+    return list(
+        re.finditer(
+            rf"(?im)^[ \t]*\*\*{re.escape(name)}\*\*",
+            text,
+        )
+    )
+
+
+def _first_section(text: str, name: str) -> re.Match[str] | None:
+    matches = _section_matches(text, name)
+    return matches[0] if matches else None
+
+
+def _last_section(text: str, name: str) -> re.Match[str] | None:
+    matches = _section_matches(text, name)
+    return matches[-1] if matches else None
+
+
 def _emit(system_message: str) -> None:
-    print(json.dumps({"systemMessage": system_message}))
+    print(system_message, file=sys.stderr)
 
 
 def _collect_strings(value: object) -> list[str]:
@@ -58,44 +79,27 @@ def _collect_hook_text(raw_input: str) -> str:
 
 
 def _is_prompt_architect_output(text: str) -> bool:
+    result = _first_section(text, "Result")
+    assumptions = _first_section(text, "Assumptions")
+    if result is None or assumptions is None:
+        return False
     return bool(
-        (RESULT_PATTERN.search(text) and re.search(r"\*\*Assumptions\*\*", text, re.IGNORECASE))
-        or (
-            re.search(r"\*\*Result\*\*", text, re.IGNORECASE)
-            and (
-                re.search(r"\*\*Final Prompt\*\*", text, re.IGNORECASE)
-                or re.search(r"\*\*Clarification Questions\*\*", text, re.IGNORECASE)
-                or re.search(r"Gate Evidence:", text, re.IGNORECASE)
-            )
-        )
+        RESULT_PATTERN.search(text)
+        or any(_section_matches(text, name) for name in SECTION_NAMES[2:])
     )
 
 
-def _missing_sections(text: str, required: list[str]) -> list[str]:
-    return [
-        section
-        for section in required
-        if not re.search(rf"\*\*{re.escape(section)}\*\*", text, re.IGNORECASE)
-    ]
+def _required_sections(
+    text: str,
+    names: list[str],
+) -> tuple[dict[str, re.Match[str]], list[str]]:
+    matches = {name: _first_section(text, name) for name in names}
+    errors = [f"missing {name}" for name, match in matches.items() if match is None]
+    return {name: match for name, match in matches.items() if match is not None}, errors
 
 
-def _has_ordered_sections(text: str, names: list[str]) -> bool:
-    cursor = -1
-    for name in names:
-        match = re.search(rf"\*\*{re.escape(name)}\*\*", text, re.IGNORECASE)
-        if match is None or match.start() <= cursor:
-            return False
-        cursor = match.start()
-    return True
-
-
-def _section_body(text: str, name: str) -> str:
-    match = re.search(rf"\*\*{re.escape(name)}\*\*", text, re.IGNORECASE)
-    if match is None:
-        return ""
-    next_match = SECTION_PATTERN.search(text, match.end())
-    end = next_match.start() if next_match else len(text)
-    return text[match.end() : end]
+def _is_ordered(matches: list[re.Match[str]]) -> bool:
+    return all(current.start() < following.start() for current, following in pairwise(matches))
 
 
 def _validate_ready(text: str) -> list[str]:
@@ -106,18 +110,36 @@ def _validate_ready(text: str) -> list[str]:
         "Final Prompt",
         "Execution Recommendation",
     ]
-    errors.extend(f"missing {section}" for section in _missing_sections(text, required))
-    if not _has_ordered_sections(text, required):
+    sections, missing_errors = _required_sections(text, required)
+    errors.extend(missing_errors)
+    if missing_errors:
+        return errors
+
+    execution_recommendation = _last_section(text, "Execution Recommendation")
+    if execution_recommendation is None:
+        return ["missing Execution Recommendation"]
+    ordered = [
+        sections["Result"],
+        sections["Assumptions"],
+        sections["Final Prompt"],
+        execution_recommendation,
+    ]
+    if not _is_ordered(ordered):
         errors.append("required Ready sections are out of order")
-    if re.search(r"\*\*Clarification Questions\*\*", text, re.IGNORECASE):
+
+    final_prompt = sections["Final Prompt"]
+    if any(
+        sections["Assumptions"].end() <= match.start() < final_prompt.start()
+        for match in _section_matches(text, "Clarification Questions")
+    ):
         errors.append("Ready output must omit Clarification Questions")
-    recommendation = _section_body(text, "Execution Recommendation")
+    recommendation = text[execution_recommendation.end() :]
     errors.extend(
         f"Execution Recommendation missing {token}"
         for token in ["model", "reasoning", "P-level", "D-level", "R-level"]
         if not re.search(re.escape(token), recommendation, re.IGNORECASE)
     )
-    if not GATE_EVIDENCE_PATTERN.search(text):
+    if not GATE_EVIDENCE_PATTERN.search(recommendation):
         errors.append("missing compact Gate Evidence pass line")
     return errors
 
@@ -125,18 +147,22 @@ def _validate_ready(text: str) -> list[str]:
 def _validate_needs_clarification(text: str) -> list[str]:
     errors: list[str] = []
     required = ["Result", "Assumptions", "Clarification Questions"]
-    errors.extend(f"missing {section}" for section in _missing_sections(text, required))
-    if not _has_ordered_sections(text, required):
+    sections, missing_errors = _required_sections(text, required)
+    errors.extend(missing_errors)
+    if missing_errors:
+        return errors
+    ordered = [sections[name] for name in required]
+    if not _is_ordered(ordered):
         errors.append("Needs Clarification sections are out of order")
-    if re.search(r"\*\*Final Prompt\*\*", text, re.IGNORECASE):
+    if _first_section(text, "Final Prompt"):
         errors.append("Needs Clarification output must omit Final Prompt")
-    if re.search(r"\*\*Execution Recommendation\*\*", text, re.IGNORECASE):
+    if _first_section(text, "Execution Recommendation"):
         errors.append("Needs Clarification output must omit Execution Recommendation")
     return errors
 
 
 def _validate_prompt_architect_output(text: str) -> list[str]:
-    if not SECTION_PATTERN.search(text) or not _is_prompt_architect_output(text):
+    if not _is_prompt_architect_output(text):
         return []
     result = RESULT_PATTERN.search(text)
     if result and result.group(1).lower() == "ready":
