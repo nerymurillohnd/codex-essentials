@@ -1,6 +1,6 @@
 ---
 name: doc-keeper
-description: Use when maintaining changelogs, release history, or ADRs after completed work, release preparation, or explicit architectural decisions. Do not use for routine implementation, generic README prose, formatting-only work, or test-only work.
+description: Use when directly creating, completing, auditing, updating, or repairing changelogs, release history, or ADRs, and after completed work, release preparation, or explicit architectural decisions. Do not use for routine implementation, generic README prose, formatting-only work, or test-only work.
 ---
 
 # DocKeeper

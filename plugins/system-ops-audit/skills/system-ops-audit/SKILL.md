@@ -1,6 +1,6 @@
 ---
 name: system-ops-audit
-description: Use when the user asks to review, audit, diagnose, document, or prepare a read-only operational baseline for a local macOS machine. Do not use for repository, application, or product-development audits.
+description: Use when the user asks to review, audit, diagnose, document, or prepare a read-only operational baseline for a local macOS machine, including installed application metadata. Do not use for repository, application-development, or product-development audits.
 ---
 
 # System Ops Audit
