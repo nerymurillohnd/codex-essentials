@@ -1,0 +1,7 @@
+interface:
+  display_name: "Skill Design Standards"
+  short_description: "Design, audit, and evaluate reusable skills"
+  default_prompt: "Use $skill-design-standards to audit this skill and report evidence-backed improvements."
+
+policy:
+  allow_implicit_invocation: true

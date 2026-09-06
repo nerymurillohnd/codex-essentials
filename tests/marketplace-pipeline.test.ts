@@ -290,7 +290,7 @@ describe("strict plugin-to-marketplace pipeline", () => {
     const root = createFixture();
     const pluginsRoot = join(root, "plugins");
     writeFileSync(join(pluginsRoot, "AGENTS.md"), "instructions\n");
-    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(9);
+    expect(marketplaceContract.loadPluginManifests(root)).toHaveLength(10);
 
     const invalidEntryRoot = createFixture();
     writeFileSync(join(invalidEntryRoot, "plugins", "not-a-plugin.txt"), "x");
@@ -617,6 +617,18 @@ describe("strict plugin-to-marketplace pipeline", () => {
         { name: "optimize-memories" },
         { name: "prettier-after-edit" },
         { name: "prompt-architect" },
+        {
+          name: "skill-design-standards",
+          source: {
+            source: "local",
+            path: "./plugins/skill-design-standards",
+          },
+          policy: {
+            installation: "AVAILABLE",
+            authentication: "ON_INSTALL",
+          },
+          category: "Developer Tools",
+        },
         { name: "svelte-development" },
         { name: "system-ops-audit" },
       ],

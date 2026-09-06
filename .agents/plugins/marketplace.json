@@ -89,6 +89,18 @@
       "category": "Productivity"
     },
     {
+      "name": "skill-design-standards",
+      "source": {
+        "source": "local",
+        "path": "./plugins/skill-design-standards"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "svelte-development",
       "source": {
         "source": "local",
