@@ -56,11 +56,11 @@
     "*.{js,css,md}": "prettier --write"
   },
   "devDependencies": {
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitest/coverage-v8": "^4.1.11",
     "ajv": "^8.20.0",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "git-format-staged": "^4.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
