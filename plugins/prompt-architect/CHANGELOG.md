@@ -14,10 +14,13 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   risk-calibrated prompt-authoring skill.
 - Add Codex-facing skill metadata in `agents/openai.yaml` for consistent
   display and invocation.
-- Add reusable references, templates, examples, domain procedures, validation,
-  and delivery gates for prompt authoring, audits, and execution planning.
+- Add reusable references, packaged templates, examples, domain procedures,
+  validation, and delivery gates for prompt authoring, audits, and execution
+  planning.
 - Add conditional `/goal` guidance for long-running Codex tasks that support
   persistent goals.
+- Add a packaged `Stop` hook and deterministic final-output validator for Prompt
+  Architect delivery checks.
 - Register Prompt Architect in the marketplace catalog and root README.
 
 ### Changed
@@ -26,8 +29,28 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
   source statement to match the current plugin README convention.
 - Refine the bundled skill frontmatter description to improve implicit
   invocation precision for prompt authoring and audits.
-- Package the skill's references, templates, examples, source canon, and
-  pressure scenarios inside `skills/prompt-architect/` so its workflow remains
-  reproducible from an installed plugin.
+- Package the skill's references, templates, examples, and pressure scenarios
+  inside `skills/prompt-architect/` so its workflow remains reproducible from an
+  installed plugin.
+- Move prompt templates to `assets/templates/` and calibration plus pressure
+  scenarios to `references/examples/` so support files match OpenAI's skill
+  resource guidance.
 - Align package documentation with the current self-contained skill layout,
   permissions, installation behavior, and verification commands.
+- Distill the full prompt-authoring canon into modular runtime references for
+  core sections, tool use, deviation reporting, final reporting, assembly,
+  quality checks, and common prompt failures.
+- Make the skill workflow boundary explicit in `SKILL.md`, including expected
+  inputs, required output, non-inferable facts, stop conditions, and supporting
+  file authority.
+- Replace the linear workflow list with compact phase gates that must pass
+  before moving to the next phase.
+
+### Removed
+
+- Remove the stale packaged `skills/prompt-architect/scripts/validate_skill.py`
+  migration helper from the distributed skill package.
+- Remove the stale migration source document from the distributed plugin after
+  backing it up outside the package.
+- Remove the redundant skill-level README so installed runtime guidance lives in
+  `SKILL.md`, references, templates, examples, and the package README.

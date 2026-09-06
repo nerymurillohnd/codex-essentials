@@ -52,5 +52,6 @@
     ],
     "brandColor": "#0F766E"
   },
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
 }

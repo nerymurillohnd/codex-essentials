@@ -12,12 +12,14 @@
 Prompt Architect is a Codex plugin for people who need to write, improve, audit,
 structure, or generate prompts for consequential work. Its self-contained skill
 classifies risk,
-prompt density, domain, and execution topology; then it uses matching
-references, templates, examples, and delivery gates to produce a copy-ready
-prompt.
+prompt density, domain, and execution topology; then it uses routed references,
+packaged templates, examples, and delivery gates to produce a copy-ready prompt.
 
 It does not execute the prompt it creates, install tools, send data to a third
 party, or modify the target project by itself.
+
+It includes a packaged `Stop` hook that validates Prompt Architect's final
+output shape before delivery when Codex hook support is available.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.
@@ -61,21 +63,20 @@ ordinary explanation instead of prompt design or review.
 
 ## 🧰 Included Components
 
-| Component                                                                                                    | Purpose                                                      |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                     | Plugin identity, version, interface, and skill declaration.  |
-| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                       | Authoritative routing and prompt-authoring workflow.         |
-| [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                   | Codex-facing display and invocation metadata.                |
-| [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                 | Normative procedures, domain guidance, and delivery gates.   |
-| [`skills/prompt-architect/templates/`](skills/prompt-architect/templates/)                                   | Compact, structured, operational, and critical prompt forms. |
-| [`skills/prompt-architect/examples/`](skills/prompt-architect/examples/)                                     | Calibration examples and prompt-audit reference.             |
-| [`skills/prompt-architect/tests/pressure-scenarios.md`](skills/prompt-architect/tests/pressure-scenarios.md) | Adversarial scenarios for skill maintenance.                 |
-| [`skills/prompt-architect/scripts/validate_skill.py`](skills/prompt-architect/scripts/validate_skill.py)     | Local skill-content validation helper.                       |
-| [`skills/prompt-architect/source/prompt-editor.md`](skills/prompt-architect/source/prompt-editor.md)         | Source canon retained with the runtime skill.                |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                               | User-facing change history.                                  |
-| [`LICENSE.md`](LICENSE.md)                                                                                   | MIT license terms.                                           |
+| Component                                                                                                              | Purpose                                                      |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                               | Plugin identity, version, interface, and skill declaration.  |
+| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing and prompt-authoring workflow.         |
+| [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                             | Codex-facing display and invocation metadata.                |
+| [`hooks/hooks.json`](hooks/hooks.json)                                                                                 | Stop hook for final-output validation.                       |
+| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Compact final-output gate used by the hook.                  |
+| [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                           | Normative procedures, domain guidance, and delivery gates.   |
+| [`skills/prompt-architect/assets/templates/`](skills/prompt-architect/assets/templates/)                               | Compact, structured, operational, and critical prompt forms. |
+| [`skills/prompt-architect/references/examples/`](skills/prompt-architect/references/examples/)                         | Calibration examples, prompt-audit reference, and scenarios. |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                                         | User-facing change history.                                  |
+| [`LICENSE.md`](LICENSE.md)                                                                                             | MIT license terms.                                           |
 
-No hooks, MCP servers, apps, external services, or credentials are bundled.
+No MCP servers, apps, external services, or credentials are bundled.
 
 ## 🖥️ Requirements and compatibility
 
@@ -84,11 +85,11 @@ No hooks, MCP servers, apps, external services, or credentials are bundled.
 | Requirement   | Supported value or behavior                                                                       |
 | ------------- | ------------------------------------------------------------------------------------------------- |
 | Codex surface | Codex hosts that support installed skills.                                                        |
-| Runtime/tools | Codex skill support; the packaged Python helper is optional for maintainers.                      |
+| Runtime/tools | Codex skill support; Codex hook support for final-output validation.                              |
 | Project types | Prompt authoring for coding, Git, research, writing, strategy, compliance, and operations.        |
 | Credentials   | Not required.                                                                                     |
 | Network       | Read-only official-source lookups when changing facts are material; no automatic remote mutation. |
-| Last verified | `2026-09-05` against local plugin schemas and Codex plugin documentation.                         |
+| Last verified | `2026-09-06` against local plugin schemas and OpenAI Codex skill documentation.                   |
 
 Current system instructions, project instructions, attached source material,
 and official documentation take precedence over static package content.
@@ -105,10 +106,10 @@ environment.
 conversation. When relevant, the response also gives separate execution
 recommendations and current-guidance notes.
 
-The skill is the orchestration contract. Its references, templates, examples,
-source canon, and pressure scenarios are intentionally shipped under
-`skills/prompt-architect/` so the workflow is reproducible from the installed
-package.
+The skill is the orchestration contract. Its references, packaged templates,
+examples, pressure scenarios, and final-output validator are intentionally
+shipped under `skills/prompt-architect/` so the workflow is reproducible from
+the installed package.
 
 ## Required Tools and Credentials
 
@@ -118,13 +119,13 @@ source material to external sites.
 
 ## Permissions
 
-| Access or effect | What this plugin may do                                                            |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| Read             | Read user-provided task material and packaged skill resources.                     |
-| Write            | None by default.                                                                   |
-| Process          | None automatically; maintainers may run the packaged validation helper explicitly. |
-| Network          | Read official or primary sources when required to validate changing claims.        |
-| Authentication   | Not required.                                                                      |
+| Access or effect | What this plugin may do                                                     |
+| ---------------- | --------------------------------------------------------------------------- |
+| Read             | Read user-provided task material and packaged skill resources.              |
+| Write            | None by default.                                                            |
+| Process          | Run the packaged final-output validator on `Stop` when hooks are available. |
+| Network          | Read official or primary sources when required to validate changing claims. |
+| Authentication   | Not required.                                                               |
 
 ## Side Effects
 
@@ -146,8 +147,9 @@ the user separately asks for that action.
 ## Installation Behavior
 
 Installation makes the `prompt-architect` skill available to Codex. It does
-not install npm packages, alter lockfiles, configure MCP servers, enable hooks,
-or create external accounts.
+not install npm packages, alter lockfiles, configure MCP servers, or create
+external accounts. It registers the packaged final-output hook declared in the
+plugin manifest.
 
 ## 🔁 Uninstall and Rollback Behavior
 
@@ -170,6 +172,7 @@ npm run validate:plugins
 npm run marketplace:build
 npm run marketplace:check
 npm run documentation:gate -- --base main --head HEAD
+python3 plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
 npm run check
 ```
 
@@ -220,12 +223,18 @@ No. Both are conditional controls used only when supported and beneficial.
 ## 📚 Documentation and support
 
 - [Authoritative skill](skills/prompt-architect/SKILL.md)
+- [Final-output hook](hooks/hooks.json)
+- [Final-output validator](skills/prompt-architect/scripts/validate-final-output.py)
 - [Prompt-engineering canon](skills/prompt-architect/references/00-prompt-engineering-canon.md)
+- [Core prompt sections](skills/prompt-architect/references/05-core-sections.md)
+- [Tool use rules](skills/prompt-architect/references/25-tool-use-rules.md)
+- [Deviation and final reporting](skills/prompt-architect/references/45-deviation-final-report.md)
 - [Current-guidance validation](skills/prompt-architect/references/60-current-guidance-validation.md)
 - [Delegation and parallelism](skills/prompt-architect/references/70-delegation-parallelism.md)
+- [Assembly and quality checks](skills/prompt-architect/references/95-assembly-quality-failures.md)
 - [Goal-tracking guidance](skills/prompt-architect/references/100-goal-tracking.md)
-- [Prompt templates](skills/prompt-architect/templates/)
-- [Calibration examples](skills/prompt-architect/examples/)
+- [Prompt templates](skills/prompt-architect/assets/templates/)
+- [Calibration examples](skills/prompt-architect/references/examples/)
 - [Changelog](CHANGELOG.md)
 - [Codex Essentials marketplace](../../README.md)
 - [OpenAI Build plugins documentation](https://learn.chatgpt.com/docs/build-plugins)

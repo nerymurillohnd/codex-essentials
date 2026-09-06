@@ -1,6 +1,9 @@
 # Prompt Engineering Canon
 
-This is the mandatory compact canon. For full detail, patterns, examples, and specialized add-ons, consult `../source/prompt-editor.md` selectively.
+This is the mandatory compact canon. The complete original prompt-authoring
+contract is preserved in this skill's routed references, packaged templates,
+examples, and pressure scenarios. Do not depend on a separate source document at
+runtime.
 
 ## Core principle
 
@@ -49,6 +52,31 @@ Use only the phases that materially help:
 - Complete deliverable over commentary about what could be done.
 - Verified facts, assumptions, inferences, and unknowns must remain distinguishable.
 
-## Full canon
+## Modular canon
 
-Read `../source/prompt-editor.md` when the task requires deeper patterns, specialized examples, or sections not covered by the compact references.
+Use the routed references for complete detail:
+
+- `references/05-core-sections.md`: role, operating mode, mission, success
+  state, context, inputs, scope, and instruction hierarchy.
+- `references/10-intake-readiness.md`: readiness gates and clarification
+  policy.
+- `references/20-density.md`: density selection and prompt size control.
+- `references/25-tool-use-rules.md`: tool use, source of truth, untrusted
+  content, and data handling.
+- `references/30-output-contracts.md`: output contract and verbosity.
+- `references/40-completion-verification.md`: completion, stop conditions, and
+  verification.
+- `references/45-deviation-final-report.md`: deviation log and final reporting.
+- `references/50-authority-risk.md`: authority, risk, destructive gates, and
+  security.
+- `references/60-current-guidance-validation.md`: current capability validation.
+- `references/70-delegation-parallelism.md`: delegation and multi-agent
+  topology.
+- `references/80-instruction-placement.md`: prompt versus schema, config,
+  permissions, or code.
+- `references/90-execution-recommendation.md`: runtime recommendation.
+- `references/100-goal-tracking.md`: optional goal tracking.
+- `references/domains/`: domain add-ons.
+- `assets/templates/`: density-calibrated prompt shells to copy or adapt.
+- `references/examples/`: calibration examples, prompt audit example, and
+  pressure scenarios.
