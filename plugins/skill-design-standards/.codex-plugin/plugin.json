@@ -1,0 +1,45 @@
+{
+  "name": "skill-design-standards",
+  "version": "0.1.0",
+  "description": "Design and review portable Agent Skills with focused workflows, reproducible script interfaces, and evidence-based evaluations.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "agent-skills",
+    "codex",
+    "skill-design",
+    "evaluation",
+    "documentation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skill Design Standards",
+    "shortDescription": "Design, audit, and evaluate reusable agent skills.",
+    "longDescription": "A self-contained design standard for skill authors and operators. Separates Agent Skills format requirements from design recommendations and host configuration, guides script interfaces and description optimization, and defines evidence-based output-quality evaluations.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Skill design and audit",
+      "Agent Skills format review",
+      "Codex skill metadata guidance",
+      "Script interface design",
+      "Description and output-quality evaluation"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use $skill-design-standards to audit this skill and distinguish format errors from design recommendations.",
+      "Use $skill-design-standards to improve this skill while preserving its scope and authorization boundaries.",
+      "Use $skill-design-standards to design an evaluation comparing these skill versions."
+    ],
+    "brandColor": "#0F766E"
+  }
+}
