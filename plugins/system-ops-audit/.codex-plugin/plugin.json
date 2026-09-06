@@ -1,0 +1,45 @@
+{
+  "name": "system-ops-audit",
+  "version": "0.1.0",
+  "description": "Read-only macOS operational baseline audit workflow for local-machine diagnostics.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "macos",
+    "audit",
+    "baseline",
+    "system-ops",
+    "read-only",
+    "security",
+    "diagnostics"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "System Ops Audit",
+    "shortDescription": "Read-only macOS baseline audit workflow.",
+    "longDescription": "Guides agents through safe preparation of a System-Ops workspace and design, execution, and analysis of read-only macOS operational baseline audits without collecting secrets or mutating the system.",
+    "developerName": "Nery Samuel Murillo",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only macOS baseline audit planning",
+      "System-Ops workspace preparation guidance",
+      "Audit script design before execution",
+      "Secret-safe findings analysis"
+    ],
+    "websiteURL": "https://forestal-mt.com",
+    "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+    "termsOfServiceURL": "https://forestal-mt.com/terms/",
+    "defaultPrompt": [
+      "Use System Ops Audit to design a read-only macOS baseline audit.",
+      "Prepare the System-Ops workspace and wait for approval before writing scripts.",
+      "Analyze macOS baseline audit output without collecting secrets."
+    ],
+    "brandColor": "#0F766E"
+  }
+}
