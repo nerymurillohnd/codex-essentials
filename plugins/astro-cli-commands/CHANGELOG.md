@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- **[Area: Agent]** Declare the skill's automatic invocation policy explicitly
+  so the package conforms to the marketplace agent-manifest contract.
 - **[Area: Skill]** Refined the bundled skill frontmatter description to focus
   implicit invocation on Astro CLI-dependent work and removed unsupported
   `disable-model-invocation` metadata.

@@ -2,3 +2,6 @@ interface:
   display_name: Svelte Architect
   short_description: Plan Svelte 5 and SvelteKit architecture with MCP-backed evidence.
   default_prompt: Use Svelte Architect before planning this Svelte or SvelteKit change.
+
+policy:
+  allow_implicit_invocation: true

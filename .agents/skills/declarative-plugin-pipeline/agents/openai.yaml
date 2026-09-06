@@ -2,3 +2,6 @@ interface:
   display_name: "Codex Essentials Plugin Pipeline"
   short_description: "Maintain plugin packages and marketplace metadata"
   default_prompt: "Use $declarative-plugin-pipeline to create or update a self-contained Codex Essentials plugin package."
+
+policy:
+  allow_implicit_invocation: true

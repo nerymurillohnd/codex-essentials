@@ -3,6 +3,7 @@ import {
   cpSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   realpathSync,
   rmSync,
@@ -18,6 +19,7 @@ const repositoryRoot = resolve(import.meta.dirname, "..");
 const require = createRequire(import.meta.url);
 const marketplaceContract = require("../scripts/marketplace-contract.cjs");
 const documentationGate = require("../scripts/documentation-gate.cjs");
+const YAML = require("yaml") as { parse(value: string): unknown };
 const marketplaceCli = {
   "validate-plugins.cjs": require("../scripts/validate-plugins.cjs"),
   "generate-marketplace.cjs": require("../scripts/generate-marketplace.cjs"),
@@ -116,6 +118,23 @@ function readJson(root: string, relativePath: string): unknown {
   return JSON.parse(readFileSync(join(root, relativePath), "utf8")) as unknown;
 }
 
+function findAgentManifests(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true })
+    .flatMap((entry) => {
+      if (entry.name === ".git" || entry.name === "node_modules") return [];
+      const target = join(directory, entry.name);
+      if (entry.isDirectory()) return findAgentManifests(target);
+      if (
+        entry.isFile() &&
+        (entry.name === "openai.yaml" || entry.name === "openai.yml")
+      ) {
+        return [target];
+      }
+      return [];
+    })
+    .sort();
+}
+
 afterEach(() => {
   for (const root of temporaryRoots.splice(0)) {
     rmSync(root, { recursive: true, force: true });
@@ -123,6 +142,35 @@ afterEach(() => {
 });
 
 describe("strict plugin-to-marketplace pipeline", () => {
+  it("declares automatic invocation in every repository agent manifest", () => {
+    const manifests = findAgentManifests(repositoryRoot);
+
+    expect(manifests.length).toBeGreaterThan(0);
+    for (const manifest of manifests) {
+      expect(YAML.parse(readFileSync(manifest, "utf8"))).toMatchObject({
+        policy: { allow_implicit_invocation: true },
+      });
+    }
+  });
+
+  it("keeps the agent-manifest template schema-valid and explicit", () => {
+    const root = createFixture();
+    const template = YAML.parse(
+      readFileSync(join(root, "templates", "agents-openai.yaml"), "utf8"),
+    );
+
+    expect(() =>
+      marketplaceContract.validate(
+        readJson(root, "schemas/agent.schema.json"),
+        template,
+        "agent-manifest template",
+      ),
+    ).not.toThrow();
+    expect(template).toMatchObject({
+      policy: { allow_implicit_invocation: true },
+    });
+  });
+
   it("exposes each pipeline CLI for instrumented execution", () => {
     for (const cli of Object.values(marketplaceCli)) {
       expect(cli.main).toBeTypeOf("function");
@@ -378,7 +426,10 @@ describe("strict plugin-to-marketplace pipeline", () => {
     writeFileSync(join(skillRoot, "assets", "icon.png"), "png");
     writeFileSync(
       agentPath,
-      `${readFileSync(agentPath, "utf8")}  icon_small: ./assets/icon.png\n`,
+      readFileSync(agentPath, "utf8").replace(
+        "\npolicy:\n",
+        "\n  icon_small: ./assets/icon.png\n\npolicy:\n",
+      ),
     );
     expect(() =>
       marketplaceContract.assertSkillDirectory(
@@ -1054,6 +1105,47 @@ describe("strict plugin-to-marketplace pipeline", () => {
       join(secondRoot, "plugins", "astro-cli-commands", "unexpected-link"),
     );
     expect(run(secondRoot, "validate-plugins.cjs").status).not.toBe(0);
+  });
+
+  it("rejects skill agent metadata without an explicit implicit-invocation policy", () => {
+    const root = createFixture();
+    const agentPath = join(
+      root,
+      "plugins",
+      "astro-cli-commands",
+      "skills",
+      "astro-commands",
+      "agents",
+      "openai.yaml",
+    );
+    writeFileSync(
+      agentPath,
+      [
+        "interface:",
+        '  display_name: "Astro Commands"',
+        '  short_description: "Use Astro commands"',
+        "",
+      ].join("\n"),
+    );
+
+    const validation = run(root, "validate-plugins.cjs");
+    expect(validation.status).not.toBe(0);
+    expect(validation.stderr).toContain("policy");
+
+    writeFileSync(
+      agentPath,
+      [
+        "interface:",
+        '  display_name: "Astro Commands"',
+        '  short_description: "Use Astro commands"',
+        "policy:",
+        "  allow_implicit_invocation: false",
+        "",
+      ].join("\n"),
+    );
+    const disabledPolicy = run(root, "validate-plugins.cjs");
+    expect(disabledPolicy.status).not.toBe(0);
+    expect(disabledPolicy.stderr).toContain("allow_implicit_invocation");
   });
 
   it("rejects a catalog whose entries no longer exactly derive from the manifests", () => {

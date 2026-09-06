@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- Declared automatic invocation explicitly for every bundled skill so the
+  package conforms to the marketplace agent-manifest contract.
 - Listed each bundled skill's `agents/openai.yaml` metadata in the README
   included components table.
 - Refined all bundled skill frontmatter descriptions to make architecture,

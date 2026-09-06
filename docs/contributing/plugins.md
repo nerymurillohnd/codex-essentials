@@ -26,13 +26,14 @@ Add these only when the plugin actually uses them:
 Do not create a repository-level `skills/` directory. Skill content belongs
 inside the plugin package that distributes it.
 
-Each `agents/openai.yaml` validates against `schemas/agent.schema.json` after
-YAML parsing. It requires `interface.display_name` and
-`interface.short_description`; an `interface.default_prompt` is optional and
-provides concise invocation framing. The file is metadata and prompt bootstrap,
-not a second copy of `SKILL.md`. Optional icons must live under the owning
-skill's `./assets/` directory, and unsupported fields or traversal paths fail
-validation.
+Start each `agents/openai.yaml` from `templates/agents-openai.yaml`. It
+validates against `schemas/agent.schema.json` after YAML parsing and requires
+`interface.display_name`, `interface.short_description`, and
+`policy.allow_implicit_invocation: true`; `interface.default_prompt` is
+optional and provides concise invocation framing. The file is metadata and
+prompt bootstrap, not a second copy of `SKILL.md`. Optional icons must live
+under the owning skill's `./assets/` directory, and unsupported fields,
+disabled implicit invocation, or traversal paths fail validation.
 
 ## Manifest Requirements
 

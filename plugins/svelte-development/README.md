@@ -61,20 +61,20 @@ that intentionally produces Svelte code.
 
 ## 🧰 Included Components
 
-| Component                                                                                                    | Purpose                                                   |
-| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                     | Plugin identity, version, and component declarations.     |
-| [`.mcp.json`](.mcp.json)                                                                                     | Documented direct-map Svelte MCP declaration.             |
-| [`skills/svelte-architect/SKILL.md`](skills/svelte-architect/SKILL.md)                                       | Planning contract for Svelte and SvelteKit architecture.  |
-| [`skills/svelte-architect/agents/openai.yaml`](skills/svelte-architect/agents/openai.yaml)                   | Codex-facing display metadata for architecture work.      |
-| [`skills/svelte-component-engineer/SKILL.md`](skills/svelte-component-engineer/SKILL.md)                     | Component and Svelte 5 implementation contract.           |
-| [`skills/svelte-component-engineer/agents/openai.yaml`](skills/svelte-component-engineer/agents/openai.yaml) | Codex-facing display metadata for component work.         |
-| [`skills/sveltekit-engineer/SKILL.md`](skills/sveltekit-engineer/SKILL.md)                                   | SvelteKit route, server, action, and adapter contract.    |
-| [`skills/sveltekit-engineer/agents/openai.yaml`](skills/sveltekit-engineer/agents/openai.yaml)               | Codex-facing display metadata for SvelteKit work.         |
-| [`skills/svelte-verification/SKILL.md`](skills/svelte-verification/SKILL.md)                                 | MCP, CLI, test, build, and browser verification contract. |
-| [`skills/svelte-verification/agents/openai.yaml`](skills/svelte-verification/agents/openai.yaml)             | Codex-facing display metadata for verification work.      |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                               | User-facing change history.                               |
-| [`LICENSE.md`](LICENSE.md)                                                                                   | License terms.                                            |
+| Component                                                                                                    | Purpose                                                                              |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                     | Plugin identity, version, and component declarations.                                |
+| [`.mcp.json`](.mcp.json)                                                                                     | Documented direct-map Svelte MCP declaration.                                        |
+| [`skills/svelte-architect/SKILL.md`](skills/svelte-architect/SKILL.md)                                       | Planning contract for Svelte and SvelteKit architecture.                             |
+| [`skills/svelte-architect/agents/openai.yaml`](skills/svelte-architect/agents/openai.yaml)                   | Codex-facing display metadata and automatic invocation policy for architecture work. |
+| [`skills/svelte-component-engineer/SKILL.md`](skills/svelte-component-engineer/SKILL.md)                     | Component and Svelte 5 implementation contract.                                      |
+| [`skills/svelte-component-engineer/agents/openai.yaml`](skills/svelte-component-engineer/agents/openai.yaml) | Codex-facing display metadata and automatic invocation policy for component work.    |
+| [`skills/sveltekit-engineer/SKILL.md`](skills/sveltekit-engineer/SKILL.md)                                   | SvelteKit route, server, action, and adapter contract.                               |
+| [`skills/sveltekit-engineer/agents/openai.yaml`](skills/sveltekit-engineer/agents/openai.yaml)               | Codex-facing display metadata and automatic invocation policy for SvelteKit work.    |
+| [`skills/svelte-verification/SKILL.md`](skills/svelte-verification/SKILL.md)                                 | MCP, CLI, test, build, and browser verification contract.                            |
+| [`skills/svelte-verification/agents/openai.yaml`](skills/svelte-verification/agents/openai.yaml)             | Codex-facing display metadata and automatic invocation policy for verification work. |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                               | User-facing change history.                                                          |
+| [`LICENSE.md`](LICENSE.md)                                                                                   | License terms.                                                                       |
 
 ## 🖥️ Requirements and Compatibility
 

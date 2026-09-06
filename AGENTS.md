@@ -92,4 +92,11 @@ Project documentation is maintained under `docs/`. Read [documentation rules](do
 
 ## Template Use
 
-Read and use the matching template before creating or updating `plugin.json`, root/plugin `README.md`, `CHANGELOG.md`, or `LICENSE.md`: manifest `templates/codex-plugin-plugin.json`; root README `templates/root-README-recommended-template.md`; plugin README `templates/plugin-README-reusable-template.md`; changelog `templates/CHANGELOG-reusable-template.md`; license `templates/LICENSE-reusable-template.md`.
+Read and use the matching template before creating or updating `plugin.json`,
+`agents/openai.yaml`, root/plugin `README.md`, `CHANGELOG.md`, or `LICENSE.md`:
+manifest `templates/codex-plugin-plugin.json`; agent manifest
+`templates/agents-openai.yaml`; root README
+`templates/root-README-recommended-template.md`; plugin README
+`templates/plugin-README-reusable-template.md`; changelog
+`templates/CHANGELOG-reusable-template.md`; license
+`templates/LICENSE-reusable-template.md`.

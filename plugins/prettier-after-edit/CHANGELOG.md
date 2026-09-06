@@ -10,6 +10,8 @@ This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **[Area: Agent]** Declare the skill's automatic invocation policy explicitly
+  so the package conforms to the marketplace agent-manifest contract.
 - **[Area: Skill]** Refined the bundled skill frontmatter description to
   distinguish immediate post-edit formatting from Prettier configuration work.
 - **[Area: Packaging]** Derived plugin and agent metadata from the repository

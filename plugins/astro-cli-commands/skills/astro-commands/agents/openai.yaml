@@ -2,3 +2,6 @@ interface:
   display_name: Astro Commands
   short_description: Use Astro's current CLI capabilities first.
   default_prompt: Use Astro Commands before planning this Astro task.
+
+policy:
+  allow_implicit_invocation: true

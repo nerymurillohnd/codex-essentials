@@ -62,7 +62,7 @@ dependency installation, Markdown linting, or another quality gate after edits.
 | [`hooks/hooks.json`](hooks/hooks.json)                                                           | `PostToolUse` matcher, Node command, timeout, and status text.               |
 | [`hooks/format.mjs`](hooks/format.mjs)                                                           | Payload parsing, containment, tool execution, hashing, and status reporting. |
 | [`skills/prettier-after-edit/SKILL.md`](skills/prettier-after-edit/SKILL.md)                     | Authoritative behavior and approval contract.                                |
-| [`skills/prettier-after-edit/agents/openai.yaml`](skills/prettier-after-edit/agents/openai.yaml) | Codex-facing presentation metadata.                                          |
+| [`skills/prettier-after-edit/agents/openai.yaml`](skills/prettier-after-edit/agents/openai.yaml) | Codex-facing presentation metadata and explicit automatic invocation policy. |
 | [`CHANGELOG.md`](CHANGELOG.md)                                                                   | User-facing change history.                                                  |
 | [`LICENSE.md`](LICENSE.md)                                                                       | MIT license terms.                                                           |
 

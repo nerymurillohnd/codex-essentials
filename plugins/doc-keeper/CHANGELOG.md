@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Declared the skill's automatic invocation policy explicitly so the package
+  conforms to the marketplace agent-manifest contract.
 - Refined the bundled skill frontmatter description to improve implicit
   invocation precision while preserving direct changelog and ADR maintenance
   triggers and routing boundaries.

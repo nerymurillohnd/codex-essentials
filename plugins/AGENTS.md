@@ -46,11 +46,13 @@ and an array `defaultPrompt`. At least one of `skills`, `hooks`, `apps`, or
 ## Referenced Resources
 
 - Declare `skills` only when `./skills/` exists.
-- Validate every `agents/openai.yaml` against
-  `lib/schemas/agent.schema.json`. The required `interface.display_name` and
-  `interface.short_description` identify the skill in Codex. An optional
-  `interface.default_prompt` may frame the first request; it must not repeat
-  the skill's operating procedure.
+- Start every `agents/openai.yaml` from `templates/agents-openai.yaml` and
+  validate it against `schemas/agent.schema.json`. The required
+  `interface.display_name`, `interface.short_description`, and
+  `policy.allow_implicit_invocation: true` identify the skill and explicitly
+  permit normal automatic discovery. An optional `interface.default_prompt`
+  may frame the first request; it must not repeat the skill's operating
+  procedure.
 - Agent icon paths are optional. When declared, keep them `./assets/`-relative
   and resolving inside the owning skill directory, including after symbolic-link
   canonicalization. Do not add unsupported YAML fields,

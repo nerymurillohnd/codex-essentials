@@ -2,3 +2,6 @@ interface:
   display_name: Prettier After Edit
   short_description: Format edited files with Prettier.
   default_prompt: Use Prettier After Edit to format changed files after supported Codex edits.
+
+policy:
+  allow_implicit_invocation: true

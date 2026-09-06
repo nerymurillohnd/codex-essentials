@@ -67,16 +67,16 @@ behavior without first re-verifying it against the installed CLI.
 
 ## 🧰 Included Components
 
-| Component                                                                                          | Purpose                                               |
-| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                           | Plugin identity, version, and component declarations. |
-| [`skills/astro-commands/SKILL.md`](skills/astro-commands/SKILL.md)                                 | Authoritative command-first operating guidance.       |
-| [`skills/astro-commands/agents/openai.yaml`](skills/astro-commands/agents/openai.yaml)             | Codex-facing skill metadata and invocation prompt.    |
-| [`skills/astro-commands/references/commands.md`](skills/astro-commands/references/commands.md)     | Command behavior and lifecycle reference.             |
-| [`skills/astro-commands/references/flags.md`](skills/astro-commands/references/flags.md)           | Flag scope, defaults, and compatibility notes.        |
-| [`skills/astro-commands/references/operations.md`](skills/astro-commands/references/operations.md) | Package, CI, server, and configuration guidance.      |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                     | User-facing release history.                          |
-| [`LICENSE.md`](LICENSE.md)                                                                         | MIT license terms.                                    |
+| Component                                                                                          | Purpose                                                                        |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                           | Plugin identity, version, and component declarations.                          |
+| [`skills/astro-commands/SKILL.md`](skills/astro-commands/SKILL.md)                                 | Authoritative command-first operating guidance.                                |
+| [`skills/astro-commands/agents/openai.yaml`](skills/astro-commands/agents/openai.yaml)             | Codex-facing skill metadata, explicit automatic invocation policy, and prompt. |
+| [`skills/astro-commands/references/commands.md`](skills/astro-commands/references/commands.md)     | Command behavior and lifecycle reference.                                      |
+| [`skills/astro-commands/references/flags.md`](skills/astro-commands/references/flags.md)           | Flag scope, defaults, and compatibility notes.                                 |
+| [`skills/astro-commands/references/operations.md`](skills/astro-commands/references/operations.md) | Package, CI, server, and configuration guidance.                               |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                     | User-facing release history.                                                   |
+| [`LICENSE.md`](LICENSE.md)                                                                         | MIT license terms.                                                             |
 
 ## 🖥️ Requirements and compatibility
 

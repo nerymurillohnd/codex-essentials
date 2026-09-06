@@ -5,7 +5,7 @@
   "description": "Schema for skills/<skill-id>/agents/openai.yaml metadata consumed by Codex.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["interface"],
+  "required": ["interface", "policy"],
   "properties": {
     "interface": {
       "type": "object",
@@ -38,9 +38,10 @@
     "policy": {
       "type": "object",
       "additionalProperties": false,
+      "required": ["allow_implicit_invocation"],
       "properties": {
         "allow_implicit_invocation": {
-          "type": "boolean"
+          "const": true
         }
       }
     }

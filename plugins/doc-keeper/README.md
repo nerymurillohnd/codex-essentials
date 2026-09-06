@@ -68,17 +68,17 @@ test-only work, or an unrelated README edit.
 
 ## 🧰 Included Components
 
-| Component                                                                                                        | Purpose                                               |
-| ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                         | Plugin identity, version, and component declarations. |
-| [`skills/doc-keeper/SKILL.md`](skills/doc-keeper/SKILL.md)                                                       | Authoritative routing and evidence contract.          |
-| [`skills/doc-keeper/agents/openai.yaml`](skills/doc-keeper/agents/openai.yaml)                                   | Codex-facing skill metadata and invocation prompt.    |
-| [`skills/doc-keeper/references/changelog-maintenance.md`](skills/doc-keeper/references/changelog-maintenance.md) | Changelog procedures.                                 |
-| [`skills/doc-keeper/references/adr-maintenance.md`](skills/doc-keeper/references/adr-maintenance.md)             | ADR procedures.                                       |
-| [`skills/doc-keeper/outputs/changelog-example.md`](skills/doc-keeper/outputs/changelog-example.md)               | Default changelog output shape.                       |
-| [`skills/doc-keeper/outputs/adr-example.md`](skills/doc-keeper/outputs/adr-example.md)                           | Default ADR output shape.                             |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                                   | User-facing release history.                          |
-| [`LICENSE.md`](LICENSE.md)                                                                                       | MIT license terms.                                    |
+| Component                                                                                                        | Purpose                                                                        |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                         | Plugin identity, version, and component declarations.                          |
+| [`skills/doc-keeper/SKILL.md`](skills/doc-keeper/SKILL.md)                                                       | Authoritative routing and evidence contract.                                   |
+| [`skills/doc-keeper/agents/openai.yaml`](skills/doc-keeper/agents/openai.yaml)                                   | Codex-facing skill metadata, explicit automatic invocation policy, and prompt. |
+| [`skills/doc-keeper/references/changelog-maintenance.md`](skills/doc-keeper/references/changelog-maintenance.md) | Changelog procedures.                                                          |
+| [`skills/doc-keeper/references/adr-maintenance.md`](skills/doc-keeper/references/adr-maintenance.md)             | ADR procedures.                                                                |
+| [`skills/doc-keeper/outputs/changelog-example.md`](skills/doc-keeper/outputs/changelog-example.md)               | Default changelog output shape.                                                |
+| [`skills/doc-keeper/outputs/adr-example.md`](skills/doc-keeper/outputs/adr-example.md)                           | Default ADR output shape.                                                      |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                                   | User-facing release history.                                                   |
+| [`LICENSE.md`](LICENSE.md)                                                                                       | MIT license terms.                                                             |
 
 The package contains no scripts, hooks, apps, MCP servers, credentials, or
 runtime dependencies.
