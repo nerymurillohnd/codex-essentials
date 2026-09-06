@@ -41,6 +41,10 @@ Use System Ops Audit to prepare the System-Ops workspace and design a read-only 
 Read the boundaries below before creating workspaces, writing scripts, running
 commands, collecting outputs, or recommending remediation.
 
+The skill metadata is scoped to local macOS operational baselines, including
+installed application metadata, and excludes repository,
+application-development, and product-development audits.
+
 ## 🎯 Use cases
 
 | Scenario                                                       | How this plugin helps                                       | Expected result                                          |

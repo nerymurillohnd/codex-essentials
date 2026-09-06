@@ -1,7 +1,6 @@
 ---
 name: svelte-architect
-description: Use before designing a Svelte 5 or SvelteKit app, major feature, migration, routing model, state model, adapter strategy, or shared component architecture.
-disable-model-invocation: false
+description: Use when planning Svelte 5 or SvelteKit app architecture, major features, migrations, routing models, state ownership, adapter strategy, or shared component systems before implementation.
 ---
 
 # Svelte Architect

@@ -1,6 +1,6 @@
 ---
 name: audit-and-cure-memories
-description: Use when a user asks to audit, verify, reconcile, or update Codex memory artifacts at project scope, global cross-project scope, or both. Use for memory audits, consistency reviews, stale-memory cleanup, memory correction, or complete memory updates.
+description: Use when auditing, verifying, reconciling, or preparing approval-gated updates for Codex memory artifacts at project scope, global scope, or both, including stale-memory cleanup, consistency review, and memory correction.
 ---
 
 # Codex Memory Audit

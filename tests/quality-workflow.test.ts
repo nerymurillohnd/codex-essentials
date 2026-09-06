@@ -5,10 +5,16 @@ import { describe, expect, it } from "vitest";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const workflowPath = resolve(repositoryRoot, ".github/workflows/quality.yml");
+const prettierWorkflowPath = resolve(
+  repositoryRoot,
+  ".github/workflows/prettier.yml",
+);
 const checkoutAction =
   "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1";
 const setupNodeAction =
   "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020";
+const autofixAction =
+  "autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a";
 
 interface WorkflowStep {
   name?: string;
@@ -41,6 +47,9 @@ interface Workflow {
 }
 
 const workflow = parse(readFileSync(workflowPath, "utf8")) as Workflow;
+const prettierWorkflow = parse(
+  readFileSync(prettierWorkflowPath, "utf8"),
+) as Workflow;
 
 function getOnlyJob(): WorkflowJob {
   const jobs = Object.values(workflow.jobs ?? {});
@@ -163,5 +172,49 @@ describe("quality workflow", () => {
     for (const step of job.steps ?? []) {
       expect(step).not.toHaveProperty("continue-on-error");
     }
+  });
+});
+
+describe("prettier autofix workflow", () => {
+  function getPrettierJob(): WorkflowJob {
+    const job = prettierWorkflow.jobs?.["prettier"];
+    expect(job).toBeDefined();
+    return job!;
+  }
+
+  function getPrettierStep(name: string): WorkflowStep {
+    const step = getPrettierJob().steps?.find(
+      (candidate) => candidate.name === name,
+    );
+    expect(step).toBeDefined();
+    return step!;
+  }
+
+  it("uses npm and the repository Node version for formatting", () => {
+    expect(prettierWorkflow.permissions).toEqual({ contents: "write" });
+    expect(getPrettierJob()).toMatchObject({
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 10,
+    });
+    expect(getPrettierStep("Check out repository").uses).toBe(checkoutAction);
+    expect(getPrettierStep("Set up Node.js")).toMatchObject({
+      uses: setupNodeAction,
+      with: {
+        "node-version-file": ".nvmrc",
+        cache: "npm",
+        "cache-dependency-path": "package-lock.json",
+      },
+    });
+    expect(getPrettierStep("Install dependencies").run).toBe("HUSKY=0 npm ci");
+    expect(getPrettierStep("Format repository").run).toBe("npm run format");
+    expect(getPrettierStep("Commit autofix changes")).toMatchObject({
+      uses: autofixAction,
+      with: { "commit-message": "Apply Prettier format" },
+    });
+  });
+
+  it("does not reintroduce Yarn into the formatter workflow", () => {
+    const workflowText = readFileSync(prettierWorkflowPath, "utf8");
+    expect(workflowText).not.toMatch(/\byarn\b/u);
   });
 });

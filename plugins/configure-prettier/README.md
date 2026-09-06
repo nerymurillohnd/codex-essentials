@@ -40,6 +40,10 @@ Start a new Codex session, then ask:
 Use $configure-prettier to audit this repository and propose a complete Prettier plan. Do not make changes.
 ```
 
+The skill metadata is scoped to Prettier setup, editor integration, formatting
+checks, hooks, CI, conflicts, upgrades, and version drift, with explicit
+approval required before mutation.
+
 In Codex CLI, `/plugins` provides the interactive plugin browser. Plugins are
 available in supported ChatGPT and Codex plugin surfaces, but not in the Codex
 IDE extension itself. The skill can still audit and propose VS Code workspace

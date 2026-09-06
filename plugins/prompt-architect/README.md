@@ -9,8 +9,9 @@
 [Environments](#supported-environments) · [Safety](#behavior-and-boundaries) ·
 [Docs](#documentation-and-support)
 
-Prompt Architect is a Codex plugin for people who need to create, improve, or
-audit prompts for consequential work. Its self-contained skill classifies risk,
+Prompt Architect is a Codex plugin for people who need to write, improve, audit,
+structure, or generate prompts for consequential work. Its self-contained skill
+classifies risk,
 prompt density, domain, and execution topology; then it uses matching
 references, templates, examples, and delivery gates to produce a copy-ready
 prompt.

@@ -1,7 +1,6 @@
 ---
 name: svelte-verification
-description: Use before claiming Svelte or SvelteKit work is complete, and when choosing MCP docs, Svelte CLI commands, autofix, checks, tests, builds, preview servers, browser validation, or failure recovery.
-disable-model-invocation: false
+description: Use when verifying Svelte or SvelteKit work before completion, including MCP docs, Svelte CLI commands, autofix, checks, tests, builds, preview servers, browser validation, diagnostics, or failure recovery.
 ---
 
 # Svelte Verification

@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Changed
 
+- **[Area: Skill]** Refined the bundled skill frontmatter description to
+  clarify approval-gated memory update preparation.
 - **[Area: Skill]** Clarified that Codex-behavior corrections require official
   sources while project-specific corrections may use authoritative local
   evidence.

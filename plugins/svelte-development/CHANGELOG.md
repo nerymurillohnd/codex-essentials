@@ -8,6 +8,13 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- Refined all bundled skill frontmatter descriptions to make architecture,
+  component, SvelteKit, and verification triggers more precise.
+- Removed unsupported `disable-model-invocation` frontmatter from bundled
+  skills.
+
 ## [0.1.2] - 2026-09-02
 
 ### Changed

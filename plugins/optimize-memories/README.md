@@ -23,8 +23,9 @@ current authority, and prepares a complete proposal before any approved change.
 
 ## 🎯 Purpose
 
-Use Codex Memory Audit when project or global memory needs evidence-based review,
-reconciliation, or a controlled correction proposal.
+Use Codex Memory Audit when project or global memory needs evidence-based
+review, reconciliation, or approval-gated update preparation before anything is
+changed.
 
 ## ⚡ Quick start
 

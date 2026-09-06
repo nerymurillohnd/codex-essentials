@@ -13,7 +13,8 @@
 Prettier After Edit is installed as `prettier-after-edit`. Its single
 `PostToolUse` hook formats supported edited files with Prettier. It never
 installs dependencies, lints Markdown, or scans the repository because one file
-changed.
+changed. Its skill metadata scopes activation to immediate post-edit formatting,
+not Prettier configuration work.
 
 | Version source                                           | Install ref |
 | -------------------------------------------------------- | ----------- |

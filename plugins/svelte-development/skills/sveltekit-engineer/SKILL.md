@@ -1,7 +1,6 @@
 ---
 name: sveltekit-engineer
-description: Use when implementing, reviewing, or debugging SvelteKit routes, layouts, load functions, form actions, endpoints, hooks, cookies, auth, env, adapters, redirects, and server-only modules.
-disable-model-invocation: false
+description: Use when implementing, reviewing, or debugging SvelteKit routes, layouts, load functions, form actions, endpoints, hooks, cookies, auth, env, adapters, redirects, or server-only modules. Do not use for component-only work.
 ---
 
 # SvelteKit Engineer

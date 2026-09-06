@@ -1,7 +1,6 @@
 ---
 name: astro-commands
-description: Use first when planning or executing work in an Astro project. Inspect the installed Astro CLI, prefer official Astro commands over custom workflows, manage Astro dev or preview servers, add integrations, generate types, configure CI checks, and diagnose flags or version drift.
-disable-model-invocation: false
+description: Use when planning or executing Astro project work that depends on Astro CLI behavior, dev or preview servers, integrations, type generation, CI checks, flags, version drift, or official command selection.
 ---
 
 # Astro Commands

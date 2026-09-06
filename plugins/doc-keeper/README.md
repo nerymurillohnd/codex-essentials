@@ -24,8 +24,10 @@ remote state.
 
 ## 🎯 Purpose
 
-Use DocKeeper when a changelog or architecture decision record must be prepared
-or checked from repository evidence without inventing history.
+Use DocKeeper when changelogs, release history, or ADRs must be directly
+created, completed, audited, updated, repaired, or checked from repository
+evidence after completed work, release preparation, or explicit architectural
+decisions.
 
 ## ⚡ Quick start
 

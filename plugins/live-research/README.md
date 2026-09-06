@@ -18,9 +18,10 @@ auditable.
 ## 🎯 Purpose
 
 Use this plugin before answering, recommending, planning, configuring, or
-modifying anything whose correctness depends on current information. It covers
-software, APIs, integrations, regulations, standards, statistics, people,
-products, infrastructure, compatibility, and other change-sensitive facts.
+modifying anything whose correctness depends on time-sensitive or
+change-sensitive information. It covers software, APIs, integrations,
+regulations, standards, statistics, people, products, infrastructure,
+compatibility, prices, schedules, and current events.
 
 ## ⚡ Quick start
 
