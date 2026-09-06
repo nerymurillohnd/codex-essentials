@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "prepare": "husky && husky install",
+    "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
@@ -61,6 +61,7 @@
     "@vitest/coverage-v8": "^4.1.11",
     "ajv": "^8.20.0",
     "eslint": "^10.9.1",
+    "git-format-staged": "^4.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
     "markdownlint-cli2": "0.23.2",
@@ -74,7 +75,7 @@
     "fsevents@2.3.3": true
   },
   "dependencies": {
-    "typescript": "^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-language-server": "^6.0.0"
   }
 }
