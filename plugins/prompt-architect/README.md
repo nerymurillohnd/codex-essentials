@@ -21,8 +21,9 @@ party, or modify the target project by itself.
 It includes a packaged `Stop` hook that blocks malformed Prompt Architect final
 output before delivery when Codex hook support is available. The validator
 checks the outer response envelope without treating headings inside the generated
-prompt as Prompt Architect sections, and returns a repair reason through the
-hook continuation path when it blocks delivery.
+prompt as Prompt Architect sections, canonicalizes wrapper heading case, and
+returns a repair reason through the hook continuation path when it blocks
+delivery.
 
 The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
 the package from the repository's `main` catalog.

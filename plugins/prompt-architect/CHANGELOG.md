@@ -59,6 +59,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 - Ignore bold headings inside a `Final Prompt` while validating the outer
   `Ready` response envelope, so generated downstream output contracts do not
   cause false Stop-hook blocks.
+- Canonicalize wrapper heading case before validation so lowercase or mixed-case
+  section headings cannot crash the final-output hook.
 - Send malformed-output repair reasons through the Stop-hook continuation path
   instead of writing success-path JSON before returning the blocking exit code.
 

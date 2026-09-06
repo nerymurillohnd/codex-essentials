@@ -3,10 +3,13 @@
 
 from __future__ import annotations
 
+from collections import deque
+from contextlib import suppress
 from itertools import pairwise
 import json
 import re
 import sys
+from typing import cast
 
 SECTION_NAMES = (
     "Result",
@@ -17,35 +20,58 @@ SECTION_NAMES = (
     "Current Guidance Notes",
     "Optional Improvements",
 )
+SECTION_BY_LOWER = dict(zip(map(str.lower, SECTION_NAMES), SECTION_NAMES, strict=True))
+RECOMMENDATION_TOKENS = ("model", "reasoning", "P-level", "D-level", "R-level")
+READY_SECTIONS = ("Result", "Assumptions", "Final Prompt", "Execution Recommendation")
+CLARIFICATION_SECTIONS = ("Result", "Assumptions", "Clarification Questions")
+HEADING_PATTERN = re.compile(
+    r"""
+    ^[ \t]*\*\*
+    (
+        Result|Assumptions|Clarification[ ]Questions|Final[ ]Prompt|
+        Execution[ ]Recommendation|Current[ ]Guidance[ ]Notes|Optional[ ]Improvements
+    )
+    \*\*
+    """,
+    re.IGNORECASE | re.MULTILINE | re.VERBOSE,
+)
 RESULT_PATTERN = re.compile(
     r"(?im)^\s*\*\*Result\*\*\s*(?:-|\u2014|:)?\s*(Ready|Needs Clarification)\b",
 )
 GATE_EVIDENCE_PATTERN = re.compile(
-    r"Gate Evidence:\s*intake=pass;\s*"
-    r"classification=R[0-3]/D[0-5]/P[0-3];\s*"
-    r"references=pass;\s*placement=pass;\s*template=pass;\s*"
-    r"output=pass;\s*self-audit=pass",
-    re.IGNORECASE,
+    r"""
+    Gate[ ]Evidence:\s*intake=pass;\s*
+    classification=R[0-3]/D[0-5]/P[0-3];\s*
+    references=pass;\s*placement=pass;\s*template=pass;\s*
+    output=pass;\s*self-audit=pass
+    """,
+    re.IGNORECASE | re.VERBOSE,
 )
 
 
-def _section_matches(text: str, name: str) -> list[re.Match[str]]:
-    return list(
-        re.finditer(
-            rf"(?im)^[ \t]*\*\*{re.escape(name)}\*\*",
-            text,
-        )
-    )
+type SectionIndex = dict[str, list[re.Match[str]]]
 
 
-def _first_section(text: str, name: str) -> re.Match[str] | None:
-    matches = _section_matches(text, name)
-    return matches[0] if matches else None
+def _build_section_index(text: str) -> SectionIndex:
+    index: SectionIndex = {name: [] for name in SECTION_NAMES}
+
+    def record(match: re.Match[str]) -> None:
+        index[SECTION_BY_LOWER[match.group(1).lower()]].append(match)
+
+    _ = deque(map(record, HEADING_PATTERN.finditer(text)), maxlen=0)
+    return index
 
 
-def _last_section(text: str, name: str) -> re.Match[str] | None:
-    matches = _section_matches(text, name)
-    return matches[-1] if matches else None
+def _first_section(index: SectionIndex, name: str) -> re.Match[str] | None:
+    with suppress(IndexError):
+        return index[name][0]
+    return None
+
+
+def _last_section(index: SectionIndex, name: str) -> re.Match[str] | None:
+    with suppress(IndexError):
+        return index[name][-1]
+    return None
 
 
 def _emit(system_message: str) -> None:
@@ -53,123 +79,160 @@ def _emit(system_message: str) -> None:
 
 
 def _collect_strings(value: object) -> list[str]:
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list):
-        output: list[str] = []
-        for item in value:
-            output.extend(_collect_strings(item))
-        return output
-    if isinstance(value, dict):
-        output = []
-        for item in value.values():
-            output.extend(_collect_strings(item))
-        return output
-    return []
+    match value:
+        case str():
+            return [value]
+        case list():
+            return [text for item in cast("list[object]", value) for text in _collect_strings(item)]
+        case dict():
+            return [
+                text
+                for item in cast("dict[object, object]", value).values()
+                for text in _collect_strings(item)
+            ]
+        case _:
+            return []
 
 
 def _collect_hook_text(raw_input: str) -> str:
-    if not raw_input.strip():
-        return ""
+    match raw_input.strip():
+        case "":
+            return ""
+        case _:
+            pass
     try:
-        parsed = json.loads(raw_input)
+        parsed = cast("object", json.loads(raw_input))
     except json.JSONDecodeError:
         return raw_input
     return "\n".join(_collect_strings(parsed))
 
 
-def _is_prompt_architect_output(text: str) -> bool:
-    result = _first_section(text, "Result")
-    assumptions = _first_section(text, "Assumptions")
-    if result is None or assumptions is None:
-        return False
-    return bool(
-        RESULT_PATTERN.search(text)
-        or any(_section_matches(text, name) for name in SECTION_NAMES[2:])
+def _result_state(text: str) -> str | None:
+    match RESULT_PATTERN.search(text):
+        case None:
+            return None
+        case result:
+            return result.group(1).lower()
+
+
+def _is_prompt_architect_output(index: SectionIndex, state: str | None) -> bool:
+    return all(
+        (
+            bool(index["Result"]),
+            bool(index["Assumptions"]),
+            any((state is not None, any(map(bool, map(index.get, SECTION_NAMES[2:]))))),
+        )
     )
 
 
 def _required_sections(
-    text: str,
-    names: list[str],
-) -> tuple[dict[str, re.Match[str]], list[str]]:
-    matches = {name: _first_section(text, name) for name in names}
-    errors = [f"missing {name}" for name, match in matches.items() if match is None]
-    return {name: match for name, match in matches.items() if match is not None}, errors
+    index: SectionIndex,
+    names: tuple[str, ...],
+) -> list[str]:
+    return [f"missing {name}" for name in names if not index[name]]
 
 
-def _is_ordered(matches: list[re.Match[str]]) -> bool:
-    return all(current.start() < following.start() for current, following in pairwise(matches))
-
-
-def _validate_ready(text: str) -> list[str]:
-    errors: list[str] = []
-    required = [
-        "Result",
-        "Assumptions",
-        "Final Prompt",
-        "Execution Recommendation",
-    ]
-    sections, missing_errors = _required_sections(text, required)
-    errors.extend(missing_errors)
-    if missing_errors:
-        return errors
-
-    execution_recommendation = _last_section(text, "Execution Recommendation")
-    if execution_recommendation is None:
-        return ["missing Execution Recommendation"]
-    ordered = [
-        sections["Result"],
-        sections["Assumptions"],
-        sections["Final Prompt"],
-        execution_recommendation,
-    ]
-    if not _is_ordered(ordered):
-        errors.append("required Ready sections are out of order")
-
-    final_prompt = sections["Final Prompt"]
-    if any(
-        sections["Assumptions"].end() <= match.start() < final_prompt.start()
-        for match in _section_matches(text, "Clarification Questions")
-    ):
-        errors.append("Ready output must omit Clarification Questions")
-    recommendation = text[execution_recommendation.end() :]
-    errors.extend(
-        f"Execution Recommendation missing {token}"
-        for token in ["model", "reasoning", "P-level", "D-level", "R-level"]
-        if not re.search(re.escape(token), recommendation, re.IGNORECASE)
+def _is_ordered(matches: tuple[re.Match[str] | None, ...]) -> bool:
+    present = tuple(filter(lambda match: match is not None, matches))
+    ordered = all(
+        current.start() < following.start()
+        for current, following in pairwise(cast("tuple[re.Match[str], ...]", present))
     )
-    if not GATE_EVIDENCE_PATTERN.search(recommendation):
-        errors.append("missing compact Gate Evidence pass line")
+    return len(present) == len(matches) and ordered
+
+
+def _recommendation_errors(recommendation: str) -> list[str]:
+    return [
+        f"Execution Recommendation missing {token}"
+        for token in RECOMMENDATION_TOKENS
+        if re.search(re.escape(token), recommendation, re.IGNORECASE) is None
+    ]
+
+
+def _has_heading_between(
+    index: SectionIndex,
+    name: str,
+    start: int,
+    end: int,
+) -> bool:
+    return any(start <= match.start() < end for match in index[name])
+
+
+def _validate_ready(text: str, index: SectionIndex) -> list[str]:
+    errors = _required_sections(index, READY_SECTIONS)
+    match errors:
+        case []:
+            pass
+        case _:
+            return errors
+
+    assumptions = cast("re.Match[str]", _first_section(index, "Assumptions"))
+    final_prompt = cast("re.Match[str]", _first_section(index, "Final Prompt"))
+    execution = cast("re.Match[str]", _last_section(index, "Execution Recommendation"))
+    recommendation = text[execution.end() :]
+    errors.extend(
+        ["required Ready sections are out of order"]
+        * (not _is_ordered((_first_section(index, "Result"), assumptions, final_prompt, execution)))
+    )
+    errors.extend(
+        ["Ready output must omit Clarification Questions"]
+        * _has_heading_between(
+            index,
+            "Clarification Questions",
+            assumptions.end(),
+            final_prompt.start(),
+        )
+    )
+    errors.extend(_recommendation_errors(recommendation))
+    errors.extend(
+        ["missing compact Gate Evidence pass line"]
+        * (GATE_EVIDENCE_PATTERN.search(recommendation) is None)
+    )
     return errors
 
 
-def _validate_needs_clarification(text: str) -> list[str]:
-    errors: list[str] = []
-    required = ["Result", "Assumptions", "Clarification Questions"]
-    sections, missing_errors = _required_sections(text, required)
-    errors.extend(missing_errors)
-    if missing_errors:
-        return errors
-    ordered = [sections[name] for name in required]
-    if not _is_ordered(ordered):
-        errors.append("Needs Clarification sections are out of order")
-    if _first_section(text, "Final Prompt"):
-        errors.append("Needs Clarification output must omit Final Prompt")
-    if _first_section(text, "Execution Recommendation"):
-        errors.append("Needs Clarification output must omit Execution Recommendation")
+def _validate_needs_clarification(index: SectionIndex) -> list[str]:
+    errors = _required_sections(index, CLARIFICATION_SECTIONS)
+    match errors:
+        case []:
+            pass
+        case _:
+            return errors
+
+    errors.extend(
+        ["Needs Clarification sections are out of order"]
+        * (
+            not _is_ordered(
+                (
+                    _first_section(index, "Result"),
+                    _first_section(index, "Assumptions"),
+                    _first_section(index, "Clarification Questions"),
+                )
+            )
+        )
+    )
+    errors.extend(
+        ["Needs Clarification output must omit Final Prompt"] * bool(index["Final Prompt"])
+    )
+    errors.extend(
+        ["Needs Clarification output must omit Execution Recommendation"]
+        * bool(index["Execution Recommendation"])
+    )
     return errors
 
 
 def _validate_prompt_architect_output(text: str) -> list[str]:
-    if not _is_prompt_architect_output(text):
-        return []
-    result = RESULT_PATTERN.search(text)
-    if result and result.group(1).lower() == "ready":
-        return _validate_ready(text)
-    if result and result.group(1).lower() == "needs clarification":
-        return _validate_needs_clarification(text)
-    return ["Result must be Ready or Needs Clarification"]
+    index = _build_section_index(text)
+    state = _result_state(text)
+    match (_is_prompt_architect_output(index, state), state):
+        case (False, _):
+            return []
+        case (True, "ready"):
+            return _validate_ready(text, index)
+        case (True, "needs clarification"):
+            return _validate_needs_clarification(index)
+        case _:
+            return ["Result must be Ready or Needs Clarification"]
 
 
 def _main() -> int:
