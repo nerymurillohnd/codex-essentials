@@ -1,0 +1,7 @@
+interface:
+  display_name: "Human-readable skill label"
+  short_description: "Concise description of the skill's outcome"
+  default_prompt: "Use $skill-name to complete the requested workflow."
+
+policy:
+  allow_implicit_invocation: true

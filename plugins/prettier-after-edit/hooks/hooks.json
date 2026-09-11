@@ -1,0 +1,18 @@
+{
+  "description": "Format edited files with Prettier.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/hooks/format.mjs\"",
+            "timeout": 60,
+            "statusMessage": "Formatting edited files"
+          }
+        ]
+      }
+    ]
+  }
+}

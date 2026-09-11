@@ -1,0 +1,17 @@
+{
+  "description": "Validate Prompt Architect final outputs before delivery.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/skills/prompt-architect/scripts/validate-final-output.py\"",
+            "timeout": 10,
+            "statusMessage": "Validating Prompt Architect final output"
+          }
+        ]
+      }
+    ]
+  }
+}

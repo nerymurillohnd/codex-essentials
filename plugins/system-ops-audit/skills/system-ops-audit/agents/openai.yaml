@@ -1,0 +1,7 @@
+interface:
+  display_name: "System Ops Audit"
+  short_description: "Plan and analyze safe macOS baselines"
+  default_prompt: "Use $system-ops-audit to design a privacy-safe, read-only baseline for one local Mac and stop before writing or running a script."
+
+policy:
+  allow_implicit_invocation: true
