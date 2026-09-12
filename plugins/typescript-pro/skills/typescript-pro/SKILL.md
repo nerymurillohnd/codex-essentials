@@ -21,16 +21,20 @@ when the added type complexity is justified.
 4. Locate trust boundaries: network data, JSON, forms, environment variables,
    database rows, CLI args, files, third-party SDKs, plugin inputs, and
    user-controlled values.
-5. Make the smallest safe change that improves type safety without changing
-   behavior.
+5. When the user authorizes implementation, make the smallest safe change that
+   improves type safety without changing behavior. For review or audit-only
+   requests, report findings, evidence, risks, and recommended changes without
+   modifying files.
 6. Verify with project-local commands when available:
 
    - `npm run typecheck`
    - `npm test`
    - `npm run lint`
-   - `npx tsc --noEmit`
+   - `./node_modules/.bin/tsc --noEmit` when that local executable exists
 
-7. If validation was not run, state exactly why and what command should be run.
+7. Do not use `npx tsc` as a fallback because it can download and execute an
+   unpinned package. If no project script or local compiler exists, state that
+   validation was not run, why, and which project-local command is needed.
 
 ## Proved versus asserted types
 
@@ -103,8 +107,7 @@ after inspecting framework and runtime constraints:
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
+    "moduleDetection": "force"
   }
 }
 ```
@@ -112,6 +115,10 @@ after inspecting framework and runtime constraints:
 Before applying the baseline, check whether the project uses Node, browser,
 React, Astro, Next.js, Vite, Vitest, Jest, ESM, CJS, decorators, path aliases,
 monorepos, generated types, or framework-managed config.
+
+Keep library checking enabled. Treat `skipLibCheck: true` only as an explicit,
+documented compatibility or performance tradeoff; do not introduce it as part of
+a strictness baseline.
 
 ## Trust-boundary audit
 
@@ -161,18 +168,26 @@ function parseUser(value: unknown): User {
 }
 ```
 
+For a complete boundary parser, a discriminated state reducer, or an internal
+typed event registry, read
+[boundary and state patterns](references/boundary-and-state-patterns.md). Use
+that reference only when the task needs one of those designs; it is not a
+catalog of abstractions to copy into ordinary code.
+
 ## Money, quantity, and client-controlled values
 
-Judge money and quantity separately from ordinary typing. A price, quantity,
-discount, tax, shipping cost, subtotal, or total that arrives from a client and
-is used without server-side recomputation is a security finding, not merely a
-typing issue.
+Judge money and quantity separately from ordinary typing. A client-submitted
+price, discount, tax, shipping cost, subtotal, or total used without server-side
+recomputation is a security finding, not merely a typing issue. A client
+quantity expresses user intent: validate it as a domain value before inventory
+or pricing logic uses it.
 
-- Never trust client-submitted totals.
+- Never trust client-submitted monetary totals.
 - Recompute money server-side from authoritative product, pricing, tax, and
   discount data.
-- Use integer minor units for money when possible, keep currency explicit, and
-  validate quantities with domain limits.
+- Use integer minor units for money when possible and keep currency explicit.
+- Parse quantities as finite, positive safe integers and validate domain limits,
+  availability, and authorization before using them.
 - Treat negative, zero, fractional, extreme, missing, and overflow values as
   edge cases.
 - Do not let TypeScript types replace authorization, pricing, or inventory

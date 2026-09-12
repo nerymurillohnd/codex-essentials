@@ -20,7 +20,7 @@ JsonObject = dict[str, object]
 
 class GenerateMarketplaceTests(unittest.TestCase):
     def test_repository_catalog_includes_typescript_pro_plugin(self) -> None:
-        result = self._run_generator(REPOSITORY_ROOT)
+        result = self._run_generator(REPOSITORY_ROOT, check_only=True)
 
         self.assertEqual(result.returncode, 0, result.stderr)
         raw_marketplace = cast(
@@ -171,9 +171,14 @@ class GenerateMarketplaceTests(unittest.TestCase):
                 result.stderr,
             )
 
-    def _run_generator(self, root: Path) -> subprocess.CompletedProcess[str]:
+    def _run_generator(
+        self, root: Path, *, check_only: bool = False
+    ) -> subprocess.CompletedProcess[str]:
+        command = [sys.executable, str(GENERATOR), "--root", str(root)]
+        if check_only:
+            command.append("--check")
         return subprocess.run(
-            [sys.executable, str(GENERATOR), "--root", str(root)],
+            command,
             check=False,
             capture_output=True,
             text=True,

@@ -8,6 +8,22 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-12
+
+### Added
+
+- Optional worked patterns for runtime-validated external data, exhaustive
+  state reducers, and typed internal event registries.
+
+### Fixed
+
+- Keep review-only requests non-mutating, use no-download local compiler
+  validation, preserve library checking by default, and distinguish quantity
+  validation from authoritative monetary recomputation.
+- Make the TypeScript Pro catalog integration test read-only.
+- Return a parse failure for malformed JSON and avoid the browser-global
+  `EventListener` name in the optional reference.
+
 ## [0.1.0] - 2026-09-12
 
 ### Added
