@@ -1,0 +1,70 @@
+name: Plugin change
+description: Propose a new plugin, skill, hook, or change to an existing package.
+title: "[Plugin]: "
+labels:
+  - plugin-change
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for marketplace package changes. Do not include secrets, tokens, private customer data, or credentials.
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin or package
+      description: Name the affected plugin ID, skill ID, hook, or package area.
+      placeholder: "plugins/<plugin-id> or new plugin: <plugin-id>"
+    validations:
+      required: true
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      options:
+        - New plugin
+        - Existing plugin update
+        - Skill update
+        - Hook update
+        - Documentation update
+        - Validation or tooling update
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Intended outcome
+      description: Explain the user-facing capability, operational improvement, or maintenance result.
+      placeholder: "This change should..."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: List expected files, manifests, docs, schemas, tests, or generated metadata.
+      placeholder: |
+        - plugins/<plugin-id>/.codex-plugin/plugin.json
+        - plugins/<plugin-id>/README.md
+        - plugins/<plugin-id>/CHANGELOG.md
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation plan
+      description: Name the checks contributors should run before review.
+      placeholder: |
+        - npm run marketplace:build
+        - npm run check
+        - npm run documentation:gate -- --base <base> --head <head>
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and compatibility notes
+      description: Note permissions, hooks, external tools, release effects, migration needs, or known limitations.
+      placeholder: "This may affect..."
+    validations:
+      required: false

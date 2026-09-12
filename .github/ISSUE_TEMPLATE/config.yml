@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributor guide
+    url: https://github.com/nerymurillohnd/codex-essentials/blob/main/AGENTS.md
+    about: Review repository contribution, validation, and pull request rules.
+  - name: Plugin contribution guide
+    url: https://github.com/nerymurillohnd/codex-essentials/blob/main/docs/contributing/plugins.md
+    about: Review package, manifest, README, changelog, and validation requirements.
