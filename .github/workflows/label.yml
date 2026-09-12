@@ -12,6 +12,11 @@ jobs:
     name: Label pull request
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout trusted labeler configuration
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
       - name: Apply surface labels
         uses: actions/labeler@v7
         with:
