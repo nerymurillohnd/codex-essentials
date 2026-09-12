@@ -11,6 +11,11 @@
       "description": "Changes that require migration"
     },
     {
+      "name": "catalog",
+      "color": "5319e7",
+      "description": "Generated marketplace catalog changes"
+    },
+    {
       "name": "dependencies",
       "color": "0366d6",
       "description": "Dependency updates and maintenance"
@@ -31,14 +36,39 @@
       "description": "GitHub Actions changes"
     },
     {
+      "name": "hook",
+      "color": "fbca04",
+      "description": "Plugin hook package or reference changes"
+    },
+    {
       "name": "plugin-change",
       "color": "5319e7",
       "description": "Marketplace plugin change proposals"
     },
     {
+      "name": "plugin-manifest",
+      "color": "1d76db",
+      "description": "Plugin manifest contract changes"
+    },
+    {
+      "name": "release-control",
+      "color": "c2e0c6",
+      "description": "Versioning, changelog, or release-control changes"
+    },
+    {
       "name": "security",
       "color": "ee0701",
       "description": "Security-related changes"
+    },
+    {
+      "name": "skill-contract",
+      "color": "0e8a16",
+      "description": "Skill instructions or agent metadata contract changes"
+    },
+    {
+      "name": "tooling",
+      "color": "0052cc",
+      "description": "Repository tooling, schema, validator, or test changes"
     }
   ]
 }

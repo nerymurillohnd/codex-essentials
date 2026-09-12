@@ -71,16 +71,22 @@ all of the following are complete:
   `package.json`.
 - Use `npm install` to install repository-local JavaScript tooling.
 - Use `npm run check` as the complete repository validation gate before
-  handoff. It runs formatting checks, marketplace generation and tests, Ruff,
-  shfmt, and ShellCheck.
+  handoff. It runs formatting checks, marketplace generation and tests, GitHub
+  label contract tests and validation, Ruff, shfmt, and ShellCheck.
 - Use `npm run format` to format supported repository files with Prettier.
 - Use `npm run format:check` to verify Prettier formatting without changes.
 - Use `npm run marketplace:build` to regenerate and validate
   `.agents/plugins/marketplace.json` from plugin manifests.
 - Use `npm run marketplace:test` or `npm test` to run marketplace generator
   tests.
+- Use `npm run github-labels:test` to test GitHub label contract validation.
+- Use `npm run validate:github-labels` to validate repository GitHub label
+  references against `.github/label-contract.json`.
 - Use `npm run ruff:format:check` and `npm run ruff:check` after editing
   Python scripts.
+- Use `basedpyright $(rg --files -g '*.py')` after editing Python scripts to
+  typecheck every Python file. Do not suppress `Any`, unknown types, unused call
+  results, or unused definitions to make diagnostics pass.
 - Use `npm run shfmt:check` and `npm run shellcheck:check` after editing shell
   scripts.
 - Use `npm run hooks:install` to install Lefthook hooks explicitly. Hooks are

@@ -6,16 +6,22 @@ by repository configuration; it does not delete GitHub's default labels.
 
 ## Maintained labels
 
-| Label             | Use                                 |
-| ----------------- | ----------------------------------- |
-| `bug`             | Reproducible problems and fixes     |
-| `breaking-change` | Changes that require migration      |
-| `dependencies`    | Dependency updates and maintenance  |
-| `documentation`   | Documentation changes               |
-| `enhancement`     | New features or improvements        |
-| `github_actions`  | GitHub Actions changes              |
-| `plugin-change`   | Marketplace plugin change proposals |
-| `security`        | Security-related changes            |
+| Label             | Use                                                    |
+| ----------------- | ------------------------------------------------------ |
+| `bug`             | Reproducible problems and fixes                        |
+| `breaking-change` | Changes that require migration                         |
+| `catalog`         | Generated marketplace catalog changes                  |
+| `dependencies`    | Dependency updates and maintenance                     |
+| `documentation`   | Documentation changes                                  |
+| `enhancement`     | New features or improvements                           |
+| `github_actions`  | GitHub Actions changes                                 |
+| `hook`            | Plugin hook package or reference changes               |
+| `plugin-change`   | Marketplace plugin change proposals                    |
+| `plugin-manifest` | Plugin manifest contract changes                       |
+| `release-control` | Versioning, changelog, or release-control changes      |
+| `security`        | Security-related changes                               |
+| `skill-contract`  | Skill instructions or agent metadata contract changes  |
+| `tooling`         | Repository tooling, schema, validator, or test changes |
 
 Issue templates may reference only labels listed in the contract.
 

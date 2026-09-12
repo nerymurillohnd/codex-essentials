@@ -1,0 +1,74 @@
+catalog:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".agents/plugins/marketplace.json"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".nvmrc"
+          - "package.json"
+          - "package-lock.json"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.md"
+          - "docs/**"
+          - "templates/**"
+          - "plugins/**/README.md"
+          - "plugins/**/CHANGELOG.md"
+          - "plugins/**/LICENSE.md"
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+hook:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "plugins/**/hooks/**"
+
+plugin-change:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "plugins/**"
+
+plugin-manifest:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "plugins/**/plugin.json"
+
+release-control:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/release-please*.json"
+          - ".github/workflows/release*.yml"
+          - "release-please*.json"
+          - "plugins/**/CHANGELOG.md"
+
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/dependabot.yml"
+          - ".github/workflows/**"
+          - "CODE_OF_CONDUCT.md"
+          - "SECURITY.md"
+          - "plugins/**/hooks/**"
+          - "plugins/**/mcp.json"
+
+skill-contract:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "plugins/**/skills/**/SKILL.md"
+          - "plugins/**/skills/**/agents/openai.yaml"
+
+tooling:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "schemas/**"
+          - "scripts/**"
+          - "tests/**"
+          - "package.json"
+          - "package-lock.json"

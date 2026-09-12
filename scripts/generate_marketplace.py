@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """Generate the Codex Essentials marketplace catalog from plugin manifests."""
 
-# ruff: noqa: ANN401, C901, D103, PLR2004, TRY003, TRY004
-# pyright: reportAny=false, reportExplicitAny=false, reportImplicitStringConcatenation=false
-# pyright: reportUnknownVariableType=false, reportUnusedCallResult=false
-
+# ruff: noqa: C901, D103, PLR2004, TRY003, TRY004
 from __future__ import annotations
 
 import json
@@ -12,7 +9,18 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Any
+from typing import TypedDict, cast
+
+JsonObject = dict[str, object]
+
+
+class PluginData(TypedDict):
+    """Loaded plugin manifest and repository location."""
+
+    name: str
+    pluginRoot: str
+    manifest: JsonObject
+
 
 MARKETPLACE = {
     "name": "codex-essentials",
@@ -27,12 +35,13 @@ MARKETPLACE_SCHEMA = Path("schemas") / "marketplace.schema.json"
 ALLOWED_PLUGIN_DIRECTORY_FILES = {"AGENTS.md"}
 REQUIRED_PLUGIN_DOCUMENTS = ("README.md", "CHANGELOG.md")
 IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-SEMVER_PATTERN = re.compile(
-    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
-    r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
-    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?"
-    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+SEMVER_PATTERN_PARTS = (
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)",
+    r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)",
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?",
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$",
 )
+SEMVER_PATTERN = re.compile("".join(SEMVER_PATTERN_PARTS))
 
 
 def main(args: list[str] | None = None) -> None:
@@ -76,11 +85,11 @@ def resolve_root_from_args(args: list[str], default_root: Path) -> Path:
     return Path(args[1]).resolve()
 
 
-def load_plugin_manifests(root: Path) -> list[dict[str, Any]]:
+def load_plugin_manifests(root: Path) -> list[PluginData]:
     plugins_root = root / PLUGINS_DIRECTORY
     assert_directory(plugins_root, "plugins directory")
     entries = sorted(os.scandir(plugins_root), key=lambda entry: entry.name)
-    plugins: list[dict[str, Any]] = []
+    plugins: list[PluginData] = []
     for entry in entries:
         if entry.name.startswith("."):
             continue
@@ -104,7 +113,7 @@ def load_plugin_manifests(root: Path) -> list[dict[str, Any]]:
     return plugins
 
 
-def build_marketplace(root: Path, plugins: list[dict[str, Any]]) -> dict[str, Any]:
+def build_marketplace(root: Path, plugins: list[PluginData]) -> JsonObject:
     if root.resolve() != Path(os.path.realpath(root)):
         raise ValueError("repository root must not be a symbolic link")
     return {
@@ -125,7 +134,7 @@ def build_marketplace(root: Path, plugins: list[dict[str, Any]]) -> dict[str, An
     }
 
 
-def write_marketplace(root: Path, marketplace: dict[str, Any]) -> None:
+def write_marketplace(root: Path, marketplace: JsonObject) -> None:
     validate_marketplace(root, marketplace)
     output_directory = root / MARKETPLACE_OUTPUT.parent
     output_directory.mkdir(parents=True, exist_ok=True)
@@ -138,30 +147,37 @@ def write_marketplace(root: Path, marketplace: dict[str, Any]) -> None:
     temporary_path = output_path.with_name(f"{output_path.name}.tmp")
     if temporary_path.exists():
         raise ValueError(f"{MARKETPLACE_OUTPUT}.tmp already exists")
-    temporary_path.write_text(json.dumps(marketplace, indent=2) + "\n", encoding="utf-8")
-    temporary_path.replace(output_path)
+    _ = temporary_path.write_text(json.dumps(marketplace, indent=2) + "\n", encoding="utf-8")
+    _ = temporary_path.replace(output_path)
     assert_regular_file(output_path, str(MARKETPLACE_OUTPUT))
     assert_contained(root, output_path, str(MARKETPLACE_OUTPUT))
 
 
-def validate_marketplace(root: Path, marketplace: dict[str, Any]) -> None:
+def validate_marketplace(root: Path, marketplace: JsonObject) -> None:
     schema = as_record(
         load_json(root / MARKETPLACE_SCHEMA, "marketplace schema"), str(MARKETPLACE_SCHEMA)
     )
-    categories = set(
-        as_record(as_record(schema["$defs"], "schema $defs")["category"], "schema category")["enum"]
-    )
+    schema_defs = as_record(schema["$defs"], "schema $defs")
+    category_schema = as_record(schema_defs["category"], "schema category")
+    category_enum = category_schema["enum"]
+    if not isinstance(category_enum, list):
+        raise ValueError("schema category enum must be an array of strings")
+    category_entries = cast("list[object]", category_enum)
+    if not all(isinstance(entry, str) for entry in category_entries):
+        raise ValueError("schema category enum must be an array of strings")
+    categories = {cast("str", entry) for entry in category_entries}
     validate_exact_keys(marketplace, {"name", "interface", "plugins"}, str(MARKETPLACE_OUTPUT))
-    require_identifier(marketplace["name"], "marketplace.name")
+    _ = require_identifier(marketplace["name"], "marketplace.name")
     interface = as_record(marketplace["interface"], "marketplace.interface")
     validate_exact_keys(interface, {"displayName"}, "marketplace.interface")
-    require_non_empty_string(interface["displayName"], "marketplace.interface.displayName")
+    _ = require_non_empty_string(interface["displayName"], "marketplace.interface.displayName")
     plugins = marketplace["plugins"]
     if not isinstance(plugins, list) or not plugins:
         raise ValueError("marketplace.plugins must be a non-empty array")
+    plugin_entries = cast("list[object]", plugins)
     seen_names: set[str] = set()
     seen_entries: set[str] = set()
-    for entry in plugins:
+    for entry in plugin_entries:
         plugin = as_record(entry, "marketplace plugin entry")
         validate_exact_keys(
             plugin, {"name", "source", "policy", "category"}, "marketplace plugin entry"
@@ -192,7 +208,7 @@ def validate_marketplace(root: Path, marketplace: dict[str, Any]) -> None:
             raise ValueError(f"marketplace plugin {name} category is invalid: {plugin['category']}")
 
 
-def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_path: Path) -> None:
+def validate_plugin_manifest(plugin_id: str, manifest: JsonObject, manifest_path: Path) -> None:
     for field in (
         "name",
         "version",
@@ -209,8 +225,8 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
     name = require_identifier(manifest["name"], f"{manifest_path} name")
     if name != plugin_id:
         raise ValueError(f"{manifest_path} name must match plugins/{plugin_id}")
-    require_semver(manifest["version"], f"{manifest_path} version")
-    require_non_empty_string(manifest["description"], f"{manifest_path} description")
+    _ = require_semver(manifest["version"], f"{manifest_path} version")
+    _ = require_non_empty_string(manifest["description"], f"{manifest_path} description")
     interface = openai_interface(manifest, str(manifest_path))
     for field in (
         "displayName",
@@ -228,7 +244,7 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
             raise ValueError(f"{manifest_path} interface is missing required field: {field}")
 
 
-def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> None:
+def validate_plugin_resources(plugin_root: Path, manifest: JsonObject) -> None:
     skills_root = plugin_root / "skills"
     components = [
         path
@@ -256,15 +272,17 @@ def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> No
     for hook_path in hook_paths(openai.get("hooks")):
         target = resolve_plugin_path(plugin_root, hook_path, "hooks")
         assert_regular_file(target, hook_path)
-        load_json(target, "plugin hooks configuration")
+        _ = load_json(target, "plugin hooks configuration")
     for field in ("composerIcon", "logo"):
         if isinstance(interface.get(field), str):
+            interface_path = cast("str", interface[field])
             assert_regular_file(
-                resolve_plugin_path(plugin_root, interface[field], field), interface[field]
+                resolve_plugin_path(plugin_root, interface_path, field), interface_path
             )
     screenshots = interface.get("screenshots")
     if isinstance(screenshots, list):
-        for screenshot in screenshots:
+        screenshot_entries = cast("list[object]", screenshots)
+        for screenshot in screenshot_entries:
             if not isinstance(screenshot, str):
                 raise ValueError("interface.screenshots must contain only paths")
             assert_regular_file(
@@ -272,7 +290,7 @@ def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> No
             )
 
 
-def openai_interface(manifest: dict[str, Any], label: str) -> dict[str, Any]:
+def openai_interface(manifest: JsonObject, label: str) -> JsonObject:
     extensions = as_record(manifest["extensions"], f"{label} extensions")
     openai = as_record(extensions.get("com.openai"), f"{label} extensions.com.openai")
     return as_record(openai.get("interface"), f"{label} extensions.com.openai.interface")
@@ -306,7 +324,7 @@ def assert_skill_directory(skills_root: Path, label: str) -> None:
         )
 
 
-def validate_referenced_mcp_configuration(configuration: Any, label: str) -> None:
+def validate_referenced_mcp_configuration(configuration: object, label: str) -> None:
     record = as_record(configuration, label)
     wrappers = [key for key in ("mcpServers", "mcp_servers") if key in record]
     if len(wrappers) > 1:
@@ -322,7 +340,7 @@ def validate_referenced_mcp_configuration(configuration: Any, label: str) -> Non
     validate_mcp_server_map(record, f"{label} MCP server map")
 
 
-def validate_mcp_server_map(value: Any, label: str) -> None:
+def validate_mcp_server_map(value: object, label: str) -> None:
     servers = as_record(value, label)
     if not servers:
         raise ValueError(f"{label} must contain at least one server")
@@ -332,7 +350,7 @@ def validate_mcp_server_map(value: Any, label: str) -> None:
         validate_mcp_server(server, f"{label}.{name}")
 
 
-def validate_mcp_server(value: Any, label: str) -> None:
+def validate_mcp_server(value: object, label: str) -> None:
     server = as_record(value, label)
     supported_fields = {"command", "args", "env", "url", "type"}
     for field in server:
@@ -346,10 +364,12 @@ def validate_mcp_server(value: Any, label: str) -> None:
         raise ValueError(f"{label}.type is supported only for HTTPS URL servers")
     if "url" in server and not str(server["url"]).startswith("https://"):
         raise ValueError(f"{label}.url must be an https URL")
-    if "args" in server and not (
-        isinstance(server["args"], list) and all(isinstance(entry, str) for entry in server["args"])
-    ):
-        raise ValueError(f"{label}.args must be an array of strings")
+    if "args" in server:
+        args = server["args"]
+        if not isinstance(args, list) or not all(
+            isinstance(entry, str) for entry in cast("list[object]", args)
+        ):
+            raise ValueError(f"{label}.args must be an array of strings")
     if "env" in server:
         env = as_record(server["env"], f"{label}.env")
         if not env or not all(key and isinstance(value, str) for key, value in env.items()):
@@ -370,14 +390,15 @@ def resolve_plugin_path(plugin_root: Path, relative_path: str, field: str) -> Pa
     return target
 
 
-def hook_paths(hooks: Any) -> list[str]:
+def hook_paths(hooks: object) -> list[str]:
     if isinstance(hooks, str):
         return [hooks]
     if hooks is None or isinstance(hooks, dict):
         return []
-    if isinstance(hooks, list) and hooks and all(isinstance(entry, str) for entry in hooks):
-        return hooks
-    if isinstance(hooks, list) and hooks and all(isinstance(entry, dict) for entry in hooks):
+    hook_entries = cast("list[object]", hooks) if isinstance(hooks, list) else []
+    if hook_entries and all(isinstance(entry, str) for entry in hook_entries):
+        return [cast("str", entry) for entry in hook_entries]
+    if hook_entries and all(isinstance(entry, dict) for entry in hook_entries):
         return []
     raise ValueError("hooks path array must contain only paths")
 
@@ -409,20 +430,20 @@ def assert_directory(target: Path, label: str) -> None:
         raise ValueError(f"{label} must be a real directory")
 
 
-def load_json(target: Path, label: str) -> Any:
+def load_json(target: Path, label: str) -> object:
     try:
-        return json.loads(target.read_text(encoding="utf-8"))
+        return cast("object", json.loads(target.read_text(encoding="utf-8")))
     except Exception as error:
         raise ValueError(f"unable to load {label} at {target}: {format_error(error)}") from error
 
 
-def as_record(value: Any, label: str) -> dict[str, Any]:
+def as_record(value: object, label: str) -> JsonObject:
     if not isinstance(value, dict):
         raise ValueError(f"{label} must be an object")
-    return value
+    return cast("JsonObject", value)
 
 
-def validate_exact_keys(value: dict[str, Any], expected: set[str], label: str) -> None:
+def validate_exact_keys(value: JsonObject, expected: set[str], label: str) -> None:
     actual = set(value)
     missing = expected - actual
     extra = actual - expected
@@ -432,19 +453,19 @@ def validate_exact_keys(value: dict[str, Any], expected: set[str], label: str) -
         raise ValueError(f"{label} has unsupported field(s): {', '.join(sorted(extra))}")
 
 
-def require_identifier(value: Any, label: str) -> str:
+def require_identifier(value: object, label: str) -> str:
     if not isinstance(value, str) or not IDENTIFIER_PATTERN.fullmatch(value):
         raise ValueError(f"{label} must be a lowercase hyphenated identifier")
     return value
 
 
-def require_semver(value: Any, label: str) -> str:
+def require_semver(value: object, label: str) -> str:
     if not isinstance(value, str) or not SEMVER_PATTERN.fullmatch(value):
         raise ValueError(f"{label} must be SemVer")
     return value
 
 
-def require_non_empty_string(value: Any, label: str) -> str:
+def require_non_empty_string(value: object, label: str) -> str:
     if not isinstance(value, str) or not value:
         raise ValueError(f"{label} must be a non-empty string")
     return value

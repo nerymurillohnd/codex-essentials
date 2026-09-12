@@ -14,19 +14,21 @@
     "doc": "docs"
   },
   "scripts": {
-    "check": "npm run format:check && npm run marketplace:check && npm run marketplace:test && npm run ruff:format:check && npm run ruff:check && npm run shfmt:check && npm run shellcheck:check",
+    "check": "npm run format:check && npm run marketplace:check && npm run marketplace:test && npm run github-labels:test && npm run validate:github-labels && npm run ruff:format:check && npm run ruff:check && npm run shfmt:check && npm run shellcheck:check",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "hooks:install": "lefthook install",
     "hooks:pre-commit": "lefthook run pre-commit",
+    "github-labels:test": "python3 scripts/test_validate_github_labels.py",
     "marketplace:build": "python3 scripts/generate_marketplace.py",
     "marketplace:check": "python3 scripts/generate_marketplace.py --check",
     "marketplace:test": "python3 scripts/test_generate_marketplace.py",
-    "ruff:check": "ruff check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py",
-    "ruff:format:check": "ruff format --check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py",
+    "ruff:check": "ruff check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py scripts/validate_github_labels.py scripts/test_validate_github_labels.py",
+    "ruff:format:check": "ruff format --check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py scripts/validate_github_labels.py scripts/test_validate_github_labels.py",
     "shellcheck:check": "shellcheck plugins/block-no-verify/skills/block-no-verify/assets/templates/test-block-no-verify.sh",
     "shfmt:check": "shfmt -d plugins/block-no-verify/skills/block-no-verify/assets/templates/test-block-no-verify.sh",
-    "test": "npm run marketplace:test"
+    "test": "npm run marketplace:test",
+    "validate:github-labels": "python3 scripts/validate_github_labels.py"
   },
   "repository": {
     "type": "git",

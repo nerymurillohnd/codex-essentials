@@ -2,7 +2,6 @@
 """Tests for the standalone marketplace generator."""
 
 # ruff: noqa: D101, D102, PT009, S603
-# pyright: reportAny=false, reportUnusedCallResult=false
 
 from __future__ import annotations
 
@@ -11,10 +10,12 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from typing import cast
 import unittest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 GENERATOR = REPOSITORY_ROOT / "scripts" / "generate_marketplace.py"
+JsonObject = dict[str, object]
 
 
 class GenerateMarketplaceTests(unittest.TestCase):
@@ -36,9 +37,12 @@ class GenerateMarketplaceTests(unittest.TestCase):
             self.assertIn(
                 "Generated .agents/plugins/marketplace.json from 2 plugin manifests.", result.stdout
             )
-            marketplace = json.loads(
-                (root / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")
+            raw_marketplace = cast(
+                "object",
+                json.loads((root / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")),
             )
+            self.assertIsInstance(raw_marketplace, dict)
+            marketplace = cast("JsonObject", raw_marketplace)
             self.assertEqual(marketplace["name"], "codex-essentials")
             self.assertEqual(marketplace["interface"], {"displayName": "Codex Essentials"})
             self.assertEqual(
@@ -91,11 +95,72 @@ class GenerateMarketplaceTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_rejects_plugin_missing_readme(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            _ = (root / "plugins" / "alpha-plugin" / "README.md").unlink()
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("plugins/alpha-plugin/README.md is missing", result.stderr)
+
+    def test_rejects_plugin_changelog_without_unreleased_section(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            _ = (root / "plugins" / "alpha-plugin" / "CHANGELOG.md").write_text(
+                "# Changelog\n\n## [0.1.0] - 2026-09-12\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "plugins/alpha-plugin/CHANGELOG.md must contain an Unreleased section",
+                result.stderr,
+            )
+
+    def test_rejects_skill_missing_openai_agent_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            _ = (
+                root
+                / "plugins"
+                / "alpha-plugin"
+                / "skills"
+                / "alpha-plugin"
+                / "agents"
+                / "openai.yaml"
+            ).unlink()
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "skills/alpha-plugin/agents/openai.yaml is missing",
+                result.stderr,
+            )
+
+    def _run_generator(self, root: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(GENERATOR), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
     def _write_schema(self, root: Path) -> None:
         schema = REPOSITORY_ROOT / "schemas" / "marketplace.schema.json"
         target = root / "schemas" / "marketplace.schema.json"
         target.parent.mkdir(parents=True)
-        target.write_text(schema.read_text(encoding="utf-8"), encoding="utf-8")
+        _ = target.write_text(schema.read_text(encoding="utf-8"), encoding="utf-8")
 
     def _write_plugin(
         self,
@@ -108,9 +173,11 @@ class GenerateMarketplaceTests(unittest.TestCase):
         plugin = root / "plugins" / plugin_id
         manifest = plugin / "plugin.json"
         plugin.mkdir(parents=True)
-        (plugin / "README.md").write_text(f"# {plugin_id}\n", encoding="utf-8")
-        (plugin / "CHANGELOG.md").write_text("# Changelog\n\n## [Unreleased]\n", encoding="utf-8")
-        manifest.write_text(
+        _ = (plugin / "README.md").write_text(f"# {plugin_id}\n", encoding="utf-8")
+        _ = (plugin / "CHANGELOG.md").write_text(
+            "# Changelog\n\n## [Unreleased]\n", encoding="utf-8"
+        )
+        _ = manifest.write_text(
             json.dumps(
                 {
                     "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
@@ -153,8 +220,8 @@ class GenerateMarketplaceTests(unittest.TestCase):
     def _write_skill(self, plugin: Path, skill_id: str) -> None:
         skill = plugin / "skills" / skill_id / "agents"
         skill.mkdir(parents=True)
-        (skill.parent / "SKILL.md").write_text("---\nname: test\n---\n", encoding="utf-8")
-        (skill / "openai.yaml").write_text(
+        _ = (skill.parent / "SKILL.md").write_text("---\nname: test\n---\n", encoding="utf-8")
+        _ = (skill / "openai.yaml").write_text(
             (
                 "interface:\n"
                 "  display_name: Test\n"
@@ -167,4 +234,4 @@ class GenerateMarketplaceTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()
