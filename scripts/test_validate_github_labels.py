@@ -17,17 +17,18 @@ VALIDATOR = REPOSITORY_ROOT / "scripts" / "validate_github_labels.py"
 
 
 class ValidateGitHubLabelsTests(unittest.TestCase):
-    def test_accepts_labeler_and_issue_template_references_in_contract(self) -> None:
+    def test_accepts_repository_label_references_in_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            self._write_contract(root, ["documentation", "plugin-change"])
+            self._write_contract(root, ["documentation", "plugin-change", "release-control"])
             self._write_labeler(root, ["documentation"])
+            self._write_release_config(root, ["release-control"])
             self._write_issue_template(root, ["plugin-change"])
 
             result = self._run_validator(root)
 
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("Validated 2 GitHub labels and 2 referenced labels.", result.stdout)
+            self.assertIn("Validated 3 GitHub labels and 3 referenced labels.", result.stdout)
 
     def test_rejects_labeler_reference_missing_from_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -54,6 +55,34 @@ class ValidateGitHubLabelsTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn(
                 "GitHub label references missing from .github/label-contract.json: plugin-change",
+                result.stderr,
+            )
+
+    def test_rejects_release_config_reference_missing_from_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_contract(root, ["documentation"])
+            self._write_release_config(root, ["release-control"])
+
+            result = self._run_validator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "GitHub label references missing from .github/label-contract.json: release-control",
+                result.stderr,
+            )
+
+    def test_rejects_flow_style_release_config_reference_missing_from_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_contract(root, ["documentation"])
+            self._write_flow_style_release_config(root, ["release-control", "*"])
+
+            result = self._run_validator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "GitHub label references missing from .github/label-contract.json: release-control",
                 result.stderr,
             )
 
@@ -112,6 +141,25 @@ class ValidateGitHubLabelsTests(unittest.TestCase):
                 )
                 for label in labels
             ),
+            encoding="utf-8",
+        )
+
+    def _write_release_config(self, root: Path, labels: list[str]) -> None:
+        release_config = root / ".github" / "release.yml"
+        release_config.parent.mkdir(parents=True, exist_ok=True)
+        _ = release_config.write_text(
+            "changelog:\n  categories:\n    - title: Test\n      labels:\n"
+            + "".join(f"        - {label}\n" for label in labels)
+            + "    - title: Other\n      labels:\n        - '*'\n",
+            encoding="utf-8",
+        )
+
+    def _write_flow_style_release_config(self, root: Path, labels: list[str]) -> None:
+        release_config = root / ".github" / "release.yml"
+        release_config.parent.mkdir(parents=True, exist_ok=True)
+        label_list = ", ".join(f'"{label}"' for label in labels)
+        _ = release_config.write_text(
+            f"changelog:\n  categories:\n    - title: Test\n      labels: [{label_list}]\n",
             encoding="utf-8",
         )
 

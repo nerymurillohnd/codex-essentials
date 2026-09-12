@@ -13,6 +13,9 @@ and skills.
   `main` catalog.
 - Release Please may create plugin tags and GitHub Releases, but must not
   publish packages or upload release assets.
+- Release tags follow [ADR-0009](docs/decisions/adr-0009-release-tagging-policy.md):
+  use `v`-prefixed SemVer tag names, keep manifest and package version fields
+  without the `v`, and mark unstable release candidates as GitHub prereleases.
 
 ## Session Start Protocol
 
@@ -72,7 +75,8 @@ all of the following are complete:
 - Use `npm install` to install repository-local JavaScript tooling.
 - Use `npm run check` as the complete repository validation gate before
   handoff. It runs formatting checks, marketplace generation and tests, GitHub
-  label contract tests and validation, Ruff, shfmt, and ShellCheck.
+  label contract tests and validation, Ruff, Basedpyright, shfmt, ShellCheck,
+  and actionlint.
 - Use `npm run format` to format supported repository files with Prettier.
 - Use `npm run format:check` to verify Prettier formatting without changes.
 - Use `npm run marketplace:build` to regenerate and validate
@@ -84,11 +88,14 @@ all of the following are complete:
   references against `.github/label-contract.json`.
 - Use `npm run ruff:format:check` and `npm run ruff:check` after editing
   Python scripts.
-- Use `basedpyright $(rg --files -g '*.py')` after editing Python scripts to
-  typecheck every Python file. Do not suppress `Any`, unknown types, unused call
-  results, or unused definitions to make diagnostics pass.
+- Use `npm run basedpyright:check` after editing Python scripts to typecheck
+  every Python file. Do not suppress `Any`, unknown types, unused call results,
+  or unused definitions to make diagnostics pass.
 - Use `npm run shfmt:check` and `npm run shellcheck:check` after editing shell
   scripts.
+- Use `npm run actionlint:check` after editing GitHub Actions workflow files.
+- `scripts/install_ci_gate_tools.sh` is CI-only runner setup for repository
+  gate tools; do not use it as a local environment bootstrap script.
 - Use `npm run hooks:install` to install Lefthook hooks explicitly. Hooks are
   not installed automatically during `npm install`.
 - Use `npm run hooks:pre-commit` to run the configured pre-commit jobs
@@ -103,6 +110,8 @@ all of the following are complete:
 - Track unresolved work in `docs/maintenance/pending-debt.md`.
 - Move verified resolutions to `docs/maintenance/resolved-debt.md`.
 - Record durable architecture or operations decisions in `docs/decisions/`.
+- Follow [docs/operations/releases.md](docs/operations/releases.md) before
+  creating repository or plugin release tags.
 - Store approved Superpowers plans and specs in `docs/superpowers/`.
 
 ## Working Rules
