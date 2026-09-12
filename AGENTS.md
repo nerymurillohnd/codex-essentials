@@ -55,6 +55,17 @@ all of the following are complete:
   validated, and verified against current official OpenAI and OpenAI Developers
   documentation.
 
+## Marketplace Plugin Authoring
+
+For a new marketplace plugin or a material change to an existing package,
+invoke `$marketplace-plugin-authoring` before creating or editing package
+artifacts. The skill defines the end-to-end authoring workflow; this file keeps
+the permanent routing and non-negotiable publication gates.
+
+Do not hand-edit `.agents/plugins/marketplace.json`. Keep mechanically
+verifiable invariants in repository tooling and run the applicable validation
+gates rather than relying on the skill as the sole control.
+
 ## Quality and Completion
 
 - Run all applicable formatters, linters, type checks, tests, documentation

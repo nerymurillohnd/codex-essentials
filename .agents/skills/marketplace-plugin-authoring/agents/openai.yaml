@@ -1,0 +1,7 @@
+interface:
+  display_name: "Marketplace Plugin Authoring"
+  short_description: "Create and verify Codex Essentials plugins"
+  default_prompt: "Use $marketplace-plugin-authoring to create or update this Codex Essentials marketplace plugin."
+
+policy:
+  allow_implicit_invocation: true
