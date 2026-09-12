@@ -44,6 +44,7 @@ def main(args: list[str] | None = None) -> None:
     )
     plugins = load_plugin_manifests(root)
     marketplace = build_marketplace(root, plugins)
+    validate_marketplace(root, marketplace)
     if check_only:
         expected = json.dumps(marketplace, indent=2) + "\n"
         output = root / MARKETPLACE_OUTPUT
@@ -229,8 +230,21 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
 
 def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> None:
     skills_root = plugin_root / "skills"
-    assert_directory(skills_root, "skills")
-    assert_skill_directory(skills_root, "skills")
+    components = [
+        path
+        for path in (
+            skills_root,
+            plugin_root / "mcp.json",
+            plugin_root / "hooks",
+            plugin_root / ".app.json",
+        )
+        if path.exists()
+    ]
+    if not components:
+        raise ValueError("plugin must contain at least one supported component")
+    if skills_root.exists():
+        assert_directory(skills_root, "skills")
+        assert_skill_directory(skills_root, "skills")
     mcp_path = plugin_root / "mcp.json"
     if mcp_path.exists():
         validate_referenced_mcp_configuration(
@@ -294,9 +308,12 @@ def assert_skill_directory(skills_root: Path, label: str) -> None:
 
 def validate_referenced_mcp_configuration(configuration: Any, label: str) -> None:
     record = as_record(configuration, label)
-    wrapped_servers = record.get("mcpServers", record.get("mcp_servers"))
+    wrappers = [key for key in ("mcpServers", "mcp_servers") if key in record]
+    if len(wrappers) > 1:
+        raise ValueError(f"{label} must not contain both mcpServers and mcp_servers")
+    wrapped_servers = record.get(wrappers[0]) if wrappers else None
     if wrapped_servers is not None:
-        if set(record) - {"$schema", "mcpServers", "mcp_servers"}:
+        if set(record) - {"$schema", wrappers[0]}:
             raise ValueError(
                 f"{label} wrapped configuration must contain exactly one top-level key"
             )

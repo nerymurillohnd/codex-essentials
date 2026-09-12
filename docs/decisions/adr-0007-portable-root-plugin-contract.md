@@ -15,6 +15,8 @@ Current OpenAI plugin guidance defines `plugin.json` at the plugin root as the
 portable entry point and treats `.codex-plugin/plugin.json` as a compatibility
 fallback.
 
+This decision supersedes [ADR-0001](adr-0001-plugin-marketplace-source-contract.md).
+
 ## Decision Outcome
 
 Every package uses a root `plugin.json` as its sole authored manifest. Portable
