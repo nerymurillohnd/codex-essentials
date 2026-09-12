@@ -1,6 +1,6 @@
 {
   "name": "live-research",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Live Research gives Codex a disciplined workflow for verifying change-sensitive claims against current authoritative evidence.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -10,15 +10,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "research",
-    "live-data",
-    "verification",
-    "evidence",
-    "sources",
-    "codex",
-    "web"
-  ],
+  "keywords": ["research", "live-data", "verification", "evidence", "sources", "codex", "web"],
   "interface": {
     "displayName": "Live Research",
     "shortDescription": "Verify change-sensitive claims with current authoritative evidence.",

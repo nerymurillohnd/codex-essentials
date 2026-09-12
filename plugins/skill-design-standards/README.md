@@ -156,7 +156,8 @@ one discoverable installation and verify it in a fresh thread.
 From the marketplace repository, maintainers can run:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 These repository checks are maintenance tooling and are not plugin dependencies.

@@ -164,7 +164,8 @@ Use the implementation report's exact rollback steps or Git history to remove th
 Maintainers can validate the package from the marketplace repository:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 For a consumer smoke test, start a fresh thread and ask Hook Creator to design—without editing—a

@@ -164,7 +164,8 @@ catalog/package snapshot and validating it before reinstalling.
 From the marketplace repository, maintainers can run the read-only package check:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 From the target Astro project, verify the installed command surface from that

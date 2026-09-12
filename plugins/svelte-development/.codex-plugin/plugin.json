@@ -1,6 +1,6 @@
 {
   "name": "svelte-development",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Svelte Development gives Codex a remote-MCP-backed operating contract for serious Svelte 5 and SvelteKit architecture, implementation, and verification work.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -10,15 +10,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "svelte",
-    "sveltekit",
-    "svelte-5",
-    "mcp",
-    "cli",
-    "codex",
-    "developer-tools"
-  ],
+  "keywords": ["svelte", "sveltekit", "svelte-5", "mcp", "cli", "codex", "developer-tools"],
   "interface": {
     "displayName": "Svelte Development",
     "shortDescription": "Engineer Svelte 5 and SvelteKit with official MCP-backed guidance.",

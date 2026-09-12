@@ -1,6 +1,6 @@
 # 🧩 Codex Essentials
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > A Git-backed marketplace of Codex plugins and skills for repeatable work.
 
@@ -139,15 +139,15 @@ for current host, marketplace, manifest, and distribution behavior.
 | `plugins/<plugin-id>/`                | Self-contained distributable plugin packages.                                  |
 | `plugins/*/.codex-plugin/plugin.json` | Authored plugin identity, version, and component declarations.                 |
 | `docs/`                               | Maintainer architecture, contributor, operational, and decision documentation. |
-| `schemas/`, `scripts/`, `tests/`      | Repository schemas, generators, validators, tests, and quality tooling.        |
+| `schemas/`, `scripts/`                | Repository schemas, generators, validators, checks, and quality tooling.       |
 | `.github/`                            | Repository contribution and issue configuration.                               |
 
-The schemas, generators, validators, tests, and quality gates in this
-repository are maintainer tooling used to create, review, and maintain the
-marketplace. They are not packaged into installed plugins. The repository does
-not install its own npm dependencies into a user's project; each plugin declares
-its own behavior, requirements, permissions, and side effects in its product
-README and authoritative skill documents.
+The schemas, generators, validators, and quality checks in this repository are
+maintainer tooling used to create, review, and maintain the marketplace. They
+are not packaged into installed plugins. The repository does not install its own
+dependencies into a user's project; each plugin declares its own behavior,
+requirements, permissions, and side effects in its product README and
+authoritative skill documents.
 
 ## 🧭 Documentation map
 
@@ -168,8 +168,9 @@ npm run check
 ```
 
 For a plugin change, update its manifest, README, and changelog together, then
-run the repository marketplace checks. The catalog is generated from validated
-package manifests; do not hand-edit generated metadata.
+run the repository marketplace generator and checks through the npm gate. The
+catalog is generated from validated package manifests; do not hand-edit
+generated metadata.
 
 See [AGENTS.md](AGENTS.md) for the complete contributor contract and validation
 details.
@@ -208,7 +209,7 @@ for requirements, permissions, and verification.
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
 - [Discussions](https://github.com/nerymurillohnd/codex-essentials/discussions)
 - [Roadmap](AGENTS.md#roadmap)
-- [MIT License](LICENSE.md)
+- [MIT License](LICENSE)
 
 Codex Essentials is community-maintained and is not an official OpenAI, Codex,
 Astro, Prettier, or Svelte product.

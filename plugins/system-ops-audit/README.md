@@ -172,11 +172,8 @@ the target workspace or repository history for rollback.
 Maintainers can run the canonical marketplace checks:
 
 ```bash
-npm run validate:plugins
-npm run marketplace:build
-npm run marketplace:check
-npm run documentation:gate -- --base main --head HEAD
-npm run check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 Consumer smoke test:

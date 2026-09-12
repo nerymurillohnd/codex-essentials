@@ -164,7 +164,8 @@ removed.
 From the marketplace repository, maintainers can run:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 After installation, ask for a read-only audit and verify that the result states

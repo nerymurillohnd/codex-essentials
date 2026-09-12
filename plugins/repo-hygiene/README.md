@@ -174,9 +174,8 @@ recovery path, backups, tags, branches, reflogs, or provider history.
 Maintainers run:
 
 ```bash
-npm run marketplace:build
-npm run marketplace:check
-npm run check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 Consumer smoke test: invoke either skill, confirm that it reports findings and

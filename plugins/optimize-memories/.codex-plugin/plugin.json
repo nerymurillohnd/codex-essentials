@@ -1,6 +1,6 @@
 {
   "name": "optimize-memories",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Audit, verify, reconcile, and update Codex memory artifacts across project and global scopes through evidence-based, approval-gated procedures.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -10,13 +10,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "codex",
-    "memory",
-    "audit",
-    "verification",
-    "knowledge-management"
-  ],
+  "keywords": ["codex", "memory", "audit", "verification", "knowledge-management"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Codex Memory Audit",

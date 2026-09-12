@@ -151,8 +151,8 @@ or another trusted backup to restore earlier file content.
 Maintainers can run the package and repository checks from the marketplace root:
 
 ```bash
-npm run marketplace:check
-npx vitest run tests/prettier-after-edit-hooks.test.ts
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 To exercise the hook against a disposable or version-controlled target:

@@ -206,7 +206,8 @@ Maintainers run the canonical marketplace validation from the Codex Essentials
 repository:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 After installation, verify that Codex recognizes the plugin:

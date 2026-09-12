@@ -154,11 +154,13 @@ diff, or other recovery record produced by the surrounding workflow.
 From the marketplace repository, run the read-only package check:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
-`npm run marketplace:build` is the mutating package pipeline: it regenerates the
-catalog after validation. Use it only when a catalog-affecting change is intended.
+`./scripts/generate_marketplace.py` is the mutating package pipeline: it
+regenerates the catalog after validation. Use it only when a catalog-affecting
+change is intended.
 For a skill audit, verify every ledger task, evidence reference, proposed diff,
 approval state, and final verification result; a tool invocation alone is not evidence.
 

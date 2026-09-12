@@ -179,11 +179,8 @@ Maintainers can run the canonical package checks from the marketplace
 repository:
 
 ```bash
-npm run validate:plugins
-npm run marketplace:build
-npm run marketplace:check
-npm run documentation:gate -- --base main --head HEAD
-npm run check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 Consumer smoke test from a Svelte or SvelteKit project:

@@ -176,13 +176,10 @@ A previous package revision in Git is the recoverable rollback record.
 Maintainers can run the canonical package checks from the marketplace repository:
 
 ```bash
-npm run validate:plugins
-npm run marketplace:build
-npm run marketplace:check
-npm run documentation:gate -- --base main --head HEAD
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 uvx ruff@0.16.6 check --isolated plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
 uvx ruff@0.16.6 format --isolated --check plugins/prompt-architect/skills/prompt-architect/scripts/validate-final-output.py
-npm run check
 ```
 
 Consumer smoke test:

@@ -106,13 +106,15 @@ Removal stops skill discovery but does not remove a policy generated elsewhere. 
 ## ✅ Verification
 
 ```bash
-npx vitest run tests/block-no-verify-skill.test.ts
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 uvx ruff@0.16.6 check --isolated plugins/block-no-verify/skills/block-no-verify/assets/templates/block-no-verify.py
 uvx ruff@0.16.6 format --isolated --check plugins/block-no-verify/skills/block-no-verify/assets/templates/block-no-verify.py
 ```
 
-The focused test materializes the Python and Bash templates and runs the behavioral contract. It does not prove Codex discovery, trust, or live event execution.
+The marketplace checks validate catalog generation and package discovery. The
+Ruff commands validate the Python template. They do not prove Codex discovery,
+trust, or live event execution.
 
 ## 🚧 Known Limitations
 

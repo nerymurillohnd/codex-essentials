@@ -118,7 +118,8 @@ Installation changes Codex-managed plugin state only. Using the skill may modify
 From the marketplace repository, maintainers can run:
 
 ```bash
-npm run marketplace:check
+./scripts/generate_marketplace.py
+python3 scripts/test_generate_marketplace.py
 ```
 
 Review the generated document, its links, local formatting/lint output, and the final Git diff before accepting the change.

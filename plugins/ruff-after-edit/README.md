@@ -99,7 +99,8 @@ Remove the plugin with `codex plugin remove ruff-after-edit@codex-essentials`. R
 
 ## ✅ Verification
 
-Maintainers run `npm run marketplace:check`. Consumers follow the smoke tests
+Maintainers run `./scripts/generate_marketplace.py` and
+`python3 scripts/test_generate_marketplace.py`. Consumers follow the smoke tests
 in [Codex Hook Validation](skills/ruff-after-edit/references/codex-hook-validation.md).
 
 ## 🚧 Known Limitations
