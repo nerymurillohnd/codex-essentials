@@ -24,6 +24,17 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Install repository gate tools
+        run: |
+          python3 -m pip install --user ruff==0.16.7
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shfmt_version="3.14.1"
+          curl -fsSLo shfmt "https://github.com/mvdan/sh/releases/download/v${shfmt_version}/shfmt_v${shfmt_version}_linux_amd64"
+          chmod +x shfmt
+          sudo mv shfmt /usr/local/bin/shfmt
+
       - name: Install dependencies
         run: npm ci
 
