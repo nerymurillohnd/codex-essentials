@@ -167,6 +167,9 @@ authoritative skill documents.
 
 ```bash
 npm install
+uv tool install ruff==0.16.7
+uv tool install basedpyright==1.40.1
+brew install shellcheck shfmt
 npm run check
 ```
 
