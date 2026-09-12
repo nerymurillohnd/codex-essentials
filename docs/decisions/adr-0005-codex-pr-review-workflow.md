@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0008
 date: 2026-09-12
 decision-makers: Nery Samuel Murillo, Codex
 consulted: Official OpenAI Codex GitHub Action and Codex code review documentation
