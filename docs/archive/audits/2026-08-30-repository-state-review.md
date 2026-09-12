@@ -83,7 +83,6 @@ The following checks passed during the review:
 - `npm run validate:github-labels` — 9 labels validated and 8 references confirmed.
 - `npm run marketplace:check` — 3 complete plugin manifests and the reverse-linked catalog validated.
 - `npm run validate:release-workflow` — 3 components and 21 output bindings validated.
-- `actionlint` — passed.
 - Plugin packaging preflight — all 3 plugin entries packaged successfully.
 - `npm run check` — passed, including formatting, linting, typechecking, coverage, and marketplace validation.
 - `npm audit --json` — 0 informational, low, moderate, high, or critical vulnerabilities.
