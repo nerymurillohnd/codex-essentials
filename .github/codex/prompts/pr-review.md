@@ -6,7 +6,7 @@ marketplace.
 Focus only on consequential findings:
 
 - Behavioral regressions, broken contracts, or missing validation.
-- Plugin packaging mistakes in `plugins/*`, `.codex-plugin/plugin.json`,
+- Plugin packaging mistakes in `plugins/*`, root `plugin.json`,
   skill manifests, hooks, marketplace metadata, or documentation.
 - Generated-file drift, especially manual edits to
   `.agents/plugins/marketplace.json`.

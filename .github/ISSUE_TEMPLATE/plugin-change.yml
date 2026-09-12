@@ -44,7 +44,7 @@ body:
       label: Proposed scope
       description: List expected files, manifests, docs, schemas, tests, or generated metadata.
       placeholder: |
-        - plugins/<plugin-id>/.codex-plugin/plugin.json
+        - plugins/<plugin-id>/plugin.json
         - plugins/<plugin-id>/README.md
         - plugins/<plugin-id>/CHANGELOG.md
     validations:

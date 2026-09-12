@@ -20,7 +20,7 @@ Add these only when the plugin actually uses them:
 - `plugins/<plugin-id>/skills/<skill-id>/SKILL.md` and its required
   `plugins/<plugin-id>/skills/<skill-id>/agents/openai.yaml`
 - `plugins/<plugin-id>/.app.json`
-- `plugins/<plugin-id>/.mcp.json`
+- `plugins/<plugin-id>/mcp.json`
 - `plugins/<plugin-id>/assets/`
 
 Do not create a repository-level `skills/` directory. Skill content belongs

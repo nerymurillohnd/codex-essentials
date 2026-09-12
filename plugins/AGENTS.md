@@ -7,7 +7,7 @@ These instructions apply to every local package under `plugins/`. The root
 
 Each `plugins/<plugin-id>/plugin.json` is the authored source of
 truth for that distributable plugin. Start it from
-`templates/codex-plugin-plugin.json`, complete its variable fields, and remove
+`templates/plugin.json`, complete its variable fields, and remove
 optional declarations for components the plugin does not use. The generator
 derives only `.agents/plugins/marketplace.json`; it never rewrites a plugin
 manifest or skill metadata.
@@ -29,7 +29,7 @@ generation, validation, packaging, and release.
 - Every local package must contain
   `plugins/<plugin-id>/plugin.json`.
 - `<plugin-id>` must match the manifest `name` and satisfy the identifier rules
-  in `lib/schemas/plugin.schema.json`.
+  in `schemas/plugin.schema.json`.
 - Keep plugin resources inside the package. Do not create a repository-level
   `skills/` directory; skill content belongs in `plugins/<plugin-id>/skills/`.
 - Every distributed skill at `skills/<skill-id>/SKILL.md` must include its
@@ -58,8 +58,8 @@ and an array `defaultPrompt`. At least one of `skills`, `hooks`, `apps`, or
   and resolving inside the owning skill directory, including after symbolic-link
   canonicalization. Do not add unsupported YAML fields,
   use traversal paths, or place credentials in agent metadata.
-- Declare `apps` as `./.app.json` and `mcpServers` as `./.mcp.json` only when
-  those files exist; inline MCP definitions are also permitted by the schema.
+- Declare portable `mcp.json` only when an MCP server exists. Keep OpenAI-specific
+  presentation and hook metadata in `extensions.com.openai`.
 - Keep interface assets under `./assets/`; screenshot paths must point to PNG
   files. Do not use `..` path segments.
 - Codex supports explicit top-level `hooks` paths and automatically discovers
