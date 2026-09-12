@@ -27,7 +27,7 @@ jobs:
           cache: npm
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.1.0
 
       - name: Install repository gate tools
         run: scripts/install_ci_gate_tools.sh
