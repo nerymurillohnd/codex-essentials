@@ -12,9 +12,11 @@
 Automatic PR Lifecycle is a GitHub MCP-first Codex plugin for taking pull
 requests through scope, local validation, commit, push, PR creation, CI and
 review repair, exact-head readiness, explicit landing confirmation, merge
-observation, cleanup, and final reporting. It uses `gh` or `gh api` only as a
-scoped fallback and never bypasses hooks, branch protection, required checks,
-reviews, merge queues, or landing approval.
+observation, cleanup, and final reporting. Its core behavior is an autonomous
+Observe/Classify → Repair/Revalidate loop that continues until the PR reaches a
+verified terminal state or an evidenced blocker. It uses `gh` or `gh api` only
+as a scoped fallback and never bypasses hooks, branch protection, required
+checks, reviews, merge queues, or landing approval.
 
 The current plugin version is recorded in `plugin.json`. Install the package
 from the repository's `main` catalog.
@@ -44,11 +46,11 @@ session only when the environment needs the documented fallback.
 
 ## 🎯 Use cases
 
-| Scenario                                         | How this plugin helps                                                               | Expected result                                                        |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| A feature branch needs a complete PR workflow.   | Coordinates local checks and GitHub MCP operations through protected landing.       | A merged PR or an evidenced blocker.                                   |
-| CI or review feedback arrives after PR creation. | Reconciles the current head and repairs one validated actionable state at a time.   | Updated commits, checks, and review evidence for the new head.         |
-| A PR is ready but landing policy is sensitive.   | Re-reads every gate, binds confirmation to the exact head, and observes the result. | A verified merge, ready-without-approval state, or documented blocker. |
+| Scenario                                         | How this plugin helps                                                                 | Expected result                                                                           |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| A feature branch needs a complete PR workflow.   | Coordinates local checks and GitHub MCP operations through protected landing.         | `merged`, `ready-without-approval`, `external-auto-merge`, or `blocked`.                  |
+| CI or review feedback arrives after PR creation. | Reconciles the current head, repairs validated findings, and re-observes the new SHA. | Updated commits, checks, review replies, and resolved conversations for the current head. |
+| A PR is ready but landing policy is sensitive.   | Re-reads every gate, binds confirmation to the exact head, and observes the result.   | A verified merge, ready-without-approval state, external auto-merge, or blocker.          |
 
 **Not a fit when:** the task is only a local Git change, a casual status
 question, or an operation intended to bypass repository controls.
@@ -57,6 +59,7 @@ question, or an operation intended to bypass repository controls.
 
 - Keep local Git validation and GitHub PR state coordinated.
 - Make GitHub MCP the primary interface for PR operations.
+- Run Observe/Classify → Repair/Revalidate as an autonomous loop.
 - Repair CI, conflict, and review failures without masking them.
 - Bind landing confirmation to the exact current head SHA.
 - Reconcile external state before retries and completion claims.
@@ -78,14 +81,14 @@ background process.
 
 ## Supported environments
 
-| Requirement   | Supported value or behavior                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| Codex surface | Hosts that support installed skills and the required GitHub MCP tools.                                 |
-| Runtime/tools | Local Git plus GitHub MCP; authenticated `gh` is an optional per-action fallback.                      |
-| Project types | Git repositories with GitHub pull requests and repository-level validation controls.                   |
-| Credentials   | An authenticated GitHub MCP connection or fallback `gh` session with task-scoped permissions.          |
-| Network       | Required for GitHub state, CI, reviews, comments, and landing operations.                              |
-| Last verified | `2026-09-12` against the Codex Essentials marketplace contract and official Codex Hooks documentation. |
+| Requirement   | Supported value or behavior                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex surface | Hosts that support installed skills and the required GitHub MCP tools.                                                                        |
+| Runtime/tools | Local Git plus GitHub MCP; authenticated `gh` is an optional per-action fallback.                                                             |
+| Project types | Git repositories with GitHub pull requests and repository-level validation controls.                                                          |
+| Credentials   | An authenticated GitHub MCP connection or fallback `gh` session with task-scoped permissions.                                                 |
+| Network       | Required for GitHub state, CI, reviews, comments, and landing operations.                                                                     |
+| Last verified | `2026-09-12` against the Codex Essentials marketplace contract; hook-boundary claims were checked against official Codex Hooks documentation. |
 
 The target repository's instructions, protections, required checks, merge
 policy, credentials, and current GitHub behavior remain authoritative.
@@ -138,9 +141,14 @@ and repository policy.
 
 ## Human approval boundaries
 
-Routine inspection, validation, monitoring, diagnosis, and repair may proceed
-when authorized by the task and repository instructions. Other Git and GitHub
-writes require the authority established by that task and policy.
+After the user authorizes the PR lifecycle task, routine inspection,
+validation, monitoring, diagnosis, repairs, corrective commits, normal pushes,
+review replies, and thread resolution may proceed without mid-cycle approval
+when they remain within the task and repository policy.
+
+Writes outside the PR lifecycle, unrelated cleanup, production deployment,
+credential changes, broad configuration changes, and any protection bypass still
+require separate authority.
 
 The final landing mutation always requires explicit per-PR confirmation for the
 current head SHA. Any push, head change, policy change, readiness change, or
@@ -200,9 +208,11 @@ Consumer smoke test:
 1. Start a new Codex conversation with the plugin installed.
 2. Ask the skill to inspect an authorized open PR without mutating it.
 3. Confirm that GitHub MCP is selected before `gh`.
-4. Confirm that the response records the current head SHA and every readiness gate.
-5. Ask for landing and confirm that the skill requests exact-head approval before mutation.
-6. Simulate a head change and confirm that the prior approval is rejected as stale.
+4. Confirm that the response records the current head SHA, lifecycle state, and readiness gates.
+5. Provide or simulate actionable CI/review feedback and confirm that the skill enters the repair/revalidate loop instead of pausing for routine approval.
+6. Confirm that any corrective push invalidates prior observations and re-observes the new head.
+7. Ask for landing and confirm that the skill requests exact-head approval before mutation.
+8. Simulate a head change and confirm that the prior approval is rejected as stale.
 
 ## 🚧 Known limitations
 
