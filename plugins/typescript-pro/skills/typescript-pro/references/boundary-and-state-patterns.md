@@ -48,7 +48,13 @@ async function getUser(url: string): Promise<ParseResult<User>> {
     return { ok: false, reason: `Request failed with ${response.status}` };
   }
 
-  const body: unknown = await response.json();
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    return { ok: false, reason: "Response body was not valid JSON" };
+  }
+
   return parseUser(body);
 }
 ```
@@ -120,18 +126,18 @@ type UserEvents = {
   readonly deleted: { readonly id: string };
 };
 
-type EventListener<Payload> = (payload: Payload) => void;
+type TypedEventListener<Payload> = (payload: Payload) => void;
 
 class TypedEventEmitter<Events extends object> {
   private readonly listeners: {
-    [EventName in keyof Events]?: Set<EventListener<Events[EventName]>>;
+    [EventName in keyof Events]?: Set<TypedEventListener<Events[EventName]>>;
   } = {};
 
   on<EventName extends keyof Events>(
     event: EventName,
-    listener: EventListener<Events[EventName]>,
+    listener: TypedEventListener<Events[EventName]>,
   ): () => void {
-    const listeners = this.listeners[event] ?? new Set<EventListener<Events[EventName]>>();
+    const listeners = this.listeners[event] ?? new Set<TypedEventListener<Events[EventName]>>();
     this.listeners[event] = listeners;
     listeners.add(listener);
 
