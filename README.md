@@ -48,6 +48,7 @@ session without making those capabilities marketplace dependencies.
 | [Svelte Development](plugins/svelte-development/README.md)         | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`     |
 | [Skill Design Standards](plugins/skill-design-standards/README.md) | Designing, auditing, and evaluating portable agent skills.                   | `skill-design-standards` |
 | [System Ops Audit](plugins/system-ops-audit/README.md)             | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`       |
+| [TypeScript Pro](plugins/typescript-pro/README.md)                 | Senior-grade TypeScript writing, review, refactoring, and trust boundaries.  | `typescript-pro`         |
 | [Verify Completion](plugins/verify-completion/README.md)           | Evidence-backed completion and release-readiness verification.               | `verify-completion`      |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
@@ -73,6 +74,7 @@ permissions, side effects, and examples._
 | Architect, build, or verify Svelte and SvelteKit work         | [Svelte Development](plugins/svelte-development/README.md)         |
 | Design, audit, or evaluate reusable agent skills              | [Skill Design Standards](plugins/skill-design-standards/README.md) |
 | Design a read-only macOS baseline audit                       | [System Ops Audit](plugins/system-ops-audit/README.md)             |
+| Write, review, or refactor TypeScript safely                  | [TypeScript Pro](plugins/typescript-pro/README.md)                 |
 | Verify work before a completion, handoff, commit, or PR claim | [Verify Completion](plugins/verify-completion/README.md)           |
 
 _Use cases describe the user's starting problem; the linked plugin README
@@ -94,6 +96,7 @@ explains behavior, requirements, boundaries, and expected results._
 [Svelte development](plugins/svelte-development/README.md) ·
 [Skill design](plugins/skill-design-standards/README.md) ·
 [System ops audit](plugins/system-ops-audit/README.md) ·
+[TypeScript development](plugins/typescript-pro/README.md) ·
 [Completion verification](plugins/verify-completion/README.md)
 
 ## ⚡ Quick start

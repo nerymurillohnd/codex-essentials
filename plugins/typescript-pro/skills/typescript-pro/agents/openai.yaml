@@ -1,0 +1,7 @@
+interface:
+  display_name: "TypeScript Pro"
+  short_description: "Write and review TypeScript with proven strict types"
+  default_prompt: "Use $typescript-pro to inspect this TypeScript project and make the smallest safe change for the requested outcome."
+
+policy:
+  allow_implicit_invocation: true

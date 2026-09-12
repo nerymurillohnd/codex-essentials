@@ -19,6 +19,29 @@ JsonObject = dict[str, object]
 
 
 class GenerateMarketplaceTests(unittest.TestCase):
+    def test_repository_catalog_includes_typescript_pro_plugin(self) -> None:
+        result = self._run_generator(REPOSITORY_ROOT)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        raw_marketplace = cast(
+            "object",
+            json.loads(
+                (REPOSITORY_ROOT / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")
+            ),
+        )
+        self.assertIsInstance(raw_marketplace, dict)
+        marketplace = cast("JsonObject", raw_marketplace)
+        plugins = cast("list[JsonObject]", marketplace["plugins"])
+        self.assertIn(
+            {
+                "name": "typescript-pro",
+                "source": {"source": "local", "path": "./plugins/typescript-pro"},
+                "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+                "category": "Developer Tools",
+            },
+            plugins,
+        )
+
     def test_generates_catalog_from_plugin_manifests(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

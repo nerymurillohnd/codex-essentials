@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "typescript-pro",
+  "version": "0.1.0",
+  "description": "Senior-grade TypeScript engineering for strict types, trust boundaries, configuration, and safe refactoring.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["typescript", "tsconfig", "type-safety", "strict-typing", "tsx"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "TypeScript Pro",
+        "shortDescription": "Write, review, and refactor TypeScript with proven types",
+        "longDescription": "Senior-grade TypeScript guidance for strict typing, runtime-validated trust boundaries, impossible-state removal, and behavior-preserving refactors.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": ["TypeScript", "Code review", "Refactoring", "Type safety"],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use $typescript-pro to inspect this TypeScript project and make the smallest safe change for the requested outcome."
+        ]
+      }
+    }
+  }
+}
