@@ -1,0 +1,7 @@
+interface:
+  display_name: "Verify Completion"
+  short_description: "Require evidence-backed verification before completion claims"
+  default_prompt: "Use $verify-completion to verify the applicable gates before I claim this work is complete."
+
+policy:
+  allow_implicit_invocation: true

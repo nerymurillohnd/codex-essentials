@@ -1,0 +1,40 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "verify-completion",
+  "version": "1.0.0",
+  "description": "Require evidence-backed verification before completion claims.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["verification", "completion", "quality", "testing", "review"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Verify Completion",
+        "shortDescription": "Require evidence-backed verification before completion claims.",
+        "longDescription": "A skills-only verification protocol for completion, correctness, handoff, commit, and pull-request claims. It requires applicable adversarial review, outcome validation, counterpart enforcement, false-positive analysis, positive and negative proof, and independently reviewable evidence. The protocol never grants new authority or bypasses project controls.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Evidence-backed completion verification",
+          "Adversarial review and false-positive analysis",
+          "Positive and negative validation guidance",
+          "Applicability-aware six-gate completion protocol",
+          "Authority-preserving verification summaries"
+        ],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use $verify-completion to verify the applicable gates before I claim this work is complete."
+        ],
+        "brandColor": "#1D4ED8"
+      }
+    }
+  }
+}
