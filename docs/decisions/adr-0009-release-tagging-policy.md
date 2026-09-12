@@ -62,7 +62,7 @@ v0.2.0
 Independently released plugins may use plugin-scoped tags:
 
 ```text
-<plugin-id>/v0.2.0
+plugin/<plugin-id>/v0.2.0
 ```
 
 Published release contents are immutable from a policy perspective. Corrective
@@ -77,6 +77,8 @@ unless a later accepted decision explicitly changes that policy.
   metadata.
 - Repository and plugin release lines can coexist without overloading a single
   tag namespace.
+- Plugin-scoped tags keep the existing `plugin/<plugin-id>/v<semver>` Release
+  Please namespace used by contributor guidance.
 - The repository retains its current no-package-publication and no-release-asset
   constraint.
 - Release automation must validate both tag shape and manifest version shape

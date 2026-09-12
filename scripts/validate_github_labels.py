@@ -16,6 +16,7 @@ RELEASE_CONFIG = Path(".github") / "release.yml"
 ISSUE_TEMPLATES = Path(".github") / "ISSUE_TEMPLATE"
 LABELER_OPTIONS = {"changed-files-labels-limit", "max-files-changed"}
 ROOT_ARGUMENT_COUNT = 2
+LABELS_KEY = "labels:"
 
 
 def main() -> None:
@@ -97,9 +98,14 @@ def read_release_config_labels(path: Path) -> set[str]:
         if not stripped or stripped.startswith("#"):
             continue
         indent = len(line) - len(line.lstrip())
-        if stripped == "labels:":
-            in_labels = True
-            labels_indent = indent
+        if stripped.startswith(LABELS_KEY):
+            inline_labels = stripped.removeprefix(LABELS_KEY).strip()
+            if inline_labels:
+                labels.update(parse_label_value(inline_labels))
+                in_labels = False
+            else:
+                in_labels = True
+                labels_indent = indent
             continue
         if in_labels and indent <= labels_indent:
             in_labels = False
@@ -110,13 +116,59 @@ def read_release_config_labels(path: Path) -> set[str]:
     return labels
 
 
+def parse_label_value(value: str) -> set[str]:
+    if not value.startswith("[") or not value.endswith("]"):
+        label = value.strip().strip("'\"")
+        return {label} if label and label != "*" else set()
+    return {
+        label
+        for label in (item.strip().strip("'\"") for item in split_flow_sequence(value[1:-1]))
+        if label and label != "*"
+    }
+
+
+def split_flow_sequence(value: str) -> list[str]:
+    items: list[str] = []
+    current: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for character in value:
+        if escaped:
+            current.append(character)
+            escaped = False
+            continue
+        if quote == '"' and character == "\\":
+            escaped = True
+            current.append(character)
+            continue
+        if character in {"'", '"'}:
+            if quote is None:
+                quote = character
+            elif quote == character:
+                quote = None
+            current.append(character)
+            continue
+        if character == "," and quote is None:
+            items.append("".join(current))
+            current = []
+            continue
+        current.append(character)
+    items.append("".join(current))
+    return items
+
+
 def read_issue_template_labels(path: Path) -> set[str]:
     labels: set[str] = set()
     in_labels = False
     for line in path.read_text(encoding="utf-8").splitlines():
         stripped = line.strip()
-        if stripped == "labels:":
-            in_labels = True
+        if stripped.startswith(LABELS_KEY):
+            inline_labels = stripped.removeprefix(LABELS_KEY).strip()
+            if inline_labels:
+                labels.update(parse_label_value(inline_labels))
+                in_labels = False
+            else:
+                in_labels = True
             continue
         if in_labels and line and not line.startswith((" ", "-")):
             in_labels = False

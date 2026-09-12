@@ -72,6 +72,20 @@ class ValidateGitHubLabelsTests(unittest.TestCase):
                 result.stderr,
             )
 
+    def test_rejects_flow_style_release_config_reference_missing_from_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_contract(root, ["documentation"])
+            self._write_flow_style_release_config(root, ["release-control", "*"])
+
+            result = self._run_validator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "GitHub label references missing from .github/label-contract.json: release-control",
+                result.stderr,
+            )
+
     def test_rejects_duplicate_contract_label(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -137,6 +151,15 @@ class ValidateGitHubLabelsTests(unittest.TestCase):
             "changelog:\n  categories:\n    - title: Test\n      labels:\n"
             + "".join(f"        - {label}\n" for label in labels)
             + "    - title: Other\n      labels:\n        - '*'\n",
+            encoding="utf-8",
+        )
+
+    def _write_flow_style_release_config(self, root: Path, labels: list[str]) -> None:
+        release_config = root / ".github" / "release.yml"
+        release_config.parent.mkdir(parents=True, exist_ok=True)
+        label_list = ", ".join(f'"{label}"' for label in labels)
+        _ = release_config.write_text(
+            f"changelog:\n  categories:\n    - title: Test\n      labels: [{label_list}]\n",
             encoding="utf-8",
         )
 
