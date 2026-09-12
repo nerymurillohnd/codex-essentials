@@ -1,0 +1,32 @@
+changelog:
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking-change
+    - title: Security
+      labels:
+        - security
+    - title: Marketplace and Plugin Changes
+      labels:
+        - plugin-change
+        - plugin-manifest
+        - skill-contract
+        - hook
+        - catalog
+    - title: Repository Tooling and CI
+      labels:
+        - tooling
+        - github_actions
+        - release-control
+    - title: Dependencies
+      labels:
+        - dependencies
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Fixes
+      labels:
+        - bug
+    - title: Other Changes
+      labels:
+        - "*"

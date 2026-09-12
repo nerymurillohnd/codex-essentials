@@ -12,6 +12,7 @@ from typing import cast
 
 LABEL_CONTRACT = Path(".github") / "label-contract.json"
 LABELER_CONFIG = Path(".github") / "labeler.yml"
+RELEASE_CONFIG = Path(".github") / "release.yml"
 ISSUE_TEMPLATES = Path(".github") / "ISSUE_TEMPLATE"
 LABELER_OPTIONS = {"changed-files-labels-limit", "max-files-changed"}
 ROOT_ARGUMENT_COUNT = 2
@@ -64,6 +65,9 @@ def collect_references(root: Path) -> set[str]:
     labeler = root / LABELER_CONFIG
     if labeler.exists():
         references.update(read_labeler_labels(labeler))
+    release_config = root / RELEASE_CONFIG
+    if release_config.exists():
+        references.update(read_release_config_labels(release_config))
     templates = root / ISSUE_TEMPLATES
     if templates.exists():
         for template in sorted(templates.glob("*.yml")):
@@ -81,6 +85,28 @@ def read_labeler_labels(path: Path) -> set[str]:
         key = line.split(":", 1)[0].strip().strip("'\"")
         if key and key not in LABELER_OPTIONS:
             labels.add(key)
+    return labels
+
+
+def read_release_config_labels(path: Path) -> set[str]:
+    labels: set[str] = set()
+    in_labels = False
+    labels_indent = 0
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip())
+        if stripped == "labels:":
+            in_labels = True
+            labels_indent = indent
+            continue
+        if in_labels and indent <= labels_indent:
+            in_labels = False
+        if in_labels and stripped.startswith("- "):
+            label = stripped.removeprefix("- ").strip().strip("'\"")
+            if label and label != "*":
+                labels.add(label)
     return labels
 
 

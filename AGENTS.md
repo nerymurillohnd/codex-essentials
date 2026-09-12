@@ -13,6 +13,9 @@ and skills.
   `main` catalog.
 - Release Please may create plugin tags and GitHub Releases, but must not
   publish packages or upload release assets.
+- Release tags follow [ADR-0009](docs/decisions/adr-0009-release-tagging-policy.md):
+  use `v`-prefixed SemVer tag names, keep manifest and package version fields
+  without the `v`, and mark unstable release candidates as GitHub prereleases.
 
 ## Session Start Protocol
 
@@ -103,6 +106,8 @@ all of the following are complete:
 - Track unresolved work in `docs/maintenance/pending-debt.md`.
 - Move verified resolutions to `docs/maintenance/resolved-debt.md`.
 - Record durable architecture or operations decisions in `docs/decisions/`.
+- Follow [docs/operations/releases.md](docs/operations/releases.md) before
+  creating repository or plugin release tags.
 - Store approved Superpowers plans and specs in `docs/superpowers/`.
 
 ## Working Rules
