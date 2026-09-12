@@ -1,0 +1,40 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "automatic-pr-lifecycle",
+  "version": "0.1.0",
+  "description": "Coordinate a protected, evidence-backed pull request lifecycle with GitHub MCP and a scoped CLI fallback.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["pull-request", "github", "ci", "code-review", "merge-queue", "automation"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Automatic PR Lifecycle",
+        "shortDescription": "Shepherd protected pull requests through verified merge or an evidenced blocker.",
+        "longDescription": "A GitHub MCP-first pull request lifecycle skill for local validation, PR creation, CI and review repair, exact-head readiness, explicit landing confirmation, merge observation, and final reporting. It uses gh or gh api only as a scoped fallback and never bypasses hooks, required checks, reviews, merge queues, or branch protection.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Protected pull request lifecycle coordination",
+          "MCP-based CI and review state reconciliation",
+          "Exact-head readiness and landing confirmation",
+          "GitHub MCP-first operations with gh fallback",
+          "Protected merge observation and evidence reporting"
+        ],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use $automatic-pr-lifecycle to take this pull request through the protected lifecycle and report its verified terminal state."
+        ],
+        "brandColor": "#0F766E"
+      }
+    }
+  }
+}
