@@ -133,7 +133,7 @@ generator, Prettier, Ruff, shfmt, ShellCheck, and the bundled skill validator.
   Run:
 
   ```bash
-  python3 /Users/nerymurillohnd/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
+  uv run --with pyyaml python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
     plugins/verify-completion/skills/verify-completion
   ```
 
@@ -206,7 +206,7 @@ generator, Prettier, Ruff, shfmt, ShellCheck, and the bundled skill validator.
 - [x] **Step 2: Run focused and complete gates**
 
   ```bash
-  python3 /Users/nerymurillohnd/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
+  uv run --with pyyaml python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
     plugins/verify-completion/skills/verify-completion
   npm run marketplace:build
   npm run marketplace:check

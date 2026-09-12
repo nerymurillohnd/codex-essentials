@@ -151,7 +151,7 @@ manifest.
 The implementation plan will require, at minimum:
 
 ```bash
-python3 /Users/nerymurillohnd/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
+uv run --with pyyaml python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
   plugins/verify-completion/skills/verify-completion
 npm run marketplace:build
 npm run marketplace:check
