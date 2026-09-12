@@ -1,0 +1,7 @@
+interface:
+  display_name: "Automatic PR Lifecycle"
+  short_description: "Shepherd protected pull requests through verified merge or a blocker"
+  default_prompt: "Use $automatic-pr-lifecycle to take this pull request through its protected lifecycle and report the verified terminal state."
+
+policy:
+  allow_implicit_invocation: true
