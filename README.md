@@ -48,30 +48,32 @@ session without making those capabilities marketplace dependencies.
 | [Svelte Development](plugins/svelte-development/README.md)         | Svelte 5 and SvelteKit architecture, implementation, MCP, and verification.  | `svelte-development`     |
 | [Skill Design Standards](plugins/skill-design-standards/README.md) | Designing, auditing, and evaluating portable agent skills.                   | `skill-design-standards` |
 | [System Ops Audit](plugins/system-ops-audit/README.md)             | Read-only macOS baseline audit design, execution boundaries, and analysis.   | `system-ops-audit`       |
+| [Verify Completion](plugins/verify-completion/README.md)           | Evidence-backed completion and release-readiness verification.               | `verify-completion`      |
 
 _Choose a plugin by outcome, then open its linked README for requirements,
 permissions, side effects, and examples._
 
 ## 🎯 Choose by use case
 
-| If you need to...                                          | Start with...                                                      |
-| ---------------------------------------------------------- | ------------------------------------------------------------------ |
-| Discover and install curated Codex plugins                 | [Plugin catalog](#-plugin-catalog)                                 |
-| Plan, check, preview, or coordinate an Astro project       | [Astro Commands](plugins/astro-cli-commands/README.md)             |
-| Install a Git verification bypass policy with approval     | [Block No Verify](plugins/block-no-verify/README.md)               |
-| Audit, configure, or repair Prettier setup                 | [Configure Prettier](plugins/configure-prettier/README.md)         |
-| Use Ruff or propose Codex edit hygiene                     | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
-| Format edited files with Prettier                          | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
-| Create or repair changelogs and architecture decisions     | [DocKeeper](plugins/doc-keeper/README.md)                          |
-| Engineer or debug Codex lifecycle hooks                    | [Hook Creator](plugins/hook-creator/README.md)                     |
-| Audit or reconcile project and global Codex memories       | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
-| Verify change-sensitive facts using available tools        | [Live Research](plugins/live-research/README.md)                   |
-| Turn rough task intent into a copy-ready prompt            | [Prompt Architect](plugins/prompt-architect/README.md)             |
-| Audit Git hygiene, recovery, or a regression before acting | [Repo Hygiene](plugins/repo-hygiene/README.md)                     |
-| Maintain repository documentation and debt records         | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
-| Architect, build, or verify Svelte and SvelteKit work      | [Svelte Development](plugins/svelte-development/README.md)         |
-| Design, audit, or evaluate reusable agent skills           | [Skill Design Standards](plugins/skill-design-standards/README.md) |
-| Design a read-only macOS baseline audit                    | [System Ops Audit](plugins/system-ops-audit/README.md)             |
+| If you need to...                                             | Start with...                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Discover and install curated Codex plugins                    | [Plugin catalog](#-plugin-catalog)                                 |
+| Plan, check, preview, or coordinate an Astro project          | [Astro Commands](plugins/astro-cli-commands/README.md)             |
+| Install a Git verification bypass policy with approval        | [Block No Verify](plugins/block-no-verify/README.md)               |
+| Audit, configure, or repair Prettier setup                    | [Configure Prettier](plugins/configure-prettier/README.md)         |
+| Use Ruff or propose Codex edit hygiene                        | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
+| Format edited files with Prettier                             | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
+| Create or repair changelogs and architecture decisions        | [DocKeeper](plugins/doc-keeper/README.md)                          |
+| Engineer or debug Codex lifecycle hooks                       | [Hook Creator](plugins/hook-creator/README.md)                     |
+| Audit or reconcile project and global Codex memories          | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
+| Verify change-sensitive facts using available tools           | [Live Research](plugins/live-research/README.md)                   |
+| Turn rough task intent into a copy-ready prompt               | [Prompt Architect](plugins/prompt-architect/README.md)             |
+| Audit Git hygiene, recovery, or a regression before acting    | [Repo Hygiene](plugins/repo-hygiene/README.md)                     |
+| Maintain repository documentation and debt records            | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
+| Architect, build, or verify Svelte and SvelteKit work         | [Svelte Development](plugins/svelte-development/README.md)         |
+| Design, audit, or evaluate reusable agent skills              | [Skill Design Standards](plugins/skill-design-standards/README.md) |
+| Design a read-only macOS baseline audit                       | [System Ops Audit](plugins/system-ops-audit/README.md)             |
+| Verify work before a completion, handoff, commit, or PR claim | [Verify Completion](plugins/verify-completion/README.md)           |
 
 _Use cases describe the user's starting problem; the linked plugin README
 explains behavior, requirements, boundaries, and expected results._
@@ -91,7 +93,8 @@ explains behavior, requirements, boundaries, and expected results._
 [Repository maintenance](plugins/repo-maintenance/README.md) ·
 [Svelte development](plugins/svelte-development/README.md) ·
 [Skill design](plugins/skill-design-standards/README.md) ·
-[System ops audit](plugins/system-ops-audit/README.md)
+[System ops audit](plugins/system-ops-audit/README.md) ·
+[Completion verification](plugins/verify-completion/README.md)
 
 ## ⚡ Quick start
 
