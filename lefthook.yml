@@ -1,0 +1,20 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: prettier
+      run: npx prettier --ignore-unknown --write '{staged_files}'
+      stage_fixed: true
+
+    - name: ruff
+      glob: "*.py"
+      run: ruff check --force-exclude --fix --no-unsafe-fixes -- '{staged_files}' && ruff format --force-exclude -- '{staged_files}' && ruff check --force-exclude -- '{staged_files}'
+      stage_fixed: true
+
+    - name: shfmt
+      glob: "*.{sh,bash}"
+      run: shfmt -w '{staged_files}'
+      stage_fixed: true
+
+    - name: shellcheck
+      glob: "*.{sh,bash}"
+      run: shellcheck '{staged_files}'

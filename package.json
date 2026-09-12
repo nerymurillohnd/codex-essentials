@@ -1,0 +1,49 @@
+{
+  "name": "codex-essentials",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Repository maintenance tooling for the Codex Essentials plugin marketplace.",
+  "license": "MIT",
+  "type": "commonjs",
+  "packageManager": "npm@12.0.2",
+  "engines": {
+    "node": "24.21.0",
+    "npm": "12.0.2"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "check": "npm run format:check && npm run marketplace:build && npm run marketplace:test && npm run ruff:format:check && npm run ruff:check && npm run shfmt:check && npm run shellcheck:check",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "hooks:install": "lefthook install",
+    "hooks:pre-commit": "lefthook run pre-commit",
+    "marketplace:build": "python3 scripts/generate_marketplace.py",
+    "marketplace:test": "python3 scripts/test_generate_marketplace.py",
+    "ruff:check": "ruff check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py",
+    "ruff:format:check": "ruff format --check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py",
+    "shellcheck:check": "shellcheck plugins/block-no-verify/skills/block-no-verify/assets/templates/test-block-no-verify.sh",
+    "shfmt:check": "shfmt -d plugins/block-no-verify/skills/block-no-verify/assets/templates/test-block-no-verify.sh",
+    "test": "npm run marketplace:test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerymurillohnd/codex-essentials.git"
+  },
+  "keywords": [
+    "codex",
+    "plugins",
+    "marketplace"
+  ],
+  "bugs": {
+    "url": "https://github.com/nerymurillohnd/codex-essentials/issues"
+  },
+  "homepage": "https://github.com/nerymurillohnd/codex-essentials#readme",
+  "devDependencies": {
+    "lefthook": "2.1.12",
+    "prettier": "3.9.6",
+    "typescript": "7.0.2",
+    "typescript-language-server": "6.0.0"
+  }
+}

@@ -118,10 +118,7 @@
     },
     "pluginPath": {
       "type": "string",
-      "allOf": [
-        { "pattern": "^\\./[^\\r\\n]+$" },
-        { "not": { "pattern": "(?:^|/)\\.\\.(?:/|$)" } }
-      ]
+      "allOf": [{ "pattern": "^\\./[^\\r\\n]+$" }, { "not": { "pattern": "(?:^|/)\\.\\.(?:/|$)" } }]
     },
     "assetPath": {
       "type": "string",

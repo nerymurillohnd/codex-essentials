@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "charliermarsh.ruff",
+    "detachhead.basedpyright",
+    "esbenp.prettier-vscode",
+    "mkhl.shfmt",
+    "ms-python.python",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "timonwong.shellcheck"
+  ]
+}

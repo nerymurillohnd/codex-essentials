@@ -2,23 +2,8 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import {
-  accessSync,
-  constants,
-  existsSync,
-  readFileSync,
-  realpathSync,
-  statSync,
-} from "node:fs";
-import {
-  delimiter,
-  dirname,
-  isAbsolute,
-  join,
-  relative,
-  resolve,
-  sep,
-} from "node:path";
+import { accessSync, constants, existsSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 /** @typedef {{ cwd?: string, tool_input?: unknown, tool_response?: Record<string, unknown> }} HookPayload */
@@ -32,9 +17,7 @@ export function parsePayload(rawInput) {
     return null;
   }
   const value = JSON.parse(rawInput);
-  return value && typeof value === "object"
-    ? /** @type {HookPayload} */ (value)
-    : null;
+  return value && typeof value === "object" ? /** @type {HookPayload} */ (value) : null;
 }
 
 /** @param {HookPayload} payload @returns {string[]} */
@@ -52,9 +35,7 @@ export function collectCandidates(payload) {
   const input = payload.tool_input;
   const response = payload.tool_response;
   const inputRecord =
-    input && typeof input === "object"
-      ? /** @type {Record<string, unknown>} */ (input)
-      : null;
+    input && typeof input === "object" ? /** @type {Record<string, unknown>} */ (input) : null;
   if (response) {
     add(response.filePath);
   }
@@ -79,19 +60,13 @@ export function collectCandidates(payload) {
 /** @param {string} cwd @param {string} candidate @returns {ContainedFile | null} */
 export function resolveContainedFile(cwd, candidate) {
   const root = realpathSync(cwd);
-  const unresolved = isAbsolute(candidate)
-    ? candidate
-    : resolve(root, candidate);
+  const unresolved = isAbsolute(candidate) ? candidate : resolve(root, candidate);
   if (!existsSync(unresolved) || !statSync(unresolved).isFile()) {
     return null;
   }
   const target = realpathSync(unresolved);
   const fromRoot = relative(root, target);
-  if (
-    fromRoot === ".." ||
-    fromRoot.startsWith(`..${sep}`) ||
-    isAbsolute(fromRoot)
-  ) {
+  if (fromRoot === ".." || fromRoot.startsWith(`..${sep}`) || isAbsolute(fromRoot)) {
     return null;
   }
   return { root, target, relativePath: fromRoot || "." };
@@ -123,13 +98,8 @@ function executableNames(name, env) {
   if (process.platform !== "win32") {
     return [name];
   }
-  const extensions = (env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD")
-    .split(";")
-    .filter(Boolean);
-  return [
-    name,
-    ...extensions.map((extension) => `${name}${extension.toLowerCase()}`),
-  ];
+  const extensions = (env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD").split(";").filter(Boolean);
+  return [name, ...extensions.map((extension) => `${name}${extension.toLowerCase()}`)];
 }
 
 /** @param {string} path @returns {boolean} */
@@ -165,11 +135,7 @@ export function findExecutable(startDir, rootDir, name, env = process.env) {
     }
     const parent = dirname(current);
     const fromRoot = relative(root, parent);
-    if (
-      parent === current ||
-      fromRoot === ".." ||
-      fromRoot.startsWith(`..${sep}`)
-    ) {
+    if (parent === current || fromRoot === ".." || fromRoot.startsWith(`..${sep}`)) {
       break;
     }
     current = parent;
@@ -197,11 +163,7 @@ export function firstDiagnostic(result) {
 
 /** @param {string} executable @param {ContainedFile} file @returns {ToolResult} */
 export function runPrettier(executable, file) {
-  const info = runCommand(
-    executable,
-    ["--file-info", file.relativePath],
-    file.root,
-  );
+  const info = runCommand(executable, ["--file-info", file.relativePath], file.root);
   if (info.status !== 0) {
     return { state: "failed", diagnostic: firstDiagnostic(info) };
   }
@@ -234,17 +196,12 @@ export function runPrettier(executable, file) {
 
 /** @param {string} name @param {ToolResult} result @returns {string} */
 function phaseText(name, result) {
-  return `${name}=${result.state}${
-    result.diagnostic ? ` (${result.diagnostic})` : ""
-  }`;
+  return `${name}=${result.state}${result.diagnostic ? ` (${result.diagnostic})` : ""}`;
 }
 
 /** @param {string} relativePath @param {ToolResult} prettierResult @returns {string} */
 export function formatFileMessage(relativePath, prettierResult) {
-  return [
-    `prettier-after-edit: ${relativePath}`,
-    phaseText("prettier", prettierResult),
-  ].join("; ");
+  return [`prettier-after-edit: ${relativePath}`, phaseText("prettier", prettierResult)].join("; ");
 }
 
 /** @param {string} systemMessage */
@@ -279,12 +236,7 @@ export function main(rawInput = readFileSync(0, "utf8"), env = process.env) {
       );
       continue;
     }
-    const prettier = findExecutable(
-      dirname(file.target),
-      file.root,
-      "prettier",
-      env,
-    );
+    const prettier = findExecutable(dirname(file.target), file.root, "prettier", env);
     const prettierResult = prettier
       ? runPrettier(prettier, file)
       : { state: "skipped", diagnostic: "prettier not found" };
@@ -293,9 +245,6 @@ export function main(rawInput = readFileSync(0, "utf8"), env = process.env) {
   return 0;
 }
 
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
-) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   process.exitCode = main();
 }

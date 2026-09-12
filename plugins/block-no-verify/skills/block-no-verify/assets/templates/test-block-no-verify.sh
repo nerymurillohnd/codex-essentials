@@ -12,25 +12,25 @@ pass=0
 fail=0
 
 verdict() {
-  local value="$1" encoded
-  encoded=$(printf '%s' "${value}" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
-  printf '{"tool_name":"Bash","tool_input":{"command":%s}}' "${encoded}" |
-    python3 "${HOOK}" |
-    python3 -c 'import json,sys
+	local value="$1" encoded
+	encoded=$(printf '%s' "${value}" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
+	printf '{"tool_name":"Bash","tool_input":{"command":%s}}' "${encoded}" |
+		python3 "${HOOK}" |
+		python3 -c 'import json,sys
 raw=sys.stdin.read().strip()
 if not raw: print("ALLOW"); raise SystemExit
 print(json.loads(raw)["hookSpecificOutput"]["permissionDecision"].upper())'
 }
 
 want() { # want <expected> <command>
-  local expected="$1" got
-  got=$(verdict "$2")
-  if [[ "${got}" == "${expected}" ]]; then
-    pass=$((pass + 1))
-  else
-    fail=$((fail + 1))
-    printf '  FAIL: expected %-5s got %-5s :: %s\n' "${expected}" "${got}" "$2"
-  fi
+	local expected="$1" got
+	got=$(verdict "$2")
+	if [[ "${got}" == "${expected}" ]]; then
+		pass=$((pass + 1))
+	else
+		fail=$((fail + 1))
+		printf '  FAIL: expected %-5s got %-5s :: %s\n' "${expected}" "${got}" "$2"
+	fi
 }
 
 echo "=== A. direct bypasses ==="
@@ -42,7 +42,7 @@ want DENY 'git --config commit.gpgsign=false commit -m "x"'
 
 echo "=== B. wrapper bypasses ==="
 for wrapper in "sudo" "env" "nice" "nohup" "timeout 5" "xargs" "command" "builtin" "noglob" "watch"; do
-  want DENY "${wrapper} git commit -m \"x\" --no-verify"
+	want DENY "${wrapper} git commit -m \"x\" --no-verify"
 done
 want DENY 'GIT_AUTHOR_NAME=x git commit -m "x" --no-verify'
 want DENY 'sudo env GIT_AUTHOR_NAME=x nice git commit -m "x" --no-verify'
@@ -83,31 +83,31 @@ want ALLOW 'GIT status'
 echo
 echo "=== G. fail-closed corrupt input ==="
 json_verdict() {
-  printf '%s' "$1" | python3 "${HOOK}" | python3 -c 'import json,sys
+	printf '%s' "$1" | python3 "${HOOK}" | python3 -c 'import json,sys
 raw=sys.stdin.read().strip()
 if not raw: print("ALLOW"); raise SystemExit
 print(json.loads(raw)["hookSpecificOutput"]["permissionDecision"].upper())'
 }
 got=$(json_verdict 'this is not json')
 if [[ "${got}" == "DENY" ]]; then
-  pass=$((pass + 1))
+	pass=$((pass + 1))
 else
-  fail=$((fail + 1))
-  printf '  FAIL: invalid JSON should deny, got %s\n' "${got}"
+	fail=$((fail + 1))
+	printf '  FAIL: invalid JSON should deny, got %s\n' "${got}"
 fi
 got=$(json_verdict '{"tool_name":"Bash"}')
 if [[ "${got}" == "ALLOW" ]]; then
-  pass=$((pass + 1))
+	pass=$((pass + 1))
 else
-  fail=$((fail + 1))
-  printf '  FAIL: missing tool_input should allow, got %s\n' "${got}"
+	fail=$((fail + 1))
+	printf '  FAIL: missing tool_input should allow, got %s\n' "${got}"
 fi
 
 echo
 printf 'passed: %d   failed: %d\n' "${pass}" "${fail}"
 [[ "${fail}" -eq 0 ]] && {
-  echo "PASS"
-  exit 0
+	echo "PASS"
+	exit 0
 }
 echo "FAILED"
 exit 1

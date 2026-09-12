@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+
+# Build, coverage, and generated output
+build/
+coverage/
+dist/
+.nyc_output/
+
+# Tool caches
+.cache/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.basedpyright/
+
+# Local worktree and scratch space
+.worktrees/
+worktrees/
+tmp/
+temp/
+
+# Local OS/editor noise
+.DS_Store
+Thumbs.db
+*.log
+.editorconfig

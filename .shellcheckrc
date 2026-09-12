@@ -1,0 +1,65 @@
+# ==============================================================================
+# Repository-local ShellCheck policy
+# ==============================================================================
+# Used by ShellCheck for scripts checked inside this repository.
+# Repository configuration takes precedence over user-level defaults.
+# ==============================================================================
+
+# Follow sourced files during normal local development.
+external-sources=true
+
+# Resolve relative source paths from the checked script's directory.
+source-path=SCRIPTDIR
+
+# ------------------------------------------------------------------------------
+# OPTIONAL CHECKS
+# ------------------------------------------------------------------------------
+
+# Require a default branch in case statements where appropriate.
+enable=add-default-case
+
+# Prefer direct comparison operators over logically negated conditions.
+enable=avoid-negated-conditions
+
+# Flag nullary test expressions whose behavior is commonly accidental.
+enable=avoid-nullary-conditions
+
+# Detect additional cases where command return values are unintentionally masked.
+enable=check-extra-masked-returns
+
+# Detect contexts where `set -e` is silently suppressed.
+enable=check-set-e-suppressed
+
+# Detect references to uppercase variables that were never assigned.
+enable=check-unassigned-uppercase
+
+# Prefer modern command discovery over the external `which` utility.
+enable=deprecate-which
+
+# Diagnose variables that can safely be quoted.
+enable=quote-safe-variables
+
+# Prefer explicit braces where variable boundaries benefit from them.
+enable=require-variable-braces
+
+# Prefer direct command use over unnecessary cat pipelines.
+enable=useless-use-of-cat
+
+# ------------------------------------------------------------------------------
+# DIAGNOSTIC POLICY
+# ------------------------------------------------------------------------------
+# No repository-level SCxxxx disables.
+#
+# Resolve legitimate exceptions at the narrowest possible scope using inline
+# ShellCheck directives. In particular:
+#
+#   # shellcheck source=relative/or/absolute/path
+#   source "$dynamic_path"
+#
+# or, when the source is intentionally opaque:
+#
+#   # shellcheck source=/dev/null
+#   source "$dynamic_path"
+#
+# This keeps SC1090/SC1091 useful instead of suppressing an entire class of
+# broken or unresolved source relationships globally.

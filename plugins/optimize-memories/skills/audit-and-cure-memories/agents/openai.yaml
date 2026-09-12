@@ -1,8 +1,7 @@
 interface:
   display_name: Codex Memory Audit
   short_description: Audit and reconcile project and global Codex memories
-  default_prompt:
-    Audit Codex memories in project, global, or complete scope; verify
+  default_prompt: Audit Codex memories in project, global, or complete scope; verify
     every claim against current official documentation and actual state; report complete
     proposed diffs; wait for explicit approval before changing anything.
 policy:
