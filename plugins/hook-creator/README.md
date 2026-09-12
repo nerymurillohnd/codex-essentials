@@ -17,7 +17,7 @@ exact event, handler, output, integration, trust, or automation question at hand
 The plugin contains no active hooks. Installing it does not register configuration, copy handlers,
 execute scripts, or trust hook definitions.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install from the repository's
+The current plugin version is recorded in `plugin.json`. Install from the repository's
 `main` catalog. This community marketplace does not imply official Plugins Directory publication or
 OpenAI endorsement.
 
@@ -66,7 +66,7 @@ lifecycle callbacks without a Codex lifecycle hook.
 
 | Component                                                                                           | Purpose                                                                             |
 | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [Plugin manifest](.codex-plugin/plugin.json)                                                        | Identity, version, interface, and skill declaration                                 |
+| [Plugin manifest](plugin.json)                                                                      | Portable identity, version, interface, and skill declaration                        |
 | [Hook Creator skill](skills/hook-creator/SKILL.md)                                                  | Direct operating workflow and reference router                                      |
 | [Agent metadata](skills/hook-creator/agents/openai.yaml)                                            | Codex label, prompt, and implicit invocation policy                                 |
 | [Architecture and layers](skills/hook-creator/references/architecture-and-layers.md)                | Lifecycle, source layers, placement, enablement, cwd, and paths                     |

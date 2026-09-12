@@ -12,7 +12,7 @@ Svelte Development gives Codex a focused operating contract for serious Svelte
 original architecture, implementation, and verification instructions for agents
 that need to behave like senior Svelte engineers.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 the package from the repository's `main` catalog.
 
 > [!CAUTION]
@@ -63,7 +63,7 @@ that intentionally produces Svelte code.
 
 | Component                                                                                                    | Purpose                                                                              |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                     | Plugin identity, version, and component declarations.                                |
+| [`plugin.json`](plugin.json)                                                                                 | Portable plugin identity, version, and component declarations.                       |
 | [`.mcp.json`](.mcp.json)                                                                                     | Documented direct-map Svelte MCP declaration.                                        |
 | [`skills/svelte-architect/SKILL.md`](skills/svelte-architect/SKILL.md)                                       | Planning contract for Svelte and SvelteKit architecture.                             |
 | [`skills/svelte-architect/agents/openai.yaml`](skills/svelte-architect/agents/openai.yaml)                   | Codex-facing display metadata and automatic invocation policy for architecture work. |

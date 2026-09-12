@@ -5,7 +5,7 @@ These instructions apply to every local package under `plugins/`. The root
 
 ## Generated Metadata and Package Containment
 
-Each `plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of
+Each `plugins/<plugin-id>/plugin.json` is the authored source of
 truth for that distributable plugin. Start it from
 `templates/codex-plugin-plugin.json`, complete its variable fields, and remove
 optional declarations for components the plugin does not use. The generator
@@ -27,7 +27,7 @@ generation, validation, packaging, and release.
 
 - Place each package at `plugins/<plugin-id>/`.
 - Every local package must contain
-  `plugins/<plugin-id>/.codex-plugin/plugin.json`.
+  `plugins/<plugin-id>/plugin.json`.
 - `<plugin-id>` must match the manifest `name` and satisfy the identifier rules
   in `lib/schemas/plugin.schema.json`.
 - Keep plugin resources inside the package. Do not create a repository-level
@@ -136,7 +136,7 @@ must not be hand-edited.
 
 Before merging any plugin change, verify these artifacts as one atomic set:
 
-- `.codex-plugin/plugin.json`
+- `plugin.json`
 - `skills/<skill-id>/SKILL.md` and `skills/<skill-id>/agents/openai.yaml`
 - `README.md`
 - `CHANGELOG.md`

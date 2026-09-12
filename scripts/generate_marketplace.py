@@ -21,11 +21,10 @@ MARKETPLACE = {
     "authentication": "ON_INSTALL",
 }
 PLUGINS_DIRECTORY = "plugins"
-PLUGIN_MANIFEST = Path(".codex-plugin") / "plugin.json"
+PLUGIN_MANIFEST = Path("plugin.json")
 MARKETPLACE_OUTPUT = Path(".agents") / "plugins" / "marketplace.json"
 MARKETPLACE_SCHEMA = Path("schemas") / "marketplace.schema.json"
 ALLOWED_PLUGIN_DIRECTORY_FILES = {"AGENTS.md"}
-FUNCTIONAL_COMPONENT_FIELDS = ("skills", "hooks", "mcpServers", "apps")
 REQUIRED_PLUGIN_DOCUMENTS = ("README.md", "CHANGELOG.md")
 IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER_PATTERN = re.compile(
@@ -37,13 +36,26 @@ SEMVER_PATTERN = re.compile(
 
 
 def main(args: list[str] | None = None) -> None:
+    raw_args = sys.argv[1:] if args is None else args
+    check_only = "--check" in raw_args
     root = resolve_root_from_args(
-        sys.argv[1:] if args is None else args, Path(__file__).resolve().parents[1]
+        [argument for argument in raw_args if argument != "--check"],
+        Path(__file__).resolve().parents[1],
     )
     plugins = load_plugin_manifests(root)
     marketplace = build_marketplace(root, plugins)
-    write_marketplace(root, marketplace)
-    print(f"Generated .agents/plugins/marketplace.json from {len(plugins)} plugin manifests.")
+    if check_only:
+        expected = json.dumps(marketplace, indent=2) + "\n"
+        output = root / MARKETPLACE_OUTPUT
+        assert_regular_file(output, str(MARKETPLACE_OUTPUT))
+        if output.read_text(encoding="utf-8") != expected:
+            raise ValueError(f"{MARKETPLACE_OUTPUT} is stale; run npm run marketplace:build")
+        print(
+            f"Validated .agents/plugins/marketplace.json against {len(plugins)} plugin manifests."
+        )
+    else:
+        write_marketplace(root, marketplace)
+        print(f"Generated .agents/plugins/marketplace.json from {len(plugins)} plugin manifests.")
 
 
 def run(args: list[str] | None = None) -> int:
@@ -105,9 +117,7 @@ def build_marketplace(root: Path, plugins: list[dict[str, Any]]) -> dict[str, An
                     "installation": MARKETPLACE["installation"],
                     "authentication": MARKETPLACE["authentication"],
                 },
-                "category": as_record(plugin["manifest"]["interface"], "plugin interface")[
-                    "category"
-                ],
+                "category": openai_interface(plugin["manifest"], "plugin manifest")["category"],
             }
             for plugin in plugins
         ],
@@ -191,7 +201,7 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
         "repository",
         "license",
         "keywords",
-        "interface",
+        "extensions",
     ):
         if field not in manifest:
             raise ValueError(f"{manifest_path} is missing required field: {field}")
@@ -200,12 +210,7 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
         raise ValueError(f"{manifest_path} name must match plugins/{plugin_id}")
     require_semver(manifest["version"], f"{manifest_path} version")
     require_non_empty_string(manifest["description"], f"{manifest_path} description")
-    if not any(field in manifest for field in FUNCTIONAL_COMPONENT_FIELDS):
-        components = ", ".join(FUNCTIONAL_COMPONENT_FIELDS)
-        raise ValueError(
-            f"{manifest_path} must declare at least one functional component: {components}"
-        )
-    interface = as_record(manifest["interface"], f"{manifest_path} interface")
+    interface = openai_interface(manifest, str(manifest_path))
     for field in (
         "displayName",
         "shortDescription",
@@ -223,26 +228,21 @@ def validate_plugin_manifest(plugin_id: str, manifest: dict[str, Any], manifest_
 
 
 def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> None:
-    validate_declared_components(plugin_root, manifest)
-    if isinstance(manifest.get("skills"), str):
-        skills_root = resolve_plugin_path(plugin_root, manifest["skills"], "skills")
-        assert_directory(skills_root, manifest["skills"])
-        assert_skill_directory(skills_root, manifest["skills"])
-    if isinstance(manifest.get("mcpServers"), str):
-        target = resolve_plugin_path(plugin_root, manifest["mcpServers"], "mcpServers")
-        assert_regular_file(target, manifest["mcpServers"])
+    skills_root = plugin_root / "skills"
+    assert_directory(skills_root, "skills")
+    assert_skill_directory(skills_root, "skills")
+    mcp_path = plugin_root / "mcp.json"
+    if mcp_path.exists():
         validate_referenced_mcp_configuration(
-            load_json(target, "plugin MCP configuration"), str(target)
+            load_json(mcp_path, "plugin MCP configuration"), str(mcp_path)
         )
-    if isinstance(manifest.get("apps"), str):
-        assert_regular_file(
-            resolve_plugin_path(plugin_root, manifest["apps"], "apps"), manifest["apps"]
-        )
-    for hook_path in hook_paths(manifest.get("hooks")):
+    interface = openai_interface(manifest, "plugin manifest")
+    extensions = as_record(manifest["extensions"], "plugin extensions")
+    openai = as_record(extensions["com.openai"], "plugin OpenAI extension")
+    for hook_path in hook_paths(openai.get("hooks")):
         target = resolve_plugin_path(plugin_root, hook_path, "hooks")
         assert_regular_file(target, hook_path)
         load_json(target, "plugin hooks configuration")
-    interface = as_record(manifest["interface"], "plugin interface")
     for field in ("composerIcon", "logo"):
         if isinstance(interface.get(field), str):
             assert_regular_file(
@@ -258,19 +258,10 @@ def validate_plugin_resources(plugin_root: Path, manifest: dict[str, Any]) -> No
             )
 
 
-def validate_declared_components(plugin_root: Path, manifest: dict[str, Any]) -> None:
-    conventional_components = (
-        ("skills", "skills"),
-        ("mcpServers", ".mcp.json"),
-        ("apps", ".app.json"),
-        ("hooks", "hooks"),
-    )
-    for field, relative_path in conventional_components:
-        component_path = plugin_root / relative_path
-        if component_path.exists() and field not in manifest:
-            raise ValueError(f"{field} must declare the existing ./{relative_path} component")
-        if field == "skills" and field in manifest and not component_path.exists():
-            raise ValueError(f"{manifest[field]} is missing")
+def openai_interface(manifest: dict[str, Any], label: str) -> dict[str, Any]:
+    extensions = as_record(manifest["extensions"], f"{label} extensions")
+    openai = as_record(extensions.get("com.openai"), f"{label} extensions.com.openai")
+    return as_record(openai.get("interface"), f"{label} extensions.com.openai.interface")
 
 
 def validate_plugin_documentation(plugin_root: Path, label: str) -> None:
@@ -305,7 +296,7 @@ def validate_referenced_mcp_configuration(configuration: Any, label: str) -> Non
     record = as_record(configuration, label)
     wrapped_servers = record.get("mcpServers", record.get("mcp_servers"))
     if wrapped_servers is not None:
-        if len(record) != 1:
+        if set(record) - {"$schema", "mcpServers", "mcp_servers"}:
             raise ValueError(
                 f"{label} wrapped configuration must contain exactly one top-level key"
             )
@@ -334,8 +325,8 @@ def validate_mcp_server(value: Any, label: str) -> None:
     has_url = isinstance(server.get("url"), str) and bool(server["url"])
     if has_command == has_url:
         raise ValueError(f"{label} must define exactly one of command or url")
-    if "type" in server and not (server["type"] == "http" and has_url):
-        raise ValueError(f"{label}.type is supported only for http URL servers")
+    if "type" in server and not (server["type"] in {"http", "streamable-http"} and has_url):
+        raise ValueError(f"{label}.type is supported only for HTTPS URL servers")
     if "url" in server and not str(server["url"]).startswith("https://"):
         raise ValueError(f"{label}.url must be an https URL")
     if "args" in server and not (

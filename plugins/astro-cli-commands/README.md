@@ -13,9 +13,9 @@ Astro Commands is a Codex plugin for developers who build, test, preview, and
 debug Astro projects. It checks the installed Astro CLI, prefers supported
 commands, and does not replace the project's package manager or CLI.
 
-| Version source                                           | Install ref |
-| -------------------------------------------------------- | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
+| Version source               | Install ref |
+| ---------------------------- | ----------- |
+| [`plugin.json`](plugin.json) | `main`      |
 
 > [!CAUTION]
 > Astro Commands can inspect project files, run project commands, coordinate
@@ -69,7 +69,7 @@ behavior without first re-verifying it against the installed CLI.
 
 | Component                                                                                          | Purpose                                                                        |
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                           | Plugin identity, version, and component declarations.                          |
+| [`plugin.json`](plugin.json)                                                                       | Portable plugin identity, version, and component declarations.                 |
 | [`skills/astro-commands/SKILL.md`](skills/astro-commands/SKILL.md)                                 | Authoritative command-first operating guidance.                                |
 | [`skills/astro-commands/agents/openai.yaml`](skills/astro-commands/agents/openai.yaml)             | Codex-facing skill metadata, explicit automatic invocation policy, and prompt. |
 | [`skills/astro-commands/references/commands.md`](skills/astro-commands/references/commands.md)     | Command behavior and lifecycle reference.                                      |

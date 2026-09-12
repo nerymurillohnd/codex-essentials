@@ -55,9 +55,9 @@ body:
       label: Validation plan
       description: Name the checks contributors should run before review.
       placeholder: |
-        - npm run marketplace:build
         - npm run check
-        - npm run documentation:gate -- --base <base> --head <head>
+        - npm run marketplace:build
+        - npm run marketplace:test
     validations:
       required: true
   - type: textarea

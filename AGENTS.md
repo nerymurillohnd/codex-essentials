@@ -5,7 +5,7 @@ and skills.
 
 ## Repository Model
 
-- `plugins/<plugin-id>/.codex-plugin/plugin.json` is the authored source of
+- `plugins/<plugin-id>/plugin.json` is the authored source of
   truth for plugin identity, version, metadata, and components.
 - `.agents/plugins/marketplace.json` is generated metadata. Do not edit it by
   hand.
@@ -47,7 +47,7 @@ missing prerequisite.
 Do not publish, register, or push a marketplace plugin for a pull request until
 all of the following are complete:
 
-- A valid `.codex-plugin/plugin.json` manifest exists.
+- A valid root `plugin.json` manifest exists.
 - Every included skill has a valid `skills/<skill-id>/agents/openai.yaml`.
 - The package includes `README.md`, `CHANGELOG.md`, and `LICENSE.md`.
 - The marketplace entry is generated in `.agents/plugins/marketplace.json`.

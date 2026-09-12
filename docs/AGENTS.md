@@ -52,6 +52,12 @@
 - Preserve prior reports as historical snapshots and document follow-up status in a new report or linked maintenance item.
 - Do not overwrite an audit to hide a prior finding or silently change its conclusion.
 
+## `archive/`
+
+- Store superseded audits, plans, specifications, roadmaps, and operations records here.
+- Mark every archived document as historical and non-operational.
+- Do not use archived commands, paths, checks, or claims as current contributor guidance.
+
 ## `superpowers/plans/`
 
 - Store implementation plans with exact files, interfaces, verification commands, and completion criteria.

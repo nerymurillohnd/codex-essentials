@@ -1,0 +1,41 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "doc-keeper",
+  "version": "0.2.0",
+  "description": "Keep changelogs and architecture decision records aligned with completed work, release preparation, and explicit decisions through evidence-based, infrastructure-aware procedures.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["documentation", "changelog", "adr", "release", "codex"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "DocKeeper",
+        "shortDescription": "Keep changelogs and ADRs aligned.",
+        "longDescription": "DocKeeper gives Codex an evidence-first closeout, release-preflight, and maintenance process for changelogs and architecture decision records. It detects existing infrastructure, preserves document ownership, and avoids invented history or unauthorized remote actions.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Evidence-based changelog maintenance",
+          "MADR-based architecture decision records",
+          "Implicit documentation closeout",
+          "Release changelog preflight",
+          "Release automation ownership detection",
+          "Document structure and history audits",
+          "Explicit save and remote-action boundaries"
+        ],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use DocKeeper to maintain changelogs and ADRs, close out notable changes, or prepare release history."
+        ]
+      }
+    }
+  }
+}

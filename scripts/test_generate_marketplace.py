@@ -106,13 +106,14 @@ class GenerateMarketplaceTests(unittest.TestCase):
         manifest_name: str | None = None,
     ) -> None:
         plugin = root / "plugins" / plugin_id
-        manifest = plugin / ".codex-plugin" / "plugin.json"
-        (plugin / ".codex-plugin").mkdir(parents=True)
+        manifest = plugin / "plugin.json"
+        plugin.mkdir(parents=True)
         (plugin / "README.md").write_text(f"# {plugin_id}\n", encoding="utf-8")
         (plugin / "CHANGELOG.md").write_text("# Changelog\n\n## [Unreleased]\n", encoding="utf-8")
         manifest.write_text(
             json.dumps(
                 {
+                    "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
                     "name": manifest_name or plugin_id,
                     "version": "0.1.0",
                     "description": f"{plugin_id} test plugin.",
@@ -125,18 +126,21 @@ class GenerateMarketplaceTests(unittest.TestCase):
                     "repository": "https://github.com/nerymurillohnd/codex-essentials",
                     "license": "MIT",
                     "keywords": [plugin_id],
-                    "skills": "./skills/",
-                    "interface": {
-                        "displayName": plugin_id,
-                        "shortDescription": f"{plugin_id} short description.",
-                        "longDescription": f"{plugin_id} long description.",
-                        "developerName": "Nery Samuel Murillo",
-                        "category": category,
-                        "capabilities": ["Testing"],
-                        "websiteURL": "https://github.com/nerymurillohnd/codex-essentials",
-                        "privacyPolicyURL": "https://github.com/nerymurillohnd/codex-essentials",
-                        "termsOfServiceURL": "https://github.com/nerymurillohnd/codex-essentials",
-                        "defaultPrompt": ["Use this test plugin."],
+                    "extensions": {
+                        "com.openai": {
+                            "interface": {
+                                "displayName": plugin_id,
+                                "shortDescription": f"{plugin_id} short description.",
+                                "longDescription": f"{plugin_id} long description.",
+                                "developerName": "Nery Samuel Murillo",
+                                "category": category,
+                                "capabilities": ["Testing"],
+                                "websiteURL": "https://github.com/nerymurillohnd/codex-essentials",
+                                "privacyPolicyURL": "https://github.com/nerymurillohnd/codex-essentials",
+                                "termsOfServiceURL": "https://github.com/nerymurillohnd/codex-essentials",
+                                "defaultPrompt": ["Use this test plugin."],
+                            }
+                        }
                     },
                 },
                 indent=2,

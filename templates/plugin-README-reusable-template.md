@@ -12,7 +12,7 @@
 {{Plugin name}} is a Codex plugin for {{target users and task}}. It {{primary
 behavior}} and does not {{important non-goal or boundary}}.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 the package from the repository's `main` catalog.
 
 > [!CAUTION]
@@ -62,13 +62,13 @@ inventory or implementation details.
 
 List only paths that actually exist in this package. Link each navigable path.
 
-| Component                                                                              | Purpose                                               |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                               | Plugin identity, version, and component declarations. |
-| [`skills/{{skill-name}}/SKILL.md`](skills/{{skill-name}}/SKILL.md)                     | Authoritative behavior and workflow contract.         |
-| [`skills/{{skill-name}}/agents/openai.yaml`](skills/{{skill-name}}/agents/openai.yaml) | Codex-facing label and concise invocation metadata.   |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                         | User-facing change history.                           |
-| [`LICENSE.md`](LICENSE.md)                                                             | License terms.                                        |
+| Component                                                                              | Purpose                                                        |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [`plugin.json`](plugin.json)                                                           | Portable plugin identity, version, and component declarations. |
+| [`skills/{{skill-name}}/SKILL.md`](skills/{{skill-name}}/SKILL.md)                     | Authoritative behavior and workflow contract.                  |
+| [`skills/{{skill-name}}/agents/openai.yaml`](skills/{{skill-name}}/agents/openai.yaml) | Codex-facing label and concise invocation metadata.            |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                         | User-facing change history.                                    |
+| [`LICENSE.md`](LICENSE.md)                                                             | License terms.                                                 |
 
 {{Add rows for hooks, MCP/app manifests, references, examples, or assets only
 when they are present and supported by this plugin.}}

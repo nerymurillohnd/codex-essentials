@@ -15,7 +15,7 @@ defines required and optional inputs, prioritizes callable MCPs, plugins, apps,
 standalone skills, and authoritative sources already available in the session,
 and makes the evidence, date, uncertainty, conflicts, and limitations auditable.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 the package from the repository's `main` catalog.
 
 ## 🎯 Purpose
@@ -58,7 +58,7 @@ summary fully grounded in content already supplied by the user.
 
 | Component                                                                            | Purpose                                                                                               |
 | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                             | Plugin identity, version, and component declarations.                                                 |
+| [`plugin.json`](plugin.json)                                                         | Portable plugin identity, version, and component declarations.                                        |
 | [`skills/live-research/SKILL.md`](skills/live-research/SKILL.md)                     | Complete live-evidence routing, verification, grounding, citations, checklist, and recovery contract. |
 | [`skills/live-research/agents/openai.yaml`](skills/live-research/agents/openai.yaml) | Codex-facing display metadata and invocation prompt.                                                  |
 | [`CHANGELOG.md`](CHANGELOG.md)                                                       | User-facing change history.                                                                           |

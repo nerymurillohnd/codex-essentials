@@ -38,15 +38,15 @@ Ask: `Use $block-no-verify to assess whether this repository should install the 
 
 ## 🧰 Included Components
 
-| Component                                                                  | Purpose                                                    |
-| -------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Plugin manifest](.codex-plugin/plugin.json)                               | Identity, version, interface, and skill declaration.       |
-| [Skill](skills/block-no-verify/SKILL.md)                                   | Approval-gated recommendation and installation workflow.   |
-| [Agent metadata](skills/block-no-verify/agents/openai.yaml)                | Codex-facing discovery metadata.                           |
-| [Installation contract](skills/block-no-verify/references/installation.md) | Scope, composition, test, trust, and rollback rules.       |
-| [Templates](skills/block-no-verify/assets/templates/)                      | Python handler, project/user configuration, and Bash test. |
-| [Changelog](CHANGELOG.md)                                                  | User-facing change history.                                |
-| [License](LICENSE.md)                                                      | MIT terms.                                                 |
+| Component                                                                  | Purpose                                                       |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [Plugin manifest](plugin.json)                                             | Portable identity, version, interface, and skill declaration. |
+| [Skill](skills/block-no-verify/SKILL.md)                                   | Approval-gated recommendation and installation workflow.      |
+| [Agent metadata](skills/block-no-verify/agents/openai.yaml)                | Codex-facing discovery metadata.                              |
+| [Installation contract](skills/block-no-verify/references/installation.md) | Scope, composition, test, trust, and rollback rules.          |
+| [Templates](skills/block-no-verify/assets/templates/)                      | Python handler, project/user configuration, and Bash test.    |
+| [Changelog](CHANGELOG.md)                                                  | User-facing change history.                                   |
+| [License](LICENSE.md)                                                      | MIT terms.                                                    |
 
 ## 🖥️ Requirements and compatibility
 
