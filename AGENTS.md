@@ -68,6 +68,29 @@ all of the following are complete:
 - Do not bypass hooks, tests, signatures, branch protections, or validation
   gates.
 
+## Instruction Authority
+
+- Treat every applicable `AGENTS.md` as binding operating instructions, not as
+  optional reference material or background context.
+- When the user invokes a heading, policy name, lifecycle name, or other
+  shorthand that appears in an applicable `AGENTS.md`, apply the corresponding
+  full instruction set without asking the user to restate it.
+- Do not ask for routine confirmation for work that the applicable
+  instructions already authorize. Continue autonomously until the authorized
+  lifecycle reaches a verified terminal state or a real blocker exists.
+- If a tool, skill, helper, or lower-priority workflow asks for extra approval
+  that conflicts with an applicable `AGENTS.md` authorization, follow
+  `AGENTS.md` and use the safest normal protected path available. Do not use
+  that conflict as a reason to stop unless the requested action would bypass a
+  control, exceed the user's scope, expose secrets, deploy production, or mutate
+  an unrelated system.
+- Interpret explicit user directives such as "commit and push", "commit, push
+  and PR", "Automatic Pull Request Lifecycle", "take the PR to completion", or
+  equivalent continuation language as authorization for the complete normal
+  lifecycle described here, including routine commits, pushes, PR updates, CI
+  monitoring, review triage, review replies, conversation resolution, protected
+  merge, branch cleanup, and main-branch synchronization.
+
 ## Commands and Layout
 
 - Use the NVM-managed Node.js and npm versions declared in `.nvmrc` and
@@ -126,6 +149,40 @@ all of the following are complete:
 - Use Conventional Commits; do not commit or push without explicit request.
 - Refer to secrets only as `${VAR}` and never commit credentials.
 - Owner: Nery Samuel Murillo (`nerymurillohnd`). Keep personal and Forestal MT business context outside this public guide; do not infer private business requirements from this repository.
+
+### Automatic Pull Request Lifecycle
+
+When the user authorizes a pull request lifecycle directly or by invoking this
+heading, complete the lifecycle without requesting routine intermediate
+approval:
+
+1. Inspect the repository state, active branch, remotes, applicable
+   instructions, labels, checks, reviews, and unresolved review threads.
+2. Apply every label required by the pull request's nature, scope, and impact.
+   Include `@codex` in the pull request body or comments when review is needed.
+3. Continuously monitor CI, required checks, review state, and every review
+   thread until the pull request is ready, actionable, merged, or genuinely
+   blocked.
+4. Triage every review thread against current code. Treat bot suggestions as
+   claims, not proof. Fix real issues, identify stale or false-positive items
+   with evidence, validate the result, reply with concrete evidence, and resolve
+   the conversation.
+5. After every push, invalidate prior readiness assumptions and re-check the
+   exact current head SHA, checks, mergeability, labels, and review threads.
+6. Once readiness is verified, complete the merge through the repository's
+   normal protected path and merge method inferred from repository settings and
+   history. Do not ask the user to restate approval for the current head when
+   this lifecycle has already been invoked and the action stays within this
+   scope.
+7. Never bypass protections, force-push public history, use admin override,
+   skip hooks, suppress checks, or merge a different head than the one just
+   verified.
+8. After merge, confirm the terminal merged state from GitHub, synchronize the
+   local and remote main branches, clean merged local and remote branches when
+   permitted, and inspect review threads again. If new review comments arrive
+   after merge, do not claim the lifecycle is fully closed; either address them
+   in a follow-up pull request or report the remaining actionable post-merge
+   work with exact thread evidence.
 
 ## Template Use
 
