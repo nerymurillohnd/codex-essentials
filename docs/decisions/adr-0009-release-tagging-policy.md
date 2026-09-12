@@ -28,6 +28,19 @@ local tag list is empty, and repository policy already states that Release
 Please may create plugin tags and GitHub Releases but must not publish packages
 or upload release assets.
 
+Verification snapshot:
+
+- Date: 2026-09-12.
+- Repository revision inspected:
+  `f84edca89e2a39152b1279d547a1ef1212433224`.
+- Evidence:
+  - `git show f84edca89e2a39152b1279d547a1ef1212433224:package.json`
+    reported root package version `0.1.0`.
+  - `git fetch origin --tags` followed by
+    `git tag --list --sort=-version:refname` reported no visible local tags.
+- Verification status: current for the inspected revision and fetched tag state
+  on 2026-09-12; future repository state must be re-verified before release.
+
 ## Decision Outcome
 
 Repository release tags use a leading `v` followed by a valid Semantic
@@ -69,6 +82,27 @@ Published release contents are immutable from a policy perspective. Corrective
 changes require a new version. GitHub Releases for this marketplace do not
 upload package artifacts, publish packages, or attach generated release assets
 unless a later accepted decision explicitly changes that policy.
+
+## Alternatives Considered
+
+- Root-only tags such as `v0.2.0` for every release, including independent
+  plugin releases. Rejected because it cannot distinguish whole-marketplace
+  releases from plugin-only release lines.
+- Plugin tags without the existing namespace prefix, such as
+  `<plugin-id>/v0.2.0`. Rejected because contributor guidance and Release Please
+  automation already use `plugin/<plugin-id>/v<semver>`, and changing the
+  immutable tag namespace would split future operator expectations.
+- Plain SemVer tags without a leading `v`, such as `0.2.0`. Rejected because
+  GitHub's release UI and repository guidance commonly use `v`-prefixed tag
+  names while keeping manifest and package versions as plain SemVer.
+- Publishing packages or attaching generated distribution assets to GitHub
+  Releases. Rejected because this repository is a Git-backed plugin marketplace;
+  release automation may create tags and GitHub Releases but must not publish
+  packages or upload release assets.
+- Moving or deleting incorrect published release tags as a repair strategy.
+  Rejected because published release contents are policy-immutable; repair
+  requires a corrected follow-up version or a documented recovery path that
+  resumes release creation for an already published tag.
 
 ## Consequences
 

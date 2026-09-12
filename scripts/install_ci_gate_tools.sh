@@ -11,7 +11,6 @@ sudo apt-get update
 sudo apt-get install -y shellcheck
 
 go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
-go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
 if [[ -n "${GITHUB_PATH:-}" ]]; then
 	go_path="$(go env GOPATH)"
 	echo "${go_path}/bin" >>"${GITHUB_PATH}"

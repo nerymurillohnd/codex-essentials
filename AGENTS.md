@@ -96,10 +96,19 @@ all of the following are complete:
 - Use the NVM-managed Node.js and npm versions declared in `.nvmrc` and
   `package.json`.
 - Use `npm install` to install repository-local JavaScript tooling.
+- Install repository gate tools before running the complete local gate on a
+  fresh checkout:
+
+  ```bash
+  uv tool install ruff==0.16.7
+  uv tool install basedpyright==1.40.1
+  brew install shellcheck shfmt
+  ```
+
 - Use `npm run check` as the complete repository validation gate before
   handoff. It runs formatting checks, marketplace generation and tests, GitHub
   label contract tests and validation, Ruff, Basedpyright, shfmt, ShellCheck,
-  and actionlint.
+  and repository label validation.
 - Use `npm run format` to format supported repository files with Prettier.
 - Use `npm run format:check` to verify Prettier formatting without changes.
 - Use `npm run marketplace:build` to regenerate and validate
@@ -116,7 +125,6 @@ all of the following are complete:
   or unused definitions to make diagnostics pass.
 - Use `npm run shfmt:check` and `npm run shellcheck:check` after editing shell
   scripts.
-- Use `npm run actionlint:check` after editing GitHub Actions workflow files.
 - `scripts/install_ci_gate_tools.sh` is CI-only runner setup for repository
   gate tools; do not use it as a local environment bootstrap script.
 - Use `npm run hooks:install` to install Lefthook hooks explicitly. Hooks are

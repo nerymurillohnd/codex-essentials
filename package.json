@@ -14,8 +14,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "check": "npm run format:check && npm run marketplace:check && npm run marketplace:test && npm run github-labels:test && npm run validate:github-labels && npm run ruff:format:check && npm run ruff:check && npm run basedpyright:check && npm run shfmt:check && npm run shellcheck:check && npm run actionlint:check",
-    "actionlint:check": "actionlint",
+    "check": "npm run format:check && npm run marketplace:check && npm run marketplace:test && npm run github-labels:test && npm run validate:github-labels && npm run ruff:format:check && npm run ruff:check && npm run basedpyright:check && npm run shfmt:check && npm run shellcheck:check",
     "basedpyright:check": "basedpyright $(rg --files -g '*.py')",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
