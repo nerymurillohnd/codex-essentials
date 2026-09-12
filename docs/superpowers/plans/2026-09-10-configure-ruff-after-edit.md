@@ -256,9 +256,7 @@ for (const scenario of [
   "unfixable",
 ]) {
   const result = runPythonTemplateTest(materializeTemplates(), scenario);
-  expect(result.status, `${scenario}: ${result.stdout}${result.stderr}`).toBe(
-    0,
-  );
+  expect(result.status, `${scenario}: ${result.stdout}${result.stderr}`).toBe(0);
 }
 ```
 
@@ -296,10 +294,7 @@ Expected: all exit `0`; the tests prove no unsafe fixes, no unreported-file writ
 ```ts
 it("documents approval, attribution, rollback, and marketplace discovery", () => {
   const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
-  const sources = readFileSync(
-    join(skillRoot, "references", "sources-and-attribution.md"),
-    "utf8",
-  );
+  const sources = readFileSync(join(skillRoot, "references", "sources-and-attribution.md"), "utf8");
 
   expect(readme).toContain("Human Approval Boundaries");
   expect(readme).toContain("does not create or activate a hook");
@@ -356,9 +351,7 @@ Expected: focused test and Markdown checks pass.
 
 ```ts
 it("registers the initial package release", () => {
-  expect(
-    releaseConfig.packages["plugins/configure-ruff-after-edit"],
-  ).toMatchObject({
+  expect(releaseConfig.packages["plugins/configure-ruff-after-edit"]).toMatchObject({
     "package-name": "configure-ruff-after-edit",
     component: "plugin/configure-ruff-after-edit",
     "initial-version": "0.1.0",

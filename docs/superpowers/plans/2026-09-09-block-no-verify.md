@@ -59,14 +59,7 @@ release-please-config.json                            # New independent componen
 - [ ] **Step 1: Write the failing test for package shape and materialized templates**
 
 ```ts
-import {
-  chmodSync,
-  cpSync,
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-} from "node:fs";
+import { chmodSync, cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -74,13 +67,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const pluginRoot = resolve(repositoryRoot, "plugins", "block-no-verify");
-const templateRoot = resolve(
-  pluginRoot,
-  "skills",
-  "block-no-verify",
-  "assets",
-  "templates",
-);
+const templateRoot = resolve(pluginRoot, "skills", "block-no-verify", "assets", "templates");
 const temporaryRoots: string[] = [];
 
 function materializeTemplates(): string {
@@ -106,9 +93,7 @@ function runTemplateTest(root: string) {
 }
 
 afterEach(() =>
-  temporaryRoots
-    .splice(0)
-    .forEach((root) => rmSync(root, { recursive: true, force: true })),
+  temporaryRoots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })),
 );
 
 describe("block-no-verify skill templates", () => {
@@ -122,9 +107,7 @@ describe("block-no-verify skill templates", () => {
     const projectConfig = JSON.parse(
       readFileSync(join(templateRoot, "project-hooks.json"), "utf8"),
     );
-    const userConfig = JSON.parse(
-      readFileSync(join(templateRoot, "user-hooks.json"), "utf8"),
-    );
+    const userConfig = JSON.parse(readFileSync(join(templateRoot, "user-hooks.json"), "utf8"));
     expect(projectConfig.hooks.PreToolUse[0].matcher).toBe("^Bash$");
     expect(userConfig.hooks.PreToolUse[0].hooks[0].command).toContain(
       "${HOME}/.codex/hooks/block-no-verify.py",
@@ -249,10 +232,7 @@ Expected: every command exits `0`.
 
 ```ts
 it("keeps installation behavior in the skill instead of an active plugin hook", () => {
-  const skill = readFileSync(
-    join(pluginRoot, "skills", "block-no-verify", "SKILL.md"),
-    "utf8",
-  );
+  const skill = readFileSync(join(pluginRoot, "skills", "block-no-verify", "SKILL.md"), "utf8");
   const readme = readFileSync(join(pluginRoot, "README.md"), "utf8");
   expect(skill).toContain("explicit approval");
   expect(skill).toContain("project or user scope");

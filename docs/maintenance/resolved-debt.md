@@ -14,8 +14,10 @@ the current follow-up in [pending-debt.md](pending-debt.md).
   resolution, with administrator enforcement and force-push and deletion
   protection enabled. The pre-commit ShellCheck, shfmt, and Ruff controls
   remain in force. Verified through the GitHub branch-protection API and
-  `npm run check` (116 tests). See
-  [ADR-0016](../decisions/adr-0016-main-protection-single-maintainer.md).
+  `npm run check` (116 tests). The previous ADR reference was removed during
+  the 2026-09-12 decision-baseline reset; current gate and hook policy is
+  recorded in
+  [ADR-0003](../decisions/adr-0003-quality-gates-and-explicit-hooks.md).
 
 - 2026-09-10 — Resolved pending debt `2026-09-10 [P1]` for unenforced `main`
   governance. The GitHub branch-protection API now requires one approving
@@ -99,7 +101,7 @@ the current follow-up in [pending-debt.md](pending-debt.md).
 
 - 2026-09-07 — Reconciled the current direct-documentation routing policy with
   repository guidance. The current policy in the root `AGENTS.md` and
-  [ADR-0015](../decisions/adr-0015-plugin-versioning-without-artifacts.md)
+  [ADR-0001](../decisions/adr-0001-plugin-marketplace-source-contract.md)
   requires pull requests for product, package, catalog, script, test, schema,
   security, permission, refactor, compatibility, release-control, and policy
   changes, while limiting direct pushes to non-policy plans, audits, and
@@ -122,7 +124,10 @@ the current follow-up in [pending-debt.md](pending-debt.md).
   no active Pages environment remains and the public Pages URL returns `404`.
   GitHub's managed `pages-build-deployment` history entry remains visible but
   is not repository configuration and cannot be deleted or disabled through the
-  available API. See [ADR-0012](../decisions/adr-0012-retire-github-pages.md).
+  available API. The previous ADR reference was removed during the 2026-09-12
+  decision-baseline reset; current documentation-retention policy is recorded
+  in
+  [ADR-0006](../decisions/adr-0006-documentation-retention-baseline.md).
 
 - 2026-08-27 — Closed the skill-agent metadata drift gap by requiring a
   schema-valid `skills/<skill-id>/agents/openai.yaml` for every distributed
@@ -179,8 +184,10 @@ the current follow-up in [pending-debt.md](pending-debt.md).
   macOS metadata may reappear, but remains ignored and untracked.
 - 2026-08-30 — Retired the duplicate public Codex Essentials Wiki and removed
   its `Home` page. The repository README is the public homepage and `docs/` is
-  the canonical versioned documentation surface. See
-  [ADR-0011](../decisions/adr-0011-retire-github-wiki.md).
+  the canonical versioned documentation surface. The previous ADR reference was
+  removed during the 2026-09-12 decision-baseline reset; current
+  documentation-retention policy is recorded in
+  [ADR-0006](../decisions/adr-0006-documentation-retention-baseline.md).
 - 2026-08-27 — Added `.github/dependabot.yml` for weekly npm and GitHub Actions
   dependency updates, with a limit of 10 open pull requests per ecosystem.
   Verified the configuration with Prettier and observed Dependabot update runs

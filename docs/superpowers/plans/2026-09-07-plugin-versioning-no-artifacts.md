@@ -69,10 +69,10 @@
 - Modify: `plugins/AGENTS.md`
 - Modify: `.agents/skills/declarative-plugin-pipeline/SKILL.md`
 - Modify: `.agents/skills/declarative-plugin-pipeline/references/pipeline-protocol.md`
-- Create: `docs/decisions/adr-0015-plugin-versioning-without-artifacts.md`
+- Create or update: `docs/decisions/adr-0001-plugin-marketplace-source-contract.md`
 
 - [ ] Update source-of-truth and release-policy text to permit Git tags and GitHub Release records while prohibiting uploaded artifacts and package publication.
-- [ ] Record the architectural decision, bootstrap limits, tag convention, GitHub automatic source-archive exception, and recovery path in ADR-0015.
+- [ ] Record the architectural decision, bootstrap limits, tag convention, GitHub automatic source-archive exception, and recovery path in the plugin marketplace source contract ADR.
 - [ ] Update pipeline guidance to require the release-contract check and to remove archive/checksum validation references.
 - [ ] Publish the path-and-impact routing matrix: PR plus bump, PR without bump, and the narrow documentation-only direct-push exception. Document that commit scopes cannot bypass path-based routing.
 - [ ] Run Markdownlint and local link checks for each changed Markdown file.
