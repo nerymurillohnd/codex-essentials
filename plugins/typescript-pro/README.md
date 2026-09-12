@@ -50,13 +50,14 @@ configuration, type boundaries, or type-related build failures.
 
 ## Included components
 
-| Component                                                                            | Purpose                                                     |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| [plugin.json](plugin.json)                                                           | Portable plugin identity, version, and capability metadata. |
-| [skills/typescript-pro/SKILL.md](skills/typescript-pro/SKILL.md)                     | Authoritative TypeScript workflow and review rules.         |
-| [skills/typescript-pro/agents/openai.yaml](skills/typescript-pro/agents/openai.yaml) | Codex-facing label and invocation metadata.                 |
-| [CHANGELOG.md](CHANGELOG.md)                                                         | User-facing change history.                                 |
-| [LICENSE.md](LICENSE.md)                                                             | License terms.                                              |
+| Component                                                                                      | Purpose                                                                                      |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [plugin.json](plugin.json)                                                                     | Portable plugin identity, version, and capability metadata.                                  |
+| [skills/typescript-pro/SKILL.md](skills/typescript-pro/SKILL.md)                               | Authoritative TypeScript workflow and review rules.                                          |
+| [skills/typescript-pro/agents/openai.yaml](skills/typescript-pro/agents/openai.yaml)           | Codex-facing label and invocation metadata.                                                  |
+| [boundary and state patterns](skills/typescript-pro/references/boundary-and-state-patterns.md) | Optional worked patterns for runtime parsing, state reducers, and internal event registries. |
+| [CHANGELOG.md](CHANGELOG.md)                                                                   | User-facing change history.                                                                  |
+| [LICENSE.md](LICENSE.md)                                                                       | License terms.                                                                               |
 
 ## Requirements and compatibility
 
@@ -149,6 +150,9 @@ Use $typescript-pro to inspect this repository's tsconfig and one external-data 
   it globally.
 - Type-level constraints do not replace authentication, authorization, inventory,
   pricing, or other runtime controls.
+- The optional advanced-pattern reference is intentionally narrow. It is not a
+  reason to add generic builders, recursive utility types, or typed event
+  infrastructure without a demonstrated design need.
 
 ## Failure and recovery
 
@@ -184,6 +188,7 @@ controlled construction proves the domain shape.
 ## Documentation and support
 
 - [Authoritative skill](skills/typescript-pro/SKILL.md)
+- [Boundary and state patterns](skills/typescript-pro/references/boundary-and-state-patterns.md)
 - [Changelog](CHANGELOG.md)
 - [Codex Essentials marketplace](../../README.md)
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)

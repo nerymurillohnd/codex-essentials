@@ -8,6 +8,13 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-12
+
+### Added
+
+- Optional worked patterns for runtime-validated external data, exhaustive
+  state reducers, and typed internal event registries.
+
 ## [0.1.0] - 2026-09-12
 
 ### Added

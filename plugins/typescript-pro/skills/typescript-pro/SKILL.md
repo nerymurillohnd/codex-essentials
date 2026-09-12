@@ -161,6 +161,12 @@ function parseUser(value: unknown): User {
 }
 ```
 
+For a complete boundary parser, a discriminated state reducer, or an internal
+typed event registry, read
+[boundary and state patterns](references/boundary-and-state-patterns.md). Use
+that reference only when the task needs one of those designs; it is not a
+catalog of abstractions to copy into ordinary code.
+
 ## Money, quantity, and client-controlled values
 
 Judge money and quantity separately from ordinary typing. A price, quantity,
