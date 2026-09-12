@@ -13,9 +13,9 @@ Codex Memory Audit is installed as `optimize-memories`. It audits and reconciles
 Codex memory artifacts across project and global scopes, verifies claims against
 current authority, and prepares a complete proposal before any approved change.
 
-| Version source                                           | Install ref |
-| -------------------------------------------------------- | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
+| Version source               | Install ref |
+| ---------------------------- | ----------- |
+| [`plugin.json`](plugin.json) | `main`      |
 
 > [!CAUTION]
 > Discovery, verification, and reporting are non-mutating. Memory changes occur
@@ -63,13 +63,13 @@ skills, repositories, branches, or remote services instead of memory artifacts.
 
 ## 🧰 Included Components
 
-| Component                                                                                                | Purpose                                               |
-| -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                 | Plugin identity, version, and component declarations. |
-| [`skills/audit-and-cure-memories/SKILL.md`](skills/audit-and-cure-memories/SKILL.md)                     | Phase-gated audit and approval workflow.              |
-| [`skills/audit-and-cure-memories/agents/openai.yaml`](skills/audit-and-cure-memories/agents/openai.yaml) | Codex-facing skill metadata and invocation prompt.    |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                           | User-facing release history.                          |
-| [`LICENSE.md`](LICENSE.md)                                                                               | MIT license terms.                                    |
+| Component                                                                                                | Purpose                                                        |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [`plugin.json`](plugin.json)                                                                             | Portable plugin identity, version, and component declarations. |
+| [`skills/audit-and-cure-memories/SKILL.md`](skills/audit-and-cure-memories/SKILL.md)                     | Phase-gated audit and approval workflow.                       |
+| [`skills/audit-and-cure-memories/agents/openai.yaml`](skills/audit-and-cure-memories/agents/openai.yaml) | Codex-facing skill metadata and invocation prompt.             |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                           | User-facing release history.                                   |
+| [`LICENSE.md`](LICENSE.md)                                                                               | MIT license terms.                                             |
 
 No hooks, scripts, MCP servers, apps, or runtime dependencies are bundled.
 

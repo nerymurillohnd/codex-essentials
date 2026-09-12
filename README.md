@@ -133,14 +133,14 @@ for current host, marketplace, manifest, and distribution behavior.
 
 ## 📦 What is included
 
-| Path                                  | Role                                                                           |
-| ------------------------------------- | ------------------------------------------------------------------------------ |
-| `.agents/plugins/marketplace.json`    | Generated catalog and plugin ordering.                                         |
-| `plugins/<plugin-id>/`                | Self-contained distributable plugin packages.                                  |
-| `plugins/*/.codex-plugin/plugin.json` | Authored plugin identity, version, and component declarations.                 |
-| `docs/`                               | Maintainer architecture, contributor, operational, and decision documentation. |
-| `schemas/`, `scripts/`                | Repository schemas, generators, validators, checks, and quality tooling.       |
-| `.github/`                            | Repository contribution and issue configuration.                               |
+| Path                               | Role                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------------ |
+| `.agents/plugins/marketplace.json` | Generated catalog and plugin ordering.                                         |
+| `plugins/<plugin-id>/`             | Self-contained distributable plugin packages.                                  |
+| `plugins/*/plugin.json`            | Authored portable plugin identity, version, and component declarations.        |
+| `docs/`                            | Maintainer architecture, contributor, operational, and decision documentation. |
+| `schemas/`, `scripts/`             | Repository schemas, generators, validators, checks, and quality tooling.       |
+| `.github/`                         | Repository contribution and issue configuration.                               |
 
 The schemas, generators, validators, and quality checks in this repository are
 maintainer tooling used to create, review, and maintain the marketplace. They
@@ -208,7 +208,6 @@ for requirements, permissions, and verification.
 
 - [Issues](https://github.com/nerymurillohnd/codex-essentials/issues)
 - [Discussions](https://github.com/nerymurillohnd/codex-essentials/discussions)
-- [Roadmap](AGENTS.md#roadmap)
 - [MIT License](LICENSE)
 
 Codex Essentials is community-maintained and is not an official OpenAI, Codex,

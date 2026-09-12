@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "plugin.schema.json",
   "title": "Codex Plugin Manifest",
-  "description": "Strict local validation profile for .codex-plugin/plugin.json.",
+  "description": "Strict local validation profile for portable root plugin.json.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
     "repository",
     "license",
     "keywords",
-    "interface"
+    "extensions"
   ],
   "properties": {
     "name": { "$ref": "#/$defs/identifier" },
@@ -25,7 +25,7 @@
     "repository": { "$ref": "#/$defs/httpsUrl" },
     "license": { "$ref": "#/$defs/nonEmptyString" },
     "keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
-    "skills": { "const": "./skills/" },
+    "$schema": { "type": "string", "pattern": "^https://agent-plugins.org/schemas/" },
     "mcpServers": {
       "oneOf": [
         { "const": "./.mcp.json" },
@@ -57,14 +57,21 @@
         }
       ]
     },
-    "interface": { "$ref": "#/$defs/interface" }
+    "extensions": {
+      "type": "object",
+      "required": ["com.openai"],
+      "properties": {
+        "com.openai": {
+          "type": "object",
+          "required": ["interface"],
+          "properties": {
+            "interface": { "$ref": "#/$defs/interface" },
+            "hooks": {}
+          }
+        }
+      }
+    }
   },
-  "anyOf": [
-    { "required": ["skills"], "properties": { "skills": {} } },
-    { "required": ["hooks"], "properties": { "hooks": {} } },
-    { "required": ["mcpServers"], "properties": { "mcpServers": {} } },
-    { "required": ["apps"], "properties": { "apps": {} } }
-  ],
   "$defs": {
     "identifier": {
       "type": "string",

@@ -6,12 +6,12 @@ changing an existing plugin product.
 ## Required Package Structure
 
 Place every plugin under `plugins/<plugin-id>`. The plugin ID must match the
-`name` declared in `plugins/<plugin-id>/.codex-plugin/plugin.json`; the
+`name` declared in `plugins/<plugin-id>/plugin.json`; the
 marketplace catalog entry is derived from that manifest.
 
 Each plugin package must include:
 
-- `plugins/<plugin-id>/.codex-plugin/plugin.json`
+- `plugins/<plugin-id>/plugin.json`
 - `plugins/<plugin-id>/README.md`
 - `plugins/<plugin-id>/CHANGELOG.md`
 
@@ -20,7 +20,7 @@ Add these only when the plugin actually uses them:
 - `plugins/<plugin-id>/skills/<skill-id>/SKILL.md` and its required
   `plugins/<plugin-id>/skills/<skill-id>/agents/openai.yaml`
 - `plugins/<plugin-id>/.app.json`
-- `plugins/<plugin-id>/.mcp.json`
+- `plugins/<plugin-id>/mcp.json`
 - `plugins/<plugin-id>/assets/`
 
 Do not create a repository-level `skills/` directory. Skill content belongs
@@ -49,7 +49,7 @@ conventional declaration is `"hooks": "./hooks/hooks.json"`.
 
 ## Documentation Requirements
 
-Start each new manifest from `templates/codex-plugin-plugin.json`, then remove
+Start each new manifest from `templates/plugin.json`, then remove
 optional component fields that do not apply. README and changelog files are
 author-owned package documents.
 
@@ -77,7 +77,7 @@ Run the strict repository pipeline so generated fields remain consistent:
 
 ```bash
 npm run marketplace:build
-npm run marketplace:check
+npm run marketplace:build
 ```
 
 Do not hand-edit the generated marketplace catalog. The pipeline validates
@@ -92,19 +92,14 @@ output in the PR description:
 
 ```bash
 npm run format:check
-npm run lint -- --max-warnings=0
-npm run typecheck
-npm run typecheck:scripts
-npx tsc6 --noEmit
-npm test
-npm run marketplace:check
+npm run check
 ```
 
 For product-affecting plugin changes, also verify that the plugin README and
 `CHANGELOG.md` `Unreleased` entry changed together:
 
 ```bash
-npm run documentation:gate -- --base <base> --head <head>
+npm run marketplace:check
 ```
 
 ## Security and Review Expectations
@@ -127,7 +122,7 @@ implementation assumptions.
 For a releasable plugin change, use a releasable Conventional Commit (`feat`,
 `fix`, or `perf`), update the package README and a non-empty `Unreleased`
 changelog entry, and submit the change through a pull request. Do not manually
-bump `plugins/<plugin-id>/.codex-plugin/plugin.json`, create a release tag, or
+bump `plugins/<plugin-id>/plugin.json`, create a release tag, or
 create a GitHub Release.
 
 After the pull request merges into `main`, Release Please determines the

@@ -28,7 +28,7 @@ delivery.
 Its imports follow Ruff's canonical order so strict lint profiles can verify
 the packaged validator without ignoring diagnostics.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 the package from the repository's `main` catalog.
 
 ## ⚡ Quick start
@@ -70,18 +70,18 @@ ordinary explanation instead of prompt design or review.
 
 ## 🧰 Included Components
 
-| Component                                                                                                              | Purpose                                                      |
-| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                               | Plugin identity, version, interface, and skill declaration.  |
-| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing, support-file map, and workflow.       |
-| [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                             | Codex-facing display and invocation metadata.                |
-| [`hooks/hooks.json`](hooks/hooks.json)                                                                                 | Stop hook for final-output validation.                       |
-| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Outer-envelope final-output gate with repair diagnostics.    |
-| [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                           | Normative procedures, domain guidance, and delivery gates.   |
-| [`skills/prompt-architect/assets/templates/`](skills/prompt-architect/assets/templates/)                               | Compact, structured, operational, and critical prompt forms. |
-| [`skills/prompt-architect/references/examples/`](skills/prompt-architect/references/examples/)                         | Calibration examples, prompt-audit reference, and scenarios. |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                                         | User-facing change history.                                  |
-| [`LICENSE.md`](LICENSE.md)                                                                                             | MIT license terms.                                           |
+| Component                                                                                                              | Purpose                                                              |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [`plugin.json`](plugin.json)                                                                                           | Portable plugin identity, version, interface, and skill declaration. |
+| [`skills/prompt-architect/SKILL.md`](skills/prompt-architect/SKILL.md)                                                 | Authoritative routing, support-file map, and workflow.               |
+| [`skills/prompt-architect/agents/openai.yaml`](skills/prompt-architect/agents/openai.yaml)                             | Codex-facing display and invocation metadata.                        |
+| [`hooks/hooks.json`](hooks/hooks.json)                                                                                 | Stop hook for final-output validation.                               |
+| [`skills/prompt-architect/scripts/validate-final-output.py`](skills/prompt-architect/scripts/validate-final-output.py) | Outer-envelope final-output gate with repair diagnostics.            |
+| [`skills/prompt-architect/references/`](skills/prompt-architect/references/)                                           | Normative procedures, domain guidance, and delivery gates.           |
+| [`skills/prompt-architect/assets/templates/`](skills/prompt-architect/assets/templates/)                               | Compact, structured, operational, and critical prompt forms.         |
+| [`skills/prompt-architect/references/examples/`](skills/prompt-architect/references/examples/)                         | Calibration examples, prompt-audit reference, and scenarios.         |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                                         | User-facing change history.                                          |
+| [`LICENSE.md`](LICENSE.md)                                                                                             | MIT license terms.                                                   |
 
 No MCP servers, apps, external services, or credentials are bundled.
 

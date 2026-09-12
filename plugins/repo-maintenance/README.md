@@ -41,7 +41,7 @@ This plugin is not a source-code implementation workflow, release publisher, lic
 
 ## Included Components
 
-- [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json): plugin identity and
+- [`plugin.json`](plugin.json): portable plugin identity and
   component declaration.
 - [`skills/repo-maintenance/SKILL.md`](skills/repo-maintenance/SKILL.md):
   routing, template selection, acceptance, and safety contract.

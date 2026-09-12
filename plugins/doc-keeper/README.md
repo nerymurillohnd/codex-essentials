@@ -14,9 +14,9 @@ release history, and architecture decision records. It preserves existing
 infrastructure, writes only confirmed facts, and does not publish or mutate
 remote state.
 
-| Version source                                           | Install ref |
-| -------------------------------------------------------- | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
+| Version source               | Install ref |
+| ---------------------------- | ----------- |
+| [`plugin.json`](plugin.json) | `main`      |
 
 > [!CAUTION]
 > DocKeeper never invents history or simulates an owning release/ADR mechanism
@@ -70,7 +70,7 @@ test-only work, or an unrelated README edit.
 
 | Component                                                                                                        | Purpose                                                                        |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                         | Plugin identity, version, and component declarations.                          |
+| [`plugin.json`](plugin.json)                                                                                     | Portable plugin identity, version, and component declarations.                 |
 | [`skills/doc-keeper/SKILL.md`](skills/doc-keeper/SKILL.md)                                                       | Authoritative routing and evidence contract.                                   |
 | [`skills/doc-keeper/agents/openai.yaml`](skills/doc-keeper/agents/openai.yaml)                                   | Codex-facing skill metadata, explicit automatic invocation policy, and prompt. |
 | [`skills/doc-keeper/references/changelog-maintenance.md`](skills/doc-keeper/references/changelog-maintenance.md) | Changelog procedures.                                                          |

@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0007
 date: 2026-09-12
 decision-makers: Nery Samuel Murillo, Codex
 consulted: Repository schemas and existing plugin manifests

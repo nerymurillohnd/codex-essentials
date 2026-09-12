@@ -16,7 +16,7 @@ recommendations; it does not perform cleanup, pruning, integration, history
 rewrites, remote mutation, or bisection until the user approves specific
 recommendation IDs.
 
-The plugin version is recorded in `.codex-plugin/plugin.json`. Install the
+The plugin version is recorded in `plugin.json`. Install the
 package from the repository's `main` catalog.
 
 > [!CAUTION]
@@ -72,19 +72,19 @@ automatic force push, or a replacement for the repository's own access controls.
 
 ## Included Components
 
-| Component                                                                | Purpose                                                  |
-| ------------------------------------------------------------------------ | -------------------------------------------------------- |
-| [Plugin manifest](.codex-plugin/plugin.json)                             | Identity, capabilities, and bundled skill declaration.   |
-| [Routine skill](skills/routine/SKILL.md)                                 | Automatically discoverable local hygiene audit.          |
-| [Routine guidance](skills/routine/references/routine-hygiene.md)         | Candidate and local-branch evidence rules.               |
-| [Deep skill](skills/deep/SKILL.md)                                       | Explicit topology, recovery, and high-risk audit.        |
-| [Debug skill](skills/debug/SKILL.md)                                     | Explicit regression, attribution, and code-search audit. |
-| [Debug guidance](skills/debug/references/debugging-with-git.md)          | `grep`, `blame`, and `bisect` decision and safety rules. |
-| [Revision guidance](skills/deep/references/revisions-and-integration.md) | Revision proof and integration decision rules.           |
-| [Recovery guidance](skills/deep/references/topology-and-recovery.md)     | Worktree, stash, remote, and reflog procedures.          |
-| [Object guidance](skills/deep/references/object-store-and-provenance.md) | Ref, pack, configuration, and provenance inspection.     |
-| [Changelog](CHANGELOG.md)                                                | User-facing package history.                             |
-| [License](LICENSE.md)                                                    | MIT terms.                                               |
+| Component                                                                | Purpose                                                         |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| [Plugin manifest](plugin.json)                                           | Portable identity, capabilities, and bundled skill declaration. |
+| [Routine skill](skills/routine/SKILL.md)                                 | Automatically discoverable local hygiene audit.                 |
+| [Routine guidance](skills/routine/references/routine-hygiene.md)         | Candidate and local-branch evidence rules.                      |
+| [Deep skill](skills/deep/SKILL.md)                                       | Explicit topology, recovery, and high-risk audit.               |
+| [Debug skill](skills/debug/SKILL.md)                                     | Explicit regression, attribution, and code-search audit.        |
+| [Debug guidance](skills/debug/references/debugging-with-git.md)          | `grep`, `blame`, and `bisect` decision and safety rules.        |
+| [Revision guidance](skills/deep/references/revisions-and-integration.md) | Revision proof and integration decision rules.                  |
+| [Recovery guidance](skills/deep/references/topology-and-recovery.md)     | Worktree, stash, remote, and reflog procedures.                 |
+| [Object guidance](skills/deep/references/object-store-and-provenance.md) | Ref, pack, configuration, and provenance inspection.            |
+| [Changelog](CHANGELOG.md)                                                | User-facing package history.                                    |
+| [License](LICENSE.md)                                                    | MIT terms.                                                      |
 
 ## Supported Environments
 

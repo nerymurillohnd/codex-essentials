@@ -1,6 +1,6 @@
 ---
 name: live-research
-description: Verify time-sensitive and change-sensitive claims with current authoritative sources. Use for current facts about software, APIs, integrations, regulations, statistics, people, products, compatibility, prices, schedules, or news, even when the user does not explicitly ask to browse.
+description: Use when an answer, recommendation, plan, or implementation needs current authoritative evidence because facts may have changed, including software, APIs, integrations, regulations, statistics, people, products, compatibility, prices, schedules, or news, even when the user does not explicitly ask to browse.
 ---
 
 # Live Research
@@ -189,14 +189,14 @@ or tables only when they improve comprehension.
 Cite every material external claim immediately with a dated Markdown link:
 
 ```text
-[Source name - domain, YYYY-MM-DD](URL)
+[Source name - domain, YYYY-MM-DD](https://example.com)
 ```
 
 Use the source publication or update date. When an undated current page is the
 strongest permitted evidence, cite it as:
 
 ```text
-[Source name - domain, undated; accessed YYYY-MM-DD](URL)
+[Source name - domain, undated; accessed YYYY-MM-DD](https://example.com)
 ```
 
 Classify evidence faithfully:

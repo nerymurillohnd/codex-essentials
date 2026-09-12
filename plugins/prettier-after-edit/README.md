@@ -16,9 +16,9 @@ installs dependencies, lints Markdown, or scans the repository because one file
 changed. Its skill metadata scopes activation to immediate post-edit formatting,
 not Prettier configuration work.
 
-| Version source                                           | Install ref |
-| -------------------------------------------------------- | ----------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) | `main`      |
+| Version source               | Install ref |
+| ---------------------------- | ----------- |
+| [`plugin.json`](plugin.json) | `main`      |
 
 > [!CAUTION]
 > A matching hook can write Prettier output immediately after an edit. Review
@@ -58,7 +58,7 @@ dependency installation, Markdown linting, or another quality gate after edits.
 
 | Component                                                                                        | Purpose                                                                      |
 | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                         | Plugin identity, version, interface, and component declarations.             |
+| [`plugin.json`](plugin.json)                                                                     | Portable plugin identity, interface, and component declarations.             |
 | [`hooks/hooks.json`](hooks/hooks.json)                                                           | `PostToolUse` matcher, Node command, timeout, and status text.               |
 | [`hooks/format.mjs`](hooks/format.mjs)                                                           | Payload parsing, containment, tool execution, hashing, and status reporting. |
 | [`skills/prettier-after-edit/SKILL.md`](skills/prettier-after-edit/SKILL.md)                     | Authoritative behavior and approval contract.                                |

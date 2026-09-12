@@ -13,7 +13,7 @@ Skill Design Standards is a Codex plugin for skill authors, maintainers, and
 operators. It guides design, audit, improvement, and evaluation of skills while
 preserving the user's scope and the target host's requirements.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 from the repository's `main` catalog. This Git-backed marketplace is a community
 distribution source; it does not imply universal Plugins Directory publication.
 
@@ -56,7 +56,7 @@ review, or evaluation. Use the corresponding domain workflow directly.
 
 | Component                                                                     | Purpose                                             |
 | ----------------------------------------------------------------------------- | --------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                      | Identity, version, and skills declaration.          |
+| [`plugin.json`](plugin.json)                                                  | Portable identity, version, and skills declaration. |
 | [`SKILL.md`](skills/skill-design-standards/SKILL.md)                          | Main design and audit workflow.                     |
 | [`agents/openai.yaml`](skills/skill-design-standards/agents/openai.yaml)      | Skill presentation and automatic invocation policy. |
 | [`format.md`](skills/skill-design-standards/references/format.md)             | Agent Skills format and resource layout.            |

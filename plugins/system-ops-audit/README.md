@@ -14,7 +14,7 @@ work. It routes workspace preparation, baseline design, approved execution, and
 evidence analysis through separate approval boundaries, and keeps collection
 separate from repair.
 
-The current plugin version is recorded in `.codex-plugin/plugin.json`. Install
+The current plugin version is recorded in `plugin.json`. Install
 the package from the repository's `main` catalog.
 
 > [!CAUTION]
@@ -66,18 +66,18 @@ changes, remote fleet management, or collecting secrets.
 
 ## 🧰 Included Components
 
-| Component                                                                                                                            | Purpose                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json)                                                                             | Plugin identity, version, marketplace metadata, and bundled components. |
-| [`skills/system-ops-audit/SKILL.md`](skills/system-ops-audit/SKILL.md)                                                               | Authoritative operating workflow for safe macOS baseline audit work.    |
-| [`skills/system-ops-audit/agents/openai.yaml`](skills/system-ops-audit/agents/openai.yaml)                                           | Codex-facing display metadata and invocation prompt.                    |
-| [`skills/system-ops-audit/references/macos-baseline-audit-spec.md`](skills/system-ops-audit/references/macos-baseline-audit-spec.md) | Conditional coverage tiers and evidence model for macOS baselines.      |
-| [`skills/system-ops-audit/references/safety-policy.md`](skills/system-ops-audit/references/safety-policy.md)                         | Safety, privacy, and approval boundaries.                               |
-| [`skills/system-ops-audit/references/script-design-template.md`](skills/system-ops-audit/references/script-design-template.md)       | Template for presenting audit script designs before implementation.     |
-| [`skills/system-ops-audit/references/test-scenarios.md`](skills/system-ops-audit/references/test-scenarios.md)                       | Verification scenarios for generated audit scripts and analysis.        |
-| [`skills/system-ops-audit/references/workspace-contract.md`](skills/system-ops-audit/references/workspace-contract.md)               | Filesystem contract for the local System-Ops workspace.                 |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                                                       | User-facing change history.                                             |
-| [`LICENSE.md`](LICENSE.md)                                                                                                           | MIT license terms.                                                      |
+| Component                                                                                                                            | Purpose                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [`plugin.json`](plugin.json)                                                                                                         | Portable plugin identity, version, marketplace metadata, and components. |
+| [`skills/system-ops-audit/SKILL.md`](skills/system-ops-audit/SKILL.md)                                                               | Authoritative operating workflow for safe macOS baseline audit work.     |
+| [`skills/system-ops-audit/agents/openai.yaml`](skills/system-ops-audit/agents/openai.yaml)                                           | Codex-facing display metadata and invocation prompt.                     |
+| [`skills/system-ops-audit/references/macos-baseline-audit-spec.md`](skills/system-ops-audit/references/macos-baseline-audit-spec.md) | Conditional coverage tiers and evidence model for macOS baselines.       |
+| [`skills/system-ops-audit/references/safety-policy.md`](skills/system-ops-audit/references/safety-policy.md)                         | Safety, privacy, and approval boundaries.                                |
+| [`skills/system-ops-audit/references/script-design-template.md`](skills/system-ops-audit/references/script-design-template.md)       | Template for presenting audit script designs before implementation.      |
+| [`skills/system-ops-audit/references/test-scenarios.md`](skills/system-ops-audit/references/test-scenarios.md)                       | Verification scenarios for generated audit scripts and analysis.         |
+| [`skills/system-ops-audit/references/workspace-contract.md`](skills/system-ops-audit/references/workspace-contract.md)               | Filesystem contract for the local System-Ops workspace.                  |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                                                       | User-facing change history.                                              |
+| [`LICENSE.md`](LICENSE.md)                                                                                                           | MIT license terms.                                                       |
 
 This package intentionally ships with no executable audit collector script, no
 hooks, no MCP server, no app manifest, and no bundled credentials.

@@ -8,6 +8,12 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-11
+
+### Changed
+
+- Migrated package metadata to the portable root `plugin.json` contract.
+
 ## [0.1.0] - 2026-09-11
 
 ### Added
