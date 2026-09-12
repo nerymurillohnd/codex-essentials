@@ -96,15 +96,6 @@ all of the following are complete:
 - Use the NVM-managed Node.js and npm versions declared in `.nvmrc` and
   `package.json`.
 - Use `npm install` to install repository-local JavaScript tooling.
-- Install repository gate tools before running the complete local gate on a
-  fresh checkout:
-
-  ```bash
-  uv tool install ruff==0.16.7
-  uv tool install basedpyright==1.40.1
-  brew install shellcheck shfmt
-  ```
-
 - Use `npm run check` as the complete repository validation gate before
   handoff. It runs formatting checks, marketplace generation and tests, GitHub
   label contract tests and validation, Ruff, Basedpyright, shfmt, ShellCheck,
