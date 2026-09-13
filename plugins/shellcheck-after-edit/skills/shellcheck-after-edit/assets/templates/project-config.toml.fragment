@@ -6,4 +6,3 @@ type = "command"
 command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/shellcheck-after-edit.sh" --scope "$(git rev-parse --show-toplevel)"'
 timeout = 30
 statusMessage = "Formatting and linting edited shell scripts"
-

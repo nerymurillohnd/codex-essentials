@@ -6,4 +6,3 @@ type = "command"
 command = 'bash "$HOME/.codex/hooks/shellcheck-after-edit.sh" --scope "$PWD"'
 timeout = 30
 statusMessage = "Formatting and linting edited shell scripts"
-
