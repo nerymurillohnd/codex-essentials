@@ -148,6 +148,18 @@ class GenerateMarketplaceTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("plugins/alpha-plugin/README.md is missing", result.stderr)
 
+    def test_rejects_plugin_missing_license(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            _ = (root / "plugins" / "alpha-plugin" / "LICENSE.md").unlink()
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("plugins/alpha-plugin/LICENSE.md is missing", result.stderr)
+
     def test_rejects_plugin_changelog_without_unreleased_section(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -220,6 +232,7 @@ class GenerateMarketplaceTests(unittest.TestCase):
         manifest = plugin / "plugin.json"
         plugin.mkdir(parents=True)
         _ = (plugin / "README.md").write_text(f"# {plugin_id}\n", encoding="utf-8")
+        _ = (plugin / "LICENSE.md").write_text("MIT\n", encoding="utf-8")
         _ = (plugin / "CHANGELOG.md").write_text(
             "# Changelog\n\n## [Unreleased]\n", encoding="utf-8"
         )

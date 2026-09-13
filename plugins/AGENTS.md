@@ -12,9 +12,9 @@ optional declarations for components the plugin does not use. The generator
 derives only `.agents/plugins/marketplace.json`; it never rewrites a plugin
 manifest or skill metadata.
 
-`SKILL.md`, `README.md`, and `CHANGELOG.md` remain author-owned package files.
-The marketplace pipeline validates their package context but does not replace
-their content.
+`SKILL.md`, `README.md`, `CHANGELOG.md`, and `LICENSE.md` remain author-owned
+package files. The marketplace pipeline validates their package context but
+does not replace their content.
 
 Every file, directory, asset, symlink target, executable, and declared runtime
 path used by an installed plugin must resolve within `plugins/<plugin-id>/`.
@@ -42,6 +42,26 @@ top-level fields include identity, ownership, legal metadata, keywords, and
 `interface`. The interface requires display metadata, capabilities, legal URLs,
 and an array `defaultPrompt`. At least one of `skills`, `hooks`, `apps`, or
 `mcpServers` must be declared.
+
+## Plugin Publication and Authoring Gate
+
+For a new marketplace plugin or a material change to an existing package,
+invoke `$marketplace-plugin-authoring` before creating or editing package
+artifacts. Do not publish, register, or push a marketplace plugin for a pull
+request until all of the following are complete:
+
+- A valid root `plugin.json` manifest exists.
+- Every included skill has a valid `skills/<skill-id>/agents/openai.yaml`.
+- The package includes `README.md`, `CHANGELOG.md`, and `LICENSE.md`.
+- The marketplace entry is generated in `.agents/plugins/marketplace.json`.
+- The root `README.md` catalog includes the plugin.
+- The package, its included skills, and its hooks have been evaluated,
+  validated, and verified against current official OpenAI and OpenAI Developers
+  documentation.
+
+Keep mechanically verifiable invariants in repository tooling and run the
+applicable validation gates rather than relying on this instruction file as the
+sole control.
 
 ## Referenced Resources
 
@@ -96,6 +116,7 @@ Every plugin product must include these files at its package root:
 
 - `plugins/<plugin-name>/README.md`
 - `plugins/<plugin-name>/CHANGELOG.md`
+- `plugins/<plugin-name>/LICENSE.md`
 
 The plugin README must document its purpose, included components, supported
 environments, inputs and outputs, required tools and credentials, permissions,
@@ -118,15 +139,26 @@ do not add entries for unaffected areas, and remove empty sections from the
 
 ## Catalog and Workflow
 
-- Register local packages in `.agents/plugins/marketplace.json` with a local
-  source path such as `./plugins/<plugin-id>`.
-- Use the repository pipeline so manifests and catalog entries stay aligned:
+- The generator registers local packages in `.agents/plugins/marketplace.json`
+  with source paths such as `./plugins/<plugin-id>`; never hand-edit that
+  generated file.
+- For read-only inspection when no regenerated metadata is expected, run:
+
+  ```sh
+  npm run marketplace:check
+  ```
+
+- After an authorized plugin change requires regenerated metadata, run:
 
   ```sh
   npm run marketplace:build
   npm run marketplace:check
   npm run check
   ```
+
+`npm run marketplace:check` is read-only validation. `npm run
+marketplace:build` writes the generated catalog and is appropriate only after
+an authorized plugin change requires regenerated metadata.
 
 Never commit credentials or real secret values in plugin files; use `${VAR}`
 references and document required configuration instead. The generated catalog
@@ -140,6 +172,7 @@ Before merging any plugin change, verify these artifacts as one atomic set:
 - `skills/<skill-id>/SKILL.md` and `skills/<skill-id>/agents/openai.yaml`
 - `README.md`
 - `CHANGELOG.md`
+- `LICENSE.md`
 - `.agents/plugins/marketplace.json`
 
 Required consistency checks:

@@ -36,35 +36,10 @@ Before making repository changes:
 ## Change Routing
 
 - Plugin, skill, hook, app, MCP, manifest, catalog, or release metadata: Read [plugins/AGENTS.md](plugins/AGENTS.md) and run the applicable plugin and marketplace checks.
-- Repository documentation: Read [docs/AGENTS.md](docs/AGENTS.md) and run the applicable documentation gate.
+- Repository documentation: Read [docs/AGENTS.md](docs/AGENTS.md) and run `npm run check`.
 - Tooling, schema, validator, generator, workflow, or test: Run `npm run check`.
 - Current Codex behavior or compatibility: Consult official OpenAI documentation and relevant release notes.
 - If a required maintenance file or instruction file is absent, stop and report the missing prerequisite.
-
-## Plugin Publication Gate
-
-Do not publish, register, or push a marketplace plugin for a pull request until
-all of the following are complete:
-
-- A valid root `plugin.json` manifest exists.
-- Every included skill has a valid `skills/<skill-id>/agents/openai.yaml`.
-- The package includes `README.md`, `CHANGELOG.md`, and `LICENSE.md`.
-- The marketplace entry is generated in `.agents/plugins/marketplace.json`.
-- The root `README.md` catalog includes the plugin.
-- The package, its included skills, and its hooks have been evaluated,
-  validated, and verified against current official OpenAI and OpenAI Developers
-  documentation.
-
-## Marketplace Plugin Authoring
-
-For a new marketplace plugin or a material change to an existing package,
-invoke `$marketplace-plugin-authoring` before creating or editing package
-artifacts. The skill defines the end-to-end authoring workflow; this file keeps
-the permanent routing and non-negotiable publication gates.
-
-Do not hand-edit `.agents/plugins/marketplace.json`. Keep mechanically
-verifiable invariants in repository tooling and run the applicable validation
-gates rather than relying on the skill as the sole control.
 
 ## Quality and Completion
 
@@ -106,7 +81,8 @@ gates rather than relying on the skill as the sole control.
 - Use `npm run check` as the complete repository validation gate before handoff.
 - Use `npm run format` to format supported repository files with Prettier.
 - Use `npm run format:check` to verify Prettier formatting without changes.
-- Use `npm run marketplace:build` to regenerate and validate `.agents/plugins/marketplace.json` from plugin manifests.
+- Use `npm run marketplace:check` for read-only validation of `.agents/plugins/marketplace.json` against plugin manifests.
+- Use `npm run marketplace:build` only after an authorized plugin change must regenerate `.agents/plugins/marketplace.json`.
 - Use `npm run marketplace:test` or `npm test` to run marketplace generator tests.
 - Use `npm run github-labels:test` to test GitHub label contract validation.
 - Use `npm run validate:github-labels` to validate repository GitHub label references against `.github/label-contract.json`.
@@ -129,6 +105,6 @@ gates rather than relying on the skill as the sole control.
 
 ## Template Use
 
-Read the matching repository template before creating or updating
-`plugin.json`, `agents/openai.yaml`, a root or plugin README, `CHANGELOG.md`,
-or `LICENSE.md`.
+Read the matching repository template before creating or updating a root README
+or a repository record. Package templates are routed through
+[`plugins/AGENTS.md`](plugins/AGENTS.md).

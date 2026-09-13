@@ -33,7 +33,7 @@ PLUGIN_MANIFEST = Path("plugin.json")
 MARKETPLACE_OUTPUT = Path(".agents") / "plugins" / "marketplace.json"
 MARKETPLACE_SCHEMA = Path("schemas") / "marketplace.schema.json"
 ALLOWED_PLUGIN_DIRECTORY_FILES = {"AGENTS.md"}
-REQUIRED_PLUGIN_DOCUMENTS = ("README.md", "CHANGELOG.md")
+REQUIRED_PLUGIN_DOCUMENTS = ("README.md", "CHANGELOG.md", "LICENSE.md")
 IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER_PATTERN_PARTS = (
     r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)",

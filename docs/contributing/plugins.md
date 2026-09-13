@@ -14,6 +14,7 @@ Each plugin package must include:
 - `plugins/<plugin-id>/plugin.json`
 - `plugins/<plugin-id>/README.md`
 - `plugins/<plugin-id>/CHANGELOG.md`
+- `plugins/<plugin-id>/LICENSE.md`
 
 Add these only when the plugin actually uses them:
 
@@ -28,12 +29,13 @@ inside the plugin package that distributes it.
 
 Start each `agents/openai.yaml` from `templates/agents-openai.yaml`. It
 validates against `schemas/agent.schema.json` after YAML parsing and requires
-`interface.display_name`, `interface.short_description`, and
-`policy.allow_implicit_invocation: true`; `interface.default_prompt` is
-optional and provides concise invocation framing. The file is metadata and
-prompt bootstrap, not a second copy of `SKILL.md`. Optional icons must live
-under the owning skill's `./assets/` directory, and unsupported fields,
-disabled implicit invocation, or traversal paths fail validation.
+`interface.display_name`, `interface.short_description`, and boolean
+`policy.allow_implicit_invocation`; use `true` for routine skills and `false`
+only for an explicit product boundary. `interface.default_prompt` is optional
+and provides concise invocation framing. The file is metadata and prompt
+bootstrap, not a second copy of `SKILL.md`. Optional icons must live under the
+owning skill's `./assets/` directory, and unsupported fields or traversal paths
+fail validation.
 
 ## Manifest Requirements
 
@@ -49,8 +51,8 @@ conventional declaration is `"hooks": "./hooks/hooks.json"`.
 
 ## Documentation Requirements
 
-Start each new manifest from `templates/plugin.json`, then remove
-optional component fields that do not apply. README and changelog files are
+Start each new manifest from `templates/plugin.json`, then remove optional
+component fields that do not apply. README, changelog, and license files are
 author-owned package documents.
 
 The plugin README must explain:
@@ -77,7 +79,7 @@ Run the strict repository pipeline so generated fields remain consistent:
 
 ```bash
 npm run marketplace:build
-npm run marketplace:build
+npm run marketplace:check
 ```
 
 Do not hand-edit the generated marketplace catalog. The pipeline validates
@@ -95,8 +97,9 @@ npm run format:check
 npm run check
 ```
 
-For product-affecting plugin changes, also verify that the plugin README and
-`CHANGELOG.md` `Unreleased` entry changed together:
+For product-affecting plugin changes, manually review the diff to confirm that
+the plugin README and `CHANGELOG.md` `Unreleased` entry changed together. Then
+run the structural catalog validation:
 
 ```bash
 npm run marketplace:check

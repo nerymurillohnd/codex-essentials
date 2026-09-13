@@ -74,4 +74,5 @@
 
 - Update the smallest authoritative document set when a policy, process, decision, or audit conclusion changes.
 - Add links between related documents instead of copying conflicting versions of the same rule.
-- Run the repository documentation gate and relevant validation after documentation changes.
+- Run `npm run check` and relevant validation after documentation changes. No
+  documentation-specific gate is currently defined in `package.json`.
