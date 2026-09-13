@@ -1,0 +1,43 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agents-md-master",
+  "version": "0.1.0",
+  "description": "Create, audit, refactor, maintain, and evaluate evidence-based AGENTS.md instruction systems for Codex.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "agents-md", "instructions", "governance", "documentation", "evaluation"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AGENTS.md Master",
+        "shortDescription": "Design and audit evidence-based Codex instruction systems.",
+        "longDescription": "AGENTS.md Master helps experienced operators create, audit, refactor, maintain, and evaluate Codex instruction hierarchies. It maps effective scope and authority, routes policy to the correct enforcement layer, uses progressive disclosure without losing mandatory rules, and prepares approval-gated change proposals backed by repository evidence.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "AGENTS.md system design",
+          "Instruction hierarchy audits",
+          "Progressive-disclosure refactors",
+          "Policy placement and enforcement routing",
+          "Approval-gated instruction maintenance",
+          "Scenario-based instruction evaluation"
+        ],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use $agents-md-master to audit this repository's AGENTS.md hierarchy and prepare a proposal without editing.",
+          "Use $agents-md-master to design a scoped AGENTS.md system from this repository's actual commands, topology, and controls.",
+          "Use $agents-md-master to evaluate whether this proposed instruction change improves the selected scenarios."
+        ],
+        "brandColor": "#1D4ED8"
+      }
+    }
+  }
+}

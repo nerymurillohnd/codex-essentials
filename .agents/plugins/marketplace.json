@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "agents-md-master",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agents-md-master"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "astro-cli-commands",
       "source": {
         "source": "local",

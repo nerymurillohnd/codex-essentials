@@ -35,6 +35,7 @@ session without making those capabilities marketplace dependencies.
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------ |
 | [Astro Commands](plugins/astro-cli-commands/README.md)             | Astro CLI discovery, project checks, preview, and server coordination.        | `astro-cli-commands`     |
 | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) | Protected PR coordination from local scope through verified merge or blocker. | `automatic-pr-lifecycle` |
+| [AGENTS.md Master](plugins/agents-md-master/README.md)             | Evidence-based AGENTS.md creation, audit, governance, and evaluation.         | `agents-md-master`       |
 | [Block No Verify](plugins/block-no-verify/README.md)               | Approval-gated Git verification bypass policy installation.                   | `block-no-verify`        |
 | [Configure Prettier](plugins/configure-prettier/README.md)         | Prettier auditing, configuration, drift repair, editor setup, and CI checks.  | `configure-prettier`     |
 | [Ruff After Edit](plugins/ruff-after-edit/README.md)               | Intentional Ruff guidance and approval-gated Codex edit hygiene.              | `ruff-after-edit`        |
@@ -63,6 +64,7 @@ permissions, side effects, and examples._
 | Discover and install curated Codex plugins                                    | [Plugin catalog](#-plugin-catalog)                                 |
 | Plan, check, preview, or coordinate an Astro project                          | [Astro Commands](plugins/astro-cli-commands/README.md)             |
 | Take a GitHub PR through protected validation, landing, and merge observation | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) |
+| Create, audit, or refactor a Codex AGENTS.md instruction hierarchy            | [AGENTS.md Master](plugins/agents-md-master/README.md)             |
 | Install a Git verification bypass policy with approval                        | [Block No Verify](plugins/block-no-verify/README.md)               |
 | Audit, configure, or repair Prettier setup                                    | [Configure Prettier](plugins/configure-prettier/README.md)         |
 | Use Ruff or propose Codex edit hygiene                                        | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
@@ -87,6 +89,7 @@ explains behavior, requirements, boundaries, and expected results._
 **Explore by keyword:** [Codex plugins](https://developers.openai.com/plugins/build/plugins)
 · [Astro CLI](plugins/astro-cli-commands/README.md) ·
 [Automatic PR lifecycle](plugins/automatic-pr-lifecycle/README.md) ·
+[AGENTS.md governance](plugins/agents-md-master/README.md) ·
 [Git verification policy](plugins/block-no-verify/README.md) ·
 [Prettier configuration](plugins/configure-prettier/README.md) ·
 [Ruff edit hooks](plugins/ruff-after-edit/README.md) ·
