@@ -30,6 +30,25 @@ State whether the proposal is ready for approval, partially specified, or blocke
 | -------- | ---------------- | -------------------- | --------- | ----------------- |
 |          |                  |                      |           |                   |
 
+## Semantic Governance Ledger
+
+| Rule or pair | Normalized meaning and scope | Classification | Source and enforcement owner | Retrieval rationale | Disposition |
+| ------------ | ---------------------------- | -------------- | ---------------------------- | ------------------- | ----------- |
+|              |                              |                |                              |                     |             |
+
+For every unresolved contradiction, include both short quotes with evidence,
+the applicable condition, authority analysis, recommendation, and the user
+decision required. For every deletion candidate, explain both the removal case
+and the retention case; no candidate is removed without approval.
+
+## Density, Writing, and Links
+
+- Root density signal and retained-inclusion rationales:
+- Vague, default, or non-actionable instructions:
+- Intentional reinforcements retained and why:
+- Local link and heading-anchor evidence:
+- Required linked-document self-containment limitations:
+
 ## Proposed Changes
 
 For every changed file, include a complete diff or complete before/after text.

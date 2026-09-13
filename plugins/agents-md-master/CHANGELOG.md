@@ -10,5 +10,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Added
 
+- Semantic-governance audits for within-file and cross-chain duplication,
+  contradictions, deletion candidates, root-density signals, writing quality,
+  and linked-guidance integrity.
+- Reviewable semantic ledgers, contradiction decision prompts, and evaluation
+  fixtures that preserve intentional reinforcement and explicit controls.
+
 - Initial marketplace plugin for evidence-based Codex `AGENTS.md` system
   creation, audit, maintenance, refactoring, and scenario-based evaluation.

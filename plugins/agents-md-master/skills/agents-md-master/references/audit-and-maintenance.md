@@ -16,6 +16,10 @@ Collect only evidence that can affect the requested decision:
 4. Source-of-truth commands from manifests, task runners, CI, and current tool
    output.
 5. Official current documentation and release evidence for material Codex claims.
+6. For a semantic-governance request, read
+   [semantic-governance.md](semantic-governance.md), normalize material
+   instructions, and compare within each file before comparing the effective
+   chain.
 
 Record each atomic claim with its location, scope, evidence source, status,
 impact, and proposed disposition. Read selected instruction files completely;
@@ -29,6 +33,9 @@ do not audit from a filename, heading, or search snippet alone.
 | Contradictory               | Two applicable instructions or sources prescribe incompatible behavior.            | Apply authority and scope analysis; retain an unresolved conflict as a blocker.              |
 | Stale                       | A command, path, capability, or assumption conflicts with current evidence.        | Cite the current owner and propose the smallest correction.                                  |
 | Duplicated                  | Equivalent policy exists in multiple active locations.                             | Keep one authoritative owner and replace duplicates with a pointer when appropriate.         |
+| Partial overlap             | Rules share a core obligation but one adds a relevant condition or phase.          | Retain only the differential material and preserve the canonical rule.                       |
+| Intentional reinforcement   | A concise repeated rule is needed at a locally relevant high-risk decision.        | Retain it with a retrieval rationale; do not call it redundant merely by wording.            |
+| Lexical-only match          | Similar words do not prescribe the same decision.                                  | Retain both; do not manufacture a duplicate finding.                                         |
 | Scope-misplaced             | A valid rule resides at the wrong hierarchy level.                                 | Move it to the narrowest applicable durable layer.                                           |
 | Enforcement gap             | Prose claims to constrain an action that requires a runtime or repository control. | Route to permissions, configuration, schemas, tests, CI, or hooks; do not imply enforcement. |
 | Untestable completion claim | A definition of done lacks observable evidence.                                    | Add source-owned validation and label unavailable checks honestly.                           |
@@ -50,6 +57,11 @@ For every proposed removal or move, preserve a traceability row:
 Never discard a mandatory approval boundary, release constraint, security
 invariant, or source-of-truth command merely to reduce length. Do not create a
 large documentation tree that depends on undocumented automatic loading.
+
+For a semantic-governance audit, include a pairwise ledger for every material
+duplication, reinforcement, overlap, contradiction, or deletion candidate.
+Record the normalized meaning, scope, source owner, enforcement owner, retrieval
+rationale, and retain/consolidate/move/flag disposition.
 
 ## Maintain from demonstrated friction
 

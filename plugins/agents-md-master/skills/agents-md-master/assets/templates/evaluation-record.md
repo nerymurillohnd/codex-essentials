@@ -20,6 +20,17 @@
 | -------- | ------------------------ | --------------------------- | ----------------- | ------- |
 |          |                          |                             |                   |         |
 
+## Semantic Governance Evidence
+
+| Check                   | Baseline evidence | Candidate evidence | False-positive guard                              | Outcome |
+| ----------------------- | ----------------- | ------------------ | ------------------------------------------------- | ------- |
+| Intra-file duplication  |                   |                    | A local refinement must not be merged             |         |
+| Cross-chain duplication |                   |                    | Intentional reinforcement must retain a rationale |         |
+| Contradiction handling  |                   |                    | Unresolved authority must block dependent edits   |         |
+| Deletion candidates     |                   |                    | Explicit controls require human review            |         |
+| Root density and style  |                   |                    | More than 60 lines is not a failure by itself     |         |
+| Linked guidance         |                   |                    | Links are navigation, not implicit instructions   |         |
+
 ## Quality Score
 
 | Criterion | Baseline score | Candidate score | Evidence and rationale |

@@ -17,13 +17,15 @@
       "interface": {
         "displayName": "AGENTS.md Master",
         "shortDescription": "Design and audit evidence-based Codex instruction systems.",
-        "longDescription": "AGENTS.md Master helps experienced operators create, audit, refactor, maintain, and evaluate Codex instruction hierarchies. It maps effective scope and authority, routes policy to the correct enforcement layer, uses progressive disclosure without losing mandatory rules, and prepares approval-gated change proposals backed by repository evidence.",
+        "longDescription": "AGENTS.md Master helps experienced operators create, audit, refactor, maintain, and evaluate Codex instruction hierarchies. It maps effective scope and authority, finds semantic duplication and contradictions, routes policy to the correct enforcement layer, and prepares approval-gated change proposals backed by repository evidence.",
         "developerName": "Nery Samuel Murillo",
         "category": "Developer Tools",
         "capabilities": [
           "AGENTS.md system design",
           "Instruction hierarchy audits",
           "Progressive-disclosure refactors",
+          "Semantic duplication and contradiction audits",
+          "Density, writing, and linked-guidance reviews",
           "Policy placement and enforcement routing",
           "Approval-gated instruction maintenance",
           "Scenario-based instruction evaluation"
@@ -33,6 +35,7 @@
         "termsOfServiceURL": "https://forestal-mt.com/terms/",
         "defaultPrompt": [
           "Use $agents-md-master to audit this repository's AGENTS.md hierarchy and prepare a proposal without editing.",
+          "Use $agents-md-master to find semantic duplication, contradictions, deletion candidates, density issues, and broken linked guidance across the effective AGENTS.md chain without editing.",
           "Use $agents-md-master to design a scoped AGENTS.md system from this repository's actual commands, topology, and controls.",
           "Use $agents-md-master to evaluate whether this proposed instruction change improves the selected scenarios."
         ],

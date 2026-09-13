@@ -12,7 +12,8 @@
 AGENTS.md Master is a Codex plugin for experienced operators and engineering
 teams that create, audit, refactor, maintain, or evaluate Codex instruction
 systems. It maps effective instruction scope, routes policy to the right durable
-layer, and prepares a reviewable proposal before consequential rewrites.
+layer, finds semantic duplication and contradictions, and prepares a reviewable
+proposal before consequential rewrites.
 
 The current plugin version is recorded in `plugin.json`. Install the package
 from the repository's `main` catalog.
@@ -40,14 +41,23 @@ Inspect actual commands, scope, sources of truth, and enforcement layers.
 Produce a proposal without editing files.
 ```
 
+For semantic governance, ask:
+
+```text
+Use $agents-md-master to audit the effective AGENTS.md chain, including global guidance.
+Find semantic duplication within and across files, contradictions, deletion candidates,
+root-density issues, vague instructions, and broken linked guidance. Do not edit files.
+```
+
 ## 🎯 Use cases
 
-| Scenario                                                    | How this plugin helps                                                                       | Expected result                                                      |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| A repository has no instruction system.                     | Uses real repository evidence to design the smallest useful hierarchy.                      | A scoped root/nested proposal with command and ownership evidence.   |
-| A root file has become a ball of mud.                       | Maps each statement to scope, owner, and durable layer before refactoring.                  | Progressive disclosure without losing mandatory policy.              |
-| Instructions conflict or claim to enforce runtime controls. | Builds an authority matrix and routes controls to permissions, configuration, CI, or hooks. | Findings with correct enforcement ownership and approval boundaries. |
-| A team wants to prove a proposed change helps.              | Defines a baseline/candidate comparison and negative controls.                              | A reproducible evaluation record with limitations.                   |
+| Scenario                                                    | How this plugin helps                                                                       | Expected result                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| A repository has no instruction system.                     | Uses real repository evidence to design the smallest useful hierarchy.                      | A scoped root/nested proposal with command and ownership evidence.                 |
+| A root file has become a ball of mud.                       | Maps each statement to scope, owner, and durable layer before refactoring.                  | Progressive disclosure without losing mandatory policy.                            |
+| Instructions conflict or claim to enforce runtime controls. | Builds an authority matrix and routes controls to permissions, configuration, CI, or hooks. | Findings with correct enforcement ownership and approval boundaries.               |
+| Instructions repeat, conflict, or become vague over time.   | Compares normalized rules within files and across the effective chain.                      | A semantic ledger with consolidation, retention, or user-decision recommendations. |
+| A team wants to prove a proposed change helps.              | Defines a baseline/candidate comparison and negative controls.                              | A reproducible evaluation record with limitations.                                 |
 
 **Not a fit when:** the task is ordinary Markdown editing, a request to install
 or configure an enforcement control directly, or unrelated repository
@@ -58,6 +68,10 @@ documentation work.
 - Create `AGENTS.md` systems from repository facts rather than generic boilerplate.
 - Audit ambiguity, contradictions, stale commands, duplicated policy, misplaced
   scope, unsafe authority, and unsupported completion claims.
+- Distinguish harmful semantic duplication from intentional reinforcement,
+  local refinement, and policy-guide-enforcement traceability.
+- Flag deletion candidates, density signals, vague wording, and broken linked
+  guidance without automatically removing explicit controls.
 - Use nested instructions, documentation, skills, schemas, scripts,
   configuration, permissions, tests, CI, and hooks according to their actual
   ownership.
@@ -65,18 +79,19 @@ documentation work.
 
 ## 🧰 Included components
 
-| Component                                                                                               | Purpose                                                     |
-| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| [`plugin.json`](plugin.json)                                                                            | Portable plugin identity, version, and component metadata.  |
-| [`SKILL.md`](skills/agents-md-master/SKILL.md)                                                          | Authoritative workflow and approval boundaries.             |
-| [`agents/openai.yaml`](skills/agents-md-master/agents/openai.yaml)                                      | Codex-facing label and invocation metadata.                 |
-| [`architecture-and-placement.md`](skills/agents-md-master/references/architecture-and-placement.md)     | Scope, placement, authority, and enforcement-routing rules. |
-| [`audit-and-maintenance.md`](skills/agents-md-master/references/audit-and-maintenance.md)               | Existing-system audit, refactor, and maintenance procedure. |
-| [`evaluation-protocol.md`](skills/agents-md-master/references/evaluation-protocol.md)                   | Quality rubric and reproducible manual fixtures.            |
-| [`agents-md-change-proposal.md`](skills/agents-md-master/assets/templates/agents-md-change-proposal.md) | Reviewable change-proposal output template.                 |
-| [`evaluation-record.md`](skills/agents-md-master/assets/templates/evaluation-record.md)                 | Baseline/candidate evidence-record template.                |
-| [`CHANGELOG.md`](CHANGELOG.md)                                                                          | User-facing product change history.                         |
-| [`LICENSE.md`](LICENSE.md)                                                                              | License terms.                                              |
+| Component                                                                                               | Purpose                                                               |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [`plugin.json`](plugin.json)                                                                            | Portable plugin identity, version, and component metadata.            |
+| [`SKILL.md`](skills/agents-md-master/SKILL.md)                                                          | Authoritative workflow and approval boundaries.                       |
+| [`agents/openai.yaml`](skills/agents-md-master/agents/openai.yaml)                                      | Codex-facing label and invocation metadata.                           |
+| [`architecture-and-placement.md`](skills/agents-md-master/references/architecture-and-placement.md)     | Scope, placement, authority, and enforcement-routing rules.           |
+| [`audit-and-maintenance.md`](skills/agents-md-master/references/audit-and-maintenance.md)               | Existing-system audit, refactor, and maintenance procedure.           |
+| [`evaluation-protocol.md`](skills/agents-md-master/references/evaluation-protocol.md)                   | Quality rubric and reproducible manual fixtures.                      |
+| [`semantic-governance.md`](skills/agents-md-master/references/semantic-governance.md)                   | Semantic duplication, contradiction, density, and link review method. |
+| [`agents-md-change-proposal.md`](skills/agents-md-master/assets/templates/agents-md-change-proposal.md) | Reviewable change-proposal output template.                           |
+| [`evaluation-record.md`](skills/agents-md-master/assets/templates/evaluation-record.md)                 | Baseline/candidate evidence-record template.                          |
+| [`CHANGELOG.md`](CHANGELOG.md)                                                                          | User-facing product change history.                                   |
+| [`LICENSE.md`](LICENSE.md)                                                                              | License terms.                                                        |
 
 ## 🖥️ Requirements and compatibility
 
@@ -102,8 +117,8 @@ effective instruction chain take precedence over this package's static guidance.
 current instruction/configuration evidence, relevant command owners, and
 optional incident or evaluation artifacts.
 **Outputs:** An effective-chain map, evidence ledger, findings, placement
-decisions, approval-gated proposal, or evaluation record. No outcome is claimed
-merely because a file parses or formats successfully.
+decisions, semantic-governance ledger, approval-gated proposal, or evaluation
+record. No outcome is claimed merely because a file parses or formats successfully.
 
 ## Required tools and credentials
 
@@ -175,7 +190,9 @@ git diff --check
 
 For a consumer smoke test, start a new Codex thread in a non-production
 repository and request a read-only audit. Confirm that the report identifies the
-effective instruction chain and does not claim runtime enforcement from prose.
+effective instruction chain, distinguishes semantic duplicates from intentional
+reinforcement, surfaces unresolved contradictions for the user, and does not
+claim runtime enforcement from prose.
 This smoke test checks workflow behavior; it does not prove universal outcome
 improvement.
 
@@ -186,6 +203,10 @@ improvement.
 - Current Codex behavior, host capabilities, and retrieval routes can change;
   material compatibility must be reverified.
 - Quality scores support structured review but do not replace human judgment.
+- Semantic classification is reviewable reasoning, not an automatic proof; a
+  root over 60 lines is a review signal, not a universal failure.
+- Community heuristics can inform questions, but official documentation and
+  repository evidence determine compatibility and current behavior.
 - Outcome, token, cost, and timing claims require captured baseline/candidate
   evidence under comparable conditions.
 
@@ -203,6 +224,7 @@ adding stronger prose to `AGENTS.md`.
 - [Architecture and placement](skills/agents-md-master/references/architecture-and-placement.md)
 - [Audit and maintenance](skills/agents-md-master/references/audit-and-maintenance.md)
 - [Evaluation protocol](skills/agents-md-master/references/evaluation-protocol.md)
+- [Semantic governance](skills/agents-md-master/references/semantic-governance.md)
 - [OpenAI AGENTS.md documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
 - [OpenAI plugin packaging documentation](https://developers.openai.com/plugins/build/plugins)
 - [Changelog](CHANGELOG.md)
