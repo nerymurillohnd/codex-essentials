@@ -1,0 +1,5 @@
+# Consumer-owned ShellCheck profile. Use only through approved --rcfile wiring.
+source-path=SCRIPTDIR
+external-sources=true
+enable=all
+

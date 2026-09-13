@@ -1,0 +1,39 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "shellcheck-after-edit",
+  "version": "0.1.0",
+  "description": "Format and lint edited shell scripts with approval-gated consumer-owned Codex hooks.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "email": "nerymurillohnd@gmail.com",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "homepage": "https://forestal-mt.com",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["shellcheck", "shfmt", "shell", "hooks", "quality", "developer-tools"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "ShellCheck After Edit",
+        "shortDescription": "Format and lint edited shell scripts.",
+        "longDescription": "Use ShellCheck and shfmt on reported .sh and .bash edits through an approval-gated, consumer-owned Codex PostToolUse hook. Installation exposes the skill and references only; it does not activate or install a hook.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Exact-file shfmt then ShellCheck after approved edits",
+          "Project or user scope assessment",
+          "hooks.json or inline config.toml wiring",
+          "Independent ShellCheck and shfmt policy selection"
+        ],
+        "websiteURL": "https://forestal-mt.com",
+        "privacyPolicyURL": "https://forestal-mt.com/privacy/",
+        "termsOfServiceURL": "https://forestal-mt.com/terms/",
+        "defaultPrompt": [
+          "Use $shellcheck-after-edit to lint shell scripts or propose an approval-gated ShellCheck and shfmt edit hook."
+        ],
+        "brandColor": "#0F766E"
+      }
+    }
+  }
+}

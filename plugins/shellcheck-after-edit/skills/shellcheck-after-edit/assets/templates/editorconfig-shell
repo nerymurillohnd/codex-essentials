@@ -1,0 +1,13 @@
+# Merge after reviewing existing root EditorConfig policy.
+[*.sh]
+indent_style = space
+indent_size = 2
+shell_variant = posix
+simplify = true
+
+[*.bash]
+indent_style = space
+indent_size = 2
+shell_variant = bash
+simplify = true
+
