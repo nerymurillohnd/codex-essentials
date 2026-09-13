@@ -1,0 +1,7 @@
+interface:
+  display_name: "AGENTS.md Master"
+  short_description: "Create and audit evidence-based Codex instruction systems"
+  default_prompt: "Use $agents-md-master to audit this AGENTS.md hierarchy and prepare a proposal without editing files."
+
+policy:
+  allow_implicit_invocation: true
