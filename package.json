@@ -24,6 +24,7 @@
     "marketplace:build": "python3 scripts/generate_marketplace.py",
     "marketplace:check": "python3 scripts/generate_marketplace.py --check",
     "marketplace:test": "python3 scripts/test_generate_marketplace.py",
+    "shellcheck-after-edit:test": "python3 scripts/test_shellcheck_after_edit_plugin.py",
     "ruff:check": "ruff check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py scripts/validate_github_labels.py scripts/test_validate_github_labels.py",
     "ruff:format:check": "ruff format --check --force-exclude -- scripts/generate_marketplace.py scripts/test_generate_marketplace.py scripts/validate_github_labels.py scripts/test_validate_github_labels.py",
     "shellcheck:check": "shellcheck scripts/install_ci_gate_tools.sh plugins/block-no-verify/skills/block-no-verify/assets/templates/test-block-no-verify.sh",
