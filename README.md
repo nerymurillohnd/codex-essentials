@@ -35,7 +35,7 @@ session without making those capabilities marketplace dependencies.
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------ |
 | [Astro Commands](plugins/astro-cli-commands/README.md)             | Astro CLI discovery, project checks, preview, and server coordination.        | `astro-cli-commands`     |
 | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) | Protected PR coordination from local scope through verified merge or blocker. | `automatic-pr-lifecycle` |
-| [AGENTS.md Master](plugins/agents-md-master/README.md)             | Evidence-based AGENTS.md creation, audit, governance, and evaluation.         | `agents-md-master`       |
+| [AGENTS.md Master](plugins/agents-md-master/README.md)             | Evidence-based AGENTS.md audits, semantic governance, and evaluation.         | `agents-md-master`       |
 | [Block No Verify](plugins/block-no-verify/README.md)               | Approval-gated Git verification bypass policy installation.                   | `block-no-verify`        |
 | [Configure Prettier](plugins/configure-prettier/README.md)         | Prettier auditing, configuration, drift repair, editor setup, and CI checks.  | `configure-prettier`     |
 | [Ruff After Edit](plugins/ruff-after-edit/README.md)               | Intentional Ruff guidance and approval-gated Codex edit hygiene.              | `ruff-after-edit`        |
@@ -59,29 +59,29 @@ permissions, side effects, and examples._
 
 ## 🎯 Choose by use case
 
-| If you need to...                                                             | Start with...                                                      |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Discover and install curated Codex plugins                                    | [Plugin catalog](#-plugin-catalog)                                 |
-| Plan, check, preview, or coordinate an Astro project                          | [Astro Commands](plugins/astro-cli-commands/README.md)             |
-| Take a GitHub PR through protected validation, landing, and merge observation | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) |
-| Create, audit, or refactor a Codex AGENTS.md instruction hierarchy            | [AGENTS.md Master](plugins/agents-md-master/README.md)             |
-| Install a Git verification bypass policy with approval                        | [Block No Verify](plugins/block-no-verify/README.md)               |
-| Audit, configure, or repair Prettier setup                                    | [Configure Prettier](plugins/configure-prettier/README.md)         |
-| Use Ruff or propose Codex edit hygiene                                        | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
-| Format and lint edited .sh/.bash files with approval-gated consumer hooks     | [ShellCheck After Edit](plugins/shellcheck-after-edit/README.md)   |
-| Format edited files with Prettier                                             | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
-| Create or repair changelogs and architecture decisions                        | [DocKeeper](plugins/doc-keeper/README.md)                          |
-| Engineer or debug Codex lifecycle hooks                                       | [Hook Creator](plugins/hook-creator/README.md)                     |
-| Audit or reconcile project and global Codex memories                          | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
-| Verify change-sensitive facts using available tools                           | [Live Research](plugins/live-research/README.md)                   |
-| Turn rough task intent into a copy-ready prompt                               | [Prompt Architect](plugins/prompt-architect/README.md)             |
-| Audit Git hygiene, recovery, or a regression before acting                    | [Repo Hygiene](plugins/repo-hygiene/README.md)                     |
-| Maintain repository documentation and debt records                            | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
-| Architect, build, or verify Svelte and SvelteKit work                         | [Svelte Development](plugins/svelte-development/README.md)         |
-| Design, audit, or evaluate reusable agent skills                              | [Skill Design Standards](plugins/skill-design-standards/README.md) |
-| Design a read-only macOS baseline audit                                       | [System Ops Audit](plugins/system-ops-audit/README.md)             |
-| Write, review, or refactor TypeScript safely                                  | [TypeScript Pro](plugins/typescript-pro/README.md)                 |
-| Verify work before a completion, handoff, commit, or PR claim                 | [Verify Completion](plugins/verify-completion/README.md)           |
+| If you need to...                                                               | Start with...                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Discover and install curated Codex plugins                                      | [Plugin catalog](#-plugin-catalog)                                 |
+| Plan, check, preview, or coordinate an Astro project                            | [Astro Commands](plugins/astro-cli-commands/README.md)             |
+| Take a GitHub PR through protected validation, landing, and merge observation   | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) |
+| Create, semantically audit, or refactor a Codex AGENTS.md instruction hierarchy | [AGENTS.md Master](plugins/agents-md-master/README.md)             |
+| Install a Git verification bypass policy with approval                          | [Block No Verify](plugins/block-no-verify/README.md)               |
+| Audit, configure, or repair Prettier setup                                      | [Configure Prettier](plugins/configure-prettier/README.md)         |
+| Use Ruff or propose Codex edit hygiene                                          | [Ruff After Edit](plugins/ruff-after-edit/README.md)               |
+| Format and lint edited .sh/.bash files with approval-gated consumer hooks       | [ShellCheck After Edit](plugins/shellcheck-after-edit/README.md)   |
+| Format edited files with Prettier                                               | [Prettier After Edit](plugins/prettier-after-edit/README.md)       |
+| Create or repair changelogs and architecture decisions                          | [DocKeeper](plugins/doc-keeper/README.md)                          |
+| Engineer or debug Codex lifecycle hooks                                         | [Hook Creator](plugins/hook-creator/README.md)                     |
+| Audit or reconcile project and global Codex memories                            | [Codex Memory Audit](plugins/optimize-memories/README.md)          |
+| Verify change-sensitive facts using available tools                             | [Live Research](plugins/live-research/README.md)                   |
+| Turn rough task intent into a copy-ready prompt                                 | [Prompt Architect](plugins/prompt-architect/README.md)             |
+| Audit Git hygiene, recovery, or a regression before acting                      | [Repo Hygiene](plugins/repo-hygiene/README.md)                     |
+| Maintain repository documentation and debt records                              | [Repository Maintenance](plugins/repo-maintenance/README.md)       |
+| Architect, build, or verify Svelte and SvelteKit work                           | [Svelte Development](plugins/svelte-development/README.md)         |
+| Design, audit, or evaluate reusable agent skills                                | [Skill Design Standards](plugins/skill-design-standards/README.md) |
+| Design a read-only macOS baseline audit                                         | [System Ops Audit](plugins/system-ops-audit/README.md)             |
+| Write, review, or refactor TypeScript safely                                    | [TypeScript Pro](plugins/typescript-pro/README.md)                 |
+| Verify work before a completion, handoff, commit, or PR claim                   | [Verify Completion](plugins/verify-completion/README.md)           |
 
 _Use cases describe the user's starting problem; the linked plugin README
 explains behavior, requirements, boundaries, and expected results._

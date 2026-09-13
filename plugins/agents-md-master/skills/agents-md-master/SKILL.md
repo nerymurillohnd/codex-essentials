@@ -49,7 +49,7 @@ CI, secrets handling, or runtime behavior.
 4. Label each claim **verified**, **partly verified**, **stale**, **false**,
    **ambiguous**, **duplicated**, **scope-misplaced**, **unsupported**, or
    **unverifiable**. Preserve unknowns as unknowns.
-5. Read only the reference required by the selected mode:
+5. Read only the references required by the selected mode and material findings:
    - For root/nested boundaries, contradiction resolution, source-of-truth
      commands, or enforcement placement, read
      [architecture-and-placement.md](references/architecture-and-placement.md).
@@ -58,6 +58,11 @@ CI, secrets handling, or runtime behavior.
      [audit-and-maintenance.md](references/audit-and-maintenance.md).
    - For a claim that an instruction system improves outcomes, read
      [evaluation-protocol.md](references/evaluation-protocol.md).
+   - For semantic duplication, contradictions, deletion candidates, root density,
+     writing quality, or linked-guidance integrity, read
+     [semantic-governance.md](references/semantic-governance.md).
+     Also read the audit or architecture reference above when the request needs
+     its selected-mode procedure or authority analysis.
 
 ## Produce the right result
 
@@ -77,6 +82,21 @@ dispositions, and a reviewable change proposal. Use
 as the output structure when a complete proposal is needed. Preserve mandatory
 policy and state exactly what is retained, moved, corrected, or intentionally
 left unresolved.
+
+For a semantic-governance request, atomize every material instruction and
+compare them in this order: first within each individual instruction file, then
+across the effective chain. Classify exact duplicates, partial overlaps,
+intentional reinforcements, local refinements, policy-guide-enforcement triads,
+contradictions, and lexical-only matches. Never remove a rule merely because it
+appears to be common model knowledge: flag deletion candidates for user review,
+identify explicit controls, and explain the retrieval rationale for every
+retained reinforcement.
+
+When a material contradiction remains after authority and source analysis,
+quote both instructions with evidence, state the applicable condition, make a
+reasoned recommendation, and ask the user whether one rule takes precedence or
+both should become conditional. Do not edit dependent instructions until that
+decision is resolved.
 
 ### Evaluate
 
@@ -108,6 +128,13 @@ Before reporting a proposal or applied change, verify the effective instruction
 chain, referenced paths, current command ownership, contradictions, generated
 artifact ownership, source dates, and applicable validation evidence. A passing
 formatter, parser, or catalog generator proves only its own narrow contract.
+
+Treat a root file over 60 lines as a review signal, not a failure. For each
+retained root inclusion above that signal, explain its repository-wide task
+trigger, source owner, retrieval value, and why a narrower layer is not safer.
+Verify local link targets and stable heading anchors when present. Linked files
+are navigation material, not implicitly loaded instructions; report when a
+required linked document is not self-contained for the task it owns.
 
 Stop and report the exact blocker when the target scope, authority, source of
 truth, current Codex behavior, approval, target identity, or recovery method is
