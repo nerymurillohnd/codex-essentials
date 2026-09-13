@@ -20,8 +20,9 @@ Score factual accuracy, scope relevance, actionability, policy/enforcement
 placement, source-of-truth clarity, intra-file semantic coherence, cross-chain
 semantic coherence, intentional reinforcement handling, contradiction handling,
 deletion-candidate safety, progressive disclosure, density and root-inclusion
-rationale, command and definition-of-done accuracy, authority and secret safety,
-maintenance and stale-reference handling, and current Codex compatibility.
+rationale, command and definition-of-done accuracy, approval boundaries,
+authority and secret safety, maintenance and stale-reference handling, and
+current Codex compatibility.
 
 The candidate fails regardless of score when it makes a false enforcement
 claim, leaves a material contradiction unresolved, invents a canonical command,
