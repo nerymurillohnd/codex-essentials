@@ -5,10 +5,9 @@ import json
 import os
 from pathlib import Path
 import shutil
-import stat
 import subprocess
 import tempfile
-from typing import Final
+from typing import Final, cast
 import unittest
 
 ROOT: Final = Path(__file__).resolve().parents[1]
@@ -33,51 +32,35 @@ REQUIRED: Final = (
 )
 
 
-def _write_executable(path: Path, content: str) -> None:
-    path.write_text(content, encoding="utf-8")
-    path.chmod(path.stat().st_mode | stat.S_IXUSR)
-
-
-def _run_handler(
-    handler: Path,
-    payload: str,
-    scope: Path,
-    path_env: str,
-    *,
-    shellcheckrc: Path | None = None,
-) -> subprocess.CompletedProcess[str]:
-    args = ["bash", str(handler), "--scope", str(scope)]
-    if shellcheckrc is not None:
-        args.extend(["--shellcheckrc", str(shellcheckrc)])
-    return subprocess.run(
-        args,
-        input=payload,
-        text=True,
-        capture_output=True,
-        check=False,
-        env={**os.environ, "PATH": path_env},
-    )
-
-
 class PackageContractTests(unittest.TestCase):
     def test_package_shape_and_representations(self) -> None:
         missing = [relative for relative in REQUIRED if not (PLUGIN / relative).is_file()]
         self.assertEqual(missing, [], f"missing package files: {missing}")
-        manifest = json.loads((PLUGIN / "plugin.json").read_text(encoding="utf-8"))
+        manifest = cast(
+            "dict[str, object]",
+            json.loads((PLUGIN / "plugin.json").read_text(encoding="utf-8")),
+        )
         self.assertEqual(manifest["name"], "shellcheck-after-edit")
         self.assertNotIn("hooks", manifest)
-        self.assertNotIn("hooks", manifest["extensions"]["com.openai"])
+        extensions = cast("dict[str, object]", manifest["extensions"])
+        openai_extension = cast("dict[str, object]", extensions["com.openai"])
+        self.assertNotIn("hooks", openai_extension)
         self.assertFalse((PLUGIN / "hooks").exists())
 
         for filename in ("project-hooks.json", "user-hooks.json"):
-            wiring = json.loads((TEMPLATES / filename).read_text(encoding="utf-8"))
-            groups = wiring["hooks"]["PostToolUse"]
+            wiring = cast(
+                "dict[str, object]",
+                json.loads((TEMPLATES / filename).read_text(encoding="utf-8")),
+            )
+            hooks = cast("dict[str, object]", wiring["hooks"])
+            groups = cast("list[dict[str, object]]", hooks["PostToolUse"])
             self.assertEqual(len(groups), 1)
-            self.assertEqual(len(groups[0]["hooks"]), 1)
-            handler = groups[0]["hooks"][0]
+            nested_hooks = cast("list[dict[str, object]]", groups[0]["hooks"])
+            self.assertEqual(len(nested_hooks), 1)
+            handler = nested_hooks[0]
             self.assertEqual(handler["type"], "command")
             self.assertIn("statusMessage", handler)
-            self.assertRegex(handler["command"], r"shellcheck-after-edit\.sh")
+            self.assertRegex(str(handler["command"]), r"shellcheck-after-edit\.sh")
 
         for filename in ("project-config.toml.fragment", "user-config.toml.fragment"):
             fragment = (TEMPLATES / filename).read_text(encoding="utf-8")
@@ -90,11 +73,11 @@ class PackageContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="shellcheck-after-edit-") as directory:
             root = Path(directory)
             handler = root / "shellcheck-after-edit.sh"
-            shutil.copy2(TEMPLATES / "shellcheck-after-edit.sh", handler)
+            _ = shutil.copy2(TEMPLATES / "shellcheck-after-edit.sh", handler)
             fixture_test = root / "test-shellcheck-after-edit.sh"
-            shutil.copy2(TEMPLATES / "test-shellcheck-after-edit.sh", fixture_test)
-            handler.chmod(handler.stat().st_mode | stat.S_IXUSR)
-            fixture_test.chmod(fixture_test.stat().st_mode | stat.S_IXUSR)
+            _ = shutil.copy2(TEMPLATES / "test-shellcheck-after-edit.sh", fixture_test)
+            _ = handler.chmod(handler.stat().st_mode | 0o100)
+            _ = fixture_test.chmod(fixture_test.stat().st_mode | 0o100)
             bash_path = shutil.which("bash")
             self.assertIsNotNone(bash_path)
             result = subprocess.run(
@@ -109,4 +92,4 @@ class PackageContractTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()
