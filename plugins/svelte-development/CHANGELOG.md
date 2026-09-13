@@ -8,6 +8,12 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Changed
+
+- Changed the bundled Svelte remote MCP declaration to the portable `http`
+  transport and documented the official Svelte direct Codex CLI configuration
+  with its current Codex-reference compatibility caveat.
+
 ## [0.2.0] - 2026-09-11
 
 ### Changed

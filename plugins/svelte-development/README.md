@@ -80,14 +80,14 @@ that intentionally produces Svelte code.
 
 ## Supported Environments
 
-| Requirement   | Supported value or behavior                                                                          |
-| ------------- | ---------------------------------------------------------------------------------------------------- |
-| Codex surface | Codex CLI and Codex plugin hosts that load skills and MCP declarations.                              |
-| Runtime/tools | Project-local npm, Node.js, Svelte, SvelteKit, and `sv`/`@sveltejs/mcp` when the project uses them.  |
-| Project types | Svelte 5 applications, SvelteKit applications, libraries, and migrations into Svelte.                |
-| Credentials   | None required by this plugin. Target projects may have their own secrets; do not expose them to MCP. |
-| Network       | Required for the remote Svelte MCP endpoint and optional live documentation checks.                  |
-| Last verified | `2026-09-02` against Codex 0.152.1 direct-map loading and the official Svelte MCP endpoint.          |
+| Requirement   | Supported value or behavior                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| Codex surface | Codex CLI and Codex plugin hosts that load skills and MCP declarations.                                      |
+| Runtime/tools | Project-local npm, Node.js, Svelte, SvelteKit, and `sv`/`@sveltejs/mcp` when the project uses them.          |
+| Project types | Svelte 5 applications, SvelteKit applications, libraries, and migrations into Svelte.                        |
+| Credentials   | None required by this plugin. Target projects may have their own secrets; do not expose them to MCP.         |
+| Network       | Required for the remote Svelte MCP endpoint and optional live documentation checks.                          |
+| Last verified | `2026-09-12` against Codex 0.154.0, the portable `http` MCP transport, and the official Svelte MCP endpoint. |
 
 The installed project, lockfile, and current official documentation take
 precedence over static compatibility claims in this package.
@@ -110,6 +110,8 @@ No credential is required by this plugin.
 Expected tools are:
 
 - Codex with plugin and MCP support.
+- Direct Codex CLI configuration guidance in
+  [`mcp-and-cli.md`](skills/svelte-verification/references/mcp-and-cli.md).
 - npm and Node.js for Svelte project commands.
 - Project-local Svelte/SvelteKit dependencies.
 - Optional `sv` and `@sveltejs/mcp` CLI access for project creation,
