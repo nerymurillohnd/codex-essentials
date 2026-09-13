@@ -39,8 +39,28 @@ Before a completion claim, ask Codex:
 Use $verify-completion to verify the applicable gates before I claim this work is complete.
 ```
 
-Start a new Codex conversation after installation so the installed skill is
-available to the session.
+Codex 0.154.0 refreshes newly installed plugin tools and skills in existing
+sessions. If another Codex host does not expose the installed skill, start a
+new conversation before using it.
+
+## Recommended AGENTS.md wiring
+
+**Recommended placement:** Add this to a project's `AGENTS.md` when it needs a
+durable completion standard. Put it in a global `AGENTS.md` only when the same
+evidence requirement is intended for every workspace; individual projects still
+own their acceptance criteria and validation commands.
+
+After installing the plugin, add this block to the selected instruction file:
+
+```md
+## Completion claims
+
+- Use Verify Completion before declaring work complete, correct, verified,
+  ready for handoff, ready to commit, or ready for a pull request.
+```
+
+This recommendation preserves existing controls: it does not grant authority to
+write, commit, push, deploy, alter configuration, or skip an applicable gate.
 
 ## Use cases
 

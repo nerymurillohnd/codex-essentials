@@ -8,6 +8,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Added
+
+- Documented recommended project-scoped `AGENTS.md` wiring for Astro Docs MCP
+  and Astro Commands usage.
+
 ## [0.2.0] - 2026-09-11
 
 ### Changed

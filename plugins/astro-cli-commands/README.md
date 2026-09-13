@@ -47,6 +47,28 @@ Use Astro Commands before planning this Astro task.
 Read the boundaries below before allowing dependency installation, configuration
 changes, secret creation, or server lifecycle operations.
 
+## Recommended AGENTS.md wiring
+
+**Recommended placement:** Add this to an Astro project's `AGENTS.md`. Use a
+global `AGENTS.md` only when Astro is a deliberate standard across all Codex
+workspaces; otherwise, it would impose framework-specific instructions on
+unrelated projects.
+
+After installing the plugin, add this block to the Astro project's instructions:
+
+```md
+## Astro
+
+- Use the Astro Docs MCP server when a task involves Astro framework features,
+  APIs, implementation guidance, or best practices.
+- Use Astro Commands when Astro work depends on CLI behavior, dev or preview
+  servers, integrations, type generation, CI checks, or version drift.
+```
+
+The project still defines its package manager, supported Astro version, and
+approval boundaries. Confirm the relevant MCP and installed CLI are callable
+before relying on them.
+
 ## 🎯 Use cases
 
 | Scenario                                      | How this plugin helps                                                                                                  | Expected result                                    |

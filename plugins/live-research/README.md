@@ -42,6 +42,28 @@ Then ask Codex to verify a request:
 Use Live Research to verify the current facts, cite authoritative sources, and separate verified evidence from inference.
 ```
 
+## Recommended AGENTS.md wiring
+
+**Recommended placement:** Put this policy in a global `AGENTS.md` when every
+Codex workspace should verify change-sensitive claims. Put it in a project
+`AGENTS.md` instead when the requirement applies only to that repository or
+when a project has stricter source, privacy, or network rules.
+
+After installing the plugin, add this block to the selected instruction file:
+
+```md
+## Live Research
+
+- Use Live Research when a task or response requires current or time-sensitive information.
+- Prefer current authoritative evidence over training data for software, APIs,
+  integrations, regulations, statistics, people, products, compatibility,
+  prices, schedules, and news.
+```
+
+Keep project-specific source restrictions and approval boundaries in the
+project's `AGENTS.md`; this recommendation does not authorize remote retrieval
+or disclosure of sensitive data.
+
 ## 🎯 Use cases
 
 | Scenario                                                                     | How this plugin helps                                                                               | Expected result                                                |

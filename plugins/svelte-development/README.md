@@ -36,6 +36,27 @@ Then open a Svelte or SvelteKit project and ask Codex:
 Use Svelte Development to design and implement this feature with MCP-backed docs.
 ```
 
+## Recommended AGENTS.md wiring
+
+**Recommended placement:** Add this to a Svelte or SvelteKit project's
+`AGENTS.md`. Use a global `AGENTS.md` only when every workspace uses Svelte;
+otherwise, the framework-specific routing should remain local to the project.
+
+After installing the plugin, add this block to the Svelte project's instructions:
+
+```md
+## Svelte
+
+- Use the Svelte MCP server and Svelte Development skills when working with
+  Svelte features, code, implementation guidance, or verification.
+- Start with the MCP section inventory for documentation work, then retrieve
+  only the sections relevant to the task and verify that the MCP is callable.
+```
+
+Keep project-specific framework versions, adapters, deployment constraints, and
+approval boundaries in the project instructions. This recommendation does not
+authorize sending secrets or private source to the remote MCP.
+
 ## 🎯 Use Cases
 
 | Scenario                                      | How this plugin helps                                                 | Expected result                    |
@@ -151,10 +172,9 @@ configuration only within the scope approved by the user and repository policy.
 ## 📦 Installation Behavior
 
 Installation adds this plugin's four skills and its `svelte` remote MCP server
-connection to Codex-managed state. When the plugin is enabled, a new Codex
-session loads both the skills and the remote MCP tools. Installation does not
-run `sv`, install Svelte packages, create a project, or change application
-repositories.
+connection to Codex-managed state. A new or refreshed Codex session loads both
+the skills and the remote MCP tools. Installation does not run `sv`, install
+Svelte packages, create a project, or change application repositories.
 
 ## 🔁 Uninstall and Rollback Behavior
 

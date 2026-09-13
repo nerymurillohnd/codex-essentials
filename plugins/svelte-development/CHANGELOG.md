@@ -8,6 +8,16 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Added
+
+- Documented recommended project-scoped `AGENTS.md` wiring for the Svelte MCP
+  server and Svelte Development skills.
+
+### Changed
+
+- Clarified that the bundled Svelte MCP and skills load in a refreshed or new
+  Codex session.
+
 ### Fixed
 
 - Restored the portable `streamable-http` transport required for the bundled

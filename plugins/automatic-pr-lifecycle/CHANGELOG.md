@@ -10,6 +10,8 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ### Added
 
+- Documented recommended global-or-project `AGENTS.md` wiring for GitHub MCP
+  and Automatic PR Lifecycle usage.
 - Initial marketplace package for the protected Automatic PR Lifecycle skill.
 - GitHub MCP-first routing with `gh` and `gh api` fallback guidance.
 - Exact-head readiness, landing confirmation, state reconciliation, and terminal reporting contracts.

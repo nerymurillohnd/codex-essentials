@@ -8,6 +8,11 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
+### Added
+
+- Documented a recommended global-or-project `AGENTS.md` wiring block for
+  automatic use on change-sensitive work.
+
 ## [0.2.0] - 2026-09-11
 
 ### Changed

@@ -44,6 +44,29 @@ Use $automatic-pr-lifecycle to take this pull request through its protected life
 Connect GitHub MCP before use when available. Keep an authenticated `gh` CLI
 session only when the environment needs the documented fallback.
 
+## Recommended AGENTS.md wiring
+
+**Recommended placement:** Add this to a repository's `AGENTS.md` when it uses
+GitHub pull requests. Put it in a global `AGENTS.md` only when the same
+protected GitHub workflow is intended for every workspace; repository-specific
+branch protection and merge rules must stay local.
+
+After installing the plugin, add this block to the selected instruction file:
+
+```md
+## GitHub pull requests
+
+- Use GitHub MCP tools for GitHub repositories, pull requests, reviews, CI, and
+  protected merge operations.
+- Use Automatic PR Lifecycle for GitHub pull requests from local changes through
+  protected merge and synchronization.
+```
+
+Keep repository-specific required checks, approval rules, merge queues, and
+deployment authority in that repository's instructions. This recommendation
+does not authorize force-pushes, administrative overrides, or verification
+bypasses.
+
 ## 🎯 Use cases
 
 | Scenario                                         | How this plugin helps                                                                 | Expected result                                                                           |
