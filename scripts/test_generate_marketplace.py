@@ -19,7 +19,7 @@ JsonObject = dict[str, object]
 
 
 class GenerateMarketplaceTests(unittest.TestCase):
-    def test_svelte_development_uses_portable_http_transport(self) -> None:
+    def test_svelte_development_uses_portable_streamable_http_transport(self) -> None:
         """Keep the packaged remote server aligned with the Codex plugin format."""
         raw_configuration = cast(
             "object",
@@ -34,7 +34,7 @@ class GenerateMarketplaceTests(unittest.TestCase):
         servers = cast("JsonObject", configuration["mcpServers"])
         svelte = cast("JsonObject", servers["svelte"])
 
-        self.assertEqual(svelte["type"], "http")
+        self.assertEqual(svelte["type"], "streamable-http")
         self.assertEqual(svelte["url"], "https://mcp.svelte.dev/mcp")
 
     def test_repository_catalog_includes_typescript_pro_plugin(self) -> None:

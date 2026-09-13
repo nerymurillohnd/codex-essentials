@@ -8,7 +8,7 @@ This plugin declares the official remote Svelte MCP endpoint:
 {
   "mcpServers": {
     "svelte": {
-      "type": "http",
+      "type": "streamable-http",
       "url": "https://mcp.svelte.dev/mcp"
     }
   }
