@@ -1,0 +1,7 @@
+interface:
+  display_name: "ShellCheck After Edit"
+  short_description: "Format shell edits and design approval-gated ShellCheck hooks"
+  default_prompt: "Use $shellcheck-after-edit to lint shell scripts or propose an approval-gated ShellCheck and shfmt edit hook."
+
+policy:
+  allow_implicit_invocation: true
