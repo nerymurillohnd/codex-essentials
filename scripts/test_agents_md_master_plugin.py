@@ -24,8 +24,7 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
     def test_skill_entrypoint_routes_modes_to_explicit_references(self) -> None:
         skill = SKILL.read_text(encoding="utf-8")
 
-        self.assertIn("Load one primary mode reference by default", skill)
-        self.assertIn("Read a second only when", skill)
+        self.assertIn("## Reference Loading", skill)
 
         expected_routes = {
             "create": "references/architecture-and-placement.md",
@@ -36,32 +35,26 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
             "semantic-governance": "references/semantic-governance.md",
             "evaluate": "references/evaluation-protocol.md",
         }
-        route_bullets: list[str] = []
-        current_bullet: list[str] = []
-        for line in skill.splitlines():
-            if line.startswith("- "):
-                if current_bullet:
-                    route_bullets.append(" ".join(" ".join(current_bullet).split()))
-                current_bullet = [line]
-            elif current_bullet and line.startswith("  "):
-                current_bullet.append(line.strip())
-            elif current_bullet:
-                route_bullets.append(" ".join(" ".join(current_bullet).split()))
-                current_bullet = []
-        if current_bullet:
-            route_bullets.append(" ".join(" ".join(current_bullet).split()))
+        route_bullets = [
+            " ".join(match.group(0).split())
+            for match in re.finditer(r"^- .*(?:\n  .*)*", skill, flags=re.MULTILINE)
+            if " -> " in match.group(0)
+        ]
+        actual_routes: dict[str, str] = {}
+        for bullet in route_bullets:
+            modes_text, route_text = bullet.removeprefix("- ").split(" -> ", 1)
+            modes_text = modes_text.replace(", or ", ", ").replace(" or ", ", ")
+            route_match = re.search(r"`([^`]+)`", route_text)
 
-        route_bullets = [bullet for bullet in route_bullets if " -> " in bullet]
-        for trigger, reference in expected_routes.items():
-            with self.subTest(trigger=trigger):
-                self.assertTrue(
-                    any(
-                        trigger in bullet.split(" -> ", 1)[0]
-                        and reference in bullet.split(" -> ", 1)[1]
-                        for bullet in route_bullets
-                    )
-                )
-                self.assertTrue((SKILL_ROOT / reference).is_file())
+            assert route_match is not None
+            reference = route_match.group(1)
+            for mode in [mode.strip() for mode in modes_text.split(",") if mode.strip()]:
+                self.assertNotIn(mode, actual_routes)
+                actual_routes[mode] = reference
+
+        self.assertEqual(expected_routes, actual_routes)
+        for reference in expected_routes.values():
+            self.assertTrue((SKILL_ROOT / reference).is_file())
 
     def test_default_prompt_frames_audit_without_workflow_duplication(self) -> None:
         agent_manifest = OPENAI_AGENT.read_text(encoding="utf-8")
