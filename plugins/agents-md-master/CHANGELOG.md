@@ -8,8 +8,6 @@ dates (`YYYY-MM-DD`) and keep entries concise, user-facing, and actionable.
 
 ## [Unreleased]
 
-## [0.2.1](https://github.com/nerymurillohnd/codex-essentials/compare/plugin/agents-md-master/v0.2.0...plugin/agents-md-master/v0.2.1) (2026-09-14)
-
 ### Changed
 
 - Slimmed the skill entrypoint into an explicit reference router to reduce

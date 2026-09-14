@@ -20,7 +20,8 @@ permissions, configuration, schemas, hooks, CI, or repository protection.
   config, permissions, consumer projects, tags, releases, PRs, or deployments
   until presenting the exact scoped proposal and receiving explicit approval.
 - Do not install, configure, enable, trust, or execute consumer hooks or
-  automation without separate explicit approval.
+  event-driven automation without separate explicit approval. Repository
+  validation commands remain allowed within the approved scope.
 - Preserve user, platform, developer, repo, and nested authority. Report
   conflicts instead of silently choosing a winner.
 - Never read or use `.claude/`. Never expose secrets; write variables as
