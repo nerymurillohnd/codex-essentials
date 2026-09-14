@@ -23,7 +23,6 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
 
     def test_skill_entrypoint_routes_modes_to_explicit_references(self) -> None:
         skill = SKILL.read_text(encoding="utf-8")
-        normalized_skill = " ".join(skill.split())
 
         self.assertIn("Load one primary mode reference by default", skill)
         self.assertIn("Read a second only when", skill)
@@ -37,10 +36,31 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
             "semantic-governance": "references/semantic-governance.md",
             "evaluate": "references/evaluation-protocol.md",
         }
+        route_bullets: list[str] = []
+        current_bullet: list[str] = []
+        for line in skill.splitlines():
+            if line.startswith("- "):
+                if current_bullet:
+                    route_bullets.append(" ".join(" ".join(current_bullet).split()))
+                current_bullet = [line]
+            elif current_bullet and line.startswith("  "):
+                current_bullet.append(line.strip())
+            elif current_bullet:
+                route_bullets.append(" ".join(" ".join(current_bullet).split()))
+                current_bullet = []
+        if current_bullet:
+            route_bullets.append(" ".join(" ".join(current_bullet).split()))
+
+        route_bullets = [bullet for bullet in route_bullets if " -> " in bullet]
         for trigger, reference in expected_routes.items():
             with self.subTest(trigger=trigger):
-                route_pattern = rf"{re.escape(trigger)}.*{re.escape(reference)}"
-                self.assertRegex(normalized_skill, route_pattern)
+                self.assertTrue(
+                    any(
+                        trigger in bullet.split(" -> ", 1)[0]
+                        and reference in bullet.split(" -> ", 1)[1]
+                        for bullet in route_bullets
+                    )
+                )
                 self.assertTrue((SKILL_ROOT / reference).is_file())
 
     def test_default_prompt_frames_audit_without_workflow_duplication(self) -> None:
