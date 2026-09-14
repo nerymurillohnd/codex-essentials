@@ -11,14 +11,7 @@
   "homepage": "https://forestal-mt.com",
   "repository": "https://github.com/nerymurillohnd/codex-essentials",
   "license": "MIT",
-  "keywords": [
-    "codex",
-    "agents-md",
-    "instructions",
-    "governance",
-    "documentation",
-    "evaluation"
-  ],
+  "keywords": ["codex", "agents-md", "instructions", "governance", "documentation", "evaluation"],
   "extensions": {
     "com.openai": {
       "interface": {
