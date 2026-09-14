@@ -49,7 +49,8 @@ The workflow runs on pushes to `main` and manual dispatch. It has only the
 permissions needed to create release pull requests, tags, and GitHub Releases:
 `contents: write`, `issues: write`, and `pull-requests: write`. It does not
 install packages, publish registries, build archives, upload assets, or use a
-PAT/GitHub App credential.
+PAT/GitHub App credential. It pins `googleapis/release-please-action@v5`, whose
+released runtime is Node 24; do not use the deprecated Node 20-based v4 action.
 
 ## Consequences
 

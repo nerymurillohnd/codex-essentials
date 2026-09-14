@@ -132,7 +132,7 @@ def validate_workflow(path: Path) -> None:
     if any(term in normalized for term in FORBIDDEN_WORKFLOW_TERMS):
         raise ValueError("release workflow must not publish packages or upload assets")
     required_fragments = (
-        "googleapis/release-please-action@v4",
+        "googleapis/release-please-action@v5",
         "${{ secrets.GITHUB_TOKEN }}",
         "config-file: release-please-config.json",
         "manifest-file: .release-please-manifest.json",
@@ -145,7 +145,7 @@ def validate_workflow(path: Path) -> None:
         if fragment not in content:
             raise ValueError(f"release workflow is missing required configuration: {fragment}")
     action_steps = re.findall(r"^\s*-\s+uses:\s*([^\s]+)", content, flags=re.MULTILINE)
-    if action_steps != ["googleapis/release-please-action@v4"] or "run:" in content:
+    if action_steps != ["googleapis/release-please-action@v5"] or "run:" in content:
         raise ValueError("release workflow must contain exactly one action step")
 
 
