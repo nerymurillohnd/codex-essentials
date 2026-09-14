@@ -23,9 +23,10 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
 
     def test_skill_entrypoint_routes_modes_to_explicit_references(self) -> None:
         skill = SKILL.read_text(encoding="utf-8")
+        normalized_skill = " ".join(skill.split())
 
-        self.assertIn("Load at most one primary mode reference by default", skill)
-        self.assertIn("Read a second reference only when", skill)
+        self.assertIn("Load one primary mode reference by default", skill)
+        self.assertIn("Read a second only when", skill)
 
         expected_routes = {
             "create": "references/architecture-and-placement.md",
@@ -39,17 +40,19 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
         for trigger, reference in expected_routes.items():
             with self.subTest(trigger=trigger):
                 route_pattern = rf"{re.escape(trigger)}.*{re.escape(reference)}"
-                self.assertRegex(skill, route_pattern)
+                self.assertRegex(normalized_skill, route_pattern)
                 self.assertTrue((SKILL_ROOT / reference).is_file())
 
-    def test_default_prompt_reinforces_limited_reference_loading(self) -> None:
+    def test_default_prompt_frames_audit_without_workflow_duplication(self) -> None:
         agent_manifest = OPENAI_AGENT.read_text(encoding="utf-8")
         match = re.search(r'default_prompt:\s*"([^"]+)"', agent_manifest)
 
         assert match is not None
         default_prompt = match.group(1)
         self.assertLessEqual(len(default_prompt), 120)
-        self.assertIn("load only", default_prompt)
+        self.assertIn("audit mode", default_prompt)
+        self.assertIn("do not edit", default_prompt)
+        self.assertNotIn("load only", default_prompt)
 
 
 if __name__ == "__main__":

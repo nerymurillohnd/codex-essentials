@@ -1,7 +1,7 @@
 interface:
   display_name: "AGENTS.md Master"
   short_description: "Audit AGENTS.md systems, conflicts, and semantic duplication"
-  default_prompt: "Use $agents-md-master in audit mode; load only the needed reference and do not edit."
+  default_prompt: "Use $agents-md-master in audit mode; inspect target instructions and do not edit."
 
 policy:
   allow_implicit_invocation: true

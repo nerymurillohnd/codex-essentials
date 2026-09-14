@@ -19,6 +19,8 @@ permissions, configuration, schemas, hooks, CI, or repository protection.
 - Keep discovery, audits, and proposals read-only. Do not mutate `AGENTS.md`,
   config, permissions, consumer projects, tags, releases, PRs, or deployments
   until presenting the exact scoped proposal and receiving explicit approval.
+- Approval to edit instruction files is not approval to commit, push, merge,
+  tag, release, publish, deploy, or change external state.
 - Do not install, configure, enable, trust, or execute consumer hooks or
   event-driven automation without separate explicit approval. Repository
   validation commands remain allowed within the approved scope.
@@ -29,8 +31,8 @@ permissions, configuration, schemas, hooks, CI, or repository protection.
 
 ## Reference Loading
 
-Load at most one primary mode reference by default. Read a second reference only when
-the user request or discovered evidence requires both procedures, and state why.
+Load one primary mode reference by default. Read a second only when the request
+or evidence requires both procedures, and state why.
 Do not load the README, every reference, or templates by default.
 
 - create or topology -> `references/architecture-and-placement.md`: read before
@@ -44,8 +46,8 @@ Do not load the README, every reference, or templates by default.
 - evaluate -> `references/evaluation-protocol.md`: read before comparing
   baseline/candidate or claiming improved outcomes.
 
-Use `assets/templates/agents-md-change-proposal.md` only for complete
-proposals. Use `assets/templates/evaluation-record.md` only for evaluations.
+Use `assets/templates/agents-md-change-proposal.md` only for complete proposals;
+use `assets/templates/evaluation-record.md` only for evaluations.
 
 ## Evidence Route
 
@@ -54,8 +56,8 @@ proposals. Use `assets/templates/evaluation-record.md` only for evaluations.
 2. Discover applicable `AGENTS.override.md`, `AGENTS.md`, and configured
    fallback names from Codex home and repo root through the target directory.
    Record order and scope.
-3. Verify material claims against the competent owner: repository files and
-   commands for implementation facts; configuration, permissions, hooks, CI, or
+3. Verify material claims against the owner: repository files and commands for
+   implementation facts; configuration, permissions, hooks, CI, or
    protections for controls; current official OpenAI docs and release notes for
    Codex behavior or compatibility.
 4. Classify claims as verified, partly verified, stale, false, ambiguous,
@@ -79,4 +81,4 @@ proposals. Use `assets/templates/evaluation-record.md` only for evaluations.
   unresolved.
 
 When useful, report: Result; Scope/Authority; Evidence/System; Findings;
-Changes; Validation; Recovery/Risks/Next Step.
+Changes; Validation; Risks/Next.
