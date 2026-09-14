@@ -17,14 +17,21 @@ OPENAI_AGENT = SKILL_ROOT / "agents" / "openai.yaml"
 
 class AgentsMdMasterPluginTests(unittest.TestCase):
     def test_skill_entrypoint_stays_within_context_budget(self) -> None:
-        skill_size = len(SKILL.read_bytes())
+        skill_text = SKILL.read_text(encoding="utf-8").replace("\r\n", "\n")
+        skill_size = len(skill_text.encode("utf-8"))
 
         self.assertLessEqual(skill_size, 4500)
 
     def test_skill_entrypoint_routes_modes_to_explicit_references(self) -> None:
         skill = SKILL.read_text(encoding="utf-8")
 
-        self.assertIn("## Reference Loading", skill)
+        section_match = re.search(
+            r"^## Reference Loading\n(?P<section>.*?)(?=^## )",
+            skill,
+            flags=re.DOTALL | re.MULTILINE,
+        )
+        assert section_match is not None
+        reference_loading = section_match.group("section")
 
         expected_routes = {
             "create": "references/architecture-and-placement.md",
@@ -37,7 +44,7 @@ class AgentsMdMasterPluginTests(unittest.TestCase):
         }
         route_bullets = [
             " ".join(match.group(0).split())
-            for match in re.finditer(r"^- .*(?:\n  .*)*", skill, flags=re.MULTILINE)
+            for match in re.finditer(r"^- .*(?:\n  .*)*", reference_loading, flags=re.MULTILINE)
             if " -> " in match.group(0)
         ]
         actual_routes: dict[str, str] = {}
