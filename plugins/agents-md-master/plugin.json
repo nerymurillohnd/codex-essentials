@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agents-md-master",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create, audit, refactor, maintain, and evaluate evidence-based AGENTS.md instruction systems for Codex.",
   "author": {
     "name": "Nery Samuel Murillo",
@@ -34,10 +34,10 @@
         "privacyPolicyURL": "https://forestal-mt.com/privacy/",
         "termsOfServiceURL": "https://forestal-mt.com/terms/",
         "defaultPrompt": [
-          "Use $agents-md-master to audit this repository's AGENTS.md hierarchy and prepare a proposal without editing.",
-          "Use $agents-md-master to find semantic duplication, contradictions, deletion candidates, density issues, and broken linked guidance across the effective AGENTS.md chain without editing.",
-          "Use $agents-md-master to design a scoped AGENTS.md system from this repository's actual commands, topology, and controls.",
-          "Use $agents-md-master to evaluate whether this proposed instruction change improves the selected scenarios."
+          "Use $agents-md-master in audit mode; load only the needed reference and do not edit.",
+          "Use $agents-md-master in semantic-governance mode; load only the needed reference.",
+          "Use $agents-md-master in topology mode to design a scoped AGENTS.md system.",
+          "Use $agents-md-master in evaluate mode to compare this proposal with a baseline."
         ],
         "brandColor": "#1D4ED8"
       }
