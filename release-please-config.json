@@ -1,0 +1,133 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "86127842c7629bd1a4c38b4113e8d034f346ff4f",
+  "release-type": "go",
+  "include-component-in-tag": true,
+  "include-v-in-tag": true,
+  "tag-separator": "/",
+  "separate-pull-requests": true,
+  "label": "release-control",
+  "release-label": "release-control",
+  "packages": {
+    "plugins/agents-md-master": {
+      "component": "plugin/agents-md-master",
+      "package-name": "agents-md-master",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/astro-cli-commands": {
+      "component": "plugin/astro-cli-commands",
+      "package-name": "astro-cli-commands",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/automatic-pr-lifecycle": {
+      "component": "plugin/automatic-pr-lifecycle",
+      "package-name": "automatic-pr-lifecycle",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/block-no-verify": {
+      "component": "plugin/block-no-verify",
+      "package-name": "block-no-verify",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/configure-prettier": {
+      "component": "plugin/configure-prettier",
+      "package-name": "configure-prettier",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/doc-keeper": {
+      "component": "plugin/doc-keeper",
+      "package-name": "doc-keeper",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/hook-creator": {
+      "component": "plugin/hook-creator",
+      "package-name": "hook-creator",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/live-research": {
+      "component": "plugin/live-research",
+      "package-name": "live-research",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/optimize-memories": {
+      "component": "plugin/optimize-memories",
+      "package-name": "optimize-memories",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/prettier-after-edit": {
+      "component": "plugin/prettier-after-edit",
+      "package-name": "prettier-after-edit",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/prompt-architect": {
+      "component": "plugin/prompt-architect",
+      "package-name": "prompt-architect",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/repo-hygiene": {
+      "component": "plugin/repo-hygiene",
+      "package-name": "repo-hygiene",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/repo-maintenance": {
+      "component": "plugin/repo-maintenance",
+      "package-name": "repo-maintenance",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/ruff-after-edit": {
+      "component": "plugin/ruff-after-edit",
+      "package-name": "ruff-after-edit",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/shellcheck-after-edit": {
+      "component": "plugin/shellcheck-after-edit",
+      "package-name": "shellcheck-after-edit",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/skill-design-standards": {
+      "component": "plugin/skill-design-standards",
+      "package-name": "skill-design-standards",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/svelte-development": {
+      "component": "plugin/svelte-development",
+      "package-name": "svelte-development",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/system-ops-audit": {
+      "component": "plugin/system-ops-audit",
+      "package-name": "system-ops-audit",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/typescript-pro": {
+      "component": "plugin/typescript-pro",
+      "package-name": "typescript-pro",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    },
+    "plugins/verify-completion": {
+      "component": "plugin/verify-completion",
+      "package-name": "verify-completion",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [{ "type": "json", "path": "plugin.json", "jsonpath": "$.version" }]
+    }
+  }
+}

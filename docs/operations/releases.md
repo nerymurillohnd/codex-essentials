@@ -15,6 +15,32 @@ It implements [ADR-0009](../decisions/adr-0009-release-tagging-policy.md).
 - Do not upload packages, archives, or generated release assets unless a later
   accepted decision explicitly authorizes them.
 
+## Automated plugin releases
+
+Release Please owns the normal release lifecycle for every package under
+`plugins/`. The manifest configuration records the current version of every
+plugin and the bootstrap commit immediately before the first releasable change.
+It considers only commits touching the affected plugin path, opens a separate
+release pull request for each releasable component, updates that package's
+`plugin.json` version and changelog, then creates the immutable
+`plugin/<plugin-id>/v<semver>` tag and GitHub Release after the release pull
+request merges.
+
+The workflow uses only `${GITHUB_TOKEN}` with `contents`, `issues`, and
+`pull-requests` write permissions. It never publishes packages or uploads
+assets. `${GITHUB_TOKEN}`-created release pull requests do not automatically
+trigger the repository's `pull_request` Quality workflow, so operators must use
+the normal protected pull-request lifecycle and run `npm run check` before
+landing a generated release pull request.
+
+Do not manually bump a plugin manifest, create a plugin tag, or create a plugin
+GitHub Release in the normal path. Use `workflow_dispatch` only to retry the
+configured Release Please workflow after inspecting its current remote state;
+never use it to bypass review or required validation.
+
+The manual procedures below remain for whole-marketplace releases, recovery, or
+an explicitly approved exception. They do not replace the automated plugin path.
+
 ## Before releasing
 
 Confirm the release target and local state:
