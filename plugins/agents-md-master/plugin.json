@@ -34,8 +34,8 @@
         "privacyPolicyURL": "https://forestal-mt.com/privacy/",
         "termsOfServiceURL": "https://forestal-mt.com/terms/",
         "defaultPrompt": [
-          "Use $agents-md-master in audit mode; load only the needed reference and do not edit.",
-          "Use $agents-md-master in semantic-governance mode; load only the needed reference.",
+          "Use $agents-md-master in audit mode; inspect target instructions and do not edit.",
+          "Use $agents-md-master in semantic-governance mode to review duplication and conflicts.",
           "Use $agents-md-master in topology mode to design a scoped AGENTS.md system.",
           "Use $agents-md-master in evaluate mode to compare this proposal with a baseline."
         ],
