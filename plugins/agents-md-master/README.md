@@ -15,6 +15,10 @@ systems. It maps effective instruction scope, routes policy to the right durable
 layer, finds semantic duplication and contradictions, and prepares a reviewable
 proposal before consequential rewrites.
 
+The skill entrypoint is intentionally context-light. It routes each task to one
+primary reference by default, so detailed guidance stays available without
+loading every mode into the main prompt.
+
 The current plugin version is recorded in `plugin.json`. Install the package
 from the repository's `main` catalog.
 
@@ -36,17 +40,13 @@ codex plugin list
 Then start with a read-only audit:
 
 ```text
-Use $agents-md-master to audit this repository's AGENTS.md hierarchy.
-Inspect actual commands, scope, sources of truth, and enforcement layers.
-Produce a proposal without editing files.
+Use $agents-md-master in audit mode; inspect target instructions and do not edit.
 ```
 
 For semantic governance, ask:
 
 ```text
-Use $agents-md-master to audit the effective AGENTS.md chain, including global guidance.
-Find semantic duplication within and across files, contradictions, deletion candidates,
-root-density issues, vague instructions, and broken linked guidance. Do not edit files.
+Use $agents-md-master in semantic-governance mode to review duplication and conflicts.
 ```
 
 ## 🎯 Use cases
