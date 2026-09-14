@@ -26,6 +26,10 @@ release pull request for each releasable component, updates that package's
 `plugin/<plugin-id>/v<semver>` tag and GitHub Release after the release pull
 request merges.
 
+The workflow pins `googleapis/release-please-action@v5`, which uses Node 24.
+Do not downgrade to the Node 20-based v4 action; GitHub runner compatibility
+warnings are release-control failures to correct before retrying automation.
+
 The workflow uses only `${GITHUB_TOKEN}` with `contents`, `issues`, and
 `pull-requests` write permissions. It never publishes packages or uploads
 assets. `${GITHUB_TOKEN}`-created release pull requests do not automatically
