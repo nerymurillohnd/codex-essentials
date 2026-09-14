@@ -53,14 +53,14 @@ use `assets/templates/evaluation-record.md` only for evaluations.
 
 1. Establish target repository root, subtree, current Git state, and authorized
    scope.
-2. Discover the effective chain from Codex home and repo root to target:
-   `AGENTS.override.md` replaces same-dir `AGENTS.md`; include `AGENTS.md` and
-   configured fallbacks.
-3. Verify material claims against the owner: repo files and commands for
+2. Discover the effective chain from Codex home and repo root to target.
+   same-dir `AGENTS.override.md` replaces `AGENTS.md`; fallbacks are lower
+   priority candidates, not simultaneous chain files.
+3. Verify claims against the owner: repo files and commands for
    implementation facts; config, permissions, hooks, CI, or
    protections for controls; current official OpenAI docs and release notes for
    Codex behavior or compatibility.
-4. Classify claims as verified, partly verified, stale, false, ambiguous,
+4. Classify claims: verified, partly verified, stale, false, ambiguous,
    duplicated, scope-misplaced, unsupported, or unverifiable.
 
 ## Output

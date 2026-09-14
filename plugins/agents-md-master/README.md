@@ -40,13 +40,13 @@ codex plugin list
 Then start with a read-only audit:
 
 ```text
-Use $agents-md-master in audit mode; load only the needed reference and do not edit.
+Use $agents-md-master in audit mode; inspect target instructions and do not edit.
 ```
 
 For semantic governance, ask:
 
 ```text
-Use $agents-md-master in semantic-governance mode; load only the needed reference.
+Use $agents-md-master in semantic-governance mode to review duplication and conflicts.
 ```
 
 ## 🎯 Use cases
