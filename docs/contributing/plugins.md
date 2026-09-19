@@ -28,7 +28,9 @@ Do not create a repository-level `skills/` directory. Skill content belongs
 inside the plugin package that distributes it.
 
 Start each `agents/openai.yaml` from `templates/agents-openai.yaml`. It
-validates against `schemas/agent.schema.json` after YAML parsing and requires
+is parsed as a single YAML document and validates against
+`schemas/agent.schema.json`. Syntax errors, multiple documents, and schema
+violations fail the marketplace gate. It requires
 `interface.display_name`, `interface.short_description`, and boolean
 `policy.allow_implicit_invocation`; use `true` for routine skills and `false`
 only for an explicit product boundary. `interface.default_prompt` is optional
@@ -39,15 +41,23 @@ fail validation.
 
 ## Manifest Requirements
 
-The authored manifest must validate against `schemas/plugin.schema.json`. It must
-define the plugin identity, author, interface metadata, capabilities, and at
-least one of `skills`, `hooks`, `apps`, or `mcpServers`.
+The authored manifest validates against `schemas/plugin.schema.json` during both
+`marketplace:build` and `marketplace:check`. It must define the plugin identity,
+author, interface metadata, and capabilities. Separately, the package must
+contain at least one supported component: `skills/`, `mcp.json`, `hooks/`, or
+`.app.json`.
 
 Use relative resource paths with a `./` prefix. Do not use `..` path segments.
 Declare screenshots only for PNG assets that exist inside the package.
 
 Declare top-level `hooks` when the package includes lifecycle hooks. The
 conventional declaration is `"hooks": "./hooks/hooks.json"`.
+
+Plugin-local `mcp.json` files validate against `schemas/mcp.schema.json`.
+Referenced or inline hook configurations validate against `schemas/hooks.schema.json`.
+These executable contracts reject malformed transports, unsupported fields,
+invalid handler variants, and invalid event declarations before catalog
+generation.
 
 ## Documentation Requirements
 
@@ -82,10 +92,11 @@ npm run marketplace:build
 npm run marketplace:check
 ```
 
-Do not hand-edit the generated marketplace catalog. The pipeline validates
-every plugin manifest and skill agent manifest, rejects unsafe package links,
-generates the catalog atomically, and reverse-validates it against the
-manifests.
+Do not hand-edit the generated marketplace catalog. The pipeline executes the
+plugin, agent, MCP, hook, and generated-marketplace schemas; rejects unsafe
+package links; generates the catalog atomically; and preserves relational checks
+that schemas cannot express, such as package containment and manifest/directory
+identity.
 
 ## Pull Request Evidence
 

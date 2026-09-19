@@ -8,6 +8,8 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
+import subprocess
 import sys
 from typing import TypedDict, cast
 
@@ -22,6 +24,16 @@ class PluginData(TypedDict):
     manifest: JsonObject
 
 
+class SchemaTarget(TypedDict, total=False):
+    """A JSON Schema validation request sent to the Node validator."""
+
+    schema: str
+    label: str
+    path: str
+    format: str
+    data: object
+
+
 MARKETPLACE = {
     "name": "codex-essentials",
     "displayName": "Codex Essentials",
@@ -32,6 +44,11 @@ PLUGINS_DIRECTORY = "plugins"
 PLUGIN_MANIFEST = Path("plugin.json")
 MARKETPLACE_OUTPUT = Path(".agents") / "plugins" / "marketplace.json"
 MARKETPLACE_SCHEMA = Path("schemas") / "marketplace.schema.json"
+PLUGIN_SCHEMA = Path("schemas") / "plugin.schema.json"
+AGENT_SCHEMA = Path("schemas") / "agent.schema.json"
+HOOKS_SCHEMA = Path("schemas") / "hooks.schema.json"
+MCP_SCHEMA = Path("schemas") / "mcp.schema.json"
+CONTRACT_VALIDATOR = Path(__file__).resolve().with_name("validate_plugin_contracts.mjs")
 ALLOWED_PLUGIN_DIRECTORY_FILES = {"AGENTS.md"}
 REQUIRED_PLUGIN_DOCUMENTS = ("README.md", "CHANGELOG.md", "LICENSE.md")
 IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -90,6 +107,7 @@ def load_plugin_manifests(root: Path) -> list[PluginData]:
     assert_directory(plugins_root, "plugins directory")
     entries = sorted(os.scandir(plugins_root), key=lambda entry: entry.name)
     plugins: list[PluginData] = []
+    manifest_targets: list[SchemaTarget] = []
     for entry in entries:
         if entry.name.startswith("."):
             continue
@@ -105,11 +123,25 @@ def load_plugin_manifests(root: Path) -> list[PluginData]:
         assert_regular_file(manifest_path, f"plugins/{entry.name}/{PLUGIN_MANIFEST}")
         assert_contained(plugin_root, manifest_path, str(manifest_path))
         manifest = as_record(load_json(manifest_path, "plugin manifest"), str(manifest_path))
-        validate_plugin_manifest(entry.name, manifest, manifest_path)
-        validate_plugin_resources(plugin_root, manifest)
         plugins.append({"name": entry.name, "pluginRoot": str(plugin_root), "manifest": manifest})
+        manifest_targets.append(
+            {
+                "schema": str(PLUGIN_SCHEMA),
+                "label": "plugin manifest",
+                "path": str(manifest_path.relative_to(root)),
+                "format": "json",
+            }
+        )
     if not plugins:
         raise ValueError("plugins directory must contain at least one plugin")
+    validate_schema_targets(root, manifest_targets)
+    resource_targets: list[SchemaTarget] = []
+    for plugin in plugins:
+        plugin_root = Path(plugin["pluginRoot"])
+        manifest_path = plugin_root / PLUGIN_MANIFEST
+        validate_plugin_manifest(plugin["name"], plugin["manifest"], manifest_path)
+        resource_targets.extend(validate_plugin_resources(root, plugin_root, plugin["manifest"]))
+    validate_schema_targets(root, resource_targets)
     return plugins
 
 
@@ -154,6 +186,16 @@ def write_marketplace(root: Path, marketplace: JsonObject) -> None:
 
 
 def validate_marketplace(root: Path, marketplace: JsonObject) -> None:
+    validate_schema_targets(
+        root,
+        [
+            {
+                "schema": str(MARKETPLACE_SCHEMA),
+                "label": "marketplace catalog",
+                "data": marketplace,
+            }
+        ],
+    )
     schema = as_record(
         load_json(root / MARKETPLACE_SCHEMA, "marketplace schema"), str(MARKETPLACE_SCHEMA)
     )
@@ -244,7 +286,10 @@ def validate_plugin_manifest(plugin_id: str, manifest: JsonObject, manifest_path
             raise ValueError(f"{manifest_path} interface is missing required field: {field}")
 
 
-def validate_plugin_resources(plugin_root: Path, manifest: JsonObject) -> None:
+def validate_plugin_resources(
+    root: Path, plugin_root: Path, manifest: JsonObject
+) -> list[SchemaTarget]:
+    targets: list[SchemaTarget] = []
     skills_root = plugin_root / "skills"
     components = [
         path
@@ -260,19 +305,23 @@ def validate_plugin_resources(plugin_root: Path, manifest: JsonObject) -> None:
         raise ValueError("plugin must contain at least one supported component")
     if skills_root.exists():
         assert_directory(skills_root, "skills")
-        assert_skill_directory(skills_root, "skills")
+        targets.extend(assert_skill_directory(root, skills_root, "skills"))
     mcp_path = plugin_root / "mcp.json"
     if mcp_path.exists():
-        validate_referenced_mcp_configuration(
-            load_json(mcp_path, "plugin MCP configuration"), str(mcp_path)
+        assert_regular_file(mcp_path, str(mcp_path))
+        targets.append(
+            {
+                "schema": str(MCP_SCHEMA),
+                "label": "mcp.json",
+                "path": str(mcp_path.relative_to(root)),
+                "format": "json",
+            }
         )
     interface = openai_interface(manifest, "plugin manifest")
     extensions = as_record(manifest["extensions"], "plugin extensions")
     openai = as_record(extensions["com.openai"], "plugin OpenAI extension")
-    for hook_path in hook_paths(openai.get("hooks")):
-        target = resolve_plugin_path(plugin_root, hook_path, "hooks")
-        assert_regular_file(target, hook_path)
-        _ = load_json(target, "plugin hooks configuration")
+    targets.extend(hook_schema_targets(root, plugin_root, manifest.get("hooks"), "plugin hooks"))
+    targets.extend(hook_schema_targets(root, plugin_root, openai.get("hooks"), "plugin hooks"))
     for field in ("composerIcon", "logo"):
         if isinstance(interface.get(field), str):
             interface_path = cast("str", interface[field])
@@ -288,6 +337,7 @@ def validate_plugin_resources(plugin_root: Path, manifest: JsonObject) -> None:
             assert_regular_file(
                 resolve_plugin_path(plugin_root, screenshot, "screenshots"), screenshot
             )
+    return targets
 
 
 def openai_interface(manifest: JsonObject, label: str) -> JsonObject:
@@ -307,73 +357,30 @@ def validate_plugin_documentation(plugin_root: Path, label: str) -> None:
         raise ValueError(f"{label}/CHANGELOG.md must contain an Unreleased section")
 
 
-def assert_skill_directory(skills_root: Path, label: str) -> None:
+def assert_skill_directory(root: Path, skills_root: Path, label: str) -> list[SchemaTarget]:
     entries = sorted(
         (entry for entry in os.scandir(skills_root) if not entry.name.startswith(".")),
         key=lambda entry: entry.name,
     )
     if not entries:
         raise ValueError(f"{label} must contain at least one skill directory")
+    targets: list[SchemaTarget] = []
     for entry in entries:
         if not entry.is_dir(follow_symlinks=False):
             raise ValueError(f"{label}/{entry.name} must be a real directory")
         skill_root = skills_root / entry.name
         assert_regular_file(skill_root / "SKILL.md", f"{label}/{entry.name}/SKILL.md")
-        assert_regular_file(
-            skill_root / "agents" / "openai.yaml", f"{label}/{entry.name}/agents/openai.yaml"
+        agent_path = skill_root / "agents" / "openai.yaml"
+        assert_regular_file(agent_path, f"{label}/{entry.name}/agents/openai.yaml")
+        targets.append(
+            {
+                "schema": str(AGENT_SCHEMA),
+                "label": "openai.yaml",
+                "path": str(agent_path.relative_to(root)),
+                "format": "yaml",
+            }
         )
-
-
-def validate_referenced_mcp_configuration(configuration: object, label: str) -> None:
-    record = as_record(configuration, label)
-    wrappers = [key for key in ("mcpServers", "mcp_servers") if key in record]
-    if len(wrappers) > 1:
-        raise ValueError(f"{label} must not contain both mcpServers and mcp_servers")
-    wrapped_servers = record.get(wrappers[0]) if wrappers else None
-    if wrapped_servers is not None:
-        if set(record) - {"$schema", wrappers[0]}:
-            raise ValueError(
-                f"{label} wrapped configuration must contain exactly one top-level key"
-            )
-        validate_mcp_server_map(wrapped_servers, f"{label} MCP servers")
-        return
-    validate_mcp_server_map(record, f"{label} MCP server map")
-
-
-def validate_mcp_server_map(value: object, label: str) -> None:
-    servers = as_record(value, label)
-    if not servers:
-        raise ValueError(f"{label} must contain at least one server")
-    for name, server in servers.items():
-        if not re.fullmatch(r"[A-Za-z0-9_-]+", name):
-            raise ValueError(f"{label} server name is invalid: {name}")
-        validate_mcp_server(server, f"{label}.{name}")
-
-
-def validate_mcp_server(value: object, label: str) -> None:
-    server = as_record(value, label)
-    supported_fields = {"command", "args", "env", "url", "type"}
-    for field in server:
-        if field not in supported_fields:
-            raise ValueError(f"{label}.{field} is not a supported MCP server field")
-    has_command = isinstance(server.get("command"), str) and bool(server["command"])
-    has_url = isinstance(server.get("url"), str) and bool(server["url"])
-    if has_command == has_url:
-        raise ValueError(f"{label} must define exactly one of command or url")
-    if "type" in server and not (server["type"] in {"http", "streamable-http"} and has_url):
-        raise ValueError(f"{label}.type is supported only for HTTPS URL servers")
-    if "url" in server and not str(server["url"]).startswith("https://"):
-        raise ValueError(f"{label}.url must be an https URL")
-    if "args" in server:
-        args = server["args"]
-        if not isinstance(args, list) or not all(
-            isinstance(entry, str) for entry in cast("list[object]", args)
-        ):
-            raise ValueError(f"{label}.args must be an array of strings")
-    if "env" in server:
-        env = as_record(server["env"], f"{label}.env")
-        if not env or not all(key and isinstance(value, str) for key, value in env.items()):
-            raise ValueError(f"{label}.env must map non-empty keys to strings")
+    return targets
 
 
 def resolve_plugin_path(plugin_root: Path, relative_path: str, field: str) -> Path:
@@ -390,17 +397,61 @@ def resolve_plugin_path(plugin_root: Path, relative_path: str, field: str) -> Pa
     return target
 
 
-def hook_paths(hooks: object) -> list[str]:
+def hook_schema_targets(
+    root: Path, plugin_root: Path, hooks: object, field: str
+) -> list[SchemaTarget]:
+    if hooks is None:
+        return []
     if isinstance(hooks, str):
-        return [hooks]
-    if hooks is None or isinstance(hooks, dict):
-        return []
-    hook_entries = cast("list[object]", hooks) if isinstance(hooks, list) else []
-    if hook_entries and all(isinstance(entry, str) for entry in hook_entries):
-        return [cast("str", entry) for entry in hook_entries]
-    if hook_entries and all(isinstance(entry, dict) for entry in hook_entries):
-        return []
-    raise ValueError("hooks path array must contain only paths")
+        hook_paths = [hooks]
+    elif isinstance(hooks, dict):
+        return [{"schema": str(HOOKS_SCHEMA), "label": field, "data": hooks}]
+    elif isinstance(hooks, list):
+        entries = cast("list[object]", hooks)
+        if all(isinstance(entry, str) for entry in entries):
+            hook_paths = [cast("str", entry) for entry in entries]
+        elif all(isinstance(entry, dict) for entry in entries):
+            return [
+                {"schema": str(HOOKS_SCHEMA), "label": field, "data": entry} for entry in entries
+            ]
+        else:
+            raise ValueError("hooks path array must contain only paths or configurations")
+    else:
+        raise ValueError("hooks must be a path, configuration, or array of one kind")
+    targets: list[SchemaTarget] = []
+    for hook_path in hook_paths:
+        target = resolve_plugin_path(plugin_root, hook_path, field)
+        assert_regular_file(target, hook_path)
+        targets.append(
+            {
+                "schema": str(HOOKS_SCHEMA),
+                "label": target.name,
+                "path": str(target.relative_to(root)),
+                "format": "json",
+            }
+        )
+    return targets
+
+
+def validate_schema_targets(root: Path, targets: list[SchemaTarget]) -> None:
+    if not targets:
+        return
+    request = json.dumps({"root": str(root), "targets": targets})
+    node = shutil.which("node")
+    if node is None:
+        raise ValueError("node is required to execute JSON Schema validation")
+    try:
+        result = subprocess.run(  # noqa: S603 - executes the repository-owned validator only.
+            [node, str(CONTRACT_VALIDATOR)],
+            check=False,
+            capture_output=True,
+            input=request,
+            text=True,
+        )
+    except OSError as error:
+        raise ValueError(f"unable to run schema validator: {format_error(error)}") from error
+    if result.returncode != 0:
+        raise ValueError(result.stderr.strip() or "schema validation failed")
 
 
 def assert_no_symlinks(root: Path) -> None:
