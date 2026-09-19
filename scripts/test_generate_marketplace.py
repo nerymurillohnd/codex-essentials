@@ -201,6 +201,105 @@ class GenerateMarketplaceTests(unittest.TestCase):
                 result.stderr,
             )
 
+    def test_rejects_plugin_manifest_that_violates_its_schema(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            manifest = root / "plugins" / "alpha-plugin" / "plugin.json"
+            content = cast("JsonObject", json.loads(manifest.read_text(encoding="utf-8")))
+            content["unexpected"] = True
+            _ = manifest.write_text(json.dumps(content, indent=2) + "\n", encoding="utf-8")
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(
+                "plugin manifest is invalid against schemas/plugin.schema.json", result.stderr
+            )
+
+    def test_rejects_malformed_openai_agent_yaml(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            agent = root / "plugins" / "alpha-plugin" / "skills" / "alpha-plugin" / "agents"
+            _ = (agent / "openai.yaml").write_text("interface: [\n", encoding="utf-8")
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("openai.yaml is invalid YAML", result.stderr)
+
+    def test_rejects_openai_agent_yaml_that_violates_its_schema(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            agent = root / "plugins" / "alpha-plugin" / "skills" / "alpha-plugin" / "agents"
+            _ = (agent / "openai.yaml").write_text(
+                (
+                    "interface:\n"
+                    "  display_name: Test\n"
+                    "  short_description: Test skill.\n"
+                    "policy:\n"
+                    "  allow_implicit_invocation: 'true'\n"
+                ),
+                encoding="utf-8",
+            )
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("openai.yaml is invalid against schemas/agent.schema.json", result.stderr)
+
+    def test_rejects_mcp_configuration_that_violates_its_schema(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            _ = (root / "plugins" / "alpha-plugin" / "mcp.json").write_text(
+                json.dumps(
+                    {
+                        "$schema": 42,
+                        "mcpServers": {
+                            "example": {"type": "streamable-http", "url": "https://example.com/mcp"}
+                        },
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("mcp.json is invalid against schemas/mcp.schema.json", result.stderr)
+
+    def test_rejects_hook_configuration_that_violates_its_schema(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_schema(root)
+            self._write_plugin(root, "alpha-plugin", "Productivity")
+            plugin = root / "plugins" / "alpha-plugin"
+            manifest = plugin / "plugin.json"
+            content = cast("JsonObject", json.loads(manifest.read_text(encoding="utf-8")))
+            extensions = cast("JsonObject", content["extensions"])
+            openai = cast("JsonObject", extensions["com.openai"])
+            openai["hooks"] = "./hooks/hooks.json"
+            _ = manifest.write_text(json.dumps(content, indent=2) + "\n", encoding="utf-8")
+            hooks = plugin / "hooks"
+            hooks.mkdir()
+            _ = (hooks / "hooks.json").write_text(
+                json.dumps({"hooks": {"PostToolUse": [{"hooks": [{"type": "command"}]}]}}) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_generator(root)
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("hooks.json is invalid against schemas/hooks.schema.json", result.stderr)
+
     def _run_generator(
         self, root: Path, *, check_only: bool = False
     ) -> subprocess.CompletedProcess[str]:
@@ -215,10 +314,18 @@ class GenerateMarketplaceTests(unittest.TestCase):
         )
 
     def _write_schema(self, root: Path) -> None:
-        schema = REPOSITORY_ROOT / "schemas" / "marketplace.schema.json"
-        target = root / "schemas" / "marketplace.schema.json"
-        target.parent.mkdir(parents=True)
-        _ = target.write_text(schema.read_text(encoding="utf-8"), encoding="utf-8")
+        target_directory = root / "schemas"
+        target_directory.mkdir(parents=True)
+        for schema_name in (
+            "agent.schema.json",
+            "hooks.schema.json",
+            "marketplace.schema.json",
+            "mcp.schema.json",
+            "plugin.schema.json",
+        ):
+            schema = REPOSITORY_ROOT / "schemas" / schema_name
+            target = target_directory / schema_name
+            _ = target.write_text(schema.read_text(encoding="utf-8"), encoding="utf-8")
 
     def _write_plugin(
         self,

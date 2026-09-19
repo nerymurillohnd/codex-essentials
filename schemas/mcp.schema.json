@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mcp.schema.json",
+  "title": "Codex Plugin MCP Configuration",
+  "description": "Schema for a plugin-local mcp.json configuration file.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mcpServers"],
+      "properties": {
+        "$schema": { "type": "string", "minLength": 1 },
+        "mcpServers": { "$ref": "#/$defs/mcpServerMap" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mcp_servers"],
+      "properties": {
+        "$schema": { "type": "string", "minLength": 1 },
+        "mcp_servers": { "$ref": "#/$defs/mcpServerMap" }
+      }
+    },
+    { "$ref": "#/$defs/mcpServerMap" }
+  ],
+  "$defs": {
+    "mcpServerMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Za-z0-9_-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/mcpServer" }
+    },
+    "mcpServer": {
+      "type": "object",
+      "additionalProperties": false,
+      "dependentRequired": { "type": ["url"] },
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "args": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "env": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "minLength": 1 },
+          "additionalProperties": { "type": "string" }
+        },
+        "type": { "enum": ["http", "streamable-http"] },
+        "url": { "type": "string", "pattern": "^https://[^\\s]+$" }
+      },
+      "oneOf": [
+        {
+          "required": ["command"],
+          "properties": { "command": {}, "url": false }
+        },
+        {
+          "required": ["url"],
+          "properties": { "command": false, "url": {} }
+        }
+      ]
+    }
+  }
+}
