@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "svelte-development",
+  "version": "0.1.0",
+  "description": "Plan, implement, and verify Svelte 5 and SvelteKit work with the official Svelte MCP.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "svelte", "sveltekit", "mcp", "frontend"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Svelte Development",
+        "shortDescription": "Engineer Svelte with current MCP guidance.",
+        "longDescription": "Four Codex skills route Svelte and SvelteKit architecture, components, server work, and verification through current official guidance. The package declares the official remote Svelte MCP endpoint.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Svelte 5 architecture and component work",
+          "SvelteKit route and server work",
+          "Official MCP-backed verification"
+        ],
+        "defaultPrompt": [
+          "Use Svelte Development to plan this Svelte feature with current official docs.",
+          "Use Svelte Development to verify this SvelteKit change."
+        ]
+      }
+    }
+  }
+}

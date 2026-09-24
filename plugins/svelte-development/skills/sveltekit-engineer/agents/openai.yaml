@@ -1,0 +1,7 @@
+interface:
+  display_name: "SvelteKit Engineer"
+  short_description: "Build SvelteKit routes and server flows"
+  default_prompt:
+    "Use $sveltekit-engineer to implement this route or server change safely."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Svelte Architect"
+  short_description: "Plan Svelte and SvelteKit architecture"
+  default_prompt:
+    "Use $svelte-architect to plan this Svelte feature before implementation."
+policy:
+  allow_implicit_invocation: true

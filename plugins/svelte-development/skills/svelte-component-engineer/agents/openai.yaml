@@ -1,0 +1,8 @@
+interface:
+  display_name: "Svelte Component Engineer"
+  short_description: "Build and review Svelte 5 components"
+  default_prompt:
+    "Use $svelte-component-engineer to implement this Svelte component and
+    verify its states."
+policy:
+  allow_implicit_invocation: true

@@ -26,6 +26,7 @@ Codex session after installing a plugin to inspect its available capabilities.
 | [Live Research](plugins/live-research/README.md)                   | 0.1.0   | Verify changing facts against current sources.    |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)          | 0.1.0   | Audit memories and prepare evidence-backed fixes. |
 | [Repository Maintenance](plugins/repo-maintenance/README.md)       | 0.1.0   | Maintain repository records from evidence.        |
+| [Svelte Development](plugins/svelte-development/README.md)         | 0.1.0   | Engineer Svelte with current MCP guidance.        |
 | [TypeScript Pro](plugins/typescript-pro/README.md)                 | 0.1.0   | Prove types at runtime boundaries.                |
 | [Verify Completion](plugins/verify-completion/README.md)           | 0.1.0   | Require evidence before declaring work complete.  |
 

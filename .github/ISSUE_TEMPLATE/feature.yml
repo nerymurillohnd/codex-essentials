@@ -16,6 +16,7 @@ body:
         - "live-research"
         - "optimize-memories"
         - "repo-maintenance"
+        - "svelte-development"
         - "typescript-pro"
         - "verify-completion"
         # generated:plugins:end

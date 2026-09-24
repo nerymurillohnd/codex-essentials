@@ -1,0 +1,8 @@
+interface:
+  display_name: "Svelte Verification"
+  short_description: "Verify Svelte and SvelteKit changes"
+  default_prompt:
+    "Use $svelte-verification to run the applicable checks for this Svelte
+    change."
+policy:
+  allow_implicit_invocation: true
