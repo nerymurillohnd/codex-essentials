@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "astro-cli-commands",
+  "version": "0.1.0",
+  "description": "Choose and run Astro CLI commands with current docs and project-local checks.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["astro", "cli", "dev-server", "build", "codex"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Astro CLI Commands",
+        "shortDescription": "Run Astro CLI tasks with current practice.",
+        "longDescription": "Astro CLI guidance for creating, developing, checking, building, previewing, syncing, and diagnosing projects with current official docs, package-manager-aware commands, and safe server handling.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Astro command selection",
+          "Dev and preview server handling",
+          "Version-aware CLI verification"
+        ],
+        "defaultPrompt": [
+          "Use $astro-commands to choose and verify the right Astro CLI command for this project."
+        ]
+      }
+    }
+  }
+}

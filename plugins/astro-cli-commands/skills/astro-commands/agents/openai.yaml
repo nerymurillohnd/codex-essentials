@@ -1,0 +1,8 @@
+interface:
+  display_name: "Astro CLI Commands"
+  short_description: "Run Astro CLI tasks with current practice"
+  default_prompt:
+    "Use $astro-commands to choose and verify the right Astro CLI command for
+    this project."
+policy:
+  allow_implicit_invocation: true
