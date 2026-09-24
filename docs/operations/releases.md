@@ -70,7 +70,8 @@ tag or Release. Never force-push or recreate an immutable tag. Report any
 partial release state explicitly.
 
 GitHub's `latest` Release label is repository-wide, while versions here are per
-plugin. Do not use a generic latest-version badge as the marketplace's version;
+plugin. The publisher therefore sets `make_latest=false` for every plugin
+Release. Do not use a generic latest-version badge as the marketplace's version;
 link directly to the relevant plugin Release instead. See
 <https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository>.
 

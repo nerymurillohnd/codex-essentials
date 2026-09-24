@@ -143,7 +143,7 @@ function githubApi(repository) {
         "-F",
         "prerelease=false",
         "-f",
-        "make_latest=true",
+        "make_latest=false",
       ]);
     },
   };
