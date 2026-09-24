@@ -1,0 +1,8 @@
+interface:
+  display_name: "Repo Hygiene Debug"
+  short_description: "Trace Git regressions and code origins"
+  default_prompt:
+    "Use $repo-hygiene:debug to locate the history behind this reproducible
+    regression."
+policy:
+  allow_implicit_invocation: false

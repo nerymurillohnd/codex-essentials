@@ -1,0 +1,8 @@
+interface:
+  display_name: "Repo Hygiene Deep"
+  short_description: "Audit Git topology and recovery evidence"
+  default_prompt:
+    "Use $repo-hygiene:deep to audit refs, worktrees, and recovery before
+    cleanup."
+policy:
+  allow_implicit_invocation: false

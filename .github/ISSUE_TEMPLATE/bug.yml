@@ -20,6 +20,7 @@ body:
         - "doc-keeper"
         - "live-research"
         - "optimize-memories"
+        - "repo-hygiene"
         - "repo-maintenance"
         - "skill-design-standards"
         - "svelte-development"

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "repo-hygiene",
+  "version": "0.1.0",
+  "description": "Audit routine Git hygiene, deep topology, and regressions with exact recovery boundaries.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "git",
+    "repository",
+    "hygiene",
+    "recovery",
+    "debugging"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Repo Hygiene",
+        "shortDescription": "Inspect Git cleanup and recovery safely.",
+        "longDescription": "Three Codex skills distinguish routine local housekeeping from explicit deep topology/recovery audits and Git-based regression diagnosis, with exact targets and verified postconditions.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Routine checkout hygiene",
+          "Deep Git topology and recovery audits",
+          "Git regression attribution"
+        ],
+        "defaultPrompt": [
+          "Use $repo-hygiene:routine to inspect local cleanup candidates.",
+          "Use $repo-hygiene:deep to audit refs, worktrees, and recovery before a Git cleanup.",
+          "Use $repo-hygiene:debug to locate the commit behind this reproducible regression."
+        ]
+      }
+    }
+  }
+}

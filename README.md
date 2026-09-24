@@ -25,6 +25,7 @@ Codex session after installing a plugin to inspect its available capabilities.
 | [DocKeeper](plugins/doc-keeper/README.md)                          | 0.1.0   | Keep changelogs and ADRs evidence-backed.         |
 | [Live Research](plugins/live-research/README.md)                   | 0.1.0   | Verify changing facts against current sources.    |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)          | 0.1.0   | Audit memories and prepare evidence-backed fixes. |
+| [Repo Hygiene](plugins/repo-hygiene/README.md)                     | 0.1.0   | Inspect Git cleanup and recovery safely.          |
 | [Repository Maintenance](plugins/repo-maintenance/README.md)       | 0.1.0   | Maintain repository records from evidence.        |
 | [Skill Design Standards](plugins/skill-design-standards/README.md) | 0.1.0   | Design and assess focused Agent Skills.           |
 | [Svelte Development](plugins/svelte-development/README.md)         | 0.1.0   | Engineer Svelte with current MCP guidance.        |

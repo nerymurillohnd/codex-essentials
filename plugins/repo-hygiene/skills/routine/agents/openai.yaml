@@ -1,0 +1,8 @@
+interface:
+  display_name: "Repo Hygiene Routine"
+  short_description: "Inspect everyday Git cleanup candidates"
+  default_prompt:
+    "Use $repo-hygiene:routine to inspect this checkout's local cleanup
+    candidates."
+policy:
+  allow_implicit_invocation: true
