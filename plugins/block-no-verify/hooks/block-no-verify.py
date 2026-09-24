@@ -10,6 +10,8 @@ from typing import cast
 FALSY_GPGSIGN_VALUES = {"false", "0", "no", "off"}
 COMMAND_SEPARATORS = {";", "&&", "||", "|", "&", "(", ")", "\n"}
 COMMAND_PREFIXES = {"command", "env", "sudo"}
+GIT_GLOBAL_VALUE_OPTIONS = {"-c", "-C", "--git-dir", "--work-tree", "--namespace", "--config-env"}
+COMMIT_VALUE_OPTIONS = {"-m", "--message", "-F", "--file", "-C", "-c", "--author", "--date"}
 
 
 def _deny(reason: str) -> None:
@@ -62,6 +64,48 @@ def _git_arguments(command: list[str]) -> list[str]:
     return command[index + 1 :]
 
 
+def _git_subcommand_index(arguments: list[str]) -> int | None:
+    index = 0
+    while index < len(arguments):
+        part = arguments[index]
+        if part in GIT_GLOBAL_VALUE_OPTIONS:
+            index += 2
+        elif part.startswith("-"):
+            index += 1
+        else:
+            return index
+    return None
+
+
+def _short_commit_no_verify(part: str) -> bool:
+    if not part.startswith("-") or part.startswith("--"):
+        return False
+    for option in part[1:]:
+        if option == "n":
+            return True
+        if option in {"m", "F", "C", "c"}:
+            return False
+    return False
+
+
+def _short_commit_violation(arguments: list[str]) -> str | None:
+    subcommand_index = _git_subcommand_index(arguments)
+    if subcommand_index is None or arguments[subcommand_index] != "commit":
+        return None
+    index = subcommand_index + 1
+    while index < len(arguments):
+        part = arguments[index]
+        if part == "--":
+            break
+        if part in COMMIT_VALUE_OPTIONS:
+            index += 2
+        else:
+            if _short_commit_no_verify(part):
+                return "-n"
+            index += 1
+    return None
+
+
 def _git_option_violation(arguments: list[str]) -> str | None:
     for index, part in enumerate(arguments):
         if part == "--":
@@ -78,7 +122,7 @@ def _git_option_violation(arguments: list[str]) -> str | None:
         setting = _normalize_config_value(value)
         if setting and setting[0] == "commit.gpgsign" and setting[1] in FALSY_GPGSIGN_VALUES:
             return f"commit.gpgsign={setting[1]}"
-    return None
+    return _short_commit_violation(arguments)
 
 
 def _find_git_policy_violation(parts: list[str]) -> str | None:

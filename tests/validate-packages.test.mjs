@@ -147,6 +147,32 @@ test("accepts a supported command hook packaged at its declared path", (t) => {
   assert.equal(validatePackages(root)[0].hasHooks, true);
 });
 
+test("rejects a command hook with a missing PLUGIN_ROOT handler", (t) => {
+  const { root, packageRoot } = makeFixture(t);
+  const hooksRoot = join(packageRoot, "hooks");
+  mkdirSync(hooksRoot);
+  writeJson(join(hooksRoot, "hooks.json"), {
+    hooks: {
+      PreToolUse: [
+        {
+          matcher: "^Bash$",
+          hooks: [
+            {
+              type: "command",
+              command: `python3 "\${PLUGIN_ROOT}/hooks/missing.py"`,
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const path = join(packageRoot, "plugin.json");
+  const manifest = JSON.parse(readFileSync(path, "utf8"));
+  manifest.extensions["com.openai"].hooks = "./hooks/hooks.json";
+  writeJson(path, manifest);
+  assert.throws(() => validatePackages(root), /missing\.py|handler|hooks/i);
+});
+
 test("rejects a hook handler that Codex parses but does not execute", (t) => {
   const { root, packageRoot } = makeFixture(t);
   const hooksRoot = join(packageRoot, "hooks");

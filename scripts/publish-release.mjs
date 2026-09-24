@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertExpectedPackages, launchIds } from "./launch-contract.mjs";
 import { planPackageRelease, releaseNotes, tagFor } from "./release-plan.mjs";
 import { validatePackages } from "./validate-packages.mjs";
 
@@ -36,6 +37,24 @@ export async function releasePackage({
     if (plan.createRelease) await api.createRelease(tag, plan.targetSha, notes);
   }
   return plan;
+}
+
+export async function assertInitialReleases(api, names = launchIds) {
+  for (const name of names) {
+    const tag = tagFor(name, "0.1.0");
+    const sha = await api.readTag(tag);
+    const release = await api.readRelease(tag);
+    if (
+      sha === null ||
+      release === null ||
+      release.tagName !== tag ||
+      release.targetSha !== sha
+    ) {
+      throw new Error(
+        `initial bootstrap incomplete at ${tag}; dispatch the bootstrap workflow before ordinary publication`,
+      );
+    }
+  }
 }
 
 function run(command, args, { cwd = repositoryRoot, allow404 = false } = {}) {
@@ -110,6 +129,20 @@ function githubApi(repository) {
         throw new Error(
           `${tag}: tag target does not contain the expected package version`,
         );
+      }
+      const content = spawnSync(
+        "git",
+        ["diff", "--quiet", sha, "HEAD", "--", `plugins/${name}`],
+        { cwd: repositoryRoot, encoding: "utf8" },
+      );
+      if (content.error) throw content.error;
+      if (content.status === 1) {
+        throw new Error(
+          `${tag}: package content changed without a new version`,
+        );
+      }
+      if (content.status !== 0) {
+        throw new Error(`${tag}: could not compare tagged package content`);
       }
     },
     async createTag(tag, sha) {
@@ -198,8 +231,10 @@ async function main() {
   const packages = validatePackages(repositoryRoot);
   if (packages.length === 0)
     throw new Error("cannot release an empty marketplace");
+  if (bootstrap) assertExpectedPackages(packages);
   if (apply) ensureApplyPreconditions(repository, headSha);
   const api = githubApi(repository);
+  if (!bootstrap) await assertInitialReleases(api);
   const entries = packages.map((packageInfo) => ({
     packageInfo: {
       name: packageInfo.name,

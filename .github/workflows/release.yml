@@ -56,13 +56,15 @@ jobs:
         run: npm run check
 
       - name: Publish initial plugin releases
-        if: inputs.bootstrap == true
+        if: github.event_name == 'workflow_dispatch' && inputs.bootstrap == true
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/publish-release.mjs --bootstrap --apply
 
       - name: Publish later plugin releases
-        if: inputs.bootstrap != true
+        if:
+          github.event_name == 'push' || (github.event_name ==
+          'workflow_dispatch' && inputs.bootstrap != true)
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/publish-release.mjs --apply

@@ -24,7 +24,7 @@ The candidate contains exactly the 20 IDs named in the approved
 [implementation plan](../superpowers/plans/2026-09-24-codex-marketplace-rebuild.md),
 each with manifest version `0.1.0` and a new changelog entry. Twenty-five skill
 entrypoints passed the bundled Codex skill validator. `npm ci` and
-`npm run check` passed: 33 Node tests, formatter checks, official pinned Agent
+`npm run check` passed: 35 Node tests, formatter checks, official pinned Agent
 Plugins schema validation, catalog freshness, Ruff formatting and lint,
 Basedpyright, shfmt, and ShellCheck. The exact gate is encoded in
 [`package.json`](../../package.json); CI now provisions pinned Python and shell
@@ -41,6 +41,11 @@ The bootstrap release dry run planned 20 new tags and 20 new Releases without
 writing either. It was run before this record was committed; run it again at the
 final candidate SHA. No npm registry publication or asset upload is in the
 release workflow.
+
+Independent review found a `git commit -n` gap in the bypass guard and missing
+hook-resource validation. Both are now covered by negative tests; ordinary
+release publication also requires the complete initial tag/Release set before
+any later publication. These fixes must still pass the remote exact-SHA gate.
 
 ## Current remote preflight and remaining gates
 

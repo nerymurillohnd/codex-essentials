@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { releasePackage } from "../scripts/publish-release.mjs";
+import {
+  assertInitialReleases,
+  releasePackage,
+} from "../scripts/publish-release.mjs";
 
 const headSha = "1111111111111111111111111111111111111111";
 const oldSha = "2222222222222222222222222222222222222222";
@@ -93,5 +96,32 @@ test("a conflicting bootstrap tag aborts before any write", async () => {
   assert.equal(
     api.calls.some(([method]) => method.startsWith("create")),
     false,
+  );
+});
+
+test("ordinary publication requires a complete initial tag and release", async () => {
+  const complete = apiState({
+    tagSha: oldSha,
+    release: { tagName: tag, targetSha: oldSha },
+  });
+  await assert.doesNotReject(assertInitialReleases(complete, ["probe"]));
+
+  const missingRelease = apiState({ tagSha: oldSha });
+  await assert.rejects(
+    assertInitialReleases(missingRelease, ["probe"]),
+    /bootstrap.*incomplete/i,
+  );
+  assert.equal(
+    missingRelease.calls.some(([method]) => method.startsWith("create")),
+    false,
+  );
+
+  const conflictingRelease = apiState({
+    tagSha: oldSha,
+    release: { tagName: tag, targetSha: headSha },
+  });
+  await assert.rejects(
+    assertInitialReleases(conflictingRelease, ["probe"]),
+    /bootstrap.*incomplete/i,
   );
 });

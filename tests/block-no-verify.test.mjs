@@ -20,6 +20,9 @@ function decision(command) {
 
 test("denies direct Git verification bypasses", () => {
   assert.equal(decision("git commit --no-verify -m test"), "deny");
+  assert.equal(decision("git commit -n -m test"), "deny");
+  assert.equal(decision("git -c user.name=Example commit -an -m test"), "deny");
+  assert.equal(decision("git commit -nm test"), "deny");
   assert.equal(decision("/usr/bin/git commit --no-gpg-sign -m test"), "deny");
   assert.equal(decision("git -c commit.gpgsign=false commit -m test"), "deny");
   assert.equal(decision("git status; git commit --no-verify -m test"), "deny");
@@ -29,4 +32,6 @@ test("does not attribute later non-Git arguments to an earlier Git command", () 
   assert.equal(decision("git status; printf '%s' --no-verify"), null);
   assert.equal(decision("git status && echo --no-gpg-sign"), null);
   assert.equal(decision("git status\necho --no-verify"), null);
+  assert.equal(decision("git merge -n feature"), null);
+  assert.equal(decision("git commit -m '-n'"), null);
 });

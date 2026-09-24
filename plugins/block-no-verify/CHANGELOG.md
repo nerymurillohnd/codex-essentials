@@ -7,7 +7,7 @@
 ### Added
 
 - First clean-history release: plugin-bundled `PreToolUse` Bash hook that blocks
-  literal Git `--no-verify`, `--no-gpg-sign`, and falsy `commit.gpgsign` command
-  configuration.
+  literal Git `--no-verify`, `commit -n`, `--no-gpg-sign`, and falsy
+  `commit.gpgsign` command configuration.
 - Added one skill covering activation, trust, verification, rollback, and
   coverage limits.

@@ -16,7 +16,7 @@
       "interface": {
         "displayName": "Block No Verify",
         "shortDescription": "Block Git verification bypass flags.",
-        "longDescription": "Bundles a Codex PreToolUse Bash hook that denies literal Git commands using --no-verify, --no-gpg-sign, or command-scoped commit.gpgsign=false style bypasses. The package also includes a skill that explains installation, trust, verification, rollback, and coverage limits.",
+        "longDescription": "Bundles a Codex PreToolUse Bash hook that denies literal Git commands using --no-verify, commit -n, --no-gpg-sign, or command-scoped commit.gpgsign=false style bypasses. The package also includes a skill that explains installation, trust, verification, rollback, and coverage limits.",
         "developerName": "Nery Samuel Murillo",
         "category": "Developer Tools",
         "capabilities": [

@@ -117,7 +117,7 @@ function checkPackagePath(packageRoot, value, path) {
   return target;
 }
 
-function validateHooks(config, path) {
+function validateHooks(config, path, packageRoot) {
   if (config === null || typeof config !== "object" || Array.isArray(config)) {
     fail(path, "hooks configuration must be an object");
   }
@@ -155,6 +155,15 @@ function validateHooks(config, path) {
         }
         if (handler.type === "command") {
           requireNonEmptyString(handler.command, `${path} ${event} command`);
+          for (const [, resource] of handler.command.matchAll(
+            /\$(?:\{PLUGIN_ROOT\}|PLUGIN_ROOT)\/([A-Za-z0-9._/-]+)/g,
+          )) {
+            checkPackagePath(
+              packageRoot,
+              `./${resource}`,
+              `${path} ${event} command resource`,
+            );
+          }
         } else if (handler.type === "mcp_tool") {
           requireNonEmptyString(handler.server, `${path} ${event} server`);
           requireNonEmptyString(handler.tool, `${path} ${event} tool`);
@@ -288,7 +297,7 @@ function validateOnePackage(packageRoot) {
       hookSetting,
       `${manifestPath} hooks`,
     );
-    validateHooks(readJson(path), path);
+    validateHooks(readJson(path), path, packageRoot);
     hasHooks = true;
   } else if (Array.isArray(hookSetting)) {
     if (hookSetting.length === 0)
@@ -300,20 +309,20 @@ function validateOnePackage(packageRoot) {
           entry,
           `${manifestPath} hooks`,
         );
-        validateHooks(readJson(path), path);
+        validateHooks(readJson(path), path, packageRoot);
       } else {
-        validateHooks(entry, manifestPath);
+        validateHooks(entry, manifestPath, packageRoot);
       }
     }
     hasHooks = true;
   } else if (hookSetting !== undefined) {
-    validateHooks(hookSetting, manifestPath);
+    validateHooks(hookSetting, manifestPath, packageRoot);
     hasHooks = true;
   } else {
     const defaultHooksPath = join(packageRoot, "hooks", "hooks.json");
     if (existsSync(defaultHooksPath)) {
       requireFile(defaultHooksPath);
-      validateHooks(readJson(defaultHooksPath), defaultHooksPath);
+      validateHooks(readJson(defaultHooksPath), defaultHooksPath, packageRoot);
       hasHooks = true;
     }
   }

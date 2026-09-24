@@ -56,12 +56,21 @@ partially completed initial run: a correct existing tag/release is skipped; a
 tag without its Release gets the missing Release; a conflicting tag SHA stops
 the run. Do not move or delete a tag to make it pass.
 
+An ordinary `push` publication checks that all 20 initial tag/Release pairs
+already exist and agree before it considers later versions. A push before
+bootstrap fails closed with an explicit incomplete-bootstrap error and makes no
+release write; resolve it by dispatching the bootstrap workflow at the current
+qualified `main` SHA, not by relabeling a later push as a first release.
+
 ## Later releases and recovery
 
 Later merges to `main` trigger the release workflow. A package with no new
 version does not receive a new tag. The first commit carrying a new version is
 the release target; if an untagged version survives into a later unrelated
-commit, the workflow fails rather than silently tagging the wrong SHA.
+commit, the workflow fails rather than silently tagging the wrong SHA. An
+existing tag is also compared with the current package tree: changing a package
+without advancing its manifest version fails publication instead of serving
+changed bytes from `main` under an already-cached version.
 
 When a run fails, inspect its head SHA, package versions, tags, and Releases. If
 `main` still points to the same SHA, retry the workflow from `main`. If the

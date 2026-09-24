@@ -25,6 +25,7 @@ The bundled hook runs synchronously on `PreToolUse` for `^Bash$`. It denies a
 literal shell command when it finds:
 
 - `git ... --no-verify`
+- `git commit -n ...` (including short-option groups such as `-an`)
 - `git ... --no-gpg-sign`
 - `git -c commit.gpgsign=false ...`
 - `git -c commit.gpgsign=0 ...`
@@ -72,6 +73,7 @@ Run the handler fixtures:
 ```sh
 python3 hooks/block-no-verify.py < hooks/fixtures/allow-status.json
 python3 hooks/block-no-verify.py < hooks/fixtures/block-no-verify.json
+python3 hooks/block-no-verify.py < hooks/fixtures/block-short-no-verify.json
 python3 hooks/block-no-verify.py < hooks/fixtures/block-gpgsign-false.json
 ```
 

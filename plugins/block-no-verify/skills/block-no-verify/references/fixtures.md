@@ -4,17 +4,19 @@ The package includes handler fixtures under `hooks/fixtures/`.
 
 Expected results:
 
-| Fixture                    | Expected                                                      |
-| -------------------------- | ------------------------------------------------------------- |
-| `allow-status.json`        | Exit `0`, no stdout, no stderr.                               |
-| `block-no-verify.json`     | Exit `0`, JSON deny output mentioning `--no-verify`.          |
-| `block-gpgsign-false.json` | Exit `0`, JSON deny output mentioning `commit.gpgsign=false`. |
+| Fixture                      | Expected                                                      |
+| ---------------------------- | ------------------------------------------------------------- |
+| `allow-status.json`          | Exit `0`, no stdout, no stderr.                               |
+| `block-no-verify.json`       | Exit `0`, JSON deny output mentioning `--no-verify`.          |
+| `block-short-no-verify.json` | Exit `0`, JSON deny output mentioning `-n`.                   |
+| `block-gpgsign-false.json`   | Exit `0`, JSON deny output mentioning `commit.gpgsign=false`. |
 
 Manual examples after `/hooks` trust:
 
 ```sh
 git status
 git commit --no-verify -m hook-live-probe
+git commit -n -m hook-live-probe
 git -c commit.gpgsign=false commit -m hook-live-probe
 ```
 

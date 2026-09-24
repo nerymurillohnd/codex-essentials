@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assertExpectedPackages } from "../scripts/smoke-marketplace.mjs";
+import { assertExpectedPackages } from "../scripts/launch-contract.mjs";
 
 const ids = [
   "agents-md-master",

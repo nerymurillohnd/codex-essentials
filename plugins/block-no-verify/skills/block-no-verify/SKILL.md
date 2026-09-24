@@ -2,9 +2,10 @@
 name: block-no-verify
 description:
   Explain, verify, or maintain the Block No Verify Codex hook that blocks Git
-  --no-verify, --no-gpg-sign, and falsy commit.gpgsign bypasses in Bash tool
-  calls. Use for Git verification-bypass policy, commit signing enforcement, or
-  this plugin's hook behavior; do not use for ordinary read-only Git inspection.
+  --no-verify, commit -n, --no-gpg-sign, and falsy commit.gpgsign bypasses in
+  Bash tool calls. Use for Git verification-bypass policy, commit signing
+  enforcement, or this plugin's hook behavior; do not use for ordinary read-only
+  Git inspection.
 metadata:
   last-verified: "2026-09-24"
   target: "Codex PreToolUse Bash hook"
@@ -23,6 +24,7 @@ The bundled hook is a synchronous `PreToolUse` command hook for `^Bash$`. It
 denies literal Bash commands containing:
 
 - `git ... --no-verify`
+- `git commit -n ...` and short-option groups that contain `-n`
 - `git ... --no-gpg-sign`
 - `git -c commit.gpgsign=false ...`
 - `git -c commit.gpgsign=0 ...`
