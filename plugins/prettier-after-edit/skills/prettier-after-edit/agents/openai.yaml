@@ -1,0 +1,8 @@
+interface:
+  display_name: "Prettier After Edit"
+  short_description: "Format edited files with local Prettier"
+  default_prompt:
+    "Use $prettier-after-edit to format Codex-edited files with the target
+    project's local Prettier."
+policy:
+  allow_implicit_invocation: true

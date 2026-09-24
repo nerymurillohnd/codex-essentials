@@ -1,0 +1,8 @@
+interface:
+  display_name: "Configure Prettier"
+  short_description: "Audit Prettier before changing formatting"
+  default_prompt:
+    "Use $configure-prettier to audit this repository and propose a Prettier
+    configuration plan."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "configure-prettier",
+  "version": "0.1.0",
+  "description": "Audit and configure Prettier as reproducible repository tooling.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "prettier",
+    "formatter",
+    "configuration",
+    "developer-tools"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Configure Prettier",
+        "shortDescription": "Audit Prettier before changing formatting.",
+        "longDescription": "Configure Prettier helps Codex inspect repository-local formatting evidence, verify current Prettier behavior, and propose or implement scoped configuration, scripts, editor settings, hooks, and CI checks.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Read-only Prettier configuration audits",
+          "Repository-first formatting convention resolution",
+          "Scoped configuration and automation changes"
+        ],
+        "defaultPrompt": [
+          "Use $configure-prettier to audit this repository and propose a Prettier configuration plan."
+        ]
+      }
+    }
+  }
+}

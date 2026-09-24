@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "prettier-after-edit",
+  "version": "0.1.0",
+  "description": "Format Codex-edited files with the target project's local Prettier after supported edit events.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "prettier", "formatter", "hooks", "developer-tools"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Prettier After Edit",
+        "shortDescription": "Format edited files with local Prettier.",
+        "longDescription": "Prettier After Edit packages a PostToolUse hook and skill for exact-file formatting after supported Codex edit events. It uses the target project's local Prettier API, respects repository configuration and ignore files, and skips rather than installing dependencies.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "PostToolUse exact-file formatting",
+          "Project-local Prettier API resolution",
+          "Distinct formatted, unchanged, skipped, and failed statuses"
+        ],
+        "defaultPrompt": [
+          "Use $prettier-after-edit to format Codex-edited files with the target project's local Prettier."
+        ]
+      },
+      "hooks": "./hooks/hooks.json"
+    }
+  }
+}
