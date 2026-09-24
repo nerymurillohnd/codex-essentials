@@ -17,7 +17,9 @@
     "test": "node --test",
     "validate:packages": "node scripts/validate-packages.mjs",
     "catalog:build": "node scripts/build-catalog.mjs",
-    "catalog:check": "node scripts/check-catalog.mjs"
+    "catalog:check": "node scripts/check-catalog.mjs",
+    "release:plan": "node scripts/publish-release.mjs",
+    "release:bootstrap:plan": "node scripts/publish-release.mjs --bootstrap"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

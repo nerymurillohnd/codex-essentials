@@ -112,7 +112,7 @@ stable under repeated generation. Check mode compares bytes and writes nothing.
 
 ## Task 4: Release, labels, issue forms, and security controls
 
-**Files:** Create `scripts/plan-release.mjs`, `scripts/publish-release.mjs`,
+**Files:** Create `scripts/release-plan.mjs`, `scripts/publish-release.mjs`,
 `tests/release.test.mjs`, `.github/workflows/quality.yml`,
 `.github/workflows/release.yml`,
 `.github/ISSUE_TEMPLATE/{bug,feature,plugin-request,config}.yml`,
