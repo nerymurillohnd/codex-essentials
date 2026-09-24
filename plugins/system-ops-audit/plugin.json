@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "system-ops-audit",
+  "version": "0.1.0",
+  "description": "Design, run, and interpret a privacy-safe read-only macOS baseline for one machine.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "macos", "operations", "audit", "baseline"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "System Ops Audit",
+        "shortDescription": "Inspect one Mac without changing it.",
+        "longDescription": "A Codex workflow for scoping, collecting, and analyzing read-only macOS operational evidence while protecting secrets and separating observations from remediation.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Read-only macOS baseline design",
+          "Privacy-safe local diagnostics",
+          "Evidence and finding classification"
+        ],
+        "defaultPrompt": [
+          "Use $system-ops-audit to design a read-only baseline for this Mac."
+        ]
+      }
+    }
+  }
+}

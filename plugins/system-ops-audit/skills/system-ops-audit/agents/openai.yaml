@@ -1,0 +1,7 @@
+interface:
+  display_name: "System Ops Audit"
+  short_description: "Run privacy-safe read-only macOS audits"
+  default_prompt:
+    "Use $system-ops-audit to plan or analyze a read-only baseline for this Mac."
+policy:
+  allow_implicit_invocation: true

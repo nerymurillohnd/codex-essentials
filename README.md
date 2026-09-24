@@ -28,6 +28,7 @@ Codex session after installing a plugin to inspect its available capabilities.
 | [Repository Maintenance](plugins/repo-maintenance/README.md)       | 0.1.0   | Maintain repository records from evidence.        |
 | [Skill Design Standards](plugins/skill-design-standards/README.md) | 0.1.0   | Design and assess focused Agent Skills.           |
 | [Svelte Development](plugins/svelte-development/README.md)         | 0.1.0   | Engineer Svelte with current MCP guidance.        |
+| [System Ops Audit](plugins/system-ops-audit/README.md)             | 0.1.0   | Inspect one Mac without changing it.              |
 | [TypeScript Pro](plugins/typescript-pro/README.md)                 | 0.1.0   | Prove types at runtime boundaries.                |
 | [Verify Completion](plugins/verify-completion/README.md)           | 0.1.0   | Require evidence before declaring work complete.  |
 

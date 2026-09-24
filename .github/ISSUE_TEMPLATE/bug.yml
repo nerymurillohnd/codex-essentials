@@ -23,6 +23,7 @@ body:
         - "repo-maintenance"
         - "skill-design-standards"
         - "svelte-development"
+        - "system-ops-audit"
         - "typescript-pro"
         - "verify-completion"
         # generated:plugins:end
