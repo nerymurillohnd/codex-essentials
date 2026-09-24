@@ -22,6 +22,7 @@ Codex session after installing a plugin to inspect its available capabilities.
 | Plugin                                                             | Version | Summary                                           |
 | ------------------------------------------------------------------ | ------- | ------------------------------------------------- |
 | [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) | 0.1.0   | Carry authorized PRs through protected merge.     |
+| [DocKeeper](plugins/doc-keeper/README.md)                          | 0.1.0   | Keep changelogs and ADRs evidence-backed.         |
 | [Live Research](plugins/live-research/README.md)                   | 0.1.0   | Verify changing facts against current sources.    |
 | [Codex Memory Audit](plugins/optimize-memories/README.md)          | 0.1.0   | Audit memories and prepare evidence-backed fixes. |
 | [Repository Maintenance](plugins/repo-maintenance/README.md)       | 0.1.0   | Maintain repository records from evidence.        |

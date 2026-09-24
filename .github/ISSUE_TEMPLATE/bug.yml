@@ -17,6 +17,7 @@ body:
         # generated:plugins:start
         - "Marketplace / new plugin"
         - "automatic-pr-lifecycle"
+        - "doc-keeper"
         - "live-research"
         - "optimize-memories"
         - "repo-maintenance"

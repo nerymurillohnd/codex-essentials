@@ -1,0 +1,8 @@
+interface:
+  display_name: "DocKeeper"
+  short_description: "Maintain changelogs and ADRs from evidence"
+  default_prompt:
+    "Use $doc-keeper to audit or update this changelog or ADR from verified
+    facts."
+policy:
+  allow_implicit_invocation: true

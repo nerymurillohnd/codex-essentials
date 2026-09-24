@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "doc-keeper",
+  "version": "0.1.0",
+  "description": "Keep changelogs and architecture decisions aligned with verified work and explicit choices.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "changelog", "adr", "release-history", "documentation"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "DocKeeper",
+        "shortDescription": "Keep changelogs and ADRs evidence-backed.",
+        "longDescription": "A focused Codex skill for changelog and architecture decision closeout, audit, repair, and release preflight that respects existing document and release ownership.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Changelog closeout and repair",
+          "Architecture decision records",
+          "Release history verification"
+        ],
+        "defaultPrompt": [
+          "Use $doc-keeper to audit this changelog or ADR and update only the evidence-backed record."
+        ]
+      }
+    }
+  }
+}
