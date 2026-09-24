@@ -1,0 +1,29 @@
+{
+	"name": "codex-essentials",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Authoring and validation for the Codex Essentials Git marketplace.",
+	"license": "MIT",
+	"type": "module",
+	"packageManager": "npm@12.0.2",
+	"engines": {
+		"node": "24.21.0",
+		"npm": "12.0.2"
+	},
+	"scripts": {
+		"check": "npm run format:check && npm test",
+		"format": "biome check --write . && prettier --write \"**/*.{md,yml,yaml}\"",
+		"format:check": "biome check . && prettier --check \"**/*.{md,yml,yaml}\"",
+		"test": "node --test",
+		"catalog:build": "node scripts/build-catalog.mjs",
+		"catalog:check": "node scripts/check-catalog.mjs"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"ajv": "8.20.0",
+		"lefthook": "2.1.14",
+		"prettier": "3.9.9",
+		"semver": "7.8.5",
+		"yaml": "2.9.1"
+	}
+}
