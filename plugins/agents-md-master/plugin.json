@@ -1,0 +1,40 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agents-md-master",
+  "version": "0.1.0",
+  "description": "Create, audit, refactor, and evaluate Codex AGENTS.md instruction systems.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "agents-md",
+    "instructions",
+    "governance",
+    "evaluation"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AGENTS.md Master",
+        "shortDescription": "Design and audit Codex instruction systems.",
+        "longDescription": "Create, audit, refactor, and evaluate AGENTS.md instruction hierarchies from repository evidence, with clear placement, authority, approval, and validation boundaries.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "AGENTS.md hierarchy design",
+          "Instruction audit and refactor proposals",
+          "Scenario-based evaluation"
+        ],
+        "defaultPrompt": [
+          "Use $agents-md-master to audit this AGENTS.md hierarchy without editing it.",
+          "Use $agents-md-master to design a scoped AGENTS.md system for this repository.",
+          "Use $agents-md-master to evaluate this instruction proposal against the current baseline."
+        ]
+      }
+    }
+  }
+}

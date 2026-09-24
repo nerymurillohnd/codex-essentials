@@ -1,0 +1,7 @@
+interface:
+  display_name: "AGENTS.md Master"
+  short_description: "Design and audit Codex instruction systems"
+  default_prompt:
+    "Use $agents-md-master to audit this AGENTS.md hierarchy without editing it."
+policy:
+  allow_implicit_invocation: true
