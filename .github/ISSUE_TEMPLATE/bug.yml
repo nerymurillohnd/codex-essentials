@@ -17,6 +17,7 @@ body:
         # generated:plugins:start
         - "Marketplace / new plugin"
         - "live-research"
+        - "typescript-pro"
         - "verify-completion"
         # generated:plugins:end
     validations:

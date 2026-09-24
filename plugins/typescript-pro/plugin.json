@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "typescript-pro",
+  "version": "0.1.0",
+  "description": "Engineer TypeScript with proven trust boundaries and behavior-preserving types.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "typescript", "tsx", "tsconfig", "type-safety"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "TypeScript Pro",
+        "shortDescription": "Prove types at runtime boundaries.",
+        "longDescription": "TypeScript and TSX implementation, review, and refactoring guidance focused on strict types, external data validation, version-aware configuration, and behavior preservation.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "TypeScript review and implementation",
+          "Runtime trust-boundary validation",
+          "Version-aware compiler configuration"
+        ],
+        "defaultPrompt": [
+          "Use $typescript-pro to inspect this TypeScript project and make the smallest safe change."
+        ]
+      }
+    }
+  }
+}

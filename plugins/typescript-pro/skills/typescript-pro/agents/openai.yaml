@@ -1,0 +1,8 @@
+interface:
+  display_name: "TypeScript Pro"
+  short_description: "Engineer TypeScript with proven boundaries"
+  default_prompt:
+    "Use $typescript-pro to review this TypeScript change and its runtime trust
+    boundaries."
+policy:
+  allow_implicit_invocation: true
