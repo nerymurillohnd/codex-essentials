@@ -19,8 +19,9 @@ Codex session after installing a plugin to inspect its available capabilities.
 
 <!-- generated:plugins:start -->
 
-| Plugin | Version | Summary |
-| ------ | ------- | ------- |
+| Plugin                                                   | Version | Summary                                          |
+| -------------------------------------------------------- | ------- | ------------------------------------------------ |
+| [Verify Completion](plugins/verify-completion/README.md) | 0.1.0   | Require evidence before declaring work complete. |
 
 <!-- generated:plugins:end -->
 

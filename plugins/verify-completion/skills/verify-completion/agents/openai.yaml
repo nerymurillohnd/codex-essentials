@@ -1,0 +1,8 @@
+interface:
+  display_name: "Verify Completion"
+  short_description: "Check evidence before a completion claim"
+  default_prompt:
+    "Use $verify-completion to check the evidence before I call this work
+    complete."
+policy:
+  allow_implicit_invocation: true

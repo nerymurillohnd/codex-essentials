@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "verify-completion",
+  "version": "0.1.0",
+  "description": "Check the evidence behind completion, correctness, and handoff claims.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "verification", "completion", "quality"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Verify Completion",
+        "shortDescription": "Require evidence before declaring work complete.",
+        "longDescription": "A focused Codex skill for checking acceptance criteria, real outcomes, receiving contracts, false positives, and failure cases before a completion or readiness claim.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Acceptance-criteria verification",
+          "Counterpart and negative-path checks",
+          "Evidence-backed completion reports"
+        ],
+        "defaultPrompt": [
+          "Use $verify-completion to check the evidence before I say this work is complete."
+        ]
+      }
+    }
+  }
+}
