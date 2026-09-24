@@ -1,0 +1,8 @@
+interface:
+  display_name: "ShellCheck After Edit"
+  short_description: "Format and lint shell edits"
+  default_prompt:
+    "Use $shellcheck-after-edit to lint shell files or propose a shell edit
+    hook."
+policy:
+  allow_implicit_invocation: true

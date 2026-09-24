@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ruff-after-edit",
+  "version": "0.1.0",
+  "description": "Use Ruff deliberately and prepare consumer-owned Codex after-edit hooks.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "ruff", "python", "hooks", "formatting"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Ruff After Edit",
+        "shortDescription": "Use Ruff and prepare edit hooks.",
+        "longDescription": "Ruff linting and formatting guidance plus approval-gated, consumer-owned Codex PostToolUse and Stop hook templates. The package does not install, activate, or trust hooks.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Ruff linting and formatting guidance",
+          "Consumer-owned PostToolUse hook templates",
+          "Stop-gate validation workflow"
+        ],
+        "defaultPrompt": [
+          "Use $ruff-after-edit to lint Python or propose a Ruff after-edit hook."
+        ]
+      }
+    }
+  }
+}

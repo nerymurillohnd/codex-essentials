@@ -1,0 +1,3 @@
+# Optional consumer-owned ShellCheck profile. Copy only after approval.
+external-sources=true
+source-path=SCRIPTDIR

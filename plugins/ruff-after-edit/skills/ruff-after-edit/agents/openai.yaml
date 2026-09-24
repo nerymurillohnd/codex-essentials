@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ruff After Edit"
+  short_description: "Use Ruff and prepare edit hooks"
+  default_prompt:
+    "Use $ruff-after-edit to lint Python or propose a Ruff after-edit hook."
+policy:
+  allow_implicit_invocation: true

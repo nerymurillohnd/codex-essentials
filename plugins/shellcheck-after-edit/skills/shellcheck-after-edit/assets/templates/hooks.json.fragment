@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash <approved-hooks-dir>/shellcheck-after-edit.sh --scope <approved-scope>",
+            "timeout": 120,
+            "statusMessage": "Running shfmt and ShellCheck on edited shell files"
+          }
+        ]
+      }
+    ]
+  }
+}

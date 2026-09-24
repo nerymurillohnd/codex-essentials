@@ -1,0 +1,16 @@
+[[hooks.PostToolUse]]
+matcher = "apply_patch|Edit|Write"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "bash <approved-hooks-dir>/ruff-after-edit.sh --scope <approved-scope> --ruff-command '<approved-ruff-command>'"
+timeout = 120
+statusMessage = "Running Ruff on edited Python files"
+
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = "bash <approved-hooks-dir>/ruff-check-on-stop.sh --scope <approved-scope> --ruff-command '<approved-ruff-command>'"
+timeout = 120
+statusMessage = "Checking Ruff before completion"

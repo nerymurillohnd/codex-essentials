@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "shellcheck-after-edit",
+  "version": "0.1.0",
+  "description": "Use ShellCheck and shfmt for shell files and prepare edit hooks.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "shellcheck", "shfmt", "shell", "hooks"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "ShellCheck After Edit",
+        "shortDescription": "Format and lint shell edits.",
+        "longDescription": "ShellCheck and shfmt guidance plus approval-gated, consumer-owned Codex PostToolUse hook templates for edited shell scripts. The package does not install, activate, or trust hooks.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "ShellCheck and shfmt guidance",
+          "Exact-file PostToolUse hook templates",
+          "Consumer-owned hook validation"
+        ],
+        "defaultPrompt": [
+          "Use $shellcheck-after-edit to lint shell files or propose a shell edit hook."
+        ]
+      }
+    }
+  }
+}
