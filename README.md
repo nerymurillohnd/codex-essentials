@@ -18,6 +18,10 @@ Codex session after installing a plugin to inspect its available capabilities.
 ## Plugins
 
 <!-- generated:plugins:start -->
+
+| Plugin | Version | Summary |
+| ------ | ------- | ------- |
+
 <!-- generated:plugins:end -->
 
 ## Update
