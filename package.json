@@ -11,13 +11,17 @@
     "npm": "12.0.2"
   },
   "scripts": {
-    "check": "npm run format:check && npm test && npm run validate:packages && npm run catalog:check",
+    "check": "npm run format:check && npm test && npm run validate:packages && npm run catalog:check && npm run check:python && npm run check:shell",
     "format": "biome check --write . && prettier --write \"**/*.{md,yml,yaml}\"",
     "format:check": "biome check . && prettier --check \"**/*.{md,yml,yaml}\"",
     "test": "node --test",
     "validate:packages": "node scripts/validate-packages.mjs",
     "catalog:build": "node scripts/build-catalog.mjs",
     "catalog:check": "node scripts/check-catalog.mjs",
+    "check:python": "uvx ruff@0.16.8 format --check plugins/block-no-verify/hooks/block-no-verify.py && uvx ruff@0.16.8 check plugins/block-no-verify/hooks/block-no-verify.py && uvx basedpyright@1.40.1 plugins/block-no-verify/hooks/block-no-verify.py",
+    "check:shell": "shfmt -d scripts/install_ci_gate_tools.sh plugins/ruff-after-edit/skills/ruff-after-edit/assets/templates/ruff-after-edit.sh plugins/ruff-after-edit/skills/ruff-after-edit/assets/templates/ruff-check-on-stop.sh plugins/shellcheck-after-edit/skills/shellcheck-after-edit/assets/templates/shellcheck-after-edit.sh && shellcheck scripts/install_ci_gate_tools.sh plugins/ruff-after-edit/skills/ruff-after-edit/assets/templates/ruff-after-edit.sh plugins/ruff-after-edit/skills/ruff-after-edit/assets/templates/ruff-check-on-stop.sh plugins/shellcheck-after-edit/skills/shellcheck-after-edit/assets/templates/shellcheck-after-edit.sh",
+    "hooks:install": "lefthook install",
+    "hooks:pre-commit": "lefthook run pre-commit",
     "smoke:marketplace": "node scripts/smoke-marketplace.mjs",
     "release:plan": "node scripts/publish-release.mjs",
     "release:bootstrap:plan": "node scripts/publish-release.mjs --bootstrap"

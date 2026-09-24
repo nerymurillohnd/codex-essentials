@@ -64,6 +64,11 @@ npm install
 npm run check
 ```
 
+The full gate also needs `uv` for pinned Ruff and Basedpyright, ShellCheck
+`0.11.0`, and shfmt `3.14.1`. CI installs and verifies these tools before
+running the same gate. Git hooks are optional local setup via
+`npm run hooks:install`; they never replace the repository gate.
+
 The package manifest is authored; the catalog and inventory are generated. See
 [repository instructions](AGENTS.md), [package instructions](plugins/AGENTS.md),
 and [documentation instructions](docs/AGENTS.md).
