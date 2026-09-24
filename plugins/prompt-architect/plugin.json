@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "prompt-architect",
+  "version": "0.1.0",
+  "description": "Write and audit concise prompts for complex agentic work.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "prompting", "agents", "evaluation"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Prompt Architect",
+        "shortDescription": "Write concise, executable agent prompts.",
+        "longDescription": "Turn rough intent or an existing prompt into a focused execution contract with explicit outputs, authority boundaries, current-source checks, and proportionate verification.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Productivity",
+        "capabilities": [
+          "Agent prompt drafting",
+          "Prompt audit and revision",
+          "Authority and verification design"
+        ],
+        "defaultPrompt": [
+          "Use $prompt-architect to turn this rough task into a copy-ready prompt.",
+          "Audit this prompt for material ambiguity, authority, and verification gaps."
+        ]
+      }
+    }
+  }
+}

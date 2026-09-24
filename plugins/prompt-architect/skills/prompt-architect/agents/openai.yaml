@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prompt Architect"
+  short_description: "Draft and audit executable prompts"
+  default_prompt:
+    "Use $prompt-architect to write a concise prompt for this task."
+policy:
+  allow_implicit_invocation: true
