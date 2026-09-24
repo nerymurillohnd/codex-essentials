@@ -53,8 +53,13 @@ machine inherited `line-length = 100` from user-level Ruff configuration while
 CI used Ruff's default 88. The candidate now owns a small `ruff.toml` with
 `py314`, an explicit 88-character format limit, and lint selection; the Python
 handler was reformatted under that project policy. The failed run is retained as
-evidence of the diagnosed drift, not treated as a passing gate. A new candidate
-SHA must pass remote Quality before cutover.
+evidence of the diagnosed drift, not treated as a passing gate.
+
+The next Quality run, `35987541223`, passed for
+`871a63f31f413329e32309729cd62c09b40b4ad1`. It reported a non-fatal uv cache
+warning because this JavaScript repository has no Python lockfile; the workflow
+now keys uv's cache from `package.json`, which pins the `uvx` tool versions. The
+final post-fix SHA still requires its own passing run.
 
 ## Current remote preflight and remaining gates
 

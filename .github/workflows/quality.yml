@@ -34,6 +34,7 @@ jobs:
         with:
           version: 0.12.18
           python-version: "3.14"
+          cache-dependency-glob: package.json
 
       - name: Pin npm and shell gate tools
         run: |
