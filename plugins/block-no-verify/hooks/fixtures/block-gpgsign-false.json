@@ -1,0 +1,11 @@
+{
+  "session_id": "fixture",
+  "transcript_path": null,
+  "cwd": "/tmp",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_use_id": "fixture-block-gpgsign",
+  "tool_input": {
+    "command": "git -c commit.gpgsign=false commit -m hook-live-probe"
+  }
+}

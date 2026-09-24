@@ -1,0 +1,8 @@
+interface:
+  display_name: "Block No Verify"
+  short_description: "Verify Git bypass blocking hook"
+  default_prompt:
+    "Use $block-no-verify to explain and verify the Codex hook that blocks Git
+    verification bypass flags."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,18 @@
+{
+  "description": "Block Git verification bypass flags in Codex Bash tool calls.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${PLUGIN_ROOT}/hooks/block-no-verify.py",
+            "timeout": 5,
+            "statusMessage": "Checking Git verification policy"
+          }
+        ]
+      }
+    ]
+  }
+}

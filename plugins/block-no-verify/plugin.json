@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "block-no-verify",
+  "version": "0.1.0",
+  "description": "Block Git verification bypass flags in Codex Bash tool calls after plugin hook trust.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "hooks", "git", "no-verify", "commit-signing"],
+  "extensions": {
+    "com.openai": {
+      "hooks": "./hooks/hooks.json",
+      "interface": {
+        "displayName": "Block No Verify",
+        "shortDescription": "Block Git verification bypass flags.",
+        "longDescription": "Bundles a Codex PreToolUse Bash hook that denies literal Git commands using --no-verify, --no-gpg-sign, or command-scoped commit.gpgsign=false style bypasses. The package also includes a skill that explains installation, trust, verification, rollback, and coverage limits.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Git bypass policy hook",
+          "Codex hook trust guidance",
+          "Verification and rollback instructions"
+        ],
+        "defaultPrompt": [
+          "Use $block-no-verify to explain this Git verification bypass policy and how to verify it safely."
+        ]
+      }
+    }
+  }
+}

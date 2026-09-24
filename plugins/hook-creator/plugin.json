@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hook-creator",
+  "version": "0.1.0",
+  "description": "Design, implement, review, and debug Codex lifecycle hooks using current official behavior.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "hooks", "lifecycle", "automation", "plugins"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Hook Creator",
+        "shortDescription": "Design and verify Codex lifecycle hooks.",
+        "longDescription": "Map hook intent to the correct Codex lifecycle event, matcher, handler, source layer, output contract, trust flow, tests, and rollback. Covers command hooks, MCP tool hooks, background behavior, managed hooks, plugin-bundled hooks, and debugging evidence boundaries.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Codex hook design and review",
+          "Lifecycle event and matcher selection",
+          "Command and MCP hook implementation",
+          "Trust, testing, and debugging guidance"
+        ],
+        "defaultPrompt": [
+          "Use $hook-creator to design the Codex hook for this workflow and identify the verification required."
+        ]
+      }
+    }
+  }
+}
