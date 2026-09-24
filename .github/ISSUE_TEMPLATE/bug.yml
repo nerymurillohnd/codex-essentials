@@ -19,6 +19,7 @@ body:
         - "automatic-pr-lifecycle"
         - "live-research"
         - "optimize-memories"
+        - "repo-maintenance"
         - "typescript-pro"
         - "verify-completion"
         # generated:plugins:end

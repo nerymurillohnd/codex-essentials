@@ -1,0 +1,7 @@
+# Use only for a real skill; replace every placeholder and remove this comment.
+interface:
+  display_name: "{{SKILL_DISPLAY_NAME}}"
+  short_description: "{{WHAT_THIS_ONE_SKILL_DOES}}"
+  default_prompt: "Use ${{SKILL_ID}} to {{REPRESENTATIVE_TASK}}."
+policy:
+  allow_implicit_invocation: true

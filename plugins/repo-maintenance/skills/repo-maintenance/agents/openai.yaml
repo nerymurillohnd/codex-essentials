@@ -1,0 +1,8 @@
+interface:
+  display_name: "Repository Maintenance"
+  short_description: "Maintain repository records from evidence"
+  default_prompt:
+    "Use $repo-maintenance to audit or update this repository's documentation
+    from current evidence."
+policy:
+  allow_implicit_invocation: true
