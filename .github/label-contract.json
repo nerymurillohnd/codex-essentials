@@ -1,0 +1,69 @@
+{
+  "labels": [
+    {
+      "name": "bug",
+      "color": "d73a4a",
+      "description": "Reproducible product defect"
+    },
+    {
+      "name": "enhancement",
+      "color": "a2eeef",
+      "description": "Improvement to an existing capability"
+    },
+    {
+      "name": "plugin-request",
+      "color": "5319e7",
+      "description": "Proposal for a marketplace plugin"
+    },
+    {
+      "name": "documentation",
+      "color": "0075ca",
+      "description": "Documentation correction or addition"
+    },
+    {
+      "name": "catalog",
+      "color": "7057ff",
+      "description": "Marketplace metadata or generated inventory"
+    },
+    {
+      "name": "tooling",
+      "color": "0052cc",
+      "description": "Repository tooling, schema, tests, or CI"
+    },
+    {
+      "name": "release",
+      "color": "0e8a16",
+      "description": "Version, tag, changelog, or release control"
+    },
+    {
+      "name": "breaking-change",
+      "color": "b60205",
+      "description": "Consumer migration is required"
+    },
+    {
+      "name": "needs-info",
+      "color": "fbca04",
+      "description": "More evidence is needed from the reporter"
+    },
+    {
+      "name": "blocked",
+      "color": "e4e669",
+      "description": "External decision or dependency blocks progress"
+    },
+    {
+      "name": "duplicate",
+      "color": "cfd3d7",
+      "description": "Already tracked in another issue"
+    },
+    {
+      "name": "not-planned",
+      "color": "ffffff",
+      "description": "Considered but not selected for implementation"
+    },
+    {
+      "name": "released",
+      "color": "c2e0c6",
+      "description": "Verified in a plugin release"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+name: New plugin request
+description: Propose a new Codex capability for the marketplace.
+title: "[Plugin]: "
+labels:
+  - plugin-request
+body:
+  - type: textarea
+    id: use_case
+    attributes:
+      label: User workflow
+      description:
+        Explain who needs this plugin and what result they should obtain.
+    validations:
+      required: true
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Expected capability
+      description:
+        Identify any skills, MCP connections, hooks, scripts, or assets the
+        workflow needs.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Tools, permissions, and limits
+      description:
+        Include external services, credentials by name only, side effects, and
+        approval boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example requests and success criteria
+      description:
+        Give one matching request and an observable successful result.
+    validations:
+      required: true

@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a reproducible Codex Essentials defect.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value:
+        Do not include credentials, tokens, or private customer data. Report
+        vulnerabilities privately through the Security link.
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Affected plugin
+      options:
+        # generated:plugins:start
+        - "Marketplace / new plugin"
+        # generated:plugins:end
+    validations:
+      required: true
+  - type: input
+    id: codex_version
+    attributes:
+      label: Codex CLI version
+      description: Paste the result of `codex --version`.
+      placeholder: codex-cli 0.156.1
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Installed plugin version
+      description: Use `codex plugin list --json` when available.
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: install_source
+    attributes:
+      label: Installation source
+      options:
+        - Git marketplace on main
+        - Git marketplace pinned to another ref
+        - Local marketplace
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description:
+        Include the exact command or prompt and relevant non-secret inputs.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or screenshots
+      description: Remove secrets and personal data before attaching evidence.
+    validations:
+      required: false

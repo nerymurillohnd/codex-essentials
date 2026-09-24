@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose an improvement to an existing plugin or the marketplace.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Affected plugin
+      options:
+        # generated:plugins:start
+        - "Marketplace / new plugin"
+        # generated:plugins:end
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or unmet need
+      description:
+        Describe the actual workflow and what currently fails or takes manual
+        effort.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_outcome
+    attributes:
+      label: Desired outcome
+      description:
+        State observable behavior rather than only an implementation preference.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and side effects
+      description: Note affected users, tools, permissions, or migration needs.
+    validations:
+      required: false
