@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "skill-design-standards",
+  "version": "0.1.0",
+  "description": "Design, audit, and evaluate focused Agent Skills for Codex and portable hosts.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "agent-skills", "skill-authoring", "evaluation"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Skill Design Standards",
+        "shortDescription": "Design and assess focused Agent Skills.",
+        "longDescription": "Separate portable skill format from Codex host metadata, write precise invocation descriptions and script interfaces, and evaluate real output and activation with observable evidence.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Agent Skill design and audit",
+          "Codex skill metadata review",
+          "Behavioral and activation evaluation"
+        ],
+        "defaultPrompt": [
+          "Use $skill-design-standards to audit this skill and distinguish format errors from design advice."
+        ]
+      }
+    }
+  }
+}

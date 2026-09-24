@@ -21,6 +21,7 @@ body:
         - "live-research"
         - "optimize-memories"
         - "repo-maintenance"
+        - "skill-design-standards"
         - "svelte-development"
         - "typescript-pro"
         - "verify-completion"
