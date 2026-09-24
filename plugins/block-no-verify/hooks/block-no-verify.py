@@ -10,8 +10,24 @@ from typing import cast
 FALSY_GPGSIGN_VALUES = {"false", "0", "no", "off"}
 COMMAND_SEPARATORS = {";", "&&", "||", "|", "&", "(", ")", "\n"}
 COMMAND_PREFIXES = {"command", "env", "sudo"}
-GIT_GLOBAL_VALUE_OPTIONS = {"-c", "-C", "--git-dir", "--work-tree", "--namespace", "--config-env"}
-COMMIT_VALUE_OPTIONS = {"-m", "--message", "-F", "--file", "-C", "-c", "--author", "--date"}
+GIT_GLOBAL_VALUE_OPTIONS = {
+    "-c",
+    "-C",
+    "--git-dir",
+    "--work-tree",
+    "--namespace",
+    "--config-env",
+}
+COMMIT_VALUE_OPTIONS = {
+    "-m",
+    "--message",
+    "-F",
+    "--file",
+    "-C",
+    "-c",
+    "--author",
+    "--date",
+}
 
 
 def _deny(reason: str) -> None:
@@ -120,7 +136,11 @@ def _git_option_violation(arguments: list[str]) -> str | None:
         if value is None:
             continue
         setting = _normalize_config_value(value)
-        if setting and setting[0] == "commit.gpgsign" and setting[1] in FALSY_GPGSIGN_VALUES:
+        if (
+            setting
+            and setting[0] == "commit.gpgsign"
+            and setting[1] in FALSY_GPGSIGN_VALUES
+        ):
             return f"commit.gpgsign={setting[1]}"
     return _short_commit_violation(arguments)
 

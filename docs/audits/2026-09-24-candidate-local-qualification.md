@@ -47,6 +47,15 @@ hook-resource validation. Both are now covered by negative tests; ordinary
 release publication also requires the complete initial tag/Release set before
 any later publication. These fixes must still pass the remote exact-SHA gate.
 
+The first remote Quality run for candidate SHA
+`c0766349ebad4795774f4e1a3765c786b9f56851` failed Ruff formatting: the developer
+machine inherited `line-length = 100` from user-level Ruff configuration while
+CI used Ruff's default 88. The candidate now owns a small `ruff.toml` with
+`py314`, an explicit 88-character format limit, and lint selection; the Python
+handler was reformatted under that project policy. The failed run is retained as
+evidence of the diagnosed drift, not treated as a passing gate. A new candidate
+SHA must pass remote Quality before cutover.
+
 ## Current remote preflight and remaining gates
 
 The GitHub repository was public with default branch `main`, no open PRs, no
