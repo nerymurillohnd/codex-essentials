@@ -1,6 +1,8 @@
 node_modules/
 coverage/
 .superpowers/
+__pycache__/
+*.pyc
 .DS_Store
 .env
 .env.*

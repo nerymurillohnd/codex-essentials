@@ -59,9 +59,9 @@ The next Quality run, `35987541223`, passed for
 `871a63f31f413329e32309729cd62c09b40b4ad1`. It reported a non-fatal uv cache
 warning because this JavaScript repository has no Python lockfile; the workflow
 now keys uv's cache from `package.json`, which pins the `uvx` tool versions. The
-final post-fix SHA still requires its own passing run.
+At that point, the final post-fix SHA still required its own passing run.
 
-## Current remote preflight and remaining gates
+## Pre-cutover remote snapshot and gates
 
 The GitHub repository was public with default branch `main`, no open PRs, no
 repository rulesets, and no candidate branch at this snapshot. Private
@@ -69,18 +69,69 @@ vulnerability reporting returned `{ "enabled": true }`. Six labels referenced by
 the new label contract were absent and must be created before the new issue
 forms are considered ready.
 
-Still required before an outcome claim: independent review findings resolved;
-candidate push; exact-SHA Quality workflow success; Git-backed installation and
-file comparison; a controlled no-force branch rename that leaves old history at
-remote `deprecated`; active effective branch/tag rules; a complete
-20-tag/20-Release bootstrap; old-tag preservation; and final installation and
-topology checks. The former `deprecated` branch must not be deleted without a
-later user decision.
+At that snapshot, still required before an outcome claim: independent review
+findings resolved; candidate push; exact-SHA Quality workflow success;
+Git-backed installation and file comparison; a controlled no-force branch rename
+that leaves old history at remote `deprecated`; active effective branch/tag
+rules; a complete 20-tag/20-Release bootstrap; old-tag preservation; and final
+installation and topology checks. The former `deprecated` branch must not be
+deleted without a later user decision.
+
+## Cutover closeout
+
+The final candidate SHA was `bceb9c875ae02dab6ed8668a3d51454497d05ec2`.
+[Quality run 35987738039](https://github.com/nerymurillohnd/codex-essentials/actions/runs/35987738039)
+passed its exact `npm run check` job. A fresh Codex home installed the Git
+marketplace at that same SHA from `codex/rebuild-main`, then again from final
+`main`: each run copied all 20 plugins byte-for-byte, exposing 25 skills, two
+bundled-hook packages, and one declared MCP package.
+
+The no-force branch switch left remote `main` at the candidate SHA and remote
+`deprecated` at `6e26790e1fc05ecb6500c1903d3225d601c5ebf7`; the latter was not
+deleted or updated. The repository default branch is `main`. Active repository
+rulesets `23933133`, `23933145`, and `23933152` protect `main`, freeze
+`deprecated`, and prevent update/deletion of new release tags. The effective
+branch rules were read back from GitHub. The tag rule is active and its
+`refs/tags/codex-essentials/**/*` condition matches the new tag shape under
+GitHub's documented `fnmatch` syntax; no destructive tag-mutation probe was
+performed. `main` requires a PR, conversation resolution, and the
+`npm run check` status from GitHub Actions app ID `15368`, with zero required
+approvals for this single-operator repository.
+
+All 13 labels in `.github/label-contract.json` were reconciled exactly; 14 other
+repository labels were retained. GitHub private vulnerability reporting returned
+`{ "enabled": true }` after cutover.
+
+[Bootstrap run 35988945637](https://github.com/nerymurillohnd/codex-essentials/actions/runs/35988945637)
+passed the full gate and publication step. All 20 `codex-essentials/<id>/v0.1.0`
+tag refs point to the launch SHA, and all 20 GitHub Releases are immutable,
+non-draft, non-prerelease, have nonempty notes, and contain no uploaded assets.
+Historical Release `388135907` and its tag remain at
+`08a9e43eb1e0dc2d68429fc047ab10d785a50fcf`. GitHub's repository-wide latest
+Release still points to that historical release, because the publisher did not
+mark any individual plugin as globally latest. A normal publisher dry run after
+bootstrap planned zero new tags and zero new Releases.
+
+An isolated old-line installation of `agents-md-master 0.2.0` refreshed the same
+Git marketplace after cutover and explicitly reinstalled `0.1.0`; its source
+resolved to the launch SHA and the installed skill bytes matched the new
+package. The temporary Codex home was removed. The auxiliary authoring worktree
+was removed after it was clean, and the canonical checkout path was switched to
+local `main`; both local branch refs remain. Generated Python bytecode from the
+prior checkout was retained, not deleted, and is now ignored by the new
+repository policy.
+
+These checks do not auto-trust plugin hooks in consumer sessions. A user's
+`/hooks` review remains necessary. They also do not prove every skill's
+model-mediated activation or a fresh-session Svelte MCP call; the current
+session's remote Svelte MCP was healthy during authoring, while packaged MCP
+discovery and Git-backed copying were separately verified.
 
 Sources checked on 2026-09-24:
 [OpenAI plugin packaging](https://developers.openai.com/plugins/build/plugins),
 [Agent Plugins specification](https://agent-plugins.org/specification),
 [OpenAI prompting guidance](https://developers.openai.com/api/docs/guides/prompting),
 [GitHub branch rename API](https://docs.github.com/en/rest/branches/branches#rename-a-branch),
-[GitHub ruleset API](https://docs.github.com/en/rest/repos/rules), and
-[GitHub release API](https://docs.github.com/en/rest/releases/releases).
+[GitHub ruleset API](https://docs.github.com/en/rest/repos/rules),
+[GitHub ruleset pattern guidance](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository),
+and [GitHub release API](https://docs.github.com/en/rest/releases/releases).

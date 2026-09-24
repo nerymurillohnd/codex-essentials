@@ -1,8 +1,8 @@
 # Codex Essentials repository instructions
 
-This repository distributes only Codex plugins from a Git marketplace. This
-orphan lineage is the candidate for the future `main`; the previous lineage must
-be retained remotely as `deprecated` during cutover.
+This repository distributes only Codex plugins from a Git marketplace. The
+current `main` has an independent root history; the former lineage is retained
+remotely as `deprecated` until the user decides its eventual disposition.
 
 ## Authority and layout
 
@@ -28,9 +28,9 @@ be retained remotely as `deprecated` during cutover.
 - Initial and later plugin tags use `codex-essentials/<plugin-id>/v<semver>`.
   Releases contain source notes only; do not publish packages or upload
   generated assets.
-- Preserve the former `main` as remote `deprecated` during cutover. Do not
-  modify or delete that branch without a separate user decision. Do not create
-  an external Git backup for this cutover.
+- Preserve remote `deprecated` at its original history. Do not modify or delete
+  that branch without a separate user decision. No external Git backup or bundle
+  was created for this cutover.
 
 ## Secrets and external systems
 
