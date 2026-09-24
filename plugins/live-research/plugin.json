@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "live-research",
+  "version": "0.1.0",
+  "description": "Verify material facts that may have changed using current authoritative evidence.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "research", "verification", "sources", "compatibility"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Live Research",
+        "shortDescription": "Verify changing facts against current sources.",
+        "longDescription": "Research change-sensitive claims with current primary sources, local environment evidence, release history, and dated citations. Separate verified facts, interpretations, conflicts, and gaps.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Education & Research",
+        "capabilities": [
+          "Current-source verification",
+          "Technical compatibility review",
+          "Evidence and uncertainty reporting"
+        ],
+        "defaultPrompt": [
+          "Use $live-research to verify the current facts and cite the authoritative sources."
+        ]
+      }
+    }
+  }
+}

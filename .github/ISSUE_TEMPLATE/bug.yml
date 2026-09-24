@@ -16,6 +16,7 @@ body:
       options:
         # generated:plugins:start
         - "Marketplace / new plugin"
+        - "live-research"
         - "verify-completion"
         # generated:plugins:end
     validations:

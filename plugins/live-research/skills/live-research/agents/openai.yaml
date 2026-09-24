@@ -1,0 +1,8 @@
+interface:
+  display_name: "Live Research"
+  short_description: "Verify changing facts with current sources"
+  default_prompt:
+    "Use $live-research to verify this claim with current authoritative
+    evidence."
+policy:
+  allow_implicit_invocation: true
