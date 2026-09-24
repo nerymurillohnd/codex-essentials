@@ -13,6 +13,7 @@ body:
         - "Marketplace / new plugin"
         - "automatic-pr-lifecycle"
         - "live-research"
+        - "optimize-memories"
         - "typescript-pro"
         - "verify-completion"
         # generated:plugins:end

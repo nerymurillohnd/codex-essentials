@@ -1,0 +1,8 @@
+interface:
+  display_name: "Codex Memory Audit"
+  short_description: "Verify and reconcile Codex memory claims"
+  default_prompt:
+    "Use $audit-and-cure-memories to audit these memories and propose exact
+    corrections."
+policy:
+  allow_implicit_invocation: true

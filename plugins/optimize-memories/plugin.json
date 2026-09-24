@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "optimize-memories",
+  "version": "0.1.0",
+  "description": "Audit Codex memories against current evidence and prepare scoped corrections.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "memories", "audit", "verification", "knowledge"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Codex Memory Audit",
+        "shortDescription": "Audit memories and prepare evidence-backed fixes.",
+        "longDescription": "Inspect project-relevant or global Codex memory claims, verify them against current source material, separate generated state from instructions, and prepare exact corrections through the host-supported memory workflow.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Project and global memory audits",
+          "Claim-level evidence reconciliation",
+          "Scoped correction proposals"
+        ],
+        "defaultPrompt": [
+          "Use $audit-and-cure-memories to audit these Codex memories and propose evidence-backed corrections."
+        ]
+      }
+    }
+  }
+}
