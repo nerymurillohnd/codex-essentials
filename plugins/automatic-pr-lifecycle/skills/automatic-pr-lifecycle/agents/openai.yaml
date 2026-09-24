@@ -1,0 +1,8 @@
+interface:
+  display_name: "Automatic PR Lifecycle"
+  short_description: "Take authorized PRs through protected merge"
+  default_prompt:
+    "Use $automatic-pr-lifecycle to take this authorized PR through its
+    protected lifecycle."
+policy:
+  allow_implicit_invocation: true

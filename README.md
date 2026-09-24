@@ -19,11 +19,12 @@ Codex session after installing a plugin to inspect its available capabilities.
 
 <!-- generated:plugins:start -->
 
-| Plugin                                                   | Version | Summary                                          |
-| -------------------------------------------------------- | ------- | ------------------------------------------------ |
-| [Live Research](plugins/live-research/README.md)         | 0.1.0   | Verify changing facts against current sources.   |
-| [TypeScript Pro](plugins/typescript-pro/README.md)       | 0.1.0   | Prove types at runtime boundaries.               |
-| [Verify Completion](plugins/verify-completion/README.md) | 0.1.0   | Require evidence before declaring work complete. |
+| Plugin                                                             | Version | Summary                                          |
+| ------------------------------------------------------------------ | ------- | ------------------------------------------------ |
+| [Automatic PR Lifecycle](plugins/automatic-pr-lifecycle/README.md) | 0.1.0   | Carry authorized PRs through protected merge.    |
+| [Live Research](plugins/live-research/README.md)                   | 0.1.0   | Verify changing facts against current sources.   |
+| [TypeScript Pro](plugins/typescript-pro/README.md)                 | 0.1.0   | Prove types at runtime boundaries.               |
+| [Verify Completion](plugins/verify-completion/README.md)           | 0.1.0   | Require evidence before declaring work complete. |
 
 <!-- generated:plugins:end -->
 

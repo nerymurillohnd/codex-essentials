@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "automatic-pr-lifecycle",
+  "version": "0.1.0",
+  "description": "Take an authorized GitHub pull request through protected validation, repair, merge, and synchronization.",
+  "author": {
+    "name": "Nery Samuel Murillo",
+    "url": "https://github.com/nerymurillohnd"
+  },
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "MIT",
+  "keywords": ["codex", "github", "pull-request", "ci", "review", "merge"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Automatic PR Lifecycle",
+        "shortDescription": "Carry authorized PRs through protected merge.",
+        "longDescription": "A GitHub MCP-first workflow for scoping local changes, validating and publishing a feature branch, repairing CI and review findings, observing a protected merge, and synchronizing local state.",
+        "developerName": "Nery Samuel Murillo",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Protected PR delivery",
+          "SHA-specific CI and review repair",
+          "Merge and synchronization verification"
+        ],
+        "defaultPrompt": [
+          "Use $automatic-pr-lifecycle to take this authorized PR through protected merge and report the final state."
+        ]
+      }
+    }
+  }
+}

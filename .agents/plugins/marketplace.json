@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "automatic-pr-lifecycle",
+      "source": {
+        "source": "local",
+        "path": "./plugins/automatic-pr-lifecycle"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "live-research",
       "source": {
         "source": "local",
