@@ -1,0 +1,29 @@
+name: Documentation issue
+description: Report missing, incorrect, or confusing repository documentation.
+labels: ["type: documentation", "area: documentation", "status: needs triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or file
+      description: Link the page or give its repository path.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Issue type
+      options:
+        - Missing information
+        - Incorrect information
+        - Confusing explanation
+        - Broken example or link
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What needs to change?
+      description: Explain the impact and include a current official source when a product rule may have changed.
+    validations:
+      required: true

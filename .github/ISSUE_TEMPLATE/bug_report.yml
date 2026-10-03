@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible problem with a plugin or repository workflow.
+labels: ["type: bug", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues before filing. If this may expose a vulnerability, follow SECURITY.md instead of opening a public issue. Remove secrets and personal data from logs.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Plugin package or installation
+        - Skill
+        - MCP connection or tool
+        - Marketplace or catalog
+        - Repository tooling
+        - Documentation
+        - Other or unsure
+    validations:
+      required: true
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin and version
+      description: Name the affected plugin and version, or write "repository tooling".
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: Client and version
+      description: For example, Codex CLI output from codex --version, or ChatGPT desktop version.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include exact steps and a minimal example without credentials or private data.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include a concise, redacted error message when available.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

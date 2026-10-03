@@ -1,0 +1,36 @@
+name: Feature request
+description: Improve an existing plugin or repository workflow.
+labels: ["type: feature", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. Use the New plugin proposal form for a new package.
+  - type: input
+    id: scope
+    attributes:
+      label: Plugin or repository area
+      description: Name the affected plugin or repository workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: What task is difficult today, and who needs it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the desired outcome, not just an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: How to verify it
+      description: Give a prompt, example, or behavior that would show the change works.
+    validations:
+      required: false

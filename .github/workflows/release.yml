@@ -1,0 +1,48 @@
+name: Release plugin
+
+on:
+  push:
+    tags:
+      - 'plugin/*/v*'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check tag and package plugin
+        id: package
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/sync_catalog.py --check
+          if [[ ! "$RELEASE_TAG" =~ ^plugin/([a-z0-9]+(-[a-z0-9]+)*)/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo 'Invalid plugin release tag' >&2
+            exit 1
+          fi
+          plugin="${BASH_REMATCH[1]}"
+          version="${BASH_REMATCH[3]}"
+          manifest_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "plugins/$plugin/plugin.json")"
+          test "$version" = "$manifest_version"
+          python3 scripts/package_release.py "$plugin"
+          python3 scripts/release_notes.py "$plugin" "$version" > release-notes.md
+          echo "plugin=$plugin" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          PLUGIN: ${{ steps.package.outputs.plugin }}
+          VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          gh release create "$RELEASE_TAG" "dist/$PLUGIN-v$VERSION.zip" \
+            --title "$PLUGIN v$VERSION" \
+            --notes-file release-notes.md \
+            --verify-tag

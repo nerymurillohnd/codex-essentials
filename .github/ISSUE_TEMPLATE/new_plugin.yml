@@ -1,0 +1,47 @@
+name: New plugin proposal
+description: Propose a distributable plugin for the Codex Essentials catalog.
+labels: ["type: feature", "area: plugin", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search the catalog and existing issues first. Proposals are reviewed for a clear user goal, distribution rights, and a realistic test plan.
+  - type: input
+    id: name
+    attributes:
+      label: Proposed name
+      description: A short plugin name; the final package identifier may differ.
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: User goal and workflow
+      description: Who needs it, what would they ask, and what should the plugin do?
+    validations:
+      required: true
+  - type: dropdown
+    id: capabilities
+    attributes:
+      label: Expected capabilities
+      options:
+        - Skills only
+        - Skills plus MCP
+        - MCP only
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Services, permissions, and distribution rights
+      description: Name required accounts or services and any assets or content that need redistribution rights.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example requests and boundaries
+      description: Include one request that should work and one that should not activate or should be declined.
+    validations:
+      required: true

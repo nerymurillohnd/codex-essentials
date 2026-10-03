@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "replace-with-plugin-name",
+  "version": "0.1.0",
+  "description": "Replace with the specific purpose of this plugin.",
+  "author": {
+    "name": "Replace with author name"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Replace With Display Name",
+        "shortDescription": "Replace this subtitle",
+        "longDescription": "Replace with the implemented behavior and intended audience.",
+        "developerName": "Replace with author name",
+        "category": "Productivity",
+        "defaultPrompt": "Help me use this plugin."
+      }
+    }
+  }
+}

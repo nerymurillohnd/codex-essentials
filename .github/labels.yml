@@ -1,0 +1,50 @@
+# Apply these labels after the GitHub remote exists.
+# Choose one type and one primary area; add status, community, and process labels as needed.
+- name: "type: bug"
+  color: d73a4a
+  description: Reproducible defect or regression
+- name: "type: feature"
+  color: a2eeef
+  description: New plugin or user-facing capability
+- name: "type: documentation"
+  color: 0075ca
+  description: Missing, incorrect, or unclear documentation
+- name: "type: maintenance"
+  color: 7057ff
+  description: Internal upkeep without new user-facing behavior
+- name: "type: security"
+  color: b60205
+  description: Security work tracked through a private reporting path
+- name: "area: plugin"
+  color: 1d76db
+  description: Plugin package, manifest, or distribution bundle
+- name: "area: skills"
+  color: 1d76db
+  description: Skill activation, instructions, or supporting files
+- name: "area: mcp"
+  color: 1d76db
+  description: MCP transport, tools, authentication, or integration
+- name: "area: marketplace"
+  color: 1d76db
+  description: Catalog, discovery, installation, or listing
+- name: "area: tooling"
+  color: 1d76db
+  description: Scripts, CI, validation, or release automation
+- name: "area: documentation"
+  color: 1d76db
+  description: Guides, READMEs, examples, or ADRs
+- name: "status: needs triage"
+  color: fbca04
+  description: Awaiting maintainer classification or reproduction
+- name: "status: blocked"
+  color: d4c5f9
+  description: Waiting on a dependency or external decision
+- name: "community: good first issue"
+  color: 7057ff
+  description: Small, scoped contribution with clear acceptance criteria
+- name: "community: help wanted"
+  color: 008672
+  description: Maintainers welcome a community contribution
+- name: "process: release"
+  color: 0e8a16
+  description: Versioned plugin release preparation
