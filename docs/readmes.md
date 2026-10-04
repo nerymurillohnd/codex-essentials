@@ -11,7 +11,7 @@ The template gives each question a short place to be answered. Add detail or com
 3. **Requirements and installation:** state supported clients and versions, prerequisites, permissions, side effects, and verified installation steps. Do not promise a command or service that has not been tested.
 4. **Usage and examples:** show at least one realistic prompt or action and the result a user should expect.
 5. **Verification and maintenance:** tell users how to confirm the plugin works, how to update it, and how to remove it. Give UI steps when commands are not the actual route.
-6. **Limits and related links:** describe relevant boundaries and link to the changelog, repository catalog, and issue form.
+6. **Limits, license, and related links:** describe relevant boundaries, name or link the packaged license, and link to the changelog, repository catalog, and issue form.
 
 ## Content choices
 
@@ -26,4 +26,4 @@ The template gives each question a short place to be answered. Add detail or com
 
 ## Drift prevention
 
-`plugin.json` is the source for title, description, and version. `skills/` and `mcp.json` are the sources for capability badges and the capability table. The badge images use Shields.io, while their labels and linked text remain readable if the image service is unavailable. `scripts/sync_catalog.py --write` updates these generated README regions, the root catalog, and `.agents/plugins/marketplace.json`; `--check` detects drift in CI. The validator also rejects unfilled placeholders, leftover optional guidance, and broken relative links. A passing check proves structural consistency, not that the installation prose or example works: test those manually in a supported client.
+`plugin.json` is the source for title, description, and version. `skills/` and `mcp.json` are the sources for capability badges and the capability table. The badge images use Shields.io, while their labels and linked text remain readable if the image service is unavailable. `scripts/sync_catalog.py --write` updates these generated README regions, the root catalog, and `.agents/plugins/marketplace.json`; `--check` detects drift in CI. The validator also rejects unfilled placeholders, leftover optional guidance, and broken relative file links across repository documentation. A passing check proves structural consistency, not that installation prose, heading anchors, external links, or examples work: review those manually. Follow the [documentation maintenance guide](maintenance.md) after changes that affect multiple files.

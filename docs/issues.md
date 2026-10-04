@@ -1,6 +1,6 @@
 # Issues, labels, and repository topics
 
-This policy was informed by a read-only GitHub MCP review of [openai/codex issue forms](https://github.com/openai/codex/tree/main/.github/ISSUE_TEMPLATE) and its [issue list](https://github.com/openai/codex/issues) on 2026-10-02. The useful pattern is structured reports, duplicate search, and labels that separate the kind of work from the affected area. Codex Essentials has fewer surfaces, so its forms and taxonomy stay smaller. Recheck GitHub's current issue form behavior before configuring the remote repository.
+This policy was informed by a read-only GitHub MCP review of [openai/codex issue forms](https://github.com/openai/codex/tree/main/.github/ISSUE_TEMPLATE) and its [issue list](https://github.com/openai/codex/issues) on 2026-10-02. The useful pattern is structured reports, duplicate search, and labels that separate the kind of work from the affected area. Codex Essentials has fewer surfaces, so its forms and taxonomy stay smaller. Recheck GitHub's current issue form behavior before changing the live forms or labels.
 
 ## Issue entry points
 
@@ -23,7 +23,7 @@ Blank issues remain available for cases the forms do not cover. Search existing 
 - **Community:** `good first issue` needs a bounded task and clear acceptance criteria; `help wanted` signals maintainers welcome a contribution.
 - **Process:** `release` applies to versioned plugin release work and PRs.
 
-Labels classify issues and PRs. Git **tags** identify immutable plugin releases using `plugin/<name>/v<version>` as described in [releasing.md](releasing.md). GitHub repository **topics** help discovery and are separate from both; suggested topics after remote creation are `codex`, `codex-plugins`, `agent-plugins`, `mcp`, `skills`, and `plugin-marketplace`, subject to a final relevance check.
+Labels classify issues and PRs. Git **tags** identify immutable plugin releases using `plugin/<name>/v<version>` as described in [releasing.md](releasing.md). GitHub repository **topics** help discovery and are separate from both; suggested topics during remote setup are `codex`, `codex-plugins`, `agent-plugins`, `mcp`, `skills`, and `plugin-marketplace`, subject to a final relevance check.
 
 ## Triage and maintenance
 
@@ -35,4 +35,4 @@ Labels classify issues and PRs. Git **tags** identify immutable plugin releases 
 
 ## Remote setup
 
-No GitHub remote is configured yet. When it exists, create the labels in `.github/labels.yml` before relying on form defaults, then verify each form in the GitHub issue chooser. Review repository topics, private vulnerability reporting, and branch rules at the same time. The labels file is declarative documentation and does not install labels by itself.
+The [GitHub repository](https://github.com/nerymurillohnd/codex-essentials) exists, and the four issue forms are present on `main`. As checked on 2026-10-03, GitHub still has its default labels rather than the 16 labels in `.github/labels.yml`; form defaults are therefore not verified as usable. Provision the local label catalog, compare remote names and descriptions, and open each form in the GitHub issue chooser before treating the forms as active. Review repository topics, private vulnerability reporting, and branch rules at the same time. The labels file is declarative documentation and does not install labels by itself. Update this section after activation and verification.

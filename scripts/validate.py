@@ -64,6 +64,9 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
         fail(errors, manifest_path, "version must be semantic version")
     if not isinstance(manifest.get("description"), str) or not manifest["description"].strip():
         fail(errors, manifest_path, "description is required")
+    license_path = directory / "LICENSE"
+    if not license_path.is_file() or not license_path.read_text(encoding="utf-8").strip():
+        fail(errors, directory, "missing nonempty LICENSE")
     readme_path = directory / "README.md"
     if not readme_path.is_file():
         fail(errors, directory, "missing README.md")
@@ -79,6 +82,7 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
             "## Verification",
             "## Updates and removal",
             "## Limitations",
+            "## License",
             "## Related",
         ):
             if heading not in readme:
@@ -107,6 +111,8 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
                 fail(errors, changelog_path, "release date is invalid")
         if "YYYY-MM-DD" in changelog:
             fail(errors, changelog_path, "template content remains")
+        if "- Initial plugin release." in changelog:
+            fail(errors, changelog_path, "replace the template's initial-release note")
     if any(key in manifest for key in ("skills", "mcpServers", "apps", "interface")):
         fail(errors, manifest_path, "portable capabilities belong in fixed files or extensions")
     extensions = manifest.get("extensions")
@@ -162,7 +168,12 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
-    validate_relative_links(ROOT / "README.md", errors)
+    documentation = [*ROOT.glob("*.md"), *ROOT.joinpath("docs").rglob("*.md")]
+    documentation.extend(
+        (ROOT / "plugins" / "README.md", ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md")
+    )
+    for path in sorted(documentation):
+        validate_relative_links(path, errors)
     directories = sorted(path for path in PLUGINS.iterdir() if path.is_dir())
     for directory in directories:
         validate_plugin(directory, errors)

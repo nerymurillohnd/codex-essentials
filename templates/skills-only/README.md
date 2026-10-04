@@ -5,7 +5,7 @@
 Plugin purpose from plugin.json.
 <!-- plugin-meta:end -->
 
-[Overview](#overview) · [Capabilities](#capabilities) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Verification](#verification) · [Updates and removal](#updates-and-removal) · [Limitations](#limitations)
+[Overview](#overview) · [Capabilities](#capabilities) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Verification](#verification) · [Updates and removal](#updates-and-removal) · [Limitations](#limitations) · [License](#license)
 
 ## Overview
 
@@ -29,9 +29,7 @@ Capability summary generated from skills/ and mcp.json.
 
 Use the installation method verified for the supported client:
 
-```sh
-{{INSTALL_COMMAND}}
-```
+{{INSTALLATION_STEPS}}
 
 <!-- Maintainer: Explain authentication or consent in Requirements. Never put credentials in this file. -->
 
@@ -57,6 +55,10 @@ For example:
 ## Limitations
 
 - {{LIMITATION_OR_BOUNDARY}}
+
+## License
+
+See the packaged [LICENSE](LICENSE) file.
 
 <!-- Optional: Add a Configuration section only when users have settings to change. Use a table for a small set of comparable settings; use a fenced `toml`, `json`, or `sh` block for exact configuration. Delete this comment after deciding. -->
 <!-- Optional: Add a `<details><summary>Troubleshooting</summary>` section for lengthy secondary guidance. Keep installation and required warnings visible. Delete this comment after deciding. -->

@@ -1,4 +1,4 @@
-# Apply these labels after the GitHub remote exists.
+# Provision these labels on the existing GitHub remote before relying on issue form defaults.
 # Choose one type and one primary area; add status, community, and process labels as needed.
 - name: "type: bug"
   color: d73a4a

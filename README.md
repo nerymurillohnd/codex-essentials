@@ -26,7 +26,7 @@ The catalog is generated from each plugin's manifest. Each entry links to a READ
 | --- | --- |
 | [Plugin packages](plugins/README.md) | Hold a portable `plugin.json`, skills and/or MCP configuration, assets, a README, and a changelog. |
 | [Repository marketplace](.agents/plugins/marketplace.json) | Defines local discovery for plugin entries when packages are added. |
-| [GitHub releases](docs/releasing.md) | Has a prepared workflow for versioned ZIP archives after remote setup, review, and tagging. |
+| [GitHub releases](docs/releasing.md) | Defines the reviewed tag and ZIP workflow; remote activation and release verification are tracked in the release guide. |
 | [OpenAI public Plugins Directory](docs/official-guidance.md#distribution-channels) | Has a separate upload, validation, review, and publication process. |
 
 The human catalog, plugin README metadata, and local marketplace entries are generated from package files. [The README guide](docs/readmes.md) explains which content authors write and which content is generated.
@@ -65,6 +65,7 @@ Follow [the authoring guide](docs/authoring.md) to finish the package and test i
 | [OpenAI guidance audit](docs/official-guidance.md) | Dated findings and how to recheck current official documentation. |
 | [Architecture decisions](docs/decisions/README.md) | Requested ADRs using the [project template](templates/adr/ADR_YYYY-MM-DD_decision-slug.md). |
 | [Issues and labels](docs/issues.md) and [security policy](SECURITY.md) | Structured community feedback, triage, and private vulnerability reporting. |
+| [Documentation maintenance](docs/maintenance.md) | Sources of truth, drift checks, and remote-state review. |
 
 The starter files live under `templates/`, outside the plugin catalog.
 

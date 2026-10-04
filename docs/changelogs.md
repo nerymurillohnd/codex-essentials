@@ -9,6 +9,7 @@ Use the canonical [CHANGELOG.md template](../templates/changelog/CHANGELOG.md) f
 - Keep dated version sections newest first, using `## [X.Y.Z] - YYYY-MM-DD`. The date is the release date, in ISO format. Review the date when publishing if the release occurs after the bump.
 - Every manifest version needs a matching dated section. Do not silently edit the meaning of a published release; add a correction note when material information was omitted.
 - Name breaking changes and migration steps explicitly. A major bump alone does not tell users what to do.
+- Replace the scaffold's `Initial plugin release.` line with the actual first-release capabilities; the local validator rejects that generic template note.
 
 ## Release workflow
 

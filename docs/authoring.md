@@ -8,7 +8,7 @@ Put reusable workflows in `skills/<skill-name>/SKILL.md`. Each skill needs YAML 
 
 If the plugin connects to an MCP server, use a portable root `mcp.json` with verified connection details. Never invent an endpoint, include credentials, or assume a client has access to a service. If an app binding or client-specific compatibility manifest is needed, document the supported client and keep its metadata synchronized with the root manifest.
 
-Reference only assets shipped inside the plugin. Do not commit symlinks, dependency directories, release archives, or secrets in plugin packages. Each plugin README is its landing page. Follow [the README guide](readmes.md) for required content, optional sections, formatting, and generated regions.
+Reference only assets shipped inside the plugin. The scaffold copies the repository's Apache 2.0 `LICENSE` into the plugin so the release ZIP carries its license; review or replace that file if a plugin uses different terms. Do not commit symlinks, dependency directories, release archives, or secrets in plugin packages. Each plugin README is its landing page. Follow [the README guide](readmes.md) for required content, optional sections, formatting, and generated regions.
 
 The skills-only template is a local starting point, not a distribution-ready package. Before distributing a plugin for Codex, add a square `logo` and `composerIcon` to `extensions.com.openai.interface`, with `./`-prefixed paths to files included in the package (prefer `assets/`). Current Codex package validation requires both. The [current submission guidance](https://developers.openai.com/plugins/deploy/submission#icons-and-screenshots) specifies supported formats, dimensions, and size limits; recheck it before release. Do not add placeholder icon paths or claim that a scaffold passes Codex package validation.
 
@@ -17,7 +17,7 @@ The root README is the human-readable marketplace landing page. Its marked catal
 ## Local workflow
 
 1. Run `python3 scripts/new_plugin.py <name> --display-name "Name" --short-description "Short subtitle" --description "Specific purpose" --author "Author"`.
-2. Replace the example skill and complete all plugin README sections.
+2. Replace the example skill, complete all plugin README sections, and replace the generic initial-release changelog note with real capabilities.
 3. Run `python3 scripts/sync_catalog.py --write` after changing the manifest, skill folders, skill descriptions, or `mcp.json`.
 4. Add only the capabilities the plugin actually provides.
 5. Run `python3 scripts/validate.py` and `python3 scripts/sync_catalog.py --check`.

@@ -18,7 +18,7 @@ The intended scope includes model behavior, memory management, workflows, debugg
 
 The north star is a curated catalog of robust, independently versioned extensions that make Codex more capable, reliable, and operationally useful in real development and technical work. Favor working plugin experiences, clear documentation, reproducible packaging, and verified behavior over catalog size or speculative infrastructure. Keep the human README catalog, Codex marketplace metadata, plugin packages, changelogs, and releases consistent from shared sources.
 
-Work toward that outcome in stages: maintain the local foundation; build and test the first real plugin; verify local marketplace installation; create and configure the GitHub remote when requested; then activate repository workflows and publish reviewed plugin releases. Public OpenAI directory submission is a separate reviewed channel. At the start of a session, check the repository state to see which stage is actually complete; this sequence is direction, not a claim that later stages are active.
+Work toward that outcome in stages: maintain the local foundation; build and test the first real plugin; verify local marketplace installation; configure and verify the GitHub repository services; then publish reviewed plugin releases. The GitHub remote already exists, but individual services still require verification. Public OpenAI directory submission is a separate reviewed channel. At the start of a session, check the repository state to see which stage is actually complete; this sequence is direction, not a claim that later stages are active.
 
 For a plugin to be ready for distribution, its user goal, package contents, supported client, installation steps, example requests, limitations, license, version, changelog, and representative behavior checks must be concrete and reviewable. A template or generated entry alone does not satisfy that bar.
 
@@ -37,6 +37,7 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 - Issues and labels: `.github/ISSUE_TEMPLATE/`, `.github/labels.yml`, `scripts/validate_issues.py`, `docs/issues.md`.
 - Versions and releases: `templates/changelog/`, `scripts/bump_version.py`, `.github/workflows/release.yml`, `docs/releasing.md`.
 - Decisions: `templates/adr/`, `docs/decisions/`, `scripts/validate_adrs.py`.
+- Documentation maintenance: `docs/maintenance.md`, `scripts/validate.py`, and `.github/workflows/validate.yml`.
 
 ## Conventions
 
@@ -45,6 +46,7 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 - Use the Agent Plugins 1.0 root `plugin.json` format; do not add unverified MCP endpoints, app IDs, or claims of compatibility.
 - Never commit secrets, credentials, dependency directories, or generated release archives.
 - Validate changes with `python3 scripts/validate.py` before proposing a plugin release.
+- Follow `docs/maintenance.md` after documentation, template, workflow, or repository-state changes. `python3 scripts/validate.py` checks local Markdown file links; review prose, anchors, examples, and remote activation manually.
 - Treat each `plugin.json` as the source for its README metadata, root catalog, and `.agents/plugins/marketplace.json`; run `python3 scripts/sync_catalog.py --write` after manual manifest edits and `--check` before review.
 - Follow `docs/readmes.md` for plugin READMEs: explain what the plugin is, why it exists, its practical behavior, requirements, usage, permissions and effects, verification, updates, removal, and limits without filler. Edit prose outside generated regions, replace uppercase double-brace placeholders, delete optional guidance that does not apply, and verify examples manually.
 - Follow `docs/issues.md` for issue forms, triage, labels, and release tags. Keep `.github/labels.yml` and form defaults aligned; run `python3 scripts/validate_issues.py` after changes. Do not create public issues for suspected vulnerabilities.
@@ -52,4 +54,4 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 - Before changing plugin packaging, marketplace entries, skills, MCP, hooks, validation, or public submission, read `docs/official-guidance.md`, then open the relevant current official OpenAI Docs pages linked there. Check `codex --version` and the matching `openai/codex` release notes when behavior depends on the installed CLI. Do not treat the audit's 2026-10-02 findings as permanent rules.
 - If live documentation or release notes differ from this repository's guidance, follow the current official source, update the affected guidance and tooling in the same change, and record the source URL, access date, and behavior verified. Distinguish documented rules from locally tested behavior and from assumptions.
 - When the user asks to record an important project decision, use `templates/adr/ADR_YYYY-MM-DD_decision-slug.md` and create the record under `docs/decisions/`. Follow that directory's README for status, evidence, and supersession; run `python3 scripts/validate_adrs.py`. Do not create ADRs merely because a decision was discussed.
-- Do not create a GitHub remote, publish a plugin, or deploy infrastructure as part of local authoring unless explicitly requested.
+- Do not change GitHub repository settings, push commits or tags, publish a plugin, or deploy infrastructure as part of local authoring unless explicitly requested.

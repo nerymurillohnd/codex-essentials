@@ -38,6 +38,7 @@ def main() -> int:
     if target.exists():
         parser.error("plugin already exists")
     shutil.copytree(ROOT / "templates" / "skills-only", target)
+    shutil.copyfile(ROOT / "LICENSE", target / "LICENSE")
     changelog = (ROOT / "templates" / "changelog" / "CHANGELOG.md").read_text(encoding="utf-8")
     (target / "CHANGELOG.md").write_text(
         changelog.replace("YYYY-MM-DD", date.today().isoformat()), encoding="utf-8"

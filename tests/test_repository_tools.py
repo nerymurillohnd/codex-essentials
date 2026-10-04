@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+import zipfile
 
 SOURCE = pathlib.Path(__file__).resolve().parents[1]
 
@@ -23,6 +24,7 @@ class RepositoryToolsTest(unittest.TestCase):
         (self.root / "plugins").mkdir()
         shutil.copy(SOURCE / "plugins" / "README.md", self.root / "plugins" / "README.md")
         shutil.copy(SOURCE / "README.md", self.root / "README.md")
+        shutil.copy(SOURCE / "AGENTS.md", self.root / "AGENTS.md")
         shutil.copy(SOURCE / "CONTRIBUTING.md", self.root / "CONTRIBUTING.md")
         shutil.copy(SOURCE / "LICENSE", self.root / "LICENSE")
         shutil.copy(SOURCE / "SECURITY.md", self.root / "SECURITY.md")
@@ -34,6 +36,13 @@ class RepositoryToolsTest(unittest.TestCase):
         result = subprocess.run(["python3", *args], cwd=self.root, text=True, capture_output=True)
         self.assertEqual(result.returncode == 0, succeeds, result.stdout + result.stderr)
         return result
+
+    def test_documentation_link_drift_is_detected(self) -> None:
+        self.run_script("scripts/validate.py")
+        guide = self.root / "docs" / "roadmap.md"
+        guide.write_text(guide.read_text() + "\n[Missing guide](missing-guide.md)\n")
+        result = self.run_script("scripts/validate.py", succeeds=False)
+        self.assertIn("docs/roadmap.md: broken relative link: missing-guide.md", result.stderr)
 
     def test_scaffold_requires_completion_and_detects_catalog_drift(self) -> None:
         self.run_script(
@@ -48,8 +57,15 @@ class RepositoryToolsTest(unittest.TestCase):
             "--author",
             "Sample Author",
         )
-        self.run_script("scripts/validate.py", succeeds=False)
         plugin = self.root / "plugins" / "sample-plugin"
+        self.assertEqual((plugin / "LICENSE").read_text(), (self.root / "LICENSE").read_text())
+        self.run_script("scripts/validate.py", succeeds=False)
+        changelog = plugin / "CHANGELOG.md"
+        changelog.write_text(
+            changelog.read_text().replace(
+                "- Initial plugin release.", "- Add the sample workflow for maintainers."
+            )
+        )
         skill = plugin / "skills" / "example-workflow"
         skill.rename(plugin / "skills" / "sample-workflow")
         (plugin / "skills" / "sample-workflow" / "SKILL.md").write_text(
@@ -63,7 +79,7 @@ class RepositoryToolsTest(unittest.TestCase):
             "{{SUPPORTED_CLIENTS_AND_VERSIONS}}": "Codex CLI with local marketplace support.",
             "{{PREREQUISITES}}": "Access to this repository marketplace.",
             "{{PERMISSIONS_AND_SIDE_EFFECTS}}": "No external account or write action is required.",
-            "{{INSTALL_COMMAND}}": "codex plugin marketplace add ./",
+            "{{INSTALLATION_STEPS}}": "Install from the verified local marketplace in Codex.",
             "{{EXAMPLE_PROMPT}}": "Use sample-plugin for this task.",
             "{{EXPECTED_RESULT}}": "The skill follows its documented steps.",
             "{{VERIFICATION_STEPS}}": "Start a new conversation and confirm the sample workflow activates.",
@@ -82,6 +98,9 @@ class RepositoryToolsTest(unittest.TestCase):
         self.run_script("scripts/sync_catalog.py", "--write")
         self.run_script("scripts/validate.py")
         self.run_script("scripts/sync_catalog.py", "--check")
+        self.run_script("scripts/package_release.py", "sample-plugin")
+        with zipfile.ZipFile(self.root / "dist" / "sample-plugin-v0.1.0.zip") as archive:
+            self.assertIn("sample-plugin/LICENSE", archive.namelist())
         self.assertIn("[sample-workflow](skills/sample-workflow/SKILL.md)", readme.read_text())
         self.assertNotIn("MCP: included", readme.read_text())
         (plugin / "mcp.json").write_text(
@@ -107,7 +126,6 @@ class RepositoryToolsTest(unittest.TestCase):
         self.assertIn("Improve workflow", notes.stdout)
         self.assertIn("Version: 0.1.1", readme.read_text())
         self.assertIn("| 0.1.1 |", catalog.read_text())
-        changelog = plugin / "CHANGELOG.md"
         self.assertRegex(changelog.read_text(), r"## \[0\.1\.1\] - \d{4}-\d{2}-\d{2}")
         changelog.write_text(
             changelog.read_text().replace(

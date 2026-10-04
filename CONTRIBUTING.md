@@ -12,6 +12,7 @@ For bugs, improvements, plugin proposals, and documentation corrections, use the
 - Follow [the release guide](docs/releasing.md) for version bumps, tags, and release assets.
 - Run `python3 scripts/validate.py` and report the result.
 - Run `python3 scripts/sync_catalog.py --check`; generated README metadata and the root catalog must match plugin manifests.
+- Follow [the documentation maintenance guide](docs/maintenance.md) when repository instructions, templates, or remote-state claims change.
 - For plugin format, marketplace, skill, MCP, hook, or public publication changes, re-open the relevant live OpenAI Docs pages and follow [the freshness procedure](docs/official-guidance.md#how-to-keep-this-guidance-current). Record the access date and any rule changes in the PR.
 - Use clear English commit messages and apply one `type:` and one primary `area:` pull request label, plus `process: release` for a versioned plugin release. See [the label taxonomy](docs/issues.md#label-taxonomy).
 
