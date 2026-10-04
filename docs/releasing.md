@@ -17,7 +17,7 @@ Each plugin has its own semantic version in `plugin.json` and a matching section
 
 After the release PR reaches `main`, create an annotated tag named `plugin/<plugin>/v<version>` at the reviewed commit and push that tag. The release workflow checks that the tag version matches the manifest, validates all plugins, packages the tagged plugin, extracts that version's changelog notes, and creates a GitHub release with a ZIP asset. A failed check stops publication. Tags and releases are public actions; verify the exact commit and contents before pushing.
 
-The tag gate also requires an annotated tag, a clean checkout of its commit, and ancestry in `origin/main`. With the checked-in workflow running, a tag on an unmerged commit fails before release creation. This local and workflow rule uses full branch and tag history from `actions/checkout@v4` with `fetch-depth: 0`, following the [checkout documentation](https://github.com/actions/checkout#checkout-v4) checked on 2026-10-04. Branch and tag rules remain necessary to restrict who can push or change the workflow; this gate does not prove PR review.
+The tag gate also requires an annotated tag, a clean checkout of its commit, and ancestry in `origin/main`. With the checked-in workflow running, a tag on an unmerged commit fails before release creation. This local and workflow rule uses full branch and tag history from `actions/checkout@v7` with `fetch-depth: 0`, following the [checkout documentation](https://github.com/actions/checkout#fetch-all-history-for-all-tags-and-branches) checked on 2026-10-04. Branch and tag rules remain necessary to restrict who can push or change the workflow; this gate does not prove PR review.
 
 Example:
 
