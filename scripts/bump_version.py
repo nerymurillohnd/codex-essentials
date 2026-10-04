@@ -61,7 +61,9 @@ def main() -> int:
     entry = f"## [Unreleased]\n\n## [{new}] - {date.today().isoformat()}\n\n{notes}\n\n"
     changelog = changelog[: unreleased.start()] + entry + changelog[unreleased.end() :]
     manifest["version"] = new
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     changelog_path.write_text(changelog, encoding="utf-8")
     sync_catalog_main(["--write"])
     print(f"{args.plugin}: {old} → {new}")

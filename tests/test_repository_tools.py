@@ -16,7 +16,9 @@ class RepositoryToolsTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = pathlib.Path(self.temp.name)
-        shutil.copytree(SOURCE / "scripts", self.root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(
+            SOURCE / "scripts", self.root / "scripts", ignore=shutil.ignore_patterns("__pycache__")
+        )
         shutil.copytree(SOURCE / "templates", self.root / "templates")
         (self.root / "plugins").mkdir()
         shutil.copy(SOURCE / "plugins" / "README.md", self.root / "plugins" / "README.md")
@@ -35,9 +37,16 @@ class RepositoryToolsTest(unittest.TestCase):
 
     def test_scaffold_requires_completion_and_detects_catalog_drift(self) -> None:
         self.run_script(
-            "scripts/new_plugin.py", "sample-plugin", "--display-name", "Sample Plugin",
-            "--short-description", "Sample workflow", "--description", "A sample workflow.",
-            "--author", "Sample Author",
+            "scripts/new_plugin.py",
+            "sample-plugin",
+            "--display-name",
+            "Sample Plugin",
+            "--short-description",
+            "Sample workflow",
+            "--description",
+            "A sample workflow.",
+            "--author",
+            "Sample Author",
         )
         self.run_script("scripts/validate.py", succeeds=False)
         plugin = self.root / "plugins" / "sample-plugin"
@@ -64,7 +73,9 @@ class RepositoryToolsTest(unittest.TestCase):
         }
         for placeholder, value in replacements.items():
             content = content.replace(placeholder, value)
-        content = "\n".join(line for line in content.split("\n") if not line.startswith("<!-- Optional:"))
+        content = "\n".join(
+            line for line in content.split("\n") if not line.startswith("<!-- Optional:")
+        )
         readme.write_text(content)
         self.run_script("scripts/validate.py", succeeds=False)
         self.run_script("scripts/sync_catalog.py", "--check", succeeds=False)
@@ -87,7 +98,9 @@ class RepositoryToolsTest(unittest.TestCase):
         catalog.write_text(catalog.read_text().replace("A sample workflow.", "Wrong purpose."))
         self.run_script("scripts/sync_catalog.py", "--check", succeeds=False)
         self.run_script("scripts/sync_catalog.py", "--write")
-        self.run_script("scripts/bump_version.py", "sample-plugin", "patch", "--summary", "Improve workflow")
+        self.run_script(
+            "scripts/bump_version.py", "sample-plugin", "patch", "--summary", "Improve workflow"
+        )
         self.run_script("scripts/validate.py")
         self.run_script("scripts/sync_catalog.py", "--check")
         notes = self.run_script("scripts/release_notes.py", "sample-plugin", "0.1.1")
@@ -96,15 +109,26 @@ class RepositoryToolsTest(unittest.TestCase):
         self.assertIn("| 0.1.1 |", catalog.read_text())
         changelog = plugin / "CHANGELOG.md"
         self.assertRegex(changelog.read_text(), r"## \[0\.1\.1\] - \d{4}-\d{2}-\d{2}")
-        changelog.write_text(changelog.read_text().replace(
-            "## [Unreleased]\n", "## [Unreleased]\n\n### Fixed\n\n- Correct activation for indirect requests.\n"
-        ))
-        self.run_script("scripts/bump_version.py", "sample-plugin", "patch", "--summary", "Duplicate", succeeds=False)
+        changelog.write_text(
+            changelog.read_text().replace(
+                "## [Unreleased]\n",
+                "## [Unreleased]\n\n### Fixed\n\n- Correct activation for indirect requests.\n",
+            )
+        )
+        self.run_script(
+            "scripts/bump_version.py",
+            "sample-plugin",
+            "patch",
+            "--summary",
+            "Duplicate",
+            succeeds=False,
+        )
         self.run_script("scripts/bump_version.py", "sample-plugin", "patch")
         self.run_script("scripts/validate.py")
-        self.assertIn("Correct activation for indirect requests", self.run_script(
-            "scripts/release_notes.py", "sample-plugin", "0.1.2"
-        ).stdout)
+        self.assertIn(
+            "Correct activation for indirect requests",
+            self.run_script("scripts/release_notes.py", "sample-plugin", "0.1.2").stdout,
+        )
 
 
 if __name__ == "__main__":

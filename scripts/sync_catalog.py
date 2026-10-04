@@ -38,10 +38,18 @@ def skill_rows(directory: Path) -> list[str]:
     rows: list[str] = []
     for skill in sorted((directory / "skills").glob("*/SKILL.md")):
         content = skill.read_text(encoding="utf-8")
-        frontmatter = content.split("---\n", 2)[1] if content.startswith("---\n") and "---\n" in content[4:] else ""
+        frontmatter = (
+            content.split("---\n", 2)[1]
+            if content.startswith("---\n") and "---\n" in content[4:]
+            else ""
+        )
         match = re.search(r"(?m)^description:\s*(.+)$", frontmatter)
-        description = match.group(1).strip().strip('"\'') if match else "Description missing in SKILL.md"
-        rows.append(f"| [{skill.parent.name}](skills/{skill.parent.name}/SKILL.md) | {safe_cell(description)} |")
+        description = (
+            match.group(1).strip().strip("\"'") if match else "Description missing in SKILL.md"
+        )
+        rows.append(
+            f"| [{skill.parent.name}](skills/{skill.parent.name}/SKILL.md) | {safe_cell(description)} |"
+        )
     return rows
 
 
@@ -69,11 +77,17 @@ def main(argv: list[str] | None = None) -> int:
         mcp_path = directory / "mcp.json"
         has_mcp = mcp_path.is_file()
         badges = [f"[![Version: {version}]({badge('version', version)})](CHANGELOG.md)"]
-        badges.append(f"[![Skills: {len(skills)}]({badge('skills', str(len(skills)), 'informational')})](#capabilities)")
+        badges.append(
+            f"[![Skills: {len(skills)}]({badge('skills', str(len(skills)), 'informational')})](#capabilities)"
+        )
         if has_mcp:
-            badges.append(f"[![MCP: included]({badge('MCP', 'included', 'brightgreen')})](mcp.json)")
+            badges.append(
+                f"[![MCP: included]({badge('MCP', 'included', 'brightgreen')})](mcp.json)"
+            )
         body = f"# {display_name}\n\n{description}\n\n" + " ".join(badges)
-        if not replace_region(readme, "<!-- plugin-meta:start -->", "<!-- plugin-meta:end -->", body, args.write):
+        if not replace_region(
+            readme, "<!-- plugin-meta:start -->", "<!-- plugin-meta:end -->", body, args.write
+        ):
             stale.append(str(readme.relative_to(ROOT)))
         capability_rows = skills or ["| No bundled skills | This plugin uses MCP tools directly. |"]
         capability = "| Skill | Workflow |\n| --- | --- |\n" + "\n".join(capability_rows)
@@ -81,18 +95,34 @@ def main(argv: list[str] | None = None) -> int:
             mcp = json.loads(mcp_path.read_text(encoding="utf-8"))
             servers = ", ".join(sorted(mcp.get("mcpServers", {}))) or "No servers declared"
             capability += f"\n\n**MCP connection:** [{safe_cell(servers)}](mcp.json)."
-        if not replace_region(readme, "<!-- plugin-capabilities:start -->", "<!-- plugin-capabilities:end -->", capability, args.write):
+        if not replace_region(
+            readme,
+            "<!-- plugin-capabilities:start -->",
+            "<!-- plugin-capabilities:end -->",
+            capability,
+            args.write,
+        ):
             stale.append(str(readme.relative_to(ROOT)))
-        rows.append(f"| [{safe_cell(display_name)}](plugins/{directory.name}/README.md) | {safe_cell(description)} | {version} |")
-        entries.append({
-            "name": directory.name,
-            "source": {"source": "local", "path": f"./plugins/{directory.name}"},
-            "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
-            "category": interface.get("category", "Productivity"),
-        })
+        rows.append(
+            f"| [{safe_cell(display_name)}](plugins/{directory.name}/README.md) | {safe_cell(description)} | {version} |"
+        )
+        entries.append(
+            {
+                "name": directory.name,
+                "source": {"source": "local", "path": f"./plugins/{directory.name}"},
+                "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+                "category": interface.get("category", "Productivity"),
+            }
+        )
     catalog = f"![Plugins: {len(rows)}]({badge('plugins', str(len(rows)), 'informational')})\n\n"
-    catalog += "| Plugin | Purpose | Version |\n| --- | --- | --- |\n" + "\n".join(rows) if rows else "No plugins have been added yet."
-    if not replace_region(ROOT / "README.md", "<!-- catalog:start -->", "<!-- catalog:end -->", catalog, args.write):
+    catalog += (
+        "| Plugin | Purpose | Version |\n| --- | --- | --- |\n" + "\n".join(rows)
+        if rows
+        else "No plugins have been added yet."
+    )
+    if not replace_region(
+        ROOT / "README.md", "<!-- catalog:start -->", "<!-- catalog:end -->", catalog, args.write
+    ):
         stale.append("README.md")
     marketplace_path = ROOT / ".agents" / "plugins" / "marketplace.json"
     marketplace = {

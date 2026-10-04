@@ -20,12 +20,17 @@ def main() -> int:
     parser.add_argument("name")
     parser.add_argument("--display-name", required=True)
     parser.add_argument("--description", required=True)
-    parser.add_argument("--short-description", required=True, help="Listing subtitle, at most 30 characters")
+    parser.add_argument(
+        "--short-description", required=True, help="Listing subtitle, at most 30 characters"
+    )
     parser.add_argument("--author", required=True)
     args = parser.parse_args()
     if len(args.name) > 64 or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", args.name):
         parser.error("name must be lowercase kebab-case and at most 64 characters")
-    if any(not value.strip() or "\n" in value for value in (args.display_name, args.description, args.short_description, args.author)):
+    if any(
+        not value.strip() or "\n" in value
+        for value in (args.display_name, args.description, args.short_description, args.author)
+    ):
         parser.error("metadata values must be nonempty single lines")
     if len(args.short_description) > 30:
         parser.error("short description must be at most 30 characters")
@@ -47,7 +52,9 @@ def main() -> int:
     interface["shortDescription"] = args.short_description
     interface["longDescription"] = args.description
     interface["developerName"] = args.author
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     sync_catalog_main(["--write"])
     print(f"Created plugins/{args.name}; complete README.md and replace the example skill.")
     return 0

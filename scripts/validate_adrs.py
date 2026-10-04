@@ -13,8 +13,12 @@ DECISIONS = ROOT / "docs" / "decisions"
 FILENAME = re.compile(r"ADR_(\d{4}-\d{2}-\d{2})_([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
 STATUSES = {"proposed", "accepted", "rejected", "deprecated", "superseded"}
 SECTIONS = (
-    "Purpose", "Scope", "Context and problem statement", "Decision drivers",
-    "Considered options", "Decision outcome",
+    "Purpose",
+    "Scope",
+    "Context and problem statement",
+    "Decision drivers",
+    "Considered options",
+    "Decision outcome",
 )
 
 

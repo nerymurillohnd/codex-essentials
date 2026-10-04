@@ -13,7 +13,9 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 PLUGINS = ROOT / "plugins"
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")
+VERSION = re.compile(
+    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
+)
 
 
 def fail(errors: list[str], path: Path, message: str) -> None:
@@ -68,7 +70,17 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
     else:
         readme = readme_path.read_text(encoding="utf-8")
         validate_relative_links(readme_path, errors)
-        for heading in ("## Overview", "## Capabilities", "## Requirements", "## Installation", "## Usage", "## Verification", "## Updates and removal", "## Limitations", "## Related"):
+        for heading in (
+            "## Overview",
+            "## Capabilities",
+            "## Requirements",
+            "## Installation",
+            "## Usage",
+            "## Verification",
+            "## Updates and removal",
+            "## Limitations",
+            "## Related",
+        ):
             if heading not in readme:
                 fail(errors, readme_path, f"missing {heading} section")
         if re.search(r"\{\{[A-Z][A-Z0-9_]*\}\}", readme):
@@ -82,7 +94,10 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
         changelog = changelog_path.read_text(encoding="utf-8")
         if not re.search(r"(?m)^## \[Unreleased\]\s*$", changelog):
             fail(errors, changelog_path, "missing Unreleased section")
-        match = re.search(rf"(?m)^## \[{re.escape(str(manifest.get('version')))}\] - (\d{{4}}-\d{{2}}-\d{{2}})\s*$", changelog)
+        match = re.search(
+            rf"(?m)^## \[{re.escape(str(manifest.get('version')))}\] - (\d{{4}}-\d{{2}}-\d{{2}})\s*$",
+            changelog,
+        )
         if match is None:
             fail(errors, changelog_path, "missing dated section for manifest version")
         else:
