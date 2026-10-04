@@ -10,6 +10,8 @@ If the plugin connects to an MCP server, use a portable root `mcp.json` with ver
 
 Reference only assets shipped inside the plugin. The scaffold copies the repository's Apache 2.0 `LICENSE` into the plugin so the release ZIP carries its license; review or replace that file if a plugin uses different terms. Do not commit symlinks, dependency directories, release archives, or secrets in plugin packages. Each plugin README is its landing page. Follow [the README guide](readmes.md) for required content, optional sections, formatting, and generated regions.
 
+Package validation rejects common local artifacts such as `.env`, environment variants, `node_modules/`, `.venv/`, `__pycache__/`, key files, and ZIPs inside a plugin. A non-secret `.env.example` is allowed; inspect it and the final ZIP for sensitive or unneeded content.
+
 The skills-only template is a local starting point, not a distribution-ready package. Before distributing a plugin for Codex, add a square `logo` and `composerIcon` to `extensions.com.openai.interface`, with `./`-prefixed paths to files included in the package (prefer `assets/`). Current Codex package validation requires both. The [current submission guidance](https://developers.openai.com/plugins/deploy/submission#icons-and-screenshots) specifies supported formats, dimensions, and size limits; recheck it before release. Do not add placeholder icon paths or claim that a scaffold passes Codex package validation.
 
 The root README is the human-readable marketplace landing page. Its marked catalog table and `.agents/plugins/marketplace.json` are generated from plugin manifests, sorted by directory name. Do not edit generated content by hand. This keeps identity, description, version, and links aligned without duplicating manual data. See [the official guidance audit](official-guidance.md) for the distinction between a repo marketplace and public directory publication.
@@ -20,7 +22,7 @@ The root README is the human-readable marketplace landing page. Its marked catal
 2. Replace the example skill, complete all plugin README sections, and replace the generic initial-release changelog note with real capabilities.
 3. Run `python3 scripts/sync_catalog.py --write` after changing the manifest, skill folders, skill descriptions, or `mcp.json`.
 4. Add only the capabilities the plugin actually provides.
-5. Run `python3 scripts/validate.py` and `python3 scripts/sync_catalog.py --check`.
+5. Run `python3 scripts/preflight.py pr` for the repository checks, including package validation and catalog freshness.
 6. Exercise the workflow in a supported client and record the result in the pull request.
 7. Package a release only after reviewing the exact files and validating its manifest and assets.
 

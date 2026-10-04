@@ -3,11 +3,12 @@
 
 from __future__ import annotations
 
+from datetime import date
+import html
 import json
+from pathlib import Path
 import re
 import sys
-from datetime import date
-from pathlib import Path
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +17,17 @@ NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 VERSION = re.compile(
     r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
 )
+FORBIDDEN_RELEASE_NAMES = {
+    ".ds_store",
+    ".git",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "dist",
+    "node_modules",
+}
+FORBIDDEN_RELEASE_SUFFIXES = (".key", ".p12", ".pem", ".pfx", ".zip", ".tar.gz")
 
 
 def fail(errors: list[str], path: Path, message: str) -> None:
@@ -34,15 +46,57 @@ def read_json(path: Path, errors: list[str]) -> dict | None:
     return value
 
 
-def validate_relative_links(path: Path, errors: list[str]) -> None:
-    content = path.read_text(encoding="utf-8")
-    for target in re.findall(r"(?<!!)\]\(([^)]+)\)", content):
-        target = target.strip().split("#", 1)[0]
-        if not target or re.match(r"^[a-z][a-z0-9+.-]*:", target, re.I):
+def markdown_anchors(path: Path) -> set[str]:
+    """Collect GitHub-style ATX heading and explicit HTML anchors."""
+    anchors: set[str] = set()
+    counts: dict[str, int] = {}
+    fence: str | None = None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})", line)
+        if marker:
+            chars = marker.group(1)
+            if fence is None:
+                fence = chars
+            elif chars[0] == fence[0] and len(chars) >= len(fence):
+                fence = None
             continue
-        linked = (path.parent / unquote(target)).resolve()
+        if fence is not None:
+            continue
+        for custom in re.findall(
+            r'<a\s+[^>]*\b(?:name|id)=["\']([^"\']+)["\']', line, re.IGNORECASE
+        ):
+            anchors.add(custom)
+        heading = re.match(r"^ {0,3}#{1,6}(?:[ \t]+|$)(.*)$", line)
+        if heading is None:
+            continue
+        title = re.sub(r"\s+#+\s*$", "", heading.group(1).strip())
+        title = re.sub(r"!?\[([^]]+)\]\([^)]+\)", r"\1", title)
+        title = html.unescape(title).replace("`", "").replace("*", "").replace("_", "")
+        slug = "".join(char for char in title.lower() if char.isalnum() or char in "- ")
+        slug = slug.replace(" ", "-")
+        count = counts.get(slug, 0)
+        anchors.add(f"{slug}-{count}" if count else slug)
+        counts[slug] = count + 1
+    return anchors
+
+
+def validate_relative_links(path: Path, errors: list[str]) -> None:
+    """Check local Markdown link targets and common heading fragments."""
+    content = path.read_text(encoding="utf-8")
+    for raw_target in re.findall(r"(?<!!)\]\(([^)]+)\)", content):
+        target = raw_target.strip()
+        if re.match(r"^[a-z][a-z0-9+.-]*:", target, re.IGNORECASE):
+            continue
+        target_path, separator, fragment = target.partition("#")
+        linked = (path.parent / unquote(target_path)).resolve() if target_path else path
         if not linked.is_relative_to(ROOT) or not linked.exists():
-            fail(errors, path, f"broken relative link: {target}")
+            fail(errors, path, f"broken relative link: {target_path}")
+        elif (
+            separator
+            and linked.suffix.lower() == ".md"
+            and unquote(fragment) not in markdown_anchors(linked)
+        ):
+            fail(errors, path, f"broken relative anchor: {target}")
 
 
 def validate_plugin(directory: Path, errors: list[str]) -> None:
@@ -164,6 +218,14 @@ def validate_plugin(directory: Path, errors: list[str]) -> None:
     for path in directory.rglob("*"):
         if path.is_symlink():
             fail(errors, path, "symlinks are not allowed in distributable plugins")
+        lower_name = path.name.lower()
+        if (
+            lower_name in FORBIDDEN_RELEASE_NAMES
+            or lower_name == ".env"
+            or (lower_name.startswith(".env.") and lower_name != ".env.example")
+            or lower_name.endswith(FORBIDDEN_RELEASE_SUFFIXES)
+        ):
+            fail(errors, path, "forbidden release file or directory")
 
 
 def main() -> int:
