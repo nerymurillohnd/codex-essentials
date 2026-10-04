@@ -47,9 +47,7 @@ Then replace the example skill, complete its README, and run the local checks:
 
 ```sh
 python3 scripts/sync_catalog.py --write
-python3 scripts/validate.py
-python3 scripts/sync_catalog.py --check
-python3 -m unittest discover -s tests -v
+python3 scripts/preflight.py pr
 ```
 
 Follow [the authoring guide](docs/authoring.md) to finish the package and test it in a supported client before a pull request. The local checks verify structure and generated content; they do not verify that a plugin's workflow succeeds in Codex.
@@ -66,6 +64,7 @@ Follow [the authoring guide](docs/authoring.md) to finish the package and test i
 | [Architecture decisions](docs/decisions/README.md) | Requested ADRs using the [project template](templates/adr/ADR_YYYY-MM-DD_decision-slug.md). |
 | [Issues and labels](docs/issues.md) and [security policy](SECURITY.md) | Structured community feedback, triage, and private vulnerability reporting. |
 | [Documentation maintenance](docs/maintenance.md) | Sources of truth, drift checks, and remote-state review. |
+| [Repository automation](docs/automation.md) | Codex skill, scaffold, PR preflight, release preflight, and feature decisions. |
 
 The starter files live under `templates/`, outside the plugin catalog.
 

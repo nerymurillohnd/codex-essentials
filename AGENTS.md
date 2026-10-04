@@ -35,9 +35,10 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 - Plugin authoring: `templates/skills-only/`, `scripts/new_plugin.py`, `docs/authoring.md`.
 - Catalog and README consistency: `plugin.json`, `skills/`, `mcp.json`, `scripts/sync_catalog.py`, `docs/readmes.md`.
 - Issues and labels: `.github/ISSUE_TEMPLATE/`, `.github/labels.yml`, `scripts/validate_issues.py`, `docs/issues.md`.
-- Versions and releases: `templates/changelog/`, `scripts/bump_version.py`, `.github/workflows/release.yml`, `docs/releasing.md`.
+- Versions and releases: `templates/changelog/`, `scripts/bump_version.py`, `scripts/check_release_tag.py`, `.github/workflows/release.yml`, `docs/releasing.md`.
 - Decisions: `templates/adr/`, `docs/decisions/`, `scripts/validate_adrs.py`.
 - Documentation maintenance: `docs/maintenance.md`, `scripts/validate.py`, and `.github/workflows/validate.yml`.
+- Local Codex workflow and PR/release preflight: `.codex/skills/maintain-marketplace/SKILL.md`, `docs/automation.md`, and `scripts/preflight.py`.
 
 ## Conventions
 
@@ -46,7 +47,7 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 - Use the Agent Plugins 1.0 root `plugin.json` format; do not add unverified MCP endpoints, app IDs, or claims of compatibility.
 - Never commit secrets, credentials, dependency directories, or generated release archives.
 - Validate changes with `python3 scripts/validate.py` before proposing a plugin release.
-- Follow `docs/maintenance.md` after documentation, template, workflow, or repository-state changes. `python3 scripts/validate.py` checks local Markdown file links; review prose, anchors, examples, and remote activation manually.
+- Follow `docs/maintenance.md` after documentation, template, workflow, or repository-state changes. `python3 scripts/validate.py` checks local Markdown file links and common heading anchors; review prose, examples, unusual anchor syntax, and remote activation manually.
 - Treat each `plugin.json` as the source for its README metadata, root catalog, and `.agents/plugins/marketplace.json`; run `python3 scripts/sync_catalog.py --write` after manual manifest edits and `--check` before review.
 - Follow `docs/readmes.md` for plugin READMEs: explain what the plugin is, why it exists, its practical behavior, requirements, usage, permissions and effects, verification, updates, removal, and limits without filler. Edit prose outside generated regions, replace uppercase double-brace placeholders, delete optional guidance that does not apply, and verify examples manually.
 - Follow `docs/issues.md` for issue forms, triage, labels, and release tags. Keep `.github/labels.yml` and form defaults aligned; run `python3 scripts/validate_issues.py` after changes. Do not create public issues for suspected vulnerabilities.

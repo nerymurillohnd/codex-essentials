@@ -6,6 +6,7 @@
 - Skills-only starter template
 - Structural validator
 - Manifest-backed catalog and per-plugin README metadata checks
+- Repo-scoped maintenance skill discovered and invoked explicitly and implicitly for a PR-review request in fresh local Codex 0.160.0 sessions; one local/CI preflight for PRs and release packages; a local release-tag gate requiring an annotated tag on reviewed `main` history. The updated remote workflows remain unverified.
 - GitHub remote created; `Validate` completed successfully on `main` on 2026-10-03
 
 ## Before first public release

@@ -15,23 +15,17 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Check tag and package plugin
         id: package
         shell: bash
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          python3 scripts/validate.py
-          python3 scripts/sync_catalog.py --check
-          if [[ ! "$RELEASE_TAG" =~ ^plugin/([a-z0-9]+(-[a-z0-9]+)*)/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            echo 'Invalid plugin release tag' >&2
-            exit 1
-          fi
-          plugin="${BASH_REMATCH[1]}"
-          version="${BASH_REMATCH[3]}"
-          manifest_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "plugins/$plugin/plugin.json")"
-          test "$version" = "$manifest_version"
-          python3 scripts/package_release.py "$plugin"
+          metadata="$(python3 scripts/check_release_tag.py "$RELEASE_TAG")"
+          read -r plugin version <<< "$metadata"
+          python3 scripts/preflight.py release "$plugin"
           python3 scripts/release_notes.py "$plugin" "$version" > release-notes.md
           echo "plugin=$plugin" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"

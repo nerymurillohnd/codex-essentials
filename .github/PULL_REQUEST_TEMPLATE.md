@@ -27,10 +27,7 @@ Apply one `type:` and one primary `area:` label. Add `process: release` for a ve
 
 ## Verification
 
-- [ ] `python3 scripts/validate.py` passes
-- [ ] `python3 scripts/validate_adrs.py` passes if ADRs changed
-- [ ] `python3 scripts/validate_issues.py` passes if issue forms or labels changed
-- [ ] `python3 scripts/sync_catalog.py --check` passes
+- [ ] `python3 scripts/preflight.py pr` passes
 - [ ] Affected guides, examples, and remote-state claims were reviewed using `docs/maintenance.md`
 - [ ] I tested the affected workflow in a supported client, or explained why it remains untested
 - [ ] No secrets, private data, or unlicensed assets are included
