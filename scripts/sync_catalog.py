@@ -77,6 +77,11 @@ def main(argv: list[str] | None = None) -> int:
         mcp_path = directory / "mcp.json"
         has_mcp = mcp_path.is_file()
         badges = [f"[![Version: {version}]({badge('version', version)})](CHANGELOG.md)"]
+        license_name = manifest.get("license")
+        if isinstance(license_name, str) and license_name:
+            badges.append(
+                f"[![License: {license_name}]({badge('license', license_name, 'green')})](LICENSE)"
+            )
         badges.append(
             f"[![Skills: {len(skills)}]({badge('skills', str(len(skills)), 'informational')})](#capabilities)"
         )

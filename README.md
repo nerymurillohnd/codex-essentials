@@ -13,9 +13,11 @@ Browse the catalog for a workflow, or use the scaffold below to contribute one. 
 ## Plugin catalog
 
 <!-- catalog:start -->
-![Plugins: 0](https://img.shields.io/badge/plugins-0-informational)
+![Plugins: 1](https://img.shields.io/badge/plugins-1-informational)
 
-No plugins have been added yet.
+| Plugin | Purpose | Version |
+| --- | --- | --- |
+| [Svelte Development](plugins/svelte-development/README.md) | Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks. | 0.1.0 |
 <!-- catalog:end -->
 
 The catalog is generated from each plugin's manifest. Each entry links to a README explaining the plugin's purpose, practical behavior, requirements, installation, usage, permissions, verification, maintenance, and limits.

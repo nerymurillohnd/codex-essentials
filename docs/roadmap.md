@@ -9,9 +9,13 @@
 - Repo-scoped maintenance skill discovered and invoked explicitly and implicitly for a PR-review request in fresh local Codex 0.160.0 sessions; one local/CI preflight for PRs and release packages; a local release-tag gate requiring an annotated tag on reviewed `main` history. The updated `Validate` workflow passed on [PR #1](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37190979560) and [`main` after merge](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37195715144) with the pinned runner and new checkout action; the release workflow has no run.
 - GitHub remote created; PR #1 merged into `main` on 2026-10-04
 
+## First plugin candidate
+
+- `svelte-development` is authored on `plugins/svelte-development`, with local package preflight and representative Codex CLI installation, skill, MCP, editor, and auditor checks performed on 2026-10-05. It is not yet merged or released; review the package and verify CI and installation from a fresh checkout before distribution.
+
 ## Before first public release
 
-- Build and manually verify the first real plugin
+- Review and merge the first plugin candidate; verify its remote CI and installation from a fresh checkout
 - Provision the labels in `.github/labels.yml`, verify issue forms, and configure branch rules; GitHub currently has default labels and no `main` protection
 - Verify the release workflow with the first reviewed plugin tag; no release run has occurred
 - Confirm the published security contact and decide whether to enable private vulnerability reporting

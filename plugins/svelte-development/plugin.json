@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "svelte-development",
+  "version": "0.1.0",
+  "description": "Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks.",
+  "author": {
+    "name": "Codex Essentials maintainers"
+  },
+  "homepage": "https://github.com/nerymurillohnd/codex-essentials/tree/main/plugins/svelte-development",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "Apache-2.0",
+  "keywords": ["svelte", "sveltekit", "astro", "tailwindcss", "development", "code-review"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Svelte Development",
+        "shortDescription": "Build and verify Svelte apps",
+        "longDescription": "Build, migrate, inspect, and audit Svelte and SvelteKit projects. The plugin consults current Svelte documentation, uses the official autofixer, runs project checks, and offers local semantic navigation when svelteserver is installed. Astro and Tailwind guidance applies when those integrations are present.",
+        "developerName": "Codex Essentials maintainers",
+        "category": "Developer Tools",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": [
+          "Build a Svelte component using my project's installed version, then verify it.",
+          "Audit this SvelteKit route without changing files."
+        ],
+        "composerIcon": "./assets/composer-icon.svg",
+        "logo": "./assets/logo.svg"
+      }
+    }
+  }
+}
