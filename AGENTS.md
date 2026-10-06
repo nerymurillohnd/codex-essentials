@@ -18,7 +18,9 @@ The intended scope includes model behavior, memory management, workflows, debugg
 
 The north star is a curated catalog of robust, independently versioned extensions that make Codex more capable, reliable, and operationally useful in real development and technical work. Favor working plugin experiences, clear documentation, reproducible packaging, and verified behavior over catalog size or speculative infrastructure. Keep the human README catalog, Codex marketplace metadata, plugin packages, changelogs, and releases consistent from shared sources.
 
-Work toward that outcome in stages: maintain the local foundation; build and test the first real plugin; verify local marketplace installation; configure and verify the GitHub repository services; then publish reviewed plugin releases. The GitHub remote already exists, but individual services still require verification. Public OpenAI directory submission is a separate reviewed channel. At the start of a session, check the repository state to see which stage is actually complete; this sequence is direction, not a claim that later stages are active.
+Work toward that outcome in stages: maintain the local foundation; build and test real plugins; verify marketplace installation; configure and verify the GitHub repository services; then publish reviewed plugin releases. Public OpenAI directory submission is a separate reviewed channel.
+
+Current verified baseline (2026-10-05): the first package, `svelte-development`, is in the catalog on `main`. Local Codex CLI installation and representative behavior checks were performed, and the Validate workflow passed after its merge. Installation from a fresh checkout, a plugin release, and public directory publication remain unverified. The GitHub remote exists, but individual services still require verification. Recheck these claims at the start of a session rather than treating this snapshot as permanent.
 
 For a plugin to be ready for distribution, its user goal, package contents, supported client, installation steps, example requests, limitations, license, version, changelog, and representative behavior checks must be concrete and reviewable. A template or generated entry alone does not satisfy that bar.
 
@@ -33,6 +35,7 @@ For a plugin to be ready for distribution, its user goal, package contents, supp
 ## Work map
 
 - Plugin authoring: `templates/skills-only/`, `scripts/new_plugin.py`, `docs/authoring.md`.
+- First plugin package: `plugins/svelte-development/` (manifest, skills, Svelte MCP connection, local navigation client, README, and changelog).
 - Catalog and README consistency: `plugin.json`, `skills/`, `mcp.json`, `scripts/sync_catalog.py`, `docs/readmes.md`.
 - Issues and labels: `.github/ISSUE_TEMPLATE/`, `.github/labels.yml`, `scripts/validate_issues.py`, `docs/issues.md`.
 - Versions and releases: `templates/changelog/`, `scripts/bump_version.py`, `scripts/check_release_tag.py`, `.github/workflows/release.yml`, `docs/releasing.md`.
