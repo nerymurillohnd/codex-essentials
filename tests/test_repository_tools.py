@@ -22,8 +22,7 @@ class RepositoryToolsTest(unittest.TestCase):
             SOURCE / "scripts", self.root / "scripts", ignore=shutil.ignore_patterns("__pycache__")
         )
         shutil.copytree(SOURCE / "templates", self.root / "templates")
-        (self.root / "plugins").mkdir()
-        shutil.copy(SOURCE / "plugins" / "README.md", self.root / "plugins" / "README.md")
+        shutil.copytree(SOURCE / "plugins", self.root / "plugins")
         shutil.copy(SOURCE / "README.md", self.root / "README.md")
         shutil.copy(SOURCE / "AGENTS.md", self.root / "AGENTS.md")
         shutil.copy(SOURCE / "CONTRIBUTING.md", self.root / "CONTRIBUTING.md")
@@ -45,6 +44,27 @@ class RepositoryToolsTest(unittest.TestCase):
         guide.write_text(guide.read_text() + "\n[Missing guide](missing-guide.md)\n")
         result = self.run_script("scripts/validate.py", succeeds=False)
         self.assertIn("docs/roadmap.md: broken relative link: missing-guide.md", result.stderr)
+
+    def test_plugin_license_badge_comes_from_manifest(self) -> None:
+        self.run_script(
+            "scripts/new_plugin.py",
+            "badge-plugin",
+            "--display-name",
+            "Badge Plugin",
+            "--short-description",
+            "Badge checks",
+            "--description",
+            "Check generated metadata.",
+            "--author",
+            "Test Maintainer",
+        )
+        plugin = self.root / "plugins" / "badge-plugin"
+        manifest_path = plugin / "plugin.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["license"] = "Apache-2.0"
+        manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+        self.run_script("scripts/sync_catalog.py", "--write")
+        self.assertIn("[![License: Apache-2.0]", (plugin / "README.md").read_text())
 
     def test_documentation_heading_drift_is_detected(self) -> None:
         guide = self.root / "docs" / "roadmap.md"
