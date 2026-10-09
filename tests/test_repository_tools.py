@@ -232,7 +232,7 @@ class RepositoryToolsTest(unittest.TestCase):
         missing_icons = self.run_script(
             "scripts/preflight.py", "release", "sample-plugin", succeeds=False
         )
-        assert ("logo") in (missing_icons.stderr)
+        assert ("logo") in (missing_icons.stderr), missing_icons.stdout + missing_icons.stderr
         assets = plugin / "assets"
         assets.mkdir()
         (assets / "icon.svg").write_text(
