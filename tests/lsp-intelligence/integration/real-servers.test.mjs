@@ -172,7 +172,7 @@ for (const [profile, filename, content] of [
   ],
   ["astro", "Example.astro", "---\nconst value:string=123;\n---\n<p>{value}</p>\n"],
   ["python", "main.py", "import os\nimport json\nvalue: str = 123\nprint(value)\n"],
-  ["bash", "main.sh", "#!/usr/bin/env bash\nmessage=hello\necho $message\n"],
+  ["bash", "main.sh", '#!/usr/bin/env bash\nmessage="$1"\necho $message\n'],
 ]) {
   test(`real ${profile} server diagnostics and symbols`, { timeout: 120_000 }, async () => {
     const root = await mkdtemp(join(tmpdir(), `lsp-real-${profile}-`));
@@ -192,7 +192,11 @@ for (const [profile, filename, content] of [
         client,
         "lsp_get_diagnostics",
         args,
-        (d) => d.availability === "published" && d.diagnostics.length > 0,
+        (d) =>
+          d.availability === "published" &&
+          (profile === "bash"
+            ? d.diagnostics.some((diagnostic) => diagnostic.code === "SC2086")
+            : d.diagnostics.length > 0),
       );
       assert.ok(diagnostics.diagnostics.length);
       const symbols = await until(client, "lsp_get_document_symbols", args, (d) =>
