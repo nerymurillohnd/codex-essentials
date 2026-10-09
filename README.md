@@ -21,6 +21,8 @@ Browse the catalog for a workflow, or use the scaffold below to contribute one. 
 | [Svelte Development](plugins/svelte-development/README.md) | Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks. | 0.1.1 |
 <!-- catalog:end -->
 
+LSP Intelligence has verified macOS ARM64 and Linux x64 behavior in [PR #4](https://github.com/nerymurillohnd/codex-essentials/pull/4). Its [verification record](plugins/lsp-intelligence/references/verification.md) separates local preview installation, remote CI, and pending release work.
+
 The catalog is generated from each plugin's manifest. Each entry links to a README explaining the plugin's purpose, practical behavior, requirements, installation, usage, permissions, verification, maintenance, and limits.
 
 ## How it works
