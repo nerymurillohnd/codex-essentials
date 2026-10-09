@@ -1,22 +1,20 @@
-name: Release plugin
+name: LSP acceptance
 
 on:
+  pull_request:
   push:
-    tags:
-      - 'plugin/*/v*'
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  release:
+  linux-x64:
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
           persist-credentials: false
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
@@ -37,26 +35,13 @@ jobs:
         run: |
           test "$(node node_modules/npm/bin/npm-cli.js --version)" = 12.2.0
           echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
-      - name: Check tag and package plugin
-        id: package
-        shell: bash
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          metadata="$(uv run python scripts/check_release_tag.py "$RELEASE_TAG")"
-          read -r plugin version <<< "$metadata"
-          uv run python scripts/preflight.py release "$plugin"
-          uv run python scripts/release_notes.py "$plugin" "$version" > release-notes.md
-          echo "plugin=$plugin" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.ref_name }}
-          PLUGIN: ${{ steps.package.outputs.plugin }}
-          VERSION: ${{ steps.package.outputs.version }}
-        run: |
-          gh release create "$RELEASE_TAG" "dist/$PLUGIN-v$VERSION.zip" \
-            --title "$PLUGIN v$VERSION" \
-            --notes-file release-notes.md \
-            --verify-tag
+      - name: Prepare ShellCheck
+        run: sudo apt-get update && sudo apt-get install --yes shellcheck
+      - name: Install the pinned test runtime
+        run: node plugins/lsp-intelligence/scripts/runtime.mjs install --profile all --runtime-root .lsp-test-runtime/managed
+      - name: Validate package and fixtures
+        run: uv run python scripts/preflight.py pr
+      - name: Exercise real Linux language servers
+        run: npm run test:lsp:integration
+      - name: Verify the distribution archive
+        run: uv run python scripts/preflight.py release lsp-intelligence

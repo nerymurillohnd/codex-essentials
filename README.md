@@ -13,12 +13,15 @@ Browse the catalog for a workflow, or use the scaffold below to contribute one. 
 ## Plugin catalog
 
 <!-- catalog:start -->
-![Plugins: 1](https://img.shields.io/badge/plugins-1-informational)
+![Plugins: 2](https://img.shields.io/badge/plugins-2-informational)
 
 | Plugin | Purpose | Version |
 | --- | --- | --- |
-| [Svelte Development](plugins/svelte-development/README.md) | Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks. | 0.1.0 |
+| [LSP Intelligence](plugins/lsp-intelligence/README.md) | Query local language servers from any Codex CLI workspace with isolated mcpls backends, explicit diagnostic state, and preview-only refactorings. | 0.1.0 |
+| [Svelte Development](plugins/svelte-development/README.md) | Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks. | 0.1.1 |
 <!-- catalog:end -->
+
+LSP Intelligence has verified macOS ARM64 and Linux x64 behavior in [PR #4](https://github.com/nerymurillohnd/codex-essentials/pull/4). Its [verification record](plugins/lsp-intelligence/references/verification.md) separates local preview installation, remote CI, and pending release work.
 
 The catalog is generated from each plugin's manifest. Each entry links to a README explaining the plugin's purpose, practical behavior, requirements, installation, usage, permissions, verification, maintenance, and limits.
 
@@ -35,10 +38,10 @@ The human catalog, plugin README metadata, and local marketplace entries are gen
 
 ## Create a plugin
 
-From the repository root, start with the skills-only scaffold. This example uses `sample-plugin` as a name to replace:
+Use nvm-managed Node and Python through uv. From the repository root, install the locked development dependencies with `npm ci --ignore-scripts --no-audit --no-fund`, then start with the skills-only scaffold. This example uses `sample-plugin` as a name to replace:
 
 ```sh
-python3 scripts/new_plugin.py sample-plugin \
+uv run python scripts/new_plugin.py sample-plugin \
   --display-name "Sample Plugin" \
   --short-description "A concise workflow" \
   --description "Describe the specific user goal." \
@@ -48,8 +51,8 @@ python3 scripts/new_plugin.py sample-plugin \
 Then replace the example skill, complete its README, and run the local checks:
 
 ```sh
-python3 scripts/sync_catalog.py --write
-python3 scripts/preflight.py pr
+uv run python scripts/sync_catalog.py --write
+uv run python scripts/preflight.py pr
 ```
 
 Follow [the authoring guide](docs/authoring.md) to finish the package and test it in a supported client before a pull request. The local checks verify structure and generated content; they do not verify that a plugin's workflow succeeds in Codex.

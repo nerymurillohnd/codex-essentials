@@ -38,6 +38,29 @@ def check_release_icons(directory: Path, manifest: dict, parser: argparse.Argume
             parser.error(f"release {field} has an unsupported format or exceeds 5 MiB: {value}")
 
 
+def run_repository_checks() -> None:
+    """Run every structural, fixture and language-tooling gate."""
+    run("scripts/validate.py")
+    run("scripts/validate_adrs.py")
+    run("scripts/validate_issues.py")
+    run("scripts/sync_catalog.py", "--check")
+    run("-m", "compileall", "-q", "scripts")
+    if (ROOT / "tests").is_dir():
+        run("-m", "unittest", "discover", "-s", "tests", "-v")
+    svelte_lsp_tests = ROOT / "tests" / "svelte-development" / "svelte-lsp.test.mjs"
+    if svelte_lsp_tests.is_file():
+        command = ["node", "--test", str(svelte_lsp_tests.relative_to(ROOT))]
+        sys.stdout.write("+ " + " ".join(command) + "\n")
+        sys.stdout.flush()
+        subprocess.run(command, cwd=ROOT, check=True)
+    if (ROOT / "plugins" / "lsp-intelligence" / "plugin.json").is_file():
+        for script in ("check:lsp", "test:lsp"):
+            command = ["npm", "run", script]
+            sys.stdout.write("+ " + " ".join(command) + "\n")
+            sys.stdout.flush()
+            subprocess.run(command, cwd=ROOT, check=True)
+
+
 def main() -> int:
     """Execute the selected local gate."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -50,19 +73,7 @@ def main() -> int:
         parser.error("plugin must be a lowercase kebab-case name")
 
     try:
-        run("scripts/validate.py")
-        run("scripts/validate_adrs.py")
-        run("scripts/validate_issues.py")
-        run("scripts/sync_catalog.py", "--check")
-        run("-m", "compileall", "-q", "scripts")
-        if (ROOT / "tests").is_dir():
-            run("-m", "unittest", "discover", "-s", "tests", "-v")
-        svelte_lsp_tests = ROOT / "tests" / "svelte-development" / "svelte-lsp.test.mjs"
-        if svelte_lsp_tests.is_file():
-            command = ["node", "--test", str(svelte_lsp_tests.relative_to(ROOT))]
-            sys.stdout.write("+ " + " ".join(command) + "\n")
-            sys.stdout.flush()
-            subprocess.run(command, cwd=ROOT, check=True)
+        run_repository_checks()
         if args.mode == "release":
             directory = ROOT / "plugins" / args.plugin
             manifest_path = directory / "plugin.json"

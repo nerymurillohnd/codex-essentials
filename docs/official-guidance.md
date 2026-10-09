@@ -47,3 +47,9 @@ Local `codex --version` returned `codex-cli 0.160.0` on 2026-10-02. The four pre
 | [0.158.0](https://github.com/openai/codex/releases/tag/rust-v0.158.0) | MCP OAuth client-secret support and sandbox/UI changes. |
 
 The currently installed Plugin Creator is supplied as a separate plugin, so its presence does not contradict the removal of the bundled skill in 0.159.0. Treat the live product documentation as authoritative for package and submission rules; release notes indicate changes, not a complete specification.
+
+## Local LSP integration update — 2026-10-09
+
+Checked with Codex CLI 0.162.0 and its [release notes](https://github.com/openai/codex/releases/tag/rust-v0.162.0), the current [package guide](https://developers.openai.com/plugins/build/plugins), and the pinned [Agent Plugins loader](https://github.com/openai/codex/blob/rust-v0.162.0/codex-rs/codex-mcp/src/agent_plugin_config.rs). Portable stdio servers start inside the plugin package by default; contained cwd settings do not supply the task workspace. LSP Intelligence therefore requires workspace_root on each query and generates explicit mcpls roots outside project files.
+
+The [LSP Intelligence verification record](../plugins/lsp-intelligence/references/verification.md) distinguishes protocol fixtures, real language servers, installed Codex behavior, remote CI and publication. Local installation uses a separate preview marketplace while the remote main catalog remains unchanged. No public-directory acceptance is claimed for this local MCP package.

@@ -15,18 +15,22 @@ Keep repository instructions, generated catalog data, plugin packages, and remot
 
 ## Review after a change
 
-1. Update the source of truth first. If a plugin manifest, skill, or MCP file changed, run `python3 scripts/sync_catalog.py --write` and inspect the root catalog, plugin README, and marketplace entry. Fill plugin README prose outside generated regions and manually verify its examples.
+1. Update the source of truth first. If a plugin manifest, skill, or MCP file changed, run `uv run python scripts/sync_catalog.py --write` and inspect the root catalog, plugin README, and marketplace entry. Fill plugin README prose outside generated regions and manually verify its examples.
 2. Update every affected guide, README, template, and PR instruction in the same change. Check `AGENTS.md` references and search for old status language with `rg`; repository state, remote settings, and external product rules cannot be inferred from local files alone.
 3. Run the local checks below. The repository validator checks Markdown file targets and common heading anchors in root pages, guides, decisions, the PR template, and plugin READMEs, plus package structure. Anchor checks cover ATX headings, duplicate heading suffixes, and explicit HTML `<a name>` or `<a id>` anchors using [GitHub's section-link rules](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links), checked on 2026-10-04. It does not check external URLs, uncommon Markdown heading syntax, factual freshness, rendered layout, or whether an example works in Codex.
 4. Before stating that a GitHub capability is active, inspect the remote labels, issue forms, workflows and runs, branch rules, and releases as applicable. The presence of a local file does not activate a remote service. Update [the issue guide](issues.md#remote-setup), [release guide](releasing.md#github-activation-checklist), and [roadmap](roadmap.md) with the verified state.
 5. Before changing plugin behavior or packaging, follow [the official-guidance freshness procedure](official-guidance.md#how-to-keep-this-guidance-current). Before publication, verify the exact package, release notes, license, permissions, supported client, and installation behavior.
 
 ```sh
-python3 scripts/validate.py
-python3 scripts/validate_adrs.py
-python3 scripts/validate_issues.py
-python3 scripts/sync_catalog.py --check
-python3 -m unittest discover -s tests -v
+uv run python scripts/validate.py
+uv run python scripts/validate_adrs.py
+uv run python scripts/validate_issues.py
+uv run python scripts/sync_catalog.py --check
+uv run python -m unittest discover -s tests -v
 ```
 
-`python3 scripts/preflight.py pr` runs these checks and Python compilation as one command. The [Validate workflow](../.github/workflows/validate.yml) runs it for pull requests and pushes to `main`. Its `Run PR preflight` step passed on [PR #1](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37190979560) and again on [`main` after merge](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37195715144), using `actions/checkout@v7` and `ubuntu-24.04` on 2026-10-04. Ruff formatting and the full Ruff lint are separate checks until the existing lint findings are resolved and a CI gate is deliberately added. See [repository automation](automation.md) for task entry points.
+`uv run python scripts/preflight.py pr` runs these checks and Python compilation as one command. The [Validate workflow](../.github/workflows/validate.yml) runs it for pull requests and pushes to `main`. Its `Run PR preflight` step passed on [PR #1](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37190979560) and again on [`main` after merge](https://github.com/nerymurillohnd/codex-essentials/actions/runs/37195715144), using `actions/checkout@v7` and `ubuntu-24.04` on 2026-10-04. Ruff formatting and the full Ruff lint are separate checks until the existing lint findings are resolved and a CI gate is deliberately added. See [repository automation](automation.md) for task entry points.
+
+## Node runtime changes
+
+For LSP Intelligence, keep the root private package lock, source, packaged bundles, upstream tool descriptors and THIRD_PARTY_NOTICES synchronized. npm run check:lsp checks this relationship without rewriting artifacts; npm run build:lsp regenerates them after an intentional source/dependency update. Runtime language servers remain external user-owned dependencies and are not added to plugin ZIPs. See the [verification record](../plugins/lsp-intelligence/references/verification.md).

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "lsp-intelligence",
+  "version": "0.1.0",
+  "description": "Query local language servers from any Codex CLI workspace with isolated mcpls backends, explicit diagnostic state, and preview-only refactorings.",
+  "author": {
+    "name": "Codex Essentials maintainers"
+  },
+  "homepage": "https://github.com/nerymurillohnd/codex-essentials/tree/main/plugins/lsp-intelligence",
+  "repository": "https://github.com/nerymurillohnd/codex-essentials",
+  "license": "Apache-2.0",
+  "keywords": [
+    "lsp",
+    "mcp",
+    "diagnostics",
+    "typescript",
+    "svelte",
+    "astro",
+    "python",
+    "bash"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "LSP Intelligence",
+        "shortDescription": "Semantic tools for Codex",
+        "longDescription": "Use local language servers for definitions, references, hover, symbols, diagnostics, and proposed code actions. A global plugin isolates each authorized project and language profile. Dependencies are installed explicitly from upstream.",
+        "developerName": "Codex Essentials maintainers",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Find this symbol and its references using the current workspace.",
+          "Check diagnostics after my edit and explain their freshness."
+        ],
+        "composerIcon": "./assets/composer-icon.svg",
+        "logo": "./assets/logo.svg"
+      }
+    }
+  }
+}
