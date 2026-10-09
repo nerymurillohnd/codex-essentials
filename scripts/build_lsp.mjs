@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
+import { readBundledLicense } from "./bundled_licenses.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
@@ -44,16 +45,7 @@ let notices =
   "# Third-party notices\n\nGenerated from the dependencies actually included in the runtime bundles.\n\n";
 for (const p of [...packagePaths].sort()) {
   const manifest = JSON.parse(await readFile(join(root, p, "package.json"), "utf8"));
-  let license;
-  for (const filename of ["LICENSE", "LICENSE.md", "LICENSE.txt", "LICENSE-MIT"]) {
-    try {
-      license = await readFile(join(root, p, filename), "utf8");
-      break;
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-    }
-  }
-  if (!license) throw new Error(`Bundled dependency has no license file: ${manifest.name}`);
+  const license = await readBundledLicense(join(root, p), manifest.name);
   notices += `## ${manifest.name} ${manifest.version}\n\n${license.trim()}\n\n`;
 }
 const noticePath = join(root, "plugins/lsp-intelligence/THIRD_PARTY_NOTICES.md");

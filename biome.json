@@ -20,7 +20,8 @@
     "includes": [
       "plugins/lsp-intelligence/src/**",
       "tests/lsp-intelligence/**",
-      "scripts/build_lsp.mjs"
+      "scripts/build_lsp.mjs",
+      "scripts/bundled_licenses.mjs"
     ]
   }
 }

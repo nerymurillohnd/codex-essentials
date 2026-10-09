@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build:lsp": "node scripts/build_lsp.mjs",
-    "check:lsp": "tsc --noEmit && biome check plugins/lsp-intelligence/src tests/lsp-intelligence scripts/build_lsp.mjs && node scripts/build_lsp.mjs --check",
+    "check:lsp": "tsc --noEmit && biome check plugins/lsp-intelligence/src tests/lsp-intelligence scripts/build_lsp.mjs scripts/bundled_licenses.mjs && node scripts/build_lsp.mjs --check",
     "test:lsp": "node --test tests/lsp-intelligence/*.test.mjs",
     "test:lsp:integration": "node --test tests/lsp-intelligence/integration/*.test.mjs"
   },
