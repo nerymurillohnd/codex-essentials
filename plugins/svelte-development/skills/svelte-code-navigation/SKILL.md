@@ -5,6 +5,8 @@ description: Use when locating Svelte symbol definitions or references, tracing 
 
 # Svelte code navigation
 
+When LSP Intelligence's `lsp_` MCP tools are available, prefer them for supported semantic queries. Pass the current task's absolute `workspace_root` and source path; check diagnostic availability and freshness before interpreting an empty result. Retain this plugin's documentation, autofixer and project-check workflows. The helper below remains the fallback when the MCP is unavailable; its empty diagnostics alone do not establish a clean file.
+
 Use the packaged [local LSP client](../../scripts/svelte-lsp.mjs) for semantic questions when `svelteserver` is available on `PATH`. It starts the server for one query, opens a `.svelte` document, prints JSON, and exits. It defaults the Svelte server's file watcher to polling to avoid `EMFILE` in constrained Codex subprocesses; an existing `CHOKIDAR_USEPOLLING` value takes precedence. Node.js and `svelte-language-server` are user-installed requirements; this plugin does not install them.
 
 ## Query

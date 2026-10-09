@@ -1,0 +1,27 @@
+{
+  "name": "codex-essentials-tooling",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build:lsp": "node scripts/build_lsp.mjs",
+    "check:lsp": "tsc --noEmit && biome check plugins/lsp-intelligence/src tests/lsp-intelligence scripts/build_lsp.mjs && node scripts/build_lsp.mjs --check",
+    "test:lsp": "node --test tests/lsp-intelligence/*.test.mjs",
+    "test:lsp:integration": "node --test tests/lsp-intelligence/integration/*.test.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@modelcontextprotocol/client": "2.3.1",
+    "@modelcontextprotocol/core": "2.3.1",
+    "@modelcontextprotocol/server": "2.3.1",
+    "@types/node": "24.10.9",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "esbuild": "0.28.2",
+    "npm": "12.2.0",
+    "typescript": "7.0.2",
+    "zod": "4.4.3"
+  }
+}

@@ -3,7 +3,7 @@
 
 Develop, migrate, navigate, and audit Svelte and SvelteKit projects with current documentation, the Svelte autofixer, and project checks.
 
-[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue)](CHANGELOG.md) [![License: Apache-2.0](https://img.shields.io/badge/license-Apache-2.0-green)](LICENSE) [![Skills: 5](https://img.shields.io/badge/skills-5-informational)](#capabilities) [![MCP: included](https://img.shields.io/badge/MCP-included-brightgreen)](mcp.json)
+[![Version: 0.1.1](https://img.shields.io/badge/version-0.1.1-blue)](CHANGELOG.md) [![License: Apache-2.0](https://img.shields.io/badge/license-Apache-2.0-green)](LICENSE) [![Skills: 5](https://img.shields.io/badge/skills-5-informational)](#capabilities) [![MCP: included](https://img.shields.io/badge/MCP-included-brightgreen)](mcp.json)
 <!-- plugin-meta:end -->
 
 ## Overview

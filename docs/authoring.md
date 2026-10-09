@@ -31,3 +31,9 @@ The validator checks local repository conventions. It does not prove runtime com
 ## Release principles
 
 Version each plugin independently and maintain its [changelog](changelogs.md) with `Unreleased` notes and a dated section matching the manifest version. Decide whether a future public version needs MCP before the first public ZIP; current submission rules do not permit adding an MCP server later to an already submitted skills-only plugin. Public directory submission and account installation require separate review and are not implied by a merge. See [the release guide](releasing.md).
+
+## Building self-contained local MCP runtimes
+
+The repository's private Node toolchain builds LSP Intelligence into packaged JavaScript. Development dependencies stay at the repository root; do not install node_modules inside a plugin because package validation and ZIP inspection reject it. Run npm ci before PR preflight, then npm run build:lsp after changing its source. The check:lsp gate checks strict types, Biome, reproducible bundles and actual bundled dependency licenses.
+
+A plugin-owned MCP process cannot assume its cwd is the current project. Follow the [current loader guidance](official-guidance.md#local-lsp-integration-update--2026-10-09) and pass an explicit workspace through the tool interface. The LSP plugin does not create per-project MCP configuration or add lifecycle hooks.

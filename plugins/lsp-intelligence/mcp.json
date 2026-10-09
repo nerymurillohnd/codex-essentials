@@ -1,0 +1,15 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "lsp-intelligence": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${PLUGIN_ROOT}/scripts/server.mjs",
+        "--data-root",
+        "${PLUGIN_DATA}"
+      ],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}
