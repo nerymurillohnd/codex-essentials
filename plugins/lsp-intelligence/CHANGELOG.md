@@ -4,6 +4,10 @@ Notable changes to this plugin follow [Keep a Changelog](https://keepachangelog.
 
 ## [Unreleased]
 
+### Fixed
+
+- Correct merged-main verification status and document the unresolved runtime maintenance defects and dependency-alert snapshot.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
